@@ -24,6 +24,7 @@ return new class extends Migration
             $table->boolean('is_default');
             $table->timestamps();
             $table->softDeletes();
+            $table->unique(['permitted_user', 'readable_book']);
         });
     }
 
