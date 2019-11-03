@@ -63,4 +63,14 @@ class SlipService
     {
         $this->slip->updateIsDraft($slipId, false);
     }
+
+    public function retrieveAmountFlows(string $fromDate, string $toDate, string $bookId) : array
+    {
+        return $this->slipEntry->calculateSum($fromDate, $toDate, $bookId);
+    }
+
+    public function retrieveSlipEntries(string $fromDate, string $toDate, string $bookId) : array
+    {
+        return $this->slipEntry->searchSlipEntries($fromDate, $toDate, $bookId);
+    }
 }
