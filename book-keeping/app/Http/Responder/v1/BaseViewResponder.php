@@ -45,6 +45,11 @@ class BaseViewResponder
         ];
     }
 
+    public function sortAccountInAscendingCodeOrder(array $groupedList) : array
+    {
+        return $this->sortAccountGrouptListInAscendingCodeOrder($groupedList);
+    }
+
     public function translateBalanceSheetFormat(array $statements) : array
     {
         return $this->translateStatementsFormat($statements, [
@@ -88,11 +93,6 @@ class BaseViewResponder
         return $slipentryline;
     }
 
-    public function sortAccountInAscendingCodeOrder(array $groupedList) : array
-    {
-        return $this->sortAccountGrouptListInAscendingCodeOrder($groupedList);
-    }
-
     private function getIdsSortedInAscendingOrder(array $listWithKeyword, string $keyword, string $isCurrent = 'isCurrent') : array
     {
         $sortedIds1 = [];
@@ -118,6 +118,36 @@ class BaseViewResponder
         asort($sortedIds2);
 
         return $sortedIds1 + $sortedIds2;
+    }
+
+    private function sortAccountGrouptListInAscendingCodeOrder(array $groupedList) : array
+    {
+        $reordered = [];
+        $sortedKeys = $this->getIdsSortedInAscendingOrder($groupedList, 'bk_code');
+        foreach ($sortedKeys as $groupId => $keyword) {
+            $reordered[$groupId] = [
+                'title'     => $groupedList[$groupId]['title'],
+                'isCurrent' => $groupedList[$groupId]['isCurrent'],
+                'amount'    => $groupedList[$groupId]['amount'],
+                'items'     => $this->sortAccountListInAscendingCodeOrder($groupedList[$groupId]['items']),
+            ];
+        }
+
+        return $reordered;
+    }
+
+    private function sortAccountListInAscendingCodeOrder(array $list) : array
+    {
+        $reordered = [];
+        $sortedKeys = $this->getIdsSortedInAscendingOrder($list, 'bk_code');
+        foreach ($sortedKeys as $id => $keyword) {
+            $reordered[$id] = [
+                'title'     => $list[$id]['title'],
+                'amount'    => $list[$id]['amount'],
+            ];
+        }
+
+        return $reordered;
     }
 
     private function translateStatementsFormat(array $statements, array $parameters) : array
@@ -213,35 +243,5 @@ class BaseViewResponder
         }
 
         return $debitcreditline;
-    }
-
-    private function sortAccountGrouptListInAscendingCodeOrder(array $groupedList) : array
-    {
-        $reordered = [];
-        $sortedKeys = $this->getIdsSortedInAscendingOrder($groupedList, 'bk_code');
-        foreach ($sortedKeys as $groupId => $keyword) {
-            $reordered[$groupId] = [
-                'title'     => $groupedList[$groupId]['title'],
-                'isCurrent' => $groupedList[$groupId]['isCurrent'],
-                'amount'    => $groupedList[$groupId]['amount'],
-                'items'     => $this->sortAccountListInAscendingCodeOrder($groupedList[$groupId]['items']),
-            ];
-        }
-
-        return $reordered;
-    }
-
-    private function sortAccountListInAscendingCodeOrder(array $list) : array
-    {
-        $reordered = [];
-        $sortedKeys = $this->getIdsSortedInAscendingOrder($list, 'bk_code');
-        foreach ($sortedKeys as $id => $keyword) {
-            $reordered[$id] = [
-                'title'     => $list[$id]['title'],
-                'amount'    => $list[$id]['amount'],
-            ];
-        }
-
-        return $reordered;
     }
 }
