@@ -10,8 +10,21 @@ use Illuminate\Http\Response;
 
 class ShowTopActionHTML extends AuthenticatedBookKeepingAction
 {
+    /**
+     * ShowTopView responder instance.
+     *
+     * @var \App\Http\Responder\v1\ShowTopViewResponder
+     */
     private $responder;
 
+    /**
+     * Create a new controller instance.
+     *
+     * @param \App\Service\BookKeepingService             $BookKeeping
+     * @param \App\Http\Responder\v1\ShowTopViewResponder $responder
+     *
+     * @return void
+     */
     public function __construct(BookKeepingService $BookKeeping, ShowTopViewResponder $responder)
     {
         parent::__construct($BookKeeping);
