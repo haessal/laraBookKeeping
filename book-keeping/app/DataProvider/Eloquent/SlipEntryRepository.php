@@ -7,31 +7,14 @@ use App\DataProvider\SlipEntryRepositoryInterface;
 class SlipEntryRepository implements SlipEntryRepositoryInterface
 {
     /**
-     * Create new slip entry.
+     * Calculate sum of debit and credit for each account about slip entries between specified date.
      *
-     * @param string $slipId
-     * @param string $debit
-     * @param string $credit
-     * @param int    $amount
-     * @param string $client
-     * @param string $outline
+     * @param string $fromDate
+     * @param string $toDate
+     * @param string $bookId
      *
-     * @return string $slipEntryId
+     * @return array
      */
-    public function create(string $slipId, string $debit, string $credit, int $amount, string $client, string $outline) : string
-    {
-        $slipEntry = new SlipEntry();
-        $slipEntry->slip_bound_on = $slipId;
-        $slipEntry->debit = $debit;
-        $slipEntry->credit = $credit;
-        $slipEntry->amount = $amount;
-        $slipEntry->client = $client;
-        $slipEntry->outline = $outline;
-        $slipEntry->save();
-
-        return $slipEntry->slip_entry_id;
-    }
-
     public function calculateSum(string $fromDate, string $toDate, string $bookId) : array
     {
         $debitSumList = $this->getSlipEntriesQuery($fromDate, $toDate, $bookId)
@@ -61,6 +44,41 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
         return $list;
     }
 
+    /**
+     * Create new slip entry.
+     *
+     * @param string $slipId
+     * @param string $debit
+     * @param string $credit
+     * @param int    $amount
+     * @param string $client
+     * @param string $outline
+     *
+     * @return string $slipEntryId
+     */
+    public function create(string $slipId, string $debit, string $credit, int $amount, string $client, string $outline) : string
+    {
+        $slipEntry = new SlipEntry();
+        $slipEntry->slip_bound_on = $slipId;
+        $slipEntry->debit = $debit;
+        $slipEntry->credit = $credit;
+        $slipEntry->amount = $amount;
+        $slipEntry->client = $client;
+        $slipEntry->outline = $outline;
+        $slipEntry->save();
+
+        return $slipEntry->slip_entry_id;
+    }
+
+    /**
+     * Search slip entries between specified date.
+     *
+     * @param string $fromDate
+     * @param string $toDate
+     * @param string $bookId
+     *
+     * @return array
+     */
     public function searchSlipEntries(string $fromDate, string $toDate, string $bookId) : array
     {
         $list = $this->getSlipEntriesQuery($fromDate, $toDate, $bookId)
@@ -72,6 +90,15 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
         return $list;
     }
 
+    /**
+     * Query to get slip entries between specified date.
+     *
+     * @param string $fromDate
+     * @param string $toDate
+     * @param string $bookId
+     *
+     * @return array
+     */
     private function getSlipEntriesQuery(string $fromDate, string $toDate, string $bookId)
     {
         return SlipEntry::join('bk2_0_slips', 'bk2_0_slips.slip_id', '=', 'bk2_0_slip_entries.slip_bound_on')
