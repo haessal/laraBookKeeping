@@ -51,9 +51,9 @@ class BookKeepingService
     }
 
     /**
-     * Retrieve amount changes between the specified period.
+     * Retrieve slips between the specified date.
      *
-     * @param string $datfromDate
+     * @param string $fromDate
      * @param string $toDate
      * @param string $bookId
      *
