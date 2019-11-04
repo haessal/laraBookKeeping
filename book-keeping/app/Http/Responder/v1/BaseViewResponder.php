@@ -45,11 +45,25 @@ class BaseViewResponder
         ];
     }
 
+    /**
+     * Sort accounts in ascending order of account code for version 1.
+     *
+     * @param array $groupedList
+     *
+     * @return array
+     */
     public function sortAccountInAscendingCodeOrder(array $groupedList) : array
     {
         return $this->sortAccountGrouptListInAscendingCodeOrder($groupedList);
     }
 
+    /**
+     * Translate balance sheet format for view.
+     *
+     * @param array $statements
+     *
+     * @return array
+     */
     public function translateBalanceSheetFormat(array $statements) : array
     {
         return $this->translateStatementsFormat($statements, [
@@ -61,6 +75,13 @@ class BaseViewResponder
         ]);
     }
 
+    /**
+     * Translate income statement format for view.
+     *
+     * @param array $statements
+     *
+     * @return array
+     */
     public function translateIncomeStatementFormat(array $statements) : array
     {
         return $this->translateStatementsFormat($statements, [
@@ -72,6 +93,13 @@ class BaseViewResponder
         ]);
     }
 
+    /**
+     * Translate slips format for view.
+     *
+     * @param array $skips
+     *
+     * @return array
+     */
     public function translateSlipsFormat(array $slips) : array
     {
         $slipentryline = [];
@@ -93,6 +121,15 @@ class BaseViewResponder
         return $slipentryline;
     }
 
+    /**
+     * Get associative array which has account ID as key sorted in ascending order of value that is specified keyword.
+     *
+     * @param array $listWithKeyword
+     * @param array $keyword
+     * @param array $isCurrent
+     *
+     * @return array
+     */
     private function getIdsSortedInAscendingOrder(array $listWithKeyword, string $keyword, string $isCurrent = 'isCurrent') : array
     {
         $sortedIds1 = [];
@@ -120,6 +157,13 @@ class BaseViewResponder
         return $sortedIds1 + $sortedIds2;
     }
 
+    /**
+     * Sort account group list in ascending order of account code for version 1.
+     *
+     * @param array $groupedList
+     *
+     * @return array
+     */
     private function sortAccountGrouptListInAscendingCodeOrder(array $groupedList) : array
     {
         $reordered = [];
@@ -136,6 +180,13 @@ class BaseViewResponder
         return $reordered;
     }
 
+    /**
+     * Sort account list in ascending order of account code for version 1.
+     *
+     * @param array $groupedList
+     *
+     * @return array
+     */
     private function sortAccountListInAscendingCodeOrder(array $list) : array
     {
         $reordered = [];
@@ -150,6 +201,13 @@ class BaseViewResponder
         return $reordered;
     }
 
+    /**
+     * Translate statements format for view.
+     *
+     * @param array $statements
+     *
+     * @return array
+     */
     private function translateStatementsFormat(array $statements, array $parameters) : array
     {
         $debitTitle = $parameters['debitTitle'];
