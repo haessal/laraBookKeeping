@@ -59,6 +59,45 @@ class BookKeepingService
      *
      * @return array
      */
+    public function retrieveSlips(string $fromDate, string $toDate, string $bookId = null) : array
+    {
+        if (is_null($bookId)) {
+            $bookId = $this->book->retrieveDefaultBook(Auth::id());
+        }
+        $accounts = $this->account->retrieveAccounts($bookId);
+        $slipEntries = $this->slip->retrieveSlipEntries($fromDate, $toDate, $bookId);
+        $slips = [];
+
+        foreach ($slipEntries as $entry) {
+            if (!array_key_exists($entry['slip_id'], $slips)) {
+                $slips[$entry['slip_id']] = [
+                    'date'         => $entry['date'],
+                    'slip_outline' => $entry['slip_outline'],
+                    'slip_memo'    => $entry['slip_memo'],
+                    'items'        => [],
+                ];
+            }
+            $slips[$entry['slip_id']]['items'][$entry['slip_entry_id']] = [
+                'debit'   => ['account_id' => $entry['debit'], 'account_title' => $accounts[$entry['debit']]['account_title']],
+                'credit'  => ['account_id' => $entry['credit'], 'account_title' => $accounts[$entry['credit']]['account_title']],
+                'amount'  => $entry['amount'],
+                'client'  => $entry['client'],
+                'outline' => $entry['outline'],
+            ];
+        }
+
+        return $slips;
+    }
+
+    /**
+     * Retrieve amount changes between the specified period.
+     *
+     * @param string $datfromDate
+     * @param string $toDate
+     * @param string $bookId
+     *
+     * @return array
+     */
     public function retrieveStatements(string $fromDate, string $toDate, string $bookId = null) : array
     {
         if (is_null($bookId)) {
@@ -115,35 +154,5 @@ class BookKeepingService
         $statements['net_asset']['amount'] = $statements[AccountService::ACCOUNT_TYPE_ASSET]['amount'] - $statements[AccountService::ACCOUNT_TYPE_LIABILITY]['amount'];
 
         return $statements;
-    }
-
-    public function retrieveSlips(string $fromDate, string $toDate, string $bookId = null) : array
-    {
-        if (is_null($bookId)) {
-            $bookId = $this->book->retrieveDefaultBook(Auth::id());
-        }
-        $accounts = $this->account->retrieveAccounts($bookId);
-        $slipEntries = $this->slip->retrieveSlipEntries($fromDate, $toDate, $bookId);
-        $slips = [];
-
-        foreach ($slipEntries as $entry) {
-            if (!array_key_exists($entry['slip_id'], $slips)) {
-                $slips[$entry['slip_id']] = [
-                    'date'         => $entry['date'],
-                    'slip_outline' => $entry['slip_outline'],
-                    'slip_memo'    => $entry['slip_memo'],
-                    'items'        => [],
-                ];
-            }
-            $slips[$entry['slip_id']]['items'][$entry['slip_entry_id']] = [
-                'debit'   => ['account_id' => $entry['debit'], 'account_title' => $accounts[$entry['debit']]['account_title']],
-                'credit'  => ['account_id' => $entry['credit'], 'account_title' => $accounts[$entry['credit']]['account_title']],
-                'amount'  => $entry['amount'],
-                'client'  => $entry['client'],
-                'outline' => $entry['outline'],
-            ];
-        }
-
-        return $slips;
     }
 }
