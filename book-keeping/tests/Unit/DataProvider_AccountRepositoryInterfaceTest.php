@@ -10,7 +10,7 @@ abstract class DataProvider_AccountRepositoryInterfaceTest extends TestCase
     /**
      * @test
      */
-    public function create_CallWithParams_ReturnString()
+    public function create_ReturnValueTypeIsString()
     {
         $accountGroupId = '0000';
         $title = 'string';
@@ -28,7 +28,7 @@ abstract class DataProvider_AccountRepositoryInterfaceTest extends TestCase
     /**
      * @test
      */
-    public function searchAccount_CallWithParams_ReturnArray()
+    public function searchAccount_ReturnValueTypeIsArray()
     {
         $bookId = '0000';
 

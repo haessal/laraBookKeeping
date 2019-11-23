@@ -31,7 +31,7 @@ class DataProvider_Eloquent_AccountRepositoryTest extends DataProvider_AccountRe
     /**
      * @test
      */
-    public function create_CallWithParams_OneRecordAreCreated()
+    public function create_OneRecordIsCreated()
     {
         $accountGroupId = (string) Str::uuid();
         $title = 'title';
@@ -57,7 +57,7 @@ class DataProvider_Eloquent_AccountRepositoryTest extends DataProvider_AccountRe
     /**
      * @test
      */
-    public function searchAccount_CallWithValidBookID_ReturnAccountList()
+    public function searchAccount_ReturnedArrayHasKeysAsAccountList()
     {
         $bookId = (string) Str::uuid();
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
@@ -83,16 +83,18 @@ class DataProvider_Eloquent_AccountRepositoryTest extends DataProvider_AccountRe
 
         $this->assertFalse(count($accountList) === 0);
         if (!(count($accountList) === 0)) {
-            $this->assertArrayHasKey('account_type', $accountList[0]);
-            $this->assertArrayHasKey('account_group_id', $accountList[0]);
-            $this->assertArrayHasKey('account_group_title', $accountList[0]);
-            $this->assertArrayHasKey('is_current', $accountList[0]);
-            $this->assertArrayHasKey('account_id', $accountList[0]);
-            $this->assertArrayHasKey('account_title', $accountList[0]);
-            $this->assertArrayHasKey('description', $accountList[0]);
-            $this->assertArrayHasKey('selectable', $accountList[0]);
-            $this->assertArrayHasKey('bk_code', $accountList[0]);
-            $this->assertArrayHasKey('created_at', $accountList[0]);
+            $this->assertSame([
+                'account_type',
+                'account_group_id',
+                'account_group_title',
+                'is_current',
+                'account_id',
+                'account_title',
+                'description',
+                'selectable',
+                'bk_code',
+                'created_at',
+            ], array_keys($accountList[0]));
         }
     }
 }
