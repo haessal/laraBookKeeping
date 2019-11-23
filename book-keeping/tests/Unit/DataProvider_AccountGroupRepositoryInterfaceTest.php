@@ -10,7 +10,7 @@ abstract class DataProvider_AccountGroupRepositoryInterfaceTest extends TestCase
     /**
      * @test
      */
-    public function create_CallWithParams_ReturnString()
+    public function create_ReturnValueTypeIsString()
     {
         $bookId = '0000';
         $accountType = 'asset';

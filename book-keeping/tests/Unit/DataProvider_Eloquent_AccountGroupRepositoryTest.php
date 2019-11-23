@@ -29,7 +29,7 @@ class DataProvider_Eloquent_AccountGroupRepositoryTest extends DataProvider_Acco
     /**
      * @test
      */
-    public function create_CallWithParams_OneRecordAreCreated()
+    public function create_OneRecordIsCreated()
     {
         $bookId = (string) Str::uuid();
         $accountType = 'asset';
