@@ -31,6 +31,31 @@ class SlipRepository implements SlipRepositoryInterface
     }
 
     /**
+     * Delete the specified slip.
+     *
+     * @param string $slipId
+     *
+     * @return void
+     */
+    public function delete(string $slipId)
+    {
+        $slip = Slip::find($slipId);
+        if (!is_null($slip)){
+            $slip->delete();
+        }
+    }
+
+    public function searchDraft(string $bookId) : array
+    {
+        $list = Slip::select('slip_id', 'date', 'slip_outline', 'slip_memo')
+            ->where('book_bound_on', $bookId)
+            ->where('is_draft', true)
+            ->get()->toArray();
+
+        return $list;
+    }
+
+    /**
      * Update the flag which indicates that the slip is draft.
      *
      * @param string $slipId

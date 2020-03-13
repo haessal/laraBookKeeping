@@ -1,5 +1,6 @@
 {
     "Accounting period" : "会計期間",
+    "Add" : "追加",
     "Amount" : "金額",
     "Assets" : "資産",
     "Balance sheet" : "貸借対照表",
@@ -28,6 +29,7 @@
     "The token was generated at " : "トークン生成時刻: ",
     "There is no token available." : "利用中のトークンはありません。",
     "Top" : "トップ",
+    "Total" : "合計",
     "To:" : "至:",
     "Trial Balance Of Real Flow" : "実在フロー試算表",
     "You won’t be able to see it again!" : "この文字列は再表示できません。",

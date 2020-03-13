@@ -55,6 +55,47 @@ class SlipService
     }
 
     /**
+     * Create a new slip entry.
+     *
+     * @param string $slipId
+     * @param string $debit
+     * @param string $credit
+     * @param int    $amount
+     * @param string $client
+     * @param string $outline
+     *
+     * @return string $slipEntryId
+     */
+    public function createSlipEntry(string $slipId, string $debit, string $credit, int $amount, string $client, string $outline): string
+    {
+        return $this->slipEntry->create($slipId, $debit, $credit, $amount, $client, $outline);
+    }
+
+    /**
+     * Delete the specified slip.
+     *
+     * @param string $slipId
+     *
+     * @return void
+     */
+    public function deleteSlip(string $slipId)
+    {
+        $this->slip->delete($slipId);
+    }
+
+    /**
+     * Delete the specified slip entry.
+     *
+     * @param string $slipEntryId
+     *
+     * @return void
+     */
+    public function deleteSlipEntry(string $slipEntryId)
+    {
+        $this->slipEntry->delete($slipEntryId);
+    }
+
+    /**
      * Retrieve the amount flow of each account between specified data.
      *
      * @param string $fromDate
@@ -69,6 +110,18 @@ class SlipService
     }
 
     /**
+     * Retrieve draft slips.
+     *
+     * @param string $bookId
+     *
+     * @return array
+     */
+    public function retrieveDraftSlips(string $bookId): array
+    {
+        return $this->slip->searchDraft($bookId);
+    }
+
+    /**
      * Retrieve slip entries between specified date.
      *
      * @param string $fromDate
@@ -80,6 +133,36 @@ class SlipService
     public function retrieveSlipEntries(string $fromDate, string $toDate, string $bookId): array
     {
         return $this->slipEntry->searchSlipEntries($fromDate, $toDate, $bookId);
+    }
+
+    /**
+     * Retrieve slip entries bound to specify slip.
+     *
+     * @param string $slipId
+     *
+     * @return array
+     */
+    public function retrieveSlipEntriesBoundTo(string $slipId): array
+    {
+        return $this->slipEntry->searchListBoundTo($slipId);
+    }
+
+    /**
+     * Retrieve slip that bound specify slip entry.
+     *
+     * @param string $slipEntryId
+     *
+     * @return string | null
+     */
+    public function retrieveSlipThatBound(string $slipEntryId)
+    {
+        $slipEntry = $this->slipEntry->findById($slipEntryId);
+
+        if (is_null($slipEntry)) {
+            return null;
+        } else {
+            return $slipEntry['slip_bound_on'];
+        }
     }
 
     /**

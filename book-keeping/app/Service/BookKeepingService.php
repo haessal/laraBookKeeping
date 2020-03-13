@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class BookKeepingService
@@ -48,6 +49,113 @@ class BookKeepingService
         $this->account = $account;
         $this->budget = $budget;
         $this->slip = $slip;
+    }
+
+    /**
+     * Add a new slip entry as draft.
+     *
+     * @param string $debit
+     * @param string $client
+     * @param string $outline
+     * @param string $credit
+     * @param int    $amount
+     *
+     * @return void
+     */
+    public function createSlipEntryAsDraft(string $debit, $client, $outline, string $credit, int $amount, string $bookId = null)
+    {
+        /* validation */
+        if (is_null($client) || is_null($outline) || ($amount == 0)) {
+            return;
+        }
+        if (($debit === '0') || ($credit === '0') || ($debit === $credit)) {
+            return;
+        }
+
+        if (is_null($bookId)) {
+            $bookId = $this->book->retrieveDefaultBook(Auth::id());
+        }
+        $draftSlips = $this->slip->retrieveDraftSlips($bookId);
+        if (empty($draftSlips)) {
+            $date = new Carbon();
+            $this->slip->createSlipAsDraft($bookId, $outline, $date->format('Y-m-d'), [
+                ['debit' => $debit, 'client' => $client, 'outline' => $outline, 'credit' => $credit, 'amount' => $amount]
+            ]);
+        } else {
+            $this->slip->createSlipEntry($draftSlips[0]['slip_id'], $debit, $credit, $amount, $client, $outline);
+        }
+    }
+
+    /**
+     * Delete the specified slip entry.
+     *
+     * @param string $slipEntryId
+     *
+     * @return void
+     */
+    public function deleteSlipEntryAsDraft(string $slipEntryId)
+    {
+        $slipId = $this->slip->retrieveSlipThatBound($slipEntryId);
+        $this->slip->deleteSlipEntry($slipEntryId);
+        $slipEntries = $this->slip->retrieveSlipEntriesBoundTo($slipId);
+        if (empty($slipEntries)) {
+            $this->slip->deleteSlip($slipId);
+        }
+    }
+
+    /**
+     * Retrieve account list.
+     *
+     * @param string $bookId
+     *
+     * @return array
+     */
+    public function retrieveAccounts(string $bookId = null): array
+    {
+        if (is_null($bookId)) {
+            $bookId = $this->book->retrieveDefaultBook(Auth::id());
+        }
+        $accounts = $this->account->retrieveAccounts($bookId, true);
+
+        return $accounts;
+    }
+
+    /**
+     * Retrieve draft slips.
+     *
+     * @param string $bookId
+     *
+     * @return array
+     */
+    public function retrieveDraftSlips(string $bookId = null): array
+    {
+        if (is_null($bookId)) {
+            $bookId = $this->book->retrieveDefaultBook(Auth::id());
+        }
+        $accounts = $this->account->retrieveAccounts($bookId);
+        $slipsList = $this->slip->retrieveDraftSlips($bookId);
+        $slips = [];
+
+        foreach ($slipsList as $slipItem) {
+            $slips[$slipItem['slip_id']] = [
+                'date'         => $slipItem['date'],
+                'slip_outline' => $slipItem['slip_outline'],
+                'slip_memo'    => $slipItem['slip_memo'],
+                'items'        => [],
+            ];
+            $slipEntriesList = $this->slip->retrieveSlipEntriesBoundTo($slipItem['slip_id']);
+            foreach ($slipEntriesList as $slipEntryItem) {
+                $slips[$slipItem['slip_id']]['items'][$slipEntryItem['slip_entry_id']] = [
+                    'debit'   => ['account_id' => $slipEntryItem['debit'], 'account_title' => $accounts[$slipEntryItem['debit']]['account_title']],
+                    'credit'  => ['account_id' => $slipEntryItem['credit'], 'account_title' => $accounts[$slipEntryItem['credit']]['account_title']],
+                    'amount'  => $slipEntryItem['amount'],
+                    'client'  => $slipEntryItem['client'],
+                    'outline' => $slipEntryItem['outline'],
+                ];
+            }
+        }
+
+        return $slips;
     }
 
     /**
@@ -154,5 +262,10 @@ class BookKeepingService
         $statements['net_asset']['amount'] = $statements[AccountService::ACCOUNT_TYPE_ASSET]['amount'] - $statements[AccountService::ACCOUNT_TYPE_LIABILITY]['amount'];
 
         return $statements;
+    }
+
+    public function submitDraftSlip(string $date, string $bookId = null)
+    {
+        
     }
 }
