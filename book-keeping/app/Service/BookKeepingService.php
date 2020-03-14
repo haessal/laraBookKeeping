@@ -266,6 +266,13 @@ class BookKeepingService
 
     public function submitDraftSlip(string $date, string $bookId = null)
     {
-        
+        if (is_null($bookId)) {
+            $bookId = $this->book->retrieveDefaultBook(Auth::id());
+        }
+        $draftSlips = $this->slip->retrieveDraftSlips($bookId);
+        if (!empty($draftSlips)) {
+            $this->slip->updateDate($draftSlips[0]['slip_id'], $date);
+            $this->slip->submitSlip($draftSlips[0]['slip_id']);
+        }
     }
 }

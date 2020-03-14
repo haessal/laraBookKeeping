@@ -45,19 +45,18 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
 
         $accounts = $this->BookKeeping->retrieveAccounts();
         $context['accounts'] = $accounts;
-        $date = $request->input('date');
+        $date = trim($request->input('date'));
 
         if ($request->isMethod('post')) {
-            var_dump($_POST);
             $button_action = key($request->input('buttons'));
             switch($button_action) {
                 case 'add':
                     $add_debit = $request->input('debit');
-                    $add_client = $request->input('client');
-                    $add_outline = $request->input('outline');
+                    $add_client = trim($request->input('client'));
+                    $add_outline = trim($request->input('outline'));
                     $add_credit = $request->input('credit');
-                    $add_amount = $request->input('amount');
-                    $this->BookKeeping->createSlipEntryAsDraft($add_debit, $add_client, $add_outline, $add_credit, intval($add_amount));
+                    $add_amount = intval(trim($request->input('amount')));
+                    $this->BookKeeping->createSlipEntryAsDraft($add_debit, $add_client, $add_outline, $add_credit, $add_amount);
                     $context['add'] = [
                         'debit'   => $add_debit,
                         'client'  => $add_client,
@@ -72,23 +71,25 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
                         $this->BookKeeping->deleteSlipEntryAsDraft($slipEntryId);
                     }
                     break;
-                case 'OK':
-                    if ($date) {/* validate date format */
-                        $this->BookKeeping->submitDraftSlip($date);
+                case 'submit':
+                    if (strptime($date, '%Y-%m-%d')) {
+                        list($Y, $m, $d) = explode('-', $date);
+                        if (checkdate($m, $d, $Y) === true) {
+                            $this->BookKeeping->submitDraftSlip($date);
+                        }
                     }
                     break;
                 default:
                     break;
             }
         }
-        
-        if (is_null($date)) {
+
+        if (empty($date)) {
             $today = new Carbon();
             $date = $today->format('Y-m-d');
         }
         $context['slipdate'] = $date;
         $context['draftslip'] = $this->BookKeeping->retrieveDraftSlips();
-        var_dump($context['draftslip']);
 
         $totalamount = 0;
         if (!empty($context['draftslip'])) {

@@ -166,6 +166,17 @@ class SlipService
     }
 
     /**
+     * Update the slip date.
+     *
+     * @param string $slipId
+     * @param string $date
+     */
+    public function updateDate(string $slipId, string $date)
+    {
+        $this->slip->update($slipId, ['date' => $date]);
+    }
+
+    /**
      * Submit the slip.
      *
      * @param string $slipId

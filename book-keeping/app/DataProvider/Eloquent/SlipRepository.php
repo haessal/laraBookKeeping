@@ -56,6 +56,27 @@ class SlipRepository implements SlipRepositoryInterface
     }
 
     /**
+     * Update the specified slip.
+     *
+     * @param string $slipId
+     * @param array  $newData
+     */
+    public function update(string $slipId, array $newData)
+    {
+        $slip = Slip::find($slipId);
+        if (array_key_exists('outline', $newData)) {
+            $slip->slip_outline = $newData['outline'];
+        }
+        if (array_key_exists('memo', $newData)) {
+            $slip->slip_memo = $newData['memo'];
+        }
+        if (array_key_exists('date', $newData)) {
+            $slip->date = $newData['date'];
+        }
+        $slip->save();
+    }
+
+    /**
      * Update the flag which indicates that the slip is draft.
      *
      * @param string $slipId

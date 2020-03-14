@@ -99,7 +99,7 @@
                             <td><input name="buttons[delete]" value="{{ __('Delete') }}" type="submit" /></td>
                         </tr>
                     </table>
-                    <input name="buttons[OK]" value="OK" type="submit" />
+                    <input name="buttons[submit]" value="OK" type="submit" />
                 </form>
                 @endempty
             </td>
