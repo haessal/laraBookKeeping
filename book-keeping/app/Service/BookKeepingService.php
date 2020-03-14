@@ -79,7 +79,7 @@ class BookKeepingService
         if (empty($draftSlips)) {
             $date = new Carbon();
             $this->slip->createSlipAsDraft($bookId, $outline, $date->format('Y-m-d'), [
-                ['debit' => $debit, 'client' => $client, 'outline' => $outline, 'credit' => $credit, 'amount' => $amount]
+                ['debit' => $debit, 'client' => $client, 'outline' => $outline, 'credit' => $credit, 'amount' => $amount],
             ]);
         } else {
             $this->slip->createSlipEntry($draftSlips[0]['slip_id'], $debit, $credit, $amount, $client, $outline);

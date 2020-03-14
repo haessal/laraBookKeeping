@@ -41,8 +41,14 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
      */
     public function searchAccountGroup(string $bookId): array
     {
-        $list = AccountGroup::select('account_type', 'account_group_id', 'account_group_title', 'is_current',
-                    'bk_code', 'created_at')
+        $list = AccountGroup::select(
+            'account_type',
+            'account_group_id',
+            'account_group_title',
+            'is_current',
+            'bk_code',
+            'created_at'
+        )
             ->where('book_bound_on', $bookId)
             ->get()->toArray();
 

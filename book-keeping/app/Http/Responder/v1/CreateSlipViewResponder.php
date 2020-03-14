@@ -35,7 +35,7 @@ class CreateSlipViewResponder extends BaseViewResponder
             'account_title_list' => $account_title_list,
             'slipdate'           => $context['slipdate'],
             'draftslip'          => $draftslip,
-            'totalamount' => $context['totalamount'],
+            'totalamount'        => $context['totalamount'],
         ]));
         $this->response->setStatusCode(Response::HTTP_OK);
 
@@ -57,10 +57,10 @@ class CreateSlipViewResponder extends BaseViewResponder
     {
         $reordered = [];
         $structured = [
-            'asset' => ['isCurrent' => [], 'isNotCurrent' => [], ],
-            'liability' => ['isCurrent' => [], 'isNotCurrent' => [], ],
-            'expense' => ['isCurrent' => [], 'isNotCurrent' => [], ],
-            'revenue' => ['isCurrent' => [], 'isNotCurrent' => [], ],
+            'asset'     => ['isCurrent' => [], 'isNotCurrent' => []],
+            'liability' => ['isCurrent' => [], 'isNotCurrent' => []],
+            'expense'   => ['isCurrent' => [], 'isNotCurrent' => []],
+            'revenue'   => ['isCurrent' => [], 'isNotCurrent' => []],
         ];
 
         foreach ($accounts as $accountsId => $accountsItem) {
@@ -113,8 +113,8 @@ class CreateSlipViewResponder extends BaseViewResponder
             $reordered[$Ids]['account_group_bk_code'] = $accountGroups[$Ids]['account_group_bk_code'];
             $reordered[$Ids]['account_group_created_at'] = $accountGroups[$Ids]['account_group_created_at'];
             $reordered[$Ids]['account_items'] = $this->reorderedAccountInAscendingCodeOrder($accountGroups[$Ids]['account_items']);
-
         }
+
         return $reordered;
     }
 
@@ -160,12 +160,12 @@ class CreateSlipViewResponder extends BaseViewResponder
         $trclass = 'evn';
         foreach ($slips[$slipId]['items'] as $slipEntryId => $slipEntryItem) {
             $formatted[$slipEntryId] = [
-                'no' => substr($slipEntryId, 0, 6).'..',
-                'debit' => $slipEntryItem['debit']['account_title'],
-                'client' => $slipEntryItem['client'],
-                'outline' =>$slipEntryItem['outline'],
-                'credit' => $slipEntryItem['credit']['account_title'],
-                'amount' => $slipEntryItem['amount'],
+                'no'      => substr($slipEntryId, 0, 6).'..',
+                'debit'   => $slipEntryItem['debit']['account_title'],
+                'client'  => $slipEntryItem['client'],
+                'outline' => $slipEntryItem['outline'],
+                'credit'  => $slipEntryItem['credit']['account_title'],
+                'amount'  => $slipEntryItem['amount'],
                 'trclass' => $trclass,
             ];
             if ($trclass == 'evn') {
@@ -177,5 +177,4 @@ class CreateSlipViewResponder extends BaseViewResponder
 
         return $formatted;
     }
-
 }

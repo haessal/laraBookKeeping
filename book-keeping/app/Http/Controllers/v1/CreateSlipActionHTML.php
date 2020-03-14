@@ -49,7 +49,7 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
 
         if ($request->isMethod('post')) {
             $button_action = key($request->input('buttons'));
-            switch($button_action) {
+            switch ($button_action) {
                 case 'add':
                     $add_debit = $request->input('debit');
                     $add_client = trim($request->input('client'));
@@ -93,7 +93,7 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
 
         $totalamount = 0;
         if (!empty($context['draftslip'])) {
-           foreach ($context['draftslip'][key($context['draftslip'])]['items'] as $draftslipItem) {
+            foreach ($context['draftslip'][key($context['draftslip'])]['items'] as $draftslipItem) {
                 $totalamount += $draftslipItem['amount'];
             }
         }

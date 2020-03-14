@@ -80,7 +80,7 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     public function delete(string $slipEntryId)
     {
         $slipEntry = SlipEntry::find($slipEntryId);
-        if (!is_null($slipEntry)){
+        if (!is_null($slipEntry)) {
             $slipEntry->delete();
         }
     }
