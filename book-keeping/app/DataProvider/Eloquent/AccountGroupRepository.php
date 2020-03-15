@@ -33,7 +33,7 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
     }
 
     /**
-     * Find the account groups bound in the Book.
+     * Find the account groups bound in the book.
      *
      * @param string $bookId
      *

@@ -19,7 +19,7 @@ interface AccountGroupRepositoryInterface
     public function create(string $bookId, string $accountType, string $title, bool $isCurrent, $bk_uid, $bk_code): string;
 
     /**
-     * Find the account groups bound in the Book.
+     * Find the account groups bound in the book.
      *
      * @param string $bookId
      *

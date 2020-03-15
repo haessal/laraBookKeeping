@@ -118,7 +118,7 @@ class SlipService
      */
     public function retrieveDraftSlips(string $bookId): array
     {
-        return $this->slip->searchDraft($bookId);
+        return $this->slip->findDraftByBoundIn($bookId);
     }
 
     /**
@@ -144,7 +144,7 @@ class SlipService
      */
     public function retrieveSlipEntriesBoundTo(string $slipId): array
     {
-        return $this->slipEntry->searchListBoundTo($slipId);
+        return $this->slipEntry->findAllByBoundIn($slipId);
     }
 
     /**

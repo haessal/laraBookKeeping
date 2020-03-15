@@ -45,7 +45,14 @@ class SlipRepository implements SlipRepositoryInterface
         }
     }
 
-    public function searchDraft(string $bookId): array
+    /**
+     * Find the draft slip bound in the book.
+     *
+     * @param string $bookId
+     *
+     * @return array
+     */
+    public function findDraftByBoundIn(string $bookId): array
     {
         $list = Slip::select('slip_id', 'date', 'slip_outline', 'slip_memo')
             ->where('book_bound_on', $bookId)
@@ -60,6 +67,8 @@ class SlipRepository implements SlipRepositoryInterface
      *
      * @param string $slipId
      * @param array  $newData
+     *
+     * @return void
      */
     public function update(string $slipId, array $newData)
     {

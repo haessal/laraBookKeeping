@@ -86,13 +86,13 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     }
 
     /**
-     * Find slip entry by its Id.
+     * Find slip entry.
      *
      * @param string $slipEntryId
      *
      * @return array | null
      */
-    public function findById(string $slipEntryId)
+    public function findById(string $slipEntryId): ?array
     {
         $slipEntry = SlipEntry::select('slip_entry_id', 'slip_bound_on', 'debit', 'credit', 'amount', 'client', 'outline')
             ->where('slip_entry_id', $slipEntryId)
@@ -106,13 +106,13 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     }
 
     /**
-     * Search draft slip entries.
+     * Find the slip entries bound in the slip.
      *
-     * @param string $bookId
+     * @param string $slipId
      *
      * @return array
      */
-    public function searchListBoundTo(string $slipId): array
+    public function findAllByBoundIn(string $slipId): array
     {
         $list = SlipEntry::select('slip_entry_id', 'slip_bound_on', 'debit', 'credit', 'amount', 'client', 'outline')
             ->where('slip_bound_on', $slipId)
