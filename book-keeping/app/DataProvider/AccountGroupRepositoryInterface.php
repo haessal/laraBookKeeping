@@ -17,4 +17,13 @@ interface AccountGroupRepositoryInterface
      * @return string $accountGroupId
      */
     public function create(string $bookId, string $accountType, string $title, bool $isCurrent, $bk_uid, $bk_code): string;
+
+    /**
+     * Find the account groups bound in the Book.
+     *
+     * @param string $bookId
+     *
+     * @return array
+     */
+    public function findAllByBoundIn(string $bookId): array;
 }

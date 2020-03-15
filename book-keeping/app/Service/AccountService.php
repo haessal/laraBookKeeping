@@ -111,7 +111,7 @@ class AccountService
         $accounts = [];
         $accountList = $this->account->searchAccount($bookId);
         if ($extraGroupInfo) {
-            $accountsGroup = $this->retrieveAccountsGroup($bookId);
+            $accountsGroup = $this->retrieveAccountGroups($bookId);
         }
 
         foreach ($accountList as $accountItem) {
@@ -132,10 +132,10 @@ class AccountService
      *
      * @return array
      */
-    public function retrieveAccountsGroup(string $bookId): array
+    public function retrieveAccountGroups(string $bookId): array
     {
         $accountsGroup = [];
-        $accountGroupList = $this->accountGroup->searchAccountGroup($bookId);
+        $accountGroupList = $this->accountGroup->findAllByBoundIn($bookId);
 
         foreach ($accountGroupList as $accountGroupItem) {
             $accountsGroup[$accountGroupItem['account_group_id']] = $accountGroupItem;

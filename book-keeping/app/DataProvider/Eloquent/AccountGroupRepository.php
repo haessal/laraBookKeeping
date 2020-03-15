@@ -33,13 +33,13 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
     }
 
     /**
-     * Search account group.
+     * Find the account groups bound in the Book.
      *
      * @param string $bookId
      *
      * @return array
      */
-    public function searchAccountGroup(string $bookId): array
+    public function findAllByBoundIn(string $bookId): array
     {
         $list = AccountGroup::select(
             'account_type',
