@@ -209,7 +209,7 @@ class Service_BookKeepingServiceTest extends TestCase
                 'account_group_id'    => $accountGroupId_1,
                 'account_group_title' => 'accountGroupTitle_1',
                 'is_current'          => 0,
-                'bk_code'             => 1201,
+                'account_bk_code'     => 1201,
                 'account_title'       => 'accountTitle_1',
             ],
             $accountId_2 => [
@@ -217,7 +217,7 @@ class Service_BookKeepingServiceTest extends TestCase
                 'account_group_id'    => $accountGroupId_1,
                 'account_group_title' => 'accountGroupTitle_1',
                 'is_current'          => 0,
-                'bk_code'             => 1202,
+                'account_bk_code'     => 1202,
                 'account_title'       => 'accountTitle_2',
             ],
             $accountId_3 => [
@@ -225,7 +225,7 @@ class Service_BookKeepingServiceTest extends TestCase
                 'account_group_id'    => $accountGroupId_2,
                 'account_group_title' => 'accountGroupTitle_2',
                 'is_current'          => 0,
-                'bk_code'             => 2303,
+                'account_bk_code'     => 2303,
                 'account_title'       => 'accountTitle_3',
             ],
             $accountId_4 => [
@@ -233,7 +233,7 @@ class Service_BookKeepingServiceTest extends TestCase
                 'account_group_id'    => $accountGroupId_3,
                 'account_group_title' => 'accountGroupTitle_3',
                 'is_current'          => 0,
-                'bk_code'             => 4104,
+                'account_bk_code'     => 4104,
                 'account_title'       => 'accountTitle_4',
             ],
             $accountId_5 => [
@@ -241,7 +241,7 @@ class Service_BookKeepingServiceTest extends TestCase
                 'account_group_id'    => $accountGroupId_4,
                 'account_group_title' => 'accountGroupTitle_4',
                 'is_current'          => 0,
-                'bk_code'             => 5105,
+                'account_bk_code'     => 5105,
                 'account_title'       => 'accountTitle_5',
             ],
             $accountId_6 => [
@@ -249,7 +249,7 @@ class Service_BookKeepingServiceTest extends TestCase
                 'account_group_id'    => $accountGroupId_5,
                 'account_group_title' => 'accountGroupTitle_5',
                 'is_current'          => 1,
-                'bk_code'             => 1106,
+                'account_bk_code'     => 1106,
                 'account_title'       => 'accountTitle_6',
             ],
             $accountId_7 => [
@@ -257,7 +257,7 @@ class Service_BookKeepingServiceTest extends TestCase
                 'account_group_id'    => $accountGroupId_6,
                 'account_group_title' => 'accountGroupTitle_6',
                 'is_current'          => 1,
-                'bk_code'             => 2207,
+                'account_bk_code'     => 2207,
                 'account_title'       => 'accountTitle_7',
             ],
             $accountId_8 => [
@@ -265,7 +265,7 @@ class Service_BookKeepingServiceTest extends TestCase
                 'account_group_id'    => $accountGroupId_3,
                 'account_group_title' => 'accountGroupTitle_3',
                 'is_current'          => 0,
-                'bk_code'             => 4108,
+                'account_bk_code'     => 4108,
                 'account_title'       => 'accountTitle_8',
             ],
         ];
@@ -282,91 +282,91 @@ class Service_BookKeepingServiceTest extends TestCase
         $statements_expected = [
             AccountService::ACCOUNT_TYPE_ASSET     => ['amount' => 6600, 'groups' => [
                 $accountGroupId_1 => [
-                    'title'     => 'accountGroupTitle_1',
-                    'isCurrent' => 0,
-                    'amount'    => 100,
-                    'bk_code'   => 1200,
-                    'items'     => [
+                    'title'                 => 'accountGroupTitle_1',
+                    'isCurrent'             => 0,
+                    'amount'                => 100,
+                    'account_group_bk_code' => 1200,
+                    'items'                 => [
                         $accountId_2 => [
-                            'title'   => 'accountTitle_2',
-                            'amount'  => 100,
-                            'bk_code' => 1202,
+                            'title'           => 'accountTitle_2',
+                            'amount'          => 100,
+                            'account_bk_code' => 1202,
                         ],
                     ],
                 ],
                 $accountGroupId_5 => [
-                    'title'     => 'accountGroupTitle_5',
-                    'isCurrent' => 1,
-                    'amount'    => 6500,
-                    'bk_code'   => 1100,
-                    'items'     => [
+                    'title'                 => 'accountGroupTitle_5',
+                    'isCurrent'             => 1,
+                    'amount'                => 6500,
+                    'account_group_bk_code' => 1100,
+                    'items'                 => [
                         $accountId_6 => [
-                            'title'   => 'accountTitle_6',
-                            'amount'  => 6500,
-                            'bk_code' => 1106,
+                            'title'           => 'accountTitle_6',
+                            'amount'          => 6500,
+                            'account_bk_code' => 1106,
                         ],
                     ],
                 ],
             ]],
             AccountService::ACCOUNT_TYPE_LIABILITY => ['amount' => 7800, 'groups' => [
                 $accountGroupId_2 => [
-                    'title'     => 'accountGroupTitle_2',
-                    'isCurrent' => 0,
-                    'amount'    => 200,
-                    'bk_code'   => 2300,
-                    'items'     => [
+                    'title'                 => 'accountGroupTitle_2',
+                    'isCurrent'             => 0,
+                    'amount'                => 200,
+                    'account_group_bk_code' => 2300,
+                    'items'                 => [
                         $accountId_3 => [
-                            'title'   => 'accountTitle_3',
-                            'amount'  => 200,
-                            'bk_code' => 2303,
+                            'title'           => 'accountTitle_3',
+                            'amount'          => 200,
+                            'account_bk_code' => 2303,
                         ],
                     ],
                 ],
                 $accountGroupId_6 => [
-                    'title'     => 'accountGroupTitle_6',
-                    'isCurrent' => 1,
-                    'amount'    => 7600,
-                    'bk_code'   => 2200,
-                    'items'     => [
+                    'title'                 => 'accountGroupTitle_6',
+                    'isCurrent'             => 1,
+                    'amount'                => 7600,
+                    'account_group_bk_code' => 2200,
+                    'items'                 => [
                         $accountId_7 => [
-                            'title'   => 'accountTitle_7',
-                            'amount'  => 7600,
-                            'bk_code' => 2207,
+                            'title'           => 'accountTitle_7',
+                            'amount'          => 7600,
+                            'account_bk_code' => 2207,
                         ],
                     ],
                 ],
             ]],
             AccountService::ACCOUNT_TYPE_EXPENSE   => ['amount' => 400, 'groups' => [
                 $accountGroupId_3 => [
-                    'title'     => 'accountGroupTitle_3',
-                    'isCurrent' => 0,
-                    'amount'    => 400,
-                    'bk_code'   => 4100,
-                    'items'     => [
+                    'title'                 => 'accountGroupTitle_3',
+                    'isCurrent'             => 0,
+                    'amount'                => 400,
+                    'account_group_bk_code' => 4100,
+                    'items'                 => [
                         $accountId_4 => [
-                            'title'   => 'accountTitle_4',
-                            'amount'  => -300,
-                            'bk_code' => 4104,
+                            'title'           => 'accountTitle_4',
+                            'amount'          => -300,
+                            'account_bk_code' => 4104,
                         ],
                         $accountId_8 => [
-                            'title'   => 'accountTitle_8',
-                            'amount'  => 700,
-                            'bk_code' => 4108,
+                            'title'           => 'accountTitle_8',
+                            'amount'          => 700,
+                            'account_bk_code' => 4108,
                         ],
                     ],
                 ],
             ]],
             AccountService::ACCOUNT_TYPE_REVENUE   => ['amount' => -400, 'groups' => [
                 $accountGroupId_4 => [
-                    'title'     => 'accountGroupTitle_4',
-                    'isCurrent' => 0,
-                    'amount'    => -400,
-                    'bk_code'   => 5100,
-                    'items'     => [
+                    'title'                 => 'accountGroupTitle_4',
+                    'isCurrent'             => 0,
+                    'amount'                => -400,
+                    'account_group_bk_code' => 5100,
+                    'items'                 => [
                         $accountId_5 => [
-                            'title'   => 'accountTitle_5',
-                            'amount'  => -400,
-                            'bk_code' => 5105,
+                            'title'           => 'accountTitle_5',
+                            'amount'          => -400,
+                            'account_bk_code' => 5105,
                         ],
                     ],
                 ],
