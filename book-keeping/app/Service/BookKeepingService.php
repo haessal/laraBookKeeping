@@ -127,11 +127,11 @@ class BookKeepingService
                 $statements[$accountType]['amount'] += $amount;
                 if (!array_key_exists($accountGroupId, $statements[$accountType]['groups'])) {  /* This is the first time that the account which belongs to the group appears. */
                     $statements[$accountType]['groups'][$accountGroupId] = [
-                        'title'     => $accounts[$accountId]['account_group_title'],
-                        'isCurrent' => $accounts[$accountId]['is_current'],
-                        'amount'    => 0,
+                        'title'                   => $accounts[$accountId]['account_group_title'],
+                        'isCurrent'               => $accounts[$accountId]['is_current'],
+                        'amount'                  => 0,
                         'account_group_bk_code'   => $accounts[$accountId]['account_bk_code'] - ($accounts[$accountId]['account_bk_code'] % 100),
-                        'items'     => [],
+                        'items'                   => [],
                     ];
                 }
                 $statements[$accountType]['groups'][$accountGroupId]['amount'] += $amount;
@@ -144,8 +144,8 @@ class BookKeepingService
                     }
                 }
                 $statements[$accountType]['groups'][$accountGroupId]['items'][$accountId] = [
-                    'title'   => $accounts[$accountId]['account_title'],
-                    'amount'  => $amount,
+                    'title'           => $accounts[$accountId]['account_title'],
+                    'amount'          => $amount,
                     'account_bk_code' => $accounts[$accountId]['account_bk_code'],
                 ];
             }
