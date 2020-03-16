@@ -136,7 +136,7 @@ class BaseViewResponder
         $sortedIds1 = [];
         $sortedIds2 = [];
         foreach ($listWithKeyword as $Ids => $item) {
-            if (($keyword == 'bk_code') && is_null($item[$keyword])) {
+            if ((($keyword == 'account_group_bk_code') || ($keyword == 'account_bk_code')) && is_null($item[$keyword])) {
                 $value = 9999;
             } else {
                 $value = $item[$keyword];
@@ -168,7 +168,7 @@ class BaseViewResponder
     private function sortAccountGrouptListInAscendingCodeOrder(array $groupedList): array
     {
         $reordered = [];
-        $sortedKeys = $this->getIdsSortedInAscendingOrder($groupedList, 'bk_code');
+        $sortedKeys = $this->getIdsSortedInAscendingOrder($groupedList, 'account_group_bk_code');
         foreach ($sortedKeys as $groupId => $keyword) {
             $reordered[$groupId] = [
                 'title'     => $groupedList[$groupId]['title'],
@@ -191,7 +191,7 @@ class BaseViewResponder
     private function sortAccountListInAscendingCodeOrder(array $list): array
     {
         $reordered = [];
-        $sortedKeys = $this->getIdsSortedInAscendingOrder($list, 'bk_code');
+        $sortedKeys = $this->getIdsSortedInAscendingOrder($list, 'account_bk_code');
         foreach ($sortedKeys as $id => $keyword) {
             $reordered[$id] = [
                 'title'     => $list[$id]['title'],
