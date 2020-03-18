@@ -94,7 +94,7 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
      */
     public function findById(string $slipEntryId): ?array
     {
-        $slipEntry = SlipEntry::select('slip_entry_id', 'slip_bound_on', 'debit', 'credit', 'amount', 'client', 'outline')
+        $slipEntry = SlipEntry::select('slip_entry_id', 'slip_id', 'debit', 'credit', 'amount', 'client', 'outline')
             ->where('slip_entry_id', $slipEntryId)
             ->first();
 
@@ -114,8 +114,8 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
      */
     public function findAllByBoundIn(string $slipId): array
     {
-        $list = SlipEntry::select('slip_entry_id', 'slip_bound_on', 'debit', 'credit', 'amount', 'client', 'outline')
-            ->where('slip_bound_on', $slipId)
+        $list = SlipEntry::select('slip_entry_id', 'slip_id', 'debit', 'credit', 'amount', 'client', 'outline')
+            ->where('slip_id', $slipId)
             ->orderBy('created_at')
             ->get()->toArray();
 

@@ -55,7 +55,7 @@ class SlipRepository implements SlipRepositoryInterface
     public function findDraftByBoundIn(string $bookId): array
     {
         $list = Slip::select('slip_id', 'date', 'slip_outline', 'slip_memo')
-            ->where('book_bound_on', $bookId)
+            ->where('book_id', $bookId)
             ->where('is_draft', true)
             ->get()->toArray();
 

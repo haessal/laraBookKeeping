@@ -115,7 +115,7 @@ class BookKeepingService
         if (is_null($bookId)) {
             $bookId = $this->book->retrieveDefaultBook(Auth::id());
         }
-        $accounts = $this->account->retrieveAccounts($bookId, true);
+        $accounts = $this->account->retrieveAccounts($bookId);
 
         return $accounts;
     }

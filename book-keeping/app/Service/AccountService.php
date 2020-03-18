@@ -102,45 +102,18 @@ class AccountService
      * Retrieve list of account.
      *
      * @param string $bookId
-     * @param bool   $extraGroupInfo
      *
      * @return array
      */
-    public function retrieveAccounts(string $bookId, bool $extraGroupInfo = false): array
+    public function retrieveAccounts(string $bookId): array
     {
         $accounts = [];
         $accountList = $this->account->searchAccount($bookId);
-        if ($extraGroupInfo) {
-            $accountsGroup = $this->retrieveAccountGroups($bookId);
-        }
 
         foreach ($accountList as $accountItem) {
             $accounts[$accountItem['account_id']] = $accountItem;
-            if ($extraGroupInfo) {
-                $accounts[$accountItem['account_id']]['account_group_bk_code'] = $accountsGroup[$accountItem['account_group_id']]['bk_code'];
-                $accounts[$accountItem['account_id']]['account_group_created_at'] = $accountsGroup[$accountItem['account_group_id']]['created_at'];
-            }
         }
 
         return $accounts;
-    }
-
-    /**
-     * Retrieve list of account group.
-     *
-     * @param string $bookId
-     *
-     * @return array
-     */
-    public function retrieveAccountGroups(string $bookId): array
-    {
-        $accountsGroup = [];
-        $accountGroupList = $this->accountGroup->findAllByBoundIn($bookId);
-
-        foreach ($accountGroupList as $accountGroupItem) {
-            $accountsGroup[$accountGroupItem['account_group_id']] = $accountGroupItem;
-        }
-
-        return $accountsGroup;
     }
 }

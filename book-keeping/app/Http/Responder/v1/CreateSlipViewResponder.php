@@ -125,8 +125,8 @@ class CreateSlipViewResponder extends BaseViewResponder
         $reordered = [];
 
         foreach ($accounts as $accountIds => $accountItem) {
-            if (!is_null($accountItem['bk_code'])) {
-                $sortedIds1[$accountIds] = $accountItem['bk_code'];
+            if (!is_null($accountItem['account_bk_code'])) {
+                $sortedIds1[$accountIds] = $accountItem['account_bk_code'];
             } else {
                 $sortedIds2[$accountIds] = $accountItem['created_at'];
             }

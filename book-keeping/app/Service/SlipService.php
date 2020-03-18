@@ -161,7 +161,7 @@ class SlipService
         if (is_null($slipEntry)) {
             return null;
         } else {
-            return $slipEntry['slip_bound_on'];
+            return $slipEntry['slip_id'];
         }
     }
 
