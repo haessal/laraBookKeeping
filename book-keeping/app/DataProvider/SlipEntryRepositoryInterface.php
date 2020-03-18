@@ -48,13 +48,13 @@ interface SlipEntryRepositoryInterface
     public function findById(string $slipEntryId): ?array;
 
     /**
-     * Find the slip entries bound in the slip.
+     * Find the slip entries that belongs to the specified slip.
      *
      * @param string $slipId
      *
      * @return array
      */
-    public function findAllByBoundIn(string $slipId): array;
+    public function findAllBySlipId(string $slipId): array;
 
     /**
      * Search slip entries between specified date.

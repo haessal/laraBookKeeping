@@ -46,13 +46,13 @@ class SlipRepository implements SlipRepositoryInterface
     }
 
     /**
-     * Find the draft slip bound in the book.
+     * Find the draft slips that belongs to the specified book.
      *
      * @param string $bookId
      *
      * @return array
      */
-    public function findDraftByBoundIn(string $bookId): array
+    public function findAllDraftByBookId(string $bookId): array
     {
         $list = Slip::select('slip_id', 'date', 'slip_outline', 'slip_memo')
             ->where('book_id', $bookId)

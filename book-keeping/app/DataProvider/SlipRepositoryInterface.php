@@ -27,13 +27,13 @@ interface SlipRepositoryInterface
     public function delete(string $slipId);
 
     /**
-     * Find the draft slip bound in the book.
+     * Find the draft slips that belongs to the specified book.
      *
      * @param string $bookId
      *
      * @return array
      */
-    public function findDraftByBoundIn(string $bookId): array;
+    public function findAllDraftByBookId(string $bookId): array;
 
     /**
      * Update the specified slip.

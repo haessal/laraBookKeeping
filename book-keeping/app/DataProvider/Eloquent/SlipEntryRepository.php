@@ -106,13 +106,13 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     }
 
     /**
-     * Find the slip entries bound in the slip.
+     * Find the slip entries that belongs to the specified slip.
      *
      * @param string $slipId
      *
      * @return array
      */
-    public function findAllByBoundIn(string $slipId): array
+    public function findAllBySlipId(string $slipId): array
     {
         $list = SlipEntry::select('slip_entry_id', 'slip_id', 'debit', 'credit', 'amount', 'client', 'outline')
             ->where('slip_id', $slipId)
