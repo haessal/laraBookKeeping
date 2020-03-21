@@ -110,14 +110,37 @@ class BookKeepingService
      *
      * @return array
      */
-    public function retrieveAccounts(string $bookId = null): array
+    public function retrieveAccountsForSelect(string $bookId = null): array
     {
         if (is_null($bookId)) {
             $bookId = $this->book->retrieveDefaultBook(Auth::id());
         }
         $accounts = $this->account->retrieveAccounts($bookId);
 
-        return $accounts;
+        $accounts_menu = [
+            AccountService::ACCOUNT_TYPE_ASSET     => ['groups' => []],
+            AccountService::ACCOUNT_TYPE_LIABILITY => ['groups' => []],
+            AccountService::ACCOUNT_TYPE_EXPENSE   => ['groups' => []],
+            AccountService::ACCOUNT_TYPE_REVENUE   => ['groups' => []],
+        ];
+
+        foreach ($accounts as $accountsKey => $accountsItem) {
+            if ($accountsItem['selectable'] == true) {
+                if (!array_key_exists($accountsItem['account_group_id'], $accounts_menu[$accountsItem['account_type']]['groups'])) {
+                    $accounts_menu[$accountsItem['account_type']]['groups'][$accountsItem['account_group_id']] = [
+                        'account_group_id' => $accountsItem['account_group_id'],
+                        'account_group_title'=> $accountsItem['account_group_title'],
+                        'is_current'=> $accountsItem['is_current'],
+                        'account_group_bk_code'=> $accountsItem['account_group_bk_code'],
+                        'account_group_created_at'=> $accountsItem['account_group_created_at'],
+                        'items'        => [],
+                    ];
+                }
+                $accounts_menu[$accountsItem['account_type']]['groups'][$accountsItem['account_group_id']]['items'][$accountsKey] = $accountsItem;
+            }
+        }
+
+        return $accounts_menu;
     }
 
     /**
