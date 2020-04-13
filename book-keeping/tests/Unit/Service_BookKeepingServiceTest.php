@@ -186,7 +186,7 @@ class Service_BookKeepingServiceTest extends TestCase
     /**
      * @test
      */
-    public function retrieveAccountsForSelect_RetrieveTheDefaultBookAccounts()
+    public function retrieveAccounts_RetrieveTheDefaultBookAccountsWhichIsSelectable()
     {
         $bookId = (string) Str::uuid();
         $userId = 184;
@@ -324,12 +324,14 @@ class Service_BookKeepingServiceTest extends TestCase
             'asset' => [
                 'groups' => [
                     $accountGroupId_1 => [
+                        'title'        => 'accountGroupTitle_1',
                         'isCurrent'    => 0,
                         'bk_code'      => 1200,
                         'createdAt'    => '2019-12-01 12:00:12',
                         'items'        => [
                             $accountId_1 => [
                                 'title'    => 'accountTitle_1',
+                                'description' => 'description_1',
                                 'bk_code'  => 1201,
                                 'createdAt'=> '2019-12-02 12:00:01',
                             ],
@@ -340,29 +342,34 @@ class Service_BookKeepingServiceTest extends TestCase
             'liability' => [
                 'groups' => [
                     $accountGroupId_2 => [
+                        'title'        => 'accountGroupTitle_2',
                         'isCurrent'    => 0,
                         'bk_code'      => 2300,
                         'createdAt'    => '2019-12-01 12:00:23',
                         'items'        => [
                             $accountId_2 => [
                                 'title'    => 'accountTitle_2',
+                                'description' => 'description_2',
                                 'bk_code'  => 2302,
                                 'createdAt'=> '2019-12-02 12:00:02',
                             ],
                             $accountId_3 => [
                                 'title'    => 'accountTitle_3',
+                                'description' => 'description_3',
                                 'bk_code'  => 2303,
                                 'createdAt'=> '2019-12-02 12:00:03',
                             ],
                         ],
                     ],
                     $accountGroupId_3 => [
+                        'title'        => 'accountGroupTitle_3',
                         'isCurrent'    => 0,
                         'bk_code'      => 2400,
                         'createdAt'    => '2019-12-01 12:00:24',
                         'items'        => [
                             $accountId_4 => [
                                 'title'    => 'accountTitle_4',
+                                'description' => 'description_4',
                                 'bk_code'  => 2404,
                                 'createdAt'=> '2019-12-02 12:00:04',
                             ],
@@ -376,17 +383,20 @@ class Service_BookKeepingServiceTest extends TestCase
             'revenue' => [
                 'groups' => [
                     $accountGroupId_5 => [
+                        'title'        => 'accountGroupTitle_5',
                         'isCurrent'    => 1,
                         'bk_code'      => 5100,
                         'createdAt'    => '2019-12-01 12:00:51',
                         'items'        => [
                             $accountId_6 => [
                                 'title'    => 'accountTitle_6',
+                                'description' => 'description_6',
                                 'bk_code'  => 5106,
                                 'createdAt'=> '2019-12-02 12:00:06',
                             ],
                             $accountId_8 => [
                                 'title'    => 'accountTitle_8',
+                                'description' => 'description_8',
                                 'bk_code'  => 5108,
                                 'createdAt'=> '2019-12-02 12:00:08',
                             ],
@@ -413,7 +423,7 @@ class Service_BookKeepingServiceTest extends TestCase
         $slipMock = Mockery::mock(SlipService::class);
 
         $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
-        $accounts_actual = $BookKeeping->retrieveAccountsForSelect();
+        $accounts_actual = $BookKeeping->retrieveAccounts(true);
 
         $this->assertSame($accounts_expected, $accounts_actual);
     }
@@ -421,14 +431,86 @@ class Service_BookKeepingServiceTest extends TestCase
     /**
      * @test
      */
-    public function retrieveAccountsForSelect_RetrieveTheSpecifiedBookAccounts()
+    public function retrieveAccounts_RetrieveTheSpecifiedBookAccounts()
     {
         $bookId = (string) Str::uuid();
+        $accountId_1 = (string) Str::uuid();
+        $accountId_2 = (string) Str::uuid();
+        $accountGroupId_1 = (string) Str::uuid();
+        $accountGroupId_2 = (string) Str::uuid();
+        $accounts = [
+            $accountId_1 => [
+                'account_type'             => AccountService::ACCOUNT_TYPE_ASSET,
+                'account_group_id'         => $accountGroupId_1,
+                'account_group_title'      => 'accountGroupTitle_1',
+                'is_current'               => 0,
+                'account_id'               => $accountId_1,
+                'account_title'            => 'accountTitle_1',
+                'description'              => 'description_1',
+                'selectable'               => 1,
+                'account_bk_code'          => 1201,
+                'created_at'               => '2019-12-02 12:00:01',
+                'account_group_bk_code'    => 1200,
+                'account_group_created_at' => '2019-12-01 12:00:12',
+            ],
+            $accountId_2 => [
+                'account_type'             => AccountService::ACCOUNT_TYPE_LIABILITY,
+                'account_group_id'         => $accountGroupId_2,
+                'account_group_title'      => 'accountGroupTitle_2',
+                'is_current'               => 0,
+                'account_id'               => $accountId_2,
+                'account_title'            => 'accountTitle_2',
+                'description'              => 'description_2',
+                'selectable'               => 0,
+                'account_bk_code'          => 2302,
+                'created_at'               => '2019-12-02 12:00:02',
+                'account_group_bk_code'    => 2300,
+                'account_group_created_at' => '2019-12-01 12:00:23',
+            ],
+        ];
         $accounts_expected = [
-            'asset'     => ['groups' => []],
-            'liability' => ['groups' => []],
-            'expense'   => ['groups' => []],
-            'revenue'   => ['groups' => []],
+            'asset' => [
+                'groups' => [
+                    $accountGroupId_1 => [
+                        'title'        => 'accountGroupTitle_1',
+                        'isCurrent'    => 0,
+                        'bk_code'      => 1200,
+                        'createdAt'    => '2019-12-01 12:00:12',
+                        'items'        => [
+                            $accountId_1 => [
+                                'title'    => 'accountTitle_1',
+                                'description' => 'description_1',
+                                'bk_code'  => 1201,
+                                'createdAt'=> '2019-12-02 12:00:01',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'liability' => [
+                'groups' => [
+                    $accountGroupId_2 => [
+                        'title'        => 'accountGroupTitle_2',
+                        'isCurrent'    => 0,
+                        'bk_code'      => 2300,
+                        'createdAt'    => '2019-12-01 12:00:23',
+                        'items'        => [
+                            $accountId_2 => [
+                                'title'    => 'accountTitle_2',
+                                'description' => 'description_2',
+                                'bk_code'  => 2302,
+                                'createdAt'=> '2019-12-02 12:00:02',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'expense' => [
+                'groups' => [],
+            ],
+            'revenue' => [
+                'groups' => [],
+            ],
         ];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
@@ -437,14 +519,14 @@ class Service_BookKeepingServiceTest extends TestCase
         $accountMock->shouldReceive('retrieveAccounts')
             ->once()
             ->with($bookId)
-            ->andReturn([]);
+            ->andReturn($accounts);
         /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
         $budgetMock = Mockery::mock(BudgetService::class);
         /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipService::class);
 
         $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
-        $accounts_actual = $BookKeeping->retrieveAccountsForSelect($bookId);
+        $accounts_actual = $BookKeeping->retrieveAccounts(false, $bookId);
 
         $this->assertSame($accounts_expected, $accounts_actual);
     }
