@@ -99,11 +99,12 @@ class BookKeepingService
     /**
      * Retrieve account list.
      *
+     * @param bool   $selectableOnly
      * @param string $bookId
      *
      * @return array
      */
-    public function retrieveAccountsForSelect(string $bookId = null): array
+    public function retrieveAccounts(bool $selectableOnly = false, string $bookId = null): array
     {
         if (is_null($bookId)) {
             $bookId = $this->book->retrieveDefaultBook(Auth::id());
@@ -118,9 +119,10 @@ class BookKeepingService
         ];
 
         foreach ($accounts as $accountsKey => $accountsItem) {
-            if ($accountsItem['selectable'] == true) {
+            if ((!$selectableOnly) || ($accountsItem['selectable'] == true)) {
                 if (!array_key_exists($accountsItem['account_group_id'], $accounts_menu[$accountsItem['account_type']]['groups'])) {
                     $accounts_menu[$accountsItem['account_type']]['groups'][$accountsItem['account_group_id']] = [
+                        'title'        => $accountsItem['account_group_title'],
                         'isCurrent'    => $accountsItem['is_current'],
                         'bk_code'      => $accountsItem['account_group_bk_code'],
                         'createdAt'    => $accountsItem['account_group_created_at'],
@@ -129,6 +131,7 @@ class BookKeepingService
                 }
                 $accounts_menu[$accountsItem['account_type']]['groups'][$accountsItem['account_group_id']]['items'][$accountsKey] = [
                     'title'    => $accountsItem['account_title'],
+                    'description' => $accountsItem['description'],
                     'bk_code'  => $accountsItem['account_bk_code'],
                     'createdAt'=> $accountsItem['created_at'],
                 ];

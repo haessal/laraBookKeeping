@@ -44,6 +44,7 @@ class BaseViewResponder
             ['link' => 'v1_top', 'caption' => __('Top')],
             ['link' => 'v1_slip', 'caption' => __('Slip')],
             ['link' => 'v1_statements', 'caption' => __('Statements')],
+            ['link' => 'v1_accountslist', 'caption' => __('Accounts List')],
         ];
     }
 
@@ -59,14 +60,55 @@ class BaseViewResponder
         return $this->sortAccountGrouptListInAscendingCodeOrder($groupedList);
     }
 
-    /**
-     * Translate account list format for view.
+    /** XXX
+     * Translate account list format for view.XXXX
      *
      * @param array $accounts
      *
      * @return array
      */
-    public function translateAccountListFormat(array $accounts): array
+    public function translateAccountsListFormatXXXX(array $accounts): array
+    {
+        $account_list = [];
+        $accountTypeTitle = [
+            'asset'     => __('Assets'),
+            'liability' => __('Liabilities'),
+            'expense'   => __('Expense'),
+            'revenue'   => __('Revenue'),
+        ];
+        var_dump($accounts);
+        $trclass = 'evn';
+        foreach ($accounts as $accountTypeKey => $accountType) {
+            foreach ($accountType['groups'] as $accountGroupItem) {
+                foreach ($accountGroupItem['items'] as $accountId => $accountItem) {
+                    $account_list[$accountId] = [
+                        'code'        => is_null($accountItem['bk_code']) ? '-' : $accountItem['bk_code'],
+                        'type'        => $accountTypeTitle[$accountTypeKey],
+                        'group_title' => $accountGroupItem['title'],
+                        'title'       => $accountItem['title'],
+                        'description' => $accountItem['description'],
+                        'trclass'     => $trclass,
+                    ];
+                    if ($trclass == 'evn') {
+                        $trclass = 'odd';
+                    } else {
+                        $trclass = 'evn';
+                    }
+                }
+            }
+        }
+
+        return $account_list;
+    }
+
+    /**
+     * Translate account list to title list for view.
+     *
+     * @param array $accounts
+     *
+     * @return array
+     */
+    public function translateAccountListToTitleList(array $accounts): array
     {
         $account_title_list = [];
 
