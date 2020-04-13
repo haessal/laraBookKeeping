@@ -29,7 +29,7 @@ class Http_Responder_v1_ShowAccountsListViewResponderTest extends TestCase
         $accountGroupId_2 = (string) Str::uuid();
         $accountGroupId_3 = (string) Str::uuid();
         $accountGroupId_4 = (string) Str::uuid();
-        $countext = [
+        $context = [
             'accounts' => [
                 'asset' => [
                     'groups' => [
@@ -114,7 +114,7 @@ class Http_Responder_v1_ShowAccountsListViewResponderTest extends TestCase
         $ViewFactoryMock->shouldReceive('make')->once();
 
         $responder = new ShowAccountsListViewResponder($ResponseMock, $ViewFactoryMock);
-        $response = $responder->response($countext);
+        $response = $responder->response($context);
 
         $this->assertTrue(true);
     }
