@@ -60,14 +60,14 @@ class BaseViewResponder
         return $this->sortAccountGrouptListInAscendingCodeOrder($groupedList);
     }
 
-    /** XXX
-     * Translate account list format for view.XXXX
+    /**
+     * Translate account list format for view.
      *
      * @param array $accounts
      *
      * @return array
      */
-    public function translateAccountsListFormatXXXX(array $accounts): array
+    public function translateAccountsListFormat(array $accounts): array
     {
         $account_list = [];
         $accountTypeTitle = [
@@ -76,7 +76,6 @@ class BaseViewResponder
             'expense'   => __('Expense'),
             'revenue'   => __('Revenue'),
         ];
-        var_dump($accounts);
         $trclass = 'evn';
         foreach ($accounts as $accountTypeKey => $accountType) {
             foreach ($accountType['groups'] as $accountGroupItem) {

@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 class ShowAccountsListViewResponder extends BaseViewResponder
 {
     /**
-     * Response the Books list and Form to create new Book.
+     * Respond with the ShowAccountsListView.
      *
      * @param array $context
      *
@@ -16,7 +16,7 @@ class ShowAccountsListViewResponder extends BaseViewResponder
     public function response(array $context): Response
     {
         $accounts = $context['accounts'];
-        $account_list = $this->translateAccountsListFormatXXXX(
+        $account_list = $this->translateAccountsListFormat(
             [
                 'asset'     => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['asset']['groups'])],
                 'liability' => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['liability']['groups'])],

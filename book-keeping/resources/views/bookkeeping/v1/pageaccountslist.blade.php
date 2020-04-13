@@ -9,11 +9,11 @@
             <td class="main">
                 <table>
                     <tr>
-                        <th class="inmain">コード</th>
-                        <th class="inmain">大カテゴリ</th>
-                        <th class="inmain">カテゴリ</th>
-                        <th class="inmain">科目名</th>
-                        <th class="inmain">説明</th>
+                        <th class="inmain">{{ __('Code') }}</th>
+                        <th class="inmain">{{ __('Type') }}</th>
+                        <th class="inmain">{{ __('Account Group Title') }}</th>
+                        <th class="inmain">{{ __('Account Title') }}</th>
+                        <th class="inmain">{{ __('Description') }}</th>
                     </tr>
                     @foreach ($accounts_list as $accountKey => $account)
                     <tr class="{{ $account['trclass'] }}">
