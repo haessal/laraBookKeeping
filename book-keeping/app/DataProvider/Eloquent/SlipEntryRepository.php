@@ -190,7 +190,7 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
                 $query = $query
                     ->where(function ($subquery) use ($sub_account) {
                         $subquery->where('debit', $sub_account['debit'])->orWhere('credit', $sub_account['credit']);
-                });
+                    });
             }
         }
         if (!empty($keyword)) {
