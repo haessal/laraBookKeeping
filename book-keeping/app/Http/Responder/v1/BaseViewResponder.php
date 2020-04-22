@@ -42,6 +42,7 @@ class BaseViewResponder
     {
         return [
             ['link' => 'v1_top', 'caption' => __('Top')],
+            ['link' => 'v1_findslips', 'caption' => __('Find Slips')],
             ['link' => 'v1_slip', 'caption' => __('Slip')],
             ['link' => 'v1_statements', 'caption' => __('Statements')],
             ['link' => 'v1_accountslist', 'caption' => __('Accounts List')],
@@ -202,7 +203,7 @@ class BaseViewResponder
         $slipentryline = [];
         foreach ($slips as $slipId => $slip) {
             foreach ($slip['items'] as $slipEntryId => $slipEntry) {
-                $slipentryline[] = [
+                $slipentryline[$slipEntryId] = [
                     'no'      => substr($slipEntryId, 0, 6).'..',
                     'slipno'  => substr($slipId, 0, 6).'..',
                     'date'    => $slip['date'],

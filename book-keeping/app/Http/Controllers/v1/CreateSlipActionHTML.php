@@ -101,29 +101,6 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
     }
 
     /**
-     * Validate date format.
-     *
-     * @param string $date
-     *
-     * @return bool
-     */
-    private function validateDateFormat(string $date): bool
-    {
-        $success = false;
-
-        if (strptime($date, '%Y-%m-%d')) {
-            $d = Carbon::createFromFormat('Y-m-d', $date);
-            if ($d) {
-                if ($d->format('Y-m-d') == $date) {
-                    $success = true;
-                }
-            }
-        }
-
-        return $success;
-    }
-
-    /**
      * Validate arguments for create SlipEntry.
      *
      * @param string $debit
