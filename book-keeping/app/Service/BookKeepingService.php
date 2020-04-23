@@ -8,6 +8,13 @@ use Illuminate\Support\Facades\Auth;
 class BookKeepingService
 {
     /**
+     * The origin date of the system.
+     *
+     * @var string
+     */
+    const ORIGIN_DATE = '1970-01-02';
+
+    /**
      * Account service instance.
      *
      * @var \App\Service\AccountService
@@ -199,19 +206,23 @@ class BookKeepingService
         }
         $accounts = $this->account->retrieveAccounts($bookId);
         if (empty($fromDate)) {
-            $fromDate = '1970-01-02';
+            $fromDate = self::ORIGIN_DATE;
         }
         if (empty($toDate)) {
             $date = new Carbon();
             $toDate = $date->format('Y-m-d');
         }
-        $slipEntries = $this->slip->retrieveSlipEntries($fromDate, $toDate,
+        $slipEntries = $this->slip->retrieveSlipEntries(
+            $fromDate,
+            $toDate,
             [
                 'debit'    => $debit,
                 'credit'   => $credit,
                 'and_or'   => $and_or,
                 'keyword'  => $keyword,
-            ], $bookId);
+            ],
+            $bookId
+        );
         $slips = [];
 
         foreach ($slipEntries as $entry) {
