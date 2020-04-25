@@ -40,7 +40,6 @@ class FindSlipsActionHTML extends AuthenticatedBookKeepingAction
      */
     public function __invoke(Request $request): Response
     {
-        var_dump($request->all());
         $context = [];
         $beginning_date = null;
         $end_date = null;
