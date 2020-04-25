@@ -99,13 +99,13 @@ class Http_Responder_v1_FindSlipsViewResponderTest extends TestCase
                     ],
                 ],
             ],
-            'and_or' => null,
+            'and_or'         => null,
             'beginning_date' => '2020-03-01',
             'end_date'       => '2020-03-02',
             'debit'          => $accountId_1,
             'credit'         => $accountId_2,
             'keyword'        => 'keyword',
-            'slips' => [
+            'slips'          => [
                 $slipId_1 => [
                     'date'         => '2020-02-10',
                     'slip_outline' => 'slipOutline_10',
@@ -166,14 +166,14 @@ class Http_Responder_v1_FindSlipsViewResponderTest extends TestCase
                     'groups' => [],
                 ],
             ],
-            'and_or' => 'or',
+            'and_or'         => 'or',
             'beginning_date' => null,
             'end_date'       => null,
             'debit'          => $accountId_1,
             'credit'         => $accountId_2,
             'keyword'        => null,
-            'slips' => [],
-            'message' => null,
+            'slips'          => [],
+            'message'        => null,
         ];
         /** @var \Illuminate\Http\Response|\Mockery\MockInterface $ResponseMock */
         $ResponseMock = Mockery::mock(Response::class);

@@ -10,7 +10,6 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Mockery;
-use ReflectionClass;
 use Tests\TestCase;
 
 class Http_Controllers_v1_FindSlipsActionHTMLTest extends TestCase
@@ -42,13 +41,13 @@ class Http_Controllers_v1_FindSlipsActionHTMLTest extends TestCase
                 ],
             ],
             'beginning_date' => null,
-            'end_date' => null,
-            'debit' => null,
-            'credit' => null,
-            'and_or' => null,
-            'keyword' => null,
-            'slips' => null,
-            'message' => __('There is no condition for search.'),
+            'end_date'       => null,
+            'debit'          => null,
+            'credit'         => null,
+            'and_or'         => null,
+            'keyword'        => null,
+            'slips'          => null,
+            'message'        => __('There is no condition for search.'),
         ];
         $response_expected = new Response();
         /** @var \App\Service\BookKeepingService|\Mockery\MockInterface $BookKeepingMock */
@@ -99,13 +98,13 @@ class Http_Controllers_v1_FindSlipsActionHTMLTest extends TestCase
                 ],
             ],
             'beginning_date' => null,
-            'end_date' => null,
-            'debit' => $accountId_1,
-            'credit' => $accountId_2,
-            'and_or' => 'and',
-            'keyword' => null,
-            'slips' => [],
-            'message' => __('No items that match the condition.'),
+            'end_date'       => null,
+            'debit'          => $accountId_1,
+            'credit'         => $accountId_2,
+            'and_or'         => 'and',
+            'keyword'        => null,
+            'slips'          => [],
+            'message'        => __('No items that match the condition.'),
         ];
         $response_expected = new Response();
         /** @var \App\Service\BookKeepingService|\Mockery\MockInterface $BookKeepingMock */
@@ -195,12 +194,12 @@ class Http_Controllers_v1_FindSlipsActionHTMLTest extends TestCase
                 ],
             ],
             'beginning_date' => null,
-            'end_date' => null,
-            'debit' => $accountId_1,
-            'credit' => $accountId_2,
-            'and_or' => 'and',
-            'keyword' => null,
-            'slips' => [
+            'end_date'       => null,
+            'debit'          => $accountId_1,
+            'credit'         => $accountId_2,
+            'and_or'         => 'and',
+            'keyword'        => null,
+            'slips'          => [
                 $slipId_1 => [
                     'date'         => '2020-01-03',
                     'slip_outline' => 'slipOutline_15',
@@ -301,13 +300,13 @@ class Http_Controllers_v1_FindSlipsActionHTMLTest extends TestCase
                 ],
             ],
             'beginning_date' => null,
-            'end_date' => null,
-            'debit' => '0',
-            'credit' => '0',
-            'and_or' => '',
-            'keyword' => null,
-            'slips' => null,
-            'message' => __('There is no condition for search.'),
+            'end_date'       => null,
+            'debit'          => '0',
+            'credit'         => '0',
+            'and_or'         => '',
+            'keyword'        => null,
+            'slips'          => null,
+            'message'        => __('There is no condition for search.'),
         ];
         $response_expected = new Response();
         /** @var \App\Service\BookKeepingService|\Mockery\MockInterface $BookKeepingMock */
@@ -391,13 +390,13 @@ class Http_Controllers_v1_FindSlipsActionHTMLTest extends TestCase
                 ],
             ],
             'beginning_date' => null,
-            'end_date' => null,
-            'debit' => $accountId_1,
-            'credit' => $accountId_2,
-            'and_or' => 'and',
-            'keyword' => null,
-            'slips' => [],
-            'message' => __('No items that match the condition.'),
+            'end_date'       => null,
+            'debit'          => $accountId_1,
+            'credit'         => $accountId_2,
+            'and_or'         => 'and',
+            'keyword'        => null,
+            'slips'          => [],
+            'message'        => __('No items that match the condition.'),
         ];
         $response_expected = new Response();
         /** @var \App\Service\BookKeepingService|\Mockery\MockInterface $BookKeepingMock */

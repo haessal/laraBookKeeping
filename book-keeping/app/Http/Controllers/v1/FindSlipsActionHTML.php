@@ -56,7 +56,7 @@ class FindSlipsActionHTML extends AuthenticatedBookKeepingAction
             $modifyno = $request->input('modifyno');
             if (($button_action == 'delete') && (!empty($modifyno))) {
                 foreach ($modifyno as $slipEntryId) {
-                  $this->BookKeeping->deleteSlipEntryAsDraft($slipEntryId);
+                    $this->BookKeeping->deleteSlipEntryAsDraft($slipEntryId);
                 }
             }
             $beginning_date = trim($request->input('BEGINNING'));
@@ -65,7 +65,7 @@ class FindSlipsActionHTML extends AuthenticatedBookKeepingAction
             $credit = $request->input('credit');
             $and_or = $request->input('ANDOR');
             $keyword = trim($request->input('KEYWORD'));
-            if (!empty($beginning_date ) || !empty($end_date) || !empty($debit) || !empty($credit) || !empty($keyword)) {
+            if (!empty($beginning_date) || !empty($end_date) || !empty($debit) || !empty($credit) || !empty($keyword)) {
                 $slips = $this->BookKeeping->retrieveSlips($beginning_date, $end_date, $debit, $credit, $and_or, $keyword);
                 $message = null;
                 if (empty($slips)) {
