@@ -11,7 +11,7 @@ use Illuminate\Http\JsonResponse;
 class GETAccountsActionJSON extends AuthenticatedBookKeepingAPIAction
 {
     /**
-     * ShowAccountsListView responder instance.
+     * AccountsJSON responder instance.
      *
      * @var \App\Http\Responder\api\v1\AccountsJSONResponder
      */
