@@ -5,8 +5,8 @@ namespace App\Http\Controllers\api\v1;
 use App\Http\Controllers\AuthenticatedBookKeepingAPIAction;
 use App\Http\Responder\api\v1\AccountsJSONResponder;
 use App\Service\BookKeepingService;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class GETAccountsActionJSON extends AuthenticatedBookKeepingAPIAction
 {
