@@ -8,7 +8,7 @@ use App\Service\BookKeepingService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class GetAccountsActionAPI extends AuthenticatedBookKeepingAPIAction
+class GetAccountsActionApi extends AuthenticatedBookKeepingAPIAction
 {
     /**
      * AccountsJSON responder instance.

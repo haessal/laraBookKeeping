@@ -17,6 +17,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/v1/accounts', api\v1\GetAccountsActionAPI::class);
+Route::get('/v1/accounts', api\v1\GetAccountsActionApi::class);
 Route::post('/v1/slips', api\v1\PostSlipsToDefaultBookActionApi::class);
 Route::post('/v1/books/{bookId}/slips', api\v1\PostSlipsToSpecifiedBookActionApi::class);
