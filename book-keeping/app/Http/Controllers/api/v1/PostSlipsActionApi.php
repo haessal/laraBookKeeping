@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\api\v1;
 
-use App\Http\Controllers\AuthenticatedBookKeepingAPIAction;
+use App\Http\Controllers\AuthenticatedBookKeepingApiAction;
 use App\Http\Responder\api\v1\SlipJsonResponder;
 use App\Service\BookKeepingService;
 
-class PostSlipsActionApi extends AuthenticatedBookKeepingAPIAction
+class PostSlipsActionApi extends AuthenticatedBookKeepingApiAction
 {
     /**
      * SlipJson responder instance.
