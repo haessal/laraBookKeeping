@@ -83,7 +83,7 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingAPIAction
         if (!array_key_exists('date', $slip) || empty($slip['date'])) {
             $success = false;
         } else {
-            if (!($this->validateDate($slip['date']))) {
+            if (!($this->BookKeeping->validateDateFormat($slip['date']))) {
                 $success = false;
             }
         }
@@ -110,10 +110,5 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingAPIAction
         }
 
         return $success;
-    }
-
-    private function validateDate(string $date)
-    {
-        return true;
     }
 }
