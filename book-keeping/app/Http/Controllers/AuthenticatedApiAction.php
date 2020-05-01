@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-class AuthenticatedAPIAction extends Controller
+class AuthenticatedApiAction extends Controller
 {
     /**
-     * Create a new AuthenticatedAPIAction instance.
+     * Create a new AuthenticatedApiAction instance.
      *
      * @return void
      */

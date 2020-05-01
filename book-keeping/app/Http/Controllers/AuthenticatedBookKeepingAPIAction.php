@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Service\BookKeepingService;
 
-class AuthenticatedBookKeepingAPIAction extends AuthenticatedAPIAction
+class AuthenticatedBookKeepingAPIAction extends AuthenticatedApiAction
 {
     /**
      * BookKeeping service instance.
