@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\AuthenticatedBookKeepingAPIAction;
-use App\Http\Responder\api\v1\AccountsJSONResponder;
+use App\Http\Responder\api\v1\AccountsJsonResponder;
 use App\Service\BookKeepingService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,9 +11,9 @@ use Illuminate\Http\Request;
 class GetAccountsActionApi extends AuthenticatedBookKeepingAPIAction
 {
     /**
-     * AccountsJSON responder instance.
+     * AccountsJson responder instance.
      *
-     * @var \App\Http\Responder\api\v1\AccountsJSONResponder
+     * @var \App\Http\Responder\api\v1\AccountsJsonResponder
      */
     private $responder;
 
@@ -21,11 +21,11 @@ class GetAccountsActionApi extends AuthenticatedBookKeepingAPIAction
      * Create a new controller instance.
      *
      * @param \App\Service\BookKeepingService                  $BookKeeping
-     * @param \App\Http\Responder\api\v1\AccountsJSONResponder $responder
+     * @param \App\Http\Responder\api\v1\AccountsJsonResponder $responder
      *
      * @return void
      */
-    public function __construct(BookKeepingService $BookKeeping, AccountsJSONResponder $responder)
+    public function __construct(BookKeepingService $BookKeeping, AccountsJsonResponder $responder)
     {
         parent::__construct($BookKeeping);
         $this->responder = $responder;
