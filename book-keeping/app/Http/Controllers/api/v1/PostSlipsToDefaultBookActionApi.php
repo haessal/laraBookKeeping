@@ -41,13 +41,14 @@ class PostSlipsToDefaultBookActionApi extends AuthenticatedBookKeepingAPIAction
     public function __invoke(Request $request): JsonResponse
     {
         $context = [];
-        $outline = trim($request->input('outline'));
-        $date = trim($request->input('date'));
-        $entries = $request->input('entries');
+        $slip = $request->all();
+        $outline = trim($slip['outline']);
+        $date = trim($slip['date']);
+        $entries = $slip['entries'];
         if (empty($entries)) {
             $entries = [];
         }
-        $memo = trim($request->input('memo'));
+        $memo = trim($slip['memo']);
         if (empty($memo)) {
             $memo = null;
         }
