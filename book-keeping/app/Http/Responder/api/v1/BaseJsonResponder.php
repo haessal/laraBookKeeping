@@ -4,7 +4,7 @@ namespace App\Http\Responder\api\v1;
 
 use Illuminate\Http\JsonResponse;
 
-class BaseJSONResponder
+class BaseJsonResponder
 {
     /**
      * JsonResponse instance.
@@ -14,7 +14,7 @@ class BaseJSONResponder
     protected $response;
 
     /**
-     * Create a new BaseJSONResponder instance.
+     * Create a new BaseJsonResponder instance.
      *
      * @param \Illuminate\Http\JsonResponse $response
      */
