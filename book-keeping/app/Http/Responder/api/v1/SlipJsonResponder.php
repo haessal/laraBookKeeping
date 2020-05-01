@@ -4,7 +4,7 @@ namespace App\Http\Responder\api\v1;
 
 use Illuminate\Http\JsonResponse;
 
-class SlipJsonResponder extends BaseJsonesponder
+class SlipJsonResponder extends BaseJsonResponder
 {
     /**
      * Respond with the Accounts JSON.
