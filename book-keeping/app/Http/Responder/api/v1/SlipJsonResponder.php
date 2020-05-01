@@ -16,7 +16,7 @@ class SlipJsonResponder extends BaseJSONResponder
     public function response(array $context): JsonResponse
     {
         $this->response->setData($this->translateSlipFormat($context['slips']));
-        $this->response->setStatusCode(JsonResponse::HTTP_OK);
+        $this->response->setStatusCode(JsonResponse::HTTP_CREATED);
 
         return $this->response;
     }

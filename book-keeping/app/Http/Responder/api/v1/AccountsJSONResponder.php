@@ -32,20 +32,16 @@ class AccountsJSONResponder extends BaseJSONResponder
     {
         $account_list = [];
 
-        foreach ($accounts as $accountTypeKey => $accountType) {
-            foreach ($accountType['groups'] as $accountGroupKey => $accountGroupItem) {
-                foreach ($accountGroupItem['items'] as $accountId => $accountItem) {
-                    $account_list[] = [
-                        'id'          => $accountId,
-                        'title'       => $accountItem['title'],
-                        'description' => $accountItem['description'],
-                        'group'       => $accountGroupKey,
-                        'group_title' => $accountGroupItem['title'],
-                        'is_current'  => $accountGroupItem['isCurrent'],
-                        'type'        => $accountTypeKey,
-                    ];
-                }
-            }
+        foreach ($accounts as $accountId => $accountItem) {
+            $account_list[] = [
+                'id'          => $accountId,
+                'title'       => $accountItem['account_title'],
+                'description' => $accountItem['description'],
+                'group'       => $accountItem['account_group_id'],
+                'group_title' => $accountItem['account_group_title'],
+                'is_current'  => $accountItem['is_current'],
+                'type'        => $accountItem['account_type'],
+            ];
         }
 
         return $account_list;

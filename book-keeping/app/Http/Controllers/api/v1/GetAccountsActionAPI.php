@@ -41,7 +41,7 @@ class GetAccountsActionAPI extends AuthenticatedBookKeepingAPIAction
     public function __invoke(Request $request): JsonResponse
     {
         $context = [];
-        $context['accounts'] = $this->BookKeeping->retrieveAccounts();
+        $context['accounts'] = $this->BookKeeping->retrieveAccountsList();
 
         return $this->responder->response($context);
     }
