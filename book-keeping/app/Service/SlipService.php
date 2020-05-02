@@ -126,7 +126,7 @@ class SlipService
      *
      * @param string $slipId
      *
-     * @return array
+     * @return array|null
      */
     public function retrieveSlip(string $slipId): ?array
     {

@@ -59,7 +59,7 @@ class BookKeepingService
     }
 
     /**
-     * Add a new slip.
+     * Create a new slip.
      *
      * @param string $outline
      * @param string $date

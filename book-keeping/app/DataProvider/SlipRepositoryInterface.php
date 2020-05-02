@@ -40,7 +40,7 @@ interface SlipRepositoryInterface
      *
      * @param string $slipId
      *
-     * @return array | null
+     * @return array|null
      */
     public function findById(string $slipId): ?array;
 
