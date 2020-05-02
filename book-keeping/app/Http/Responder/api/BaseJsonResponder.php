@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Responder\api\v1;
+namespace App\Http\Responder\api;
 
 use Illuminate\Http\JsonResponse;
 

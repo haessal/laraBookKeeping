@@ -2,6 +2,7 @@
 
 namespace App\Http\Responder\api\v1;
 
+use App\Http\Responder\api\BaseJsonResponder;
 use Illuminate\Http\JsonResponse;
 
 class AccountsJsonResponder extends BaseJsonResponder
