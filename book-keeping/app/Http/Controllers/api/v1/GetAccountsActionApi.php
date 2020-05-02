@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\api\v1;
 
-use App\Http\Controllers\AuthenticatedBookKeepingActionApi;
+use App\Http\Controllers\api\AuthenticatedBookKeepingActionApi;
 use App\Http\Responder\api\v1\AccountsJsonResponder;
 use App\Service\BookKeepingService;
 use Illuminate\Http\JsonResponse;
