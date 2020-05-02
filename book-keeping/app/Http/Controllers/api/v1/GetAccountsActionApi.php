@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\api\v1;
 
-use App\Http\Controllers\AuthenticatedBookKeepingApiAction;
+use App\Http\Controllers\AuthenticatedBookKeepingActionApi;
 use App\Http\Responder\api\v1\AccountsJsonResponder;
 use App\Service\BookKeepingService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class GetAccountsActionApi extends AuthenticatedBookKeepingApiAction
+class GetAccountsActionApi extends AuthenticatedBookKeepingActionApi
 {
     /**
      * AccountsJson responder instance.
