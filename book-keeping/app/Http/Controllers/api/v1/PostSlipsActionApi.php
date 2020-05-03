@@ -54,6 +54,13 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
         return $response;
     }
 
+    /**
+     * Trim string data in Slip.
+     *
+     * @param array $slip_in
+     *
+     * @return array
+     */
     private function trimDraftSlip(array $slip_in): array
     {
         $slip_out = [];
@@ -98,6 +105,14 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
         return $slip_out;
     }
 
+    /**
+     * Validate draft slip.
+     *
+     * @param array $slip
+     * @param array $accounts
+     *
+     * @return bool
+     */
     private function validateDraftSlip(array $slip, array $accounts): bool
     {
         $success = true;
