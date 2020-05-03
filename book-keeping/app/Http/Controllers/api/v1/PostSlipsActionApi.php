@@ -56,61 +56,6 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
     }
 
     /**
-     * Trim string data in Slip.
-     *
-     * @param array $slip_in
-     *
-     * @return array
-     */
-    private function trimDraftSlip(array $slip_in): array
-    {
-        $slip_out = [];
-        if (array_key_exists('outline', $slip_in) && is_string($slip_in['outline'])) {
-            $slip_out['outline'] = trim($slip_in['outline']);
-        }
-        if (array_key_exists('date', $slip_in) && is_string($slip_in['date'])) {
-            $slip_out['date'] = trim($slip_in['date']);
-        }
-        $slip_out['entries'] = [];
-        if (array_key_exists('entries', $slip_in)) {
-            if (!empty($slip_in['entries']) && is_array($slip_in['entries'])) {
-                foreach ($slip_in['entries'] as $slipEntry_in) {
-                    if (!empty($slipEntry_in) && is_array($slipEntry_in)) {
-                        $slipEntry_out = [];
-                        if (array_key_exists('debit', $slipEntry_in) && is_string($slipEntry_in['debit'])) {
-                            $slipEntry_out['debit'] = trim($slipEntry_in['debit']);
-                        }
-                        if (array_key_exists('credit', $slipEntry_in) && is_string($slipEntry_in['credit'])) {
-                            $slipEntry_out['credit'] = trim($slipEntry_in['credit']);
-                        }
-                        if (array_key_exists('amount', $slipEntry_in)) {
-                            $slipEntry_out['amount'] = $slipEntry_in['amount'];
-                        }
-                        if (array_key_exists('client', $slipEntry_in) && is_string($slipEntry_in['client'])) {
-                            $slipEntry_out['client'] = trim($slipEntry_in['client']);
-                        }
-                        if (array_key_exists('outline', $slipEntry_in) && is_string($slipEntry_in['outline'])) {
-                            $slipEntry_out['outline'] = trim($slipEntry_in['outline']);
-                        }
-                        if (!empty($slipEntry_out)) {
-                            $slip_out['entries'][] = $slipEntry_out;
-                        }
-                    }
-                }
-            }
-        }
-        $slip_out['memo'] = null;
-        if (array_key_exists('memo', $slip_in) && is_string($slip_in['memo'])) {
-            $trim_memo = trim($slip_in['memo']);
-            if (!empty($trim_memo)) {
-                $slip_out['memo'] = $trim_memo;
-            }
-        }
-
-        return $slip_out;
-    }
-
-    /**
      * Validate draft slip and trim string data.
      *
      * @param array $slip
