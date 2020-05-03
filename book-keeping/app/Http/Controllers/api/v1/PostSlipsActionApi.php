@@ -5,6 +5,8 @@ namespace App\Http\Controllers\api\v1;
 use App\Http\Controllers\api\AuthenticatedBookKeepingActionApi;
 use App\Http\Responder\api\v1\SlipJsonResponder;
 use App\Service\BookKeepingService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
 {
@@ -13,7 +15,7 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
      *
      * @var \App\Http\Responder\api\v1\SlipJsonResponder
      */
-    protected $responder;
+    private $responder;
 
     /**
      * Create a new controller instance.
@@ -29,7 +31,30 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
         $this->responder = $responder;
     }
 
-    protected function trimDraftSlip(array $slip_in): array
+    /**
+     * Handle the incoming request.
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function __invoke(Request $request): JsonResponse
+    {
+        $context = [];
+        $slip = $this->trimDraftSlip($request->all());
+        $accounts = $this->BookKeeping->retrieveAccountsList();
+        if ($this->validateDraftSlip($slip, $accounts)) {
+            $slipId = $this->BookKeeping->createSlip($slip['outline'], $slip['date'], $slip['entries'], $slip['memo']);
+            $context['slips'] = $this->BookKeeping->retrieveSlip($slipId);
+            $response = $this->responder->response($context);
+        } else {
+            $response = new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        return $response;
+    }
+
+    private function trimDraftSlip(array $slip_in): array
     {
         $slip_out = [];
         if (array_key_exists('outline', $slip_in)) {
@@ -73,7 +98,7 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
         return $slip_out;
     }
 
-    protected function validateDraftSlip(array $slip, array $accounts): bool
+    private function validateDraftSlip(array $slip, array $accounts): bool
     {
         $success = true;
 
