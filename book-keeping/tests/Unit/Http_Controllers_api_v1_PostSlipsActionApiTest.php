@@ -28,36 +28,6 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
 
     /**
      * @test
-     * @dataProvider forValidateAndTrimString
-     */
-    public function validateAndTrimString_MachValidationResult($array_in, $key, $string_expected)
-    {
-        /** @var \App\Service\BookKeepingService|\Mockery\MockInterface $BookKeepingMock */
-        $BookKeepingMock = Mockery::mock(BookKeepingService::class);
-        /** @var \App\Http\Responder\api\v1\SlipJsonResponder|\Mockery\MockInterface $responderMock */
-        $responderMock = Mockery::mock(SlipJsonResponder::class);
-
-        $controller = new PostSlipsActionApi($BookKeepingMock, $responderMock);
-        $reflection = new ReflectionClass($controller);
-        $method = $reflection->getMethod('validateAndTrimString');
-        $method->setAccessible(true);
-        $string_actual = $method->invoke($controller, $array_in, $key);
-
-        $this->assertSame($string_expected, $string_actual);
-    }
-
-    public function forValidateAndTrimString()
-    {
-        return [
-            [[], 'outline', null],
-            [['outline' => ['  outline53']], 'outline', null],
-            [['outline' => '  '], 'outline', null],
-            [['outline' => '  outline55'], 'outline', 'outline55'],
-        ];
-    }
-
-    /**
-     * @test
      * @dataProvider forValidateAndTrimAccounts
      */
     public function validateAndTrimAccounts_MachValidationResult($array_in, $key, $string_expected)
@@ -669,6 +639,36 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
                 true,
                 true,
             ],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider forValidateAndTrimString
+     */
+    public function validateAndTrimString_MachValidationResult($array_in, $key, $string_expected)
+    {
+        /** @var \App\Service\BookKeepingService|\Mockery\MockInterface $BookKeepingMock */
+        $BookKeepingMock = Mockery::mock(BookKeepingService::class);
+        /** @var \App\Http\Responder\api\v1\SlipJsonResponder|\Mockery\MockInterface $responderMock */
+        $responderMock = Mockery::mock(SlipJsonResponder::class);
+
+        $controller = new PostSlipsActionApi($BookKeepingMock, $responderMock);
+        $reflection = new ReflectionClass($controller);
+        $method = $reflection->getMethod('validateAndTrimString');
+        $method->setAccessible(true);
+        $string_actual = $method->invoke($controller, $array_in, $key);
+
+        $this->assertSame($string_expected, $string_actual);
+    }
+
+    public function forValidateAndTrimString()
+    {
+        return [
+            [[], 'outline', null],
+            [['outline' => ['  outline53']], 'outline', null],
+            [['outline' => '  '], 'outline', null],
+            [['outline' => '  outline55'], 'outline', 'outline55'],
         ];
     }
 }
