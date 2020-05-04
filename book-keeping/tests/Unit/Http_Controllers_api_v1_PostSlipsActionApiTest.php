@@ -60,195 +60,6 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
 
     /**
      * @test
-     * @dataProvider forValidateAndTrimDraftSlipEntry
-     */
-    public function validateAndTrimDraftSlipEntry_MachValidationResult($slipEntry_in, $result_expected)
-    {
-        $accounts = [
-            '3274cc74-f7ab-40a4-984a-186a593401f7' => null,
-            '471b26d0-99a1-47f4-aa57-2722f6011f2a' => null,
-        ];
-        /** @var \App\Service\BookKeepingService|\Mockery\MockInterface $BookKeepingMock */
-        $BookKeepingMock = Mockery::mock(BookKeepingService::class);
-        /** @var \App\Http\Responder\api\v1\SlipJsonResponder|\Mockery\MockInterface $responderMock */
-        $responderMock = Mockery::mock(SlipJsonResponder::class);
-
-        $controller = new PostSlipsActionApi($BookKeepingMock, $responderMock);
-        $reflection = new ReflectionClass($controller);
-        $method = $reflection->getMethod('validateAndTrimDraftSlipEntry');
-        $method->setAccessible(true);
-        $result_actual = $method->invoke($controller, $slipEntry_in, $accounts);
-
-        $this->assertSame($result_expected, $result_actual);
-    }
-
-    public function forValidateAndTrimDraftSlipEntry()
-    {
-        return [
-            [
-                [
-                    'debit'   => '8548f227-7be9-42be-b5c7-66da432f5dad',
-                    'credit'  => '90dc7df5-07ea-4086-9461-0555c2a9d03c',
-                    'client'  => ['client122'],
-                    'outline' => ['outline123'],
-                ],
-                [
-                    'success'    => false,
-                    'slip_entry' => [],
-                ],
-            ],
-            [
-                [
-                    'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7  ',
-                    'credit'  => '90dc7df5-07ea-4086-9461-0555c2a9d03c',
-                    'client'  => ['client134'],
-                    'outline' => ['outline135'],
-                ],
-                [
-                    'success'    => false,
-                    'slip_entry' => [
-                        'debit' => '3274cc74-f7ab-40a4-984a-186a593401f7',
-                    ],
-                ],
-            ],
-            [
-                [
-                    'debit'   => '8548f227-7be9-42be-b5c7-66da432f5dad',
-                    'credit'  => '  471b26d0-99a1-47f4-aa57-2722f6011f2a',
-                    'client'  => ['client148'],
-                    'outline' => ['outline149'],
-                ],
-                [
-                    'success'    => false,
-                    'slip_entry' => [
-                        'credit' => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
-                    ],
-                ],
-            ],
-            [
-                [
-                    'debit'   => '8548f227-7be9-42be-b5c7-66da432f5dad',
-                    'credit'  => '90dc7df5-07ea-4086-9461-0555c2a9d03c',
-                    'client'  => '  client162',
-                    'outline' => ['outline163'],
-                ],
-                [
-                    'success'    => false,
-                    'slip_entry' => [
-                        'client' => 'client162',
-                    ],
-                ],
-            ],
-            [
-                [
-                    'debit'   => '8548f227-7be9-42be-b5c7-66da432f5dad',
-                    'credit'  => '90dc7df5-07ea-4086-9461-0555c2a9d03c',
-                    'client'  => ['client176'],
-                    'outline' => 'outline177  ',
-                ],
-                [
-                    'success'    => false,
-                    'slip_entry' => [
-                        'outline' => 'outline177',
-                    ],
-                ],
-            ],
-            [
-                [
-                    'debit'   => '  3274cc74-f7ab-40a4-984a-186a593401f7',
-                    'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a  ',
-                    'amount'  => 1900,
-                    'client'  => ' client191 ',
-                    'outline' => '  outline192  ',
-                ],
-                [
-                    'success'    => true,
-                    'slip_entry' => [
-                        'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
-                        'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
-                        'amount'  => 1900,
-                        'client'  => 'client191',
-                        'outline' => 'outline192',
-                    ],
-                ],
-            ],
-            [
-                [
-                    'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
-                    'credit'  => '3274cc74-f7ab-40a4-984a-186a593401f7',
-                    'amount'  => 2090,
-                    'client'  => 'client210',
-                    'outline' => 'outline211',
-                ],
-                [
-                    'success'    => false,
-                    'slip_entry' => [
-                        'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
-                        'credit'  => '3274cc74-f7ab-40a4-984a-186a593401f7',
-                        'amount'  => 2090,
-                        'client'  => 'client210',
-                        'outline' => 'outline211',
-                    ],
-                ],
-            ],
-            [
-                [
-                    'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
-                    'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
-                    'client'  => 'client228',
-                    'outline' => 'outline229',
-                ],
-                [
-                    'success'    => false,
-                    'slip_entry' => [
-                        'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
-                        'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
-                        'client'  => 'client228',
-                        'outline' => 'outline229',
-                    ],
-                ],
-            ],
-            [
-                [
-                    'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
-                    'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
-                    'amount'  => 0,
-                    'client'  => 'client246',
-                    'outline' => 'outline247',
-                ],
-                [
-                    'success'    => false,
-                    'slip_entry' => [
-                        'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
-                        'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
-                        'client'  => 'client246',
-                        'outline' => 'outline247',
-                    ],
-                ],
-            ],
-            [
-                [
-                    'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
-                    'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
-                    'amount'  => '123',
-                    'client'  => 'client264',
-                    'outline' => 'outline265',
-                ],
-                [
-                    'success'    => false,
-                    'slip_entry' => [
-                        'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
-                        'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
-                        'client'  => 'client264',
-                        'outline' => 'outline265',
-                    ],
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * @test
      * @dataProvider forTestTrimDraftSlip
      */
     public function validateAndTrimDraftSlip_MachValidationResult($slip_in, $result_expected, $callValidateDateFormat, $validateDateFormatResult)
@@ -638,6 +449,195 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
                 ],
                 true,
                 true,
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider forValidateAndTrimDraftSlipEntry
+     */
+    public function validateAndTrimDraftSlipEntry_MachValidationResult($slipEntry_in, $result_expected)
+    {
+        $accounts = [
+            '3274cc74-f7ab-40a4-984a-186a593401f7' => null,
+            '471b26d0-99a1-47f4-aa57-2722f6011f2a' => null,
+        ];
+        /** @var \App\Service\BookKeepingService|\Mockery\MockInterface $BookKeepingMock */
+        $BookKeepingMock = Mockery::mock(BookKeepingService::class);
+        /** @var \App\Http\Responder\api\v1\SlipJsonResponder|\Mockery\MockInterface $responderMock */
+        $responderMock = Mockery::mock(SlipJsonResponder::class);
+
+        $controller = new PostSlipsActionApi($BookKeepingMock, $responderMock);
+        $reflection = new ReflectionClass($controller);
+        $method = $reflection->getMethod('validateAndTrimDraftSlipEntry');
+        $method->setAccessible(true);
+        $result_actual = $method->invoke($controller, $slipEntry_in, $accounts);
+
+        $this->assertSame($result_expected, $result_actual);
+    }
+
+    public function forValidateAndTrimDraftSlipEntry()
+    {
+        return [
+            [
+                [
+                    'debit'   => '8548f227-7be9-42be-b5c7-66da432f5dad',
+                    'credit'  => '90dc7df5-07ea-4086-9461-0555c2a9d03c',
+                    'client'  => ['client122'],
+                    'outline' => ['outline123'],
+                ],
+                [
+                    'success'    => false,
+                    'slip_entry' => [],
+                ],
+            ],
+            [
+                [
+                    'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7  ',
+                    'credit'  => '90dc7df5-07ea-4086-9461-0555c2a9d03c',
+                    'client'  => ['client134'],
+                    'outline' => ['outline135'],
+                ],
+                [
+                    'success'    => false,
+                    'slip_entry' => [
+                        'debit' => '3274cc74-f7ab-40a4-984a-186a593401f7',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'debit'   => '8548f227-7be9-42be-b5c7-66da432f5dad',
+                    'credit'  => '  471b26d0-99a1-47f4-aa57-2722f6011f2a',
+                    'client'  => ['client148'],
+                    'outline' => ['outline149'],
+                ],
+                [
+                    'success'    => false,
+                    'slip_entry' => [
+                        'credit' => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'debit'   => '8548f227-7be9-42be-b5c7-66da432f5dad',
+                    'credit'  => '90dc7df5-07ea-4086-9461-0555c2a9d03c',
+                    'client'  => '  client162',
+                    'outline' => ['outline163'],
+                ],
+                [
+                    'success'    => false,
+                    'slip_entry' => [
+                        'client' => 'client162',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'debit'   => '8548f227-7be9-42be-b5c7-66da432f5dad',
+                    'credit'  => '90dc7df5-07ea-4086-9461-0555c2a9d03c',
+                    'client'  => ['client176'],
+                    'outline' => 'outline177  ',
+                ],
+                [
+                    'success'    => false,
+                    'slip_entry' => [
+                        'outline' => 'outline177',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'debit'   => '  3274cc74-f7ab-40a4-984a-186a593401f7',
+                    'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a  ',
+                    'amount'  => 1900,
+                    'client'  => ' client191 ',
+                    'outline' => '  outline192  ',
+                ],
+                [
+                    'success'    => true,
+                    'slip_entry' => [
+                        'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
+                        'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
+                        'amount'  => 1900,
+                        'client'  => 'client191',
+                        'outline' => 'outline192',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
+                    'credit'  => '3274cc74-f7ab-40a4-984a-186a593401f7',
+                    'amount'  => 2090,
+                    'client'  => 'client210',
+                    'outline' => 'outline211',
+                ],
+                [
+                    'success'    => false,
+                    'slip_entry' => [
+                        'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
+                        'credit'  => '3274cc74-f7ab-40a4-984a-186a593401f7',
+                        'amount'  => 2090,
+                        'client'  => 'client210',
+                        'outline' => 'outline211',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
+                    'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
+                    'client'  => 'client228',
+                    'outline' => 'outline229',
+                ],
+                [
+                    'success'    => false,
+                    'slip_entry' => [
+                        'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
+                        'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
+                        'client'  => 'client228',
+                        'outline' => 'outline229',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
+                    'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
+                    'amount'  => 0,
+                    'client'  => 'client246',
+                    'outline' => 'outline247',
+                ],
+                [
+                    'success'    => false,
+                    'slip_entry' => [
+                        'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
+                        'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
+                        'client'  => 'client246',
+                        'outline' => 'outline247',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
+                    'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
+                    'amount'  => '123',
+                    'client'  => 'client264',
+                    'outline' => 'outline265',
+                ],
+                [
+                    'success'    => false,
+                    'slip_entry' => [
+                        'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
+                        'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
+                        'client'  => 'client264',
+                        'outline' => 'outline265',
+                    ],
+                ],
             ],
         ];
     }
