@@ -149,8 +149,8 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
     /**
      * Validate draft slip entry and trim string data.
      *
-     * @param array  $slipEntry_in
-     * @param array  $accounts
+     * @param array $slipEntry_in
+     * @param array $accounts
      *
      * @return array
      */
