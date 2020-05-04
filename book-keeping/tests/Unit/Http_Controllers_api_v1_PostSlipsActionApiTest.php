@@ -118,7 +118,7 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
             [
                 [
                     'outline' => '   outline339',
-                    'memo' => [],
+                    'memo'    => [],
                 ],
                 [
                     'success' => false,
@@ -154,7 +154,7 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
             [
                 [
                     'entries' => 'entries1',
-                    'memo' => [],
+                    'memo'    => [],
                 ],
                 [
                     'success' => false,
@@ -166,7 +166,7 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
             [
                 [
                     'entries' => [[]],
-                    'memo' => [],
+                    'memo'    => [],
                 ],
                 [
                     'success' => false,
@@ -178,7 +178,7 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
             [
                 [
                     'entries' => ['entries1'],
-                    'memo' => [],
+                    'memo'    => [],
                 ],
                 [
                     'success' => false,
@@ -190,7 +190,7 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
             [
                 [
                     'entries' => [['debit' => '   3274cc74-f7ab-40a4-984a-186a593401f7']],
-                    'memo' => [],
+                    'memo'    => [],
                 ],
                 [
                     'success' => false,
@@ -202,7 +202,7 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
             [
                 [
                     'entries' => [['debit' => '   90dc7df5-07ea-4086-9461-0555c2a9d03c']],
-                    'memo' => [],
+                    'memo'    => [],
                 ],
                 [
                     'success' => false,
@@ -214,7 +214,7 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
             [
                 [
                     'entries' => [['debit' => '   3274cc74-f7ab-40a4-984a-186a593401f7']],
-                    'memo' => [],
+                    'memo'    => [],
                 ],
                 [
                     'success' => false,
@@ -226,7 +226,7 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
             [
                 [
                     'entries' => [[], ['debit' => '   3274cc74-f7ab-40a4-984a-186a593401f7']],
-                    'memo' => [],
+                    'memo'    => [],
                 ],
                 [
                     'success' => false,
