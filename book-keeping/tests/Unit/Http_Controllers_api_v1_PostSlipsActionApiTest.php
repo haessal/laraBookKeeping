@@ -50,9 +50,9 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
     {
         return [
             [[], 'outline', null],
-            [['outline' => ['  outline1']], 'outline', null],
+            [['outline' => ['  outline53']], 'outline', null],
             [['outline' => '  '], 'outline', null],
-            [['outline' => '  outline1'], 'outline', 'outline1'],
+            [['outline' => '  outline55'], 'outline', 'outline55'],
         ];
     }
 
@@ -119,8 +119,8 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
                 [
                     'debit'   => '8548f227-7be9-42be-b5c7-66da432f5dad',
                     'credit'  => '90dc7df5-07ea-4086-9461-0555c2a9d03c',
-                    'client'  => ['client1'],
-                    'outline' => ['outline1'],
+                    'client'  => ['client122'],
+                    'outline' => ['outline123'],
                 ],
                 [
                     'success'    => false,
@@ -131,8 +131,8 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
                 [
                     'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7  ',
                     'credit'  => '90dc7df5-07ea-4086-9461-0555c2a9d03c',
-                    'client'  => ['client1'],
-                    'outline' => ['outline1'],
+                    'client'  => ['client134'],
+                    'outline' => ['outline135'],
                 ],
                 [
                     'success'    => false,
@@ -145,8 +145,8 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
                 [
                     'debit'   => '8548f227-7be9-42be-b5c7-66da432f5dad',
                     'credit'  => '  471b26d0-99a1-47f4-aa57-2722f6011f2a',
-                    'client'  => ['client1'],
-                    'outline' => ['outline1'],
+                    'client'  => ['client148'],
+                    'outline' => ['outline149'],
                 ],
                 [
                     'success'    => false,
@@ -159,13 +159,13 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
                 [
                     'debit'   => '8548f227-7be9-42be-b5c7-66da432f5dad',
                     'credit'  => '90dc7df5-07ea-4086-9461-0555c2a9d03c',
-                    'client'  => '  client1',
-                    'outline' => ['outline1'],
+                    'client'  => '  client162',
+                    'outline' => ['outline163'],
                 ],
                 [
                     'success'    => false,
                     'slip_entry' => [
-                        'client' => 'client1',
+                        'client' => 'client162',
                     ],
                 ],
             ],
@@ -173,13 +173,13 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
                 [
                     'debit'   => '8548f227-7be9-42be-b5c7-66da432f5dad',
                     'credit'  => '90dc7df5-07ea-4086-9461-0555c2a9d03c',
-                    'client'  => ['client1'],
-                    'outline' => 'outline1  ',
+                    'client'  => ['client176'],
+                    'outline' => 'outline177  ',
                 ],
                 [
                     'success'    => false,
                     'slip_entry' => [
-                        'outline' => 'outline1',
+                        'outline' => 'outline177',
                     ],
                 ],
             ],
@@ -187,18 +187,18 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
                 [
                     'debit'   => '  3274cc74-f7ab-40a4-984a-186a593401f7',
                     'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a  ',
-                    'amount'  => 200,
-                    'client'  => ' client1 ',
-                    'outline' => '  outline1  ',
+                    'amount'  => 1900,
+                    'client'  => ' client191 ',
+                    'outline' => '  outline192  ',
                 ],
                 [
                     'success'    => true,
                     'slip_entry' => [
                         'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
                         'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
-                        'amount'  => 200,
-                        'client'  => 'client1',
-                        'outline' => 'outline1',
+                        'amount'  => 1900,
+                        'client'  => 'client191',
+                        'outline' => 'outline192',
                     ],
                 ],
             ],
@@ -206,18 +206,18 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
                 [
                     'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
                     'credit'  => '3274cc74-f7ab-40a4-984a-186a593401f7',
-                    'amount'  => 200,
-                    'client'  => 'client1',
-                    'outline' => 'outline1',
+                    'amount'  => 2090,
+                    'client'  => 'client210',
+                    'outline' => 'outline211',
                 ],
                 [
                     'success'    => false,
                     'slip_entry' => [
                         'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
                         'credit'  => '3274cc74-f7ab-40a4-984a-186a593401f7',
-                        'amount'  => 200,
-                        'client'  => 'client1',
-                        'outline' => 'outline1',
+                        'amount'  => 2090,
+                        'client'  => 'client210',
+                        'outline' => 'outline211',
                     ],
                 ],
             ],
@@ -225,16 +225,16 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
                 [
                     'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
                     'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
-                    'client'  => 'client1',
-                    'outline' => 'outline1',
+                    'client'  => 'client228',
+                    'outline' => 'outline229',
                 ],
                 [
                     'success'    => false,
                     'slip_entry' => [
                         'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
                         'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
-                        'client'  => 'client1',
-                        'outline' => 'outline1',
+                        'client'  => 'client228',
+                        'outline' => 'outline229',
                     ],
                 ],
             ],
@@ -243,16 +243,16 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
                     'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
                     'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
                     'amount'  => 0,
-                    'client'  => 'client1',
-                    'outline' => 'outline1',
+                    'client'  => 'client246',
+                    'outline' => 'outline247',
                 ],
                 [
                     'success'    => false,
                     'slip_entry' => [
                         'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
                         'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
-                        'client'  => 'client1',
-                        'outline' => 'outline1',
+                        'client'  => 'client246',
+                        'outline' => 'outline247',
                     ],
                 ],
             ],
@@ -261,16 +261,16 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
                     'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
                     'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
                     'amount'  => '123',
-                    'client'  => 'client1',
-                    'outline' => 'outline1',
+                    'client'  => 'client264',
+                    'outline' => 'outline265',
                 ],
                 [
                     'success'    => false,
                     'slip_entry' => [
                         'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
                         'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
-                        'client'  => 'client1',
-                        'outline' => 'outline1',
+                        'client'  => 'client264',
+                        'outline' => 'outline265',
                     ],
                 ],
             ],
@@ -287,7 +287,6 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
             '3274cc74-f7ab-40a4-984a-186a593401f7' => null,
             '471b26d0-99a1-47f4-aa57-2722f6011f2a' => null,
             '8548f227-7be9-42be-b5c7-66da432f5dad' => null,
-            '90dc7df5-07ea-4086-9461-0555c2a9d03c' => null,
         ];
         /** @var \App\Service\BookKeepingService|\Mockery\MockInterface $BookKeepingMock */
         $BookKeepingMock = Mockery::mock(BookKeepingService::class);
@@ -321,217 +320,355 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
                 false,
                 false,
             ],
-            /*
             [
-                ['outline' => ['  outline1']],
+                [
+                    'outline' => ['outline'],
+                    'date'    => ['2020-01-02'],
+                    'entries' => [],
+                    'memo'    => [],
+                ],
                 [
                     'success' => false,
-                    'slip' => ['memo' => null],
+                    'slip'    => [],
                 ],
                 false,
                 false,
             ],
             [
-                ['outline' => '  '],
+                [
+                    'outline' => '   outline339',
+                    'memo' => [],
+                ],
                 [
                     'success' => false,
-                    'slip' => ['memo' => null],
+                    'slip'    => ['outline' => 'outline339'],
                 ],
                 false,
                 false,
             ],
             [
-                ['outline' => '  outline1'],
+                [
+                    'date' => '   2020-01-32',
+                    'memo' => [],
+                ],
                 [
                     'success' => false,
-                    'slip' => ['outline' => 'outline1',  'memo' => null],
+                    'slip'    => [],
                 ],
-                false,
+                true,
                 false,
             ],
             [
-                ['outline' => ''],
+                [
+                    'date' => '   2020-01-20',
+                    'memo' => [],
+                ],
                 [
                     'success' => false,
-                    'slip' => ['memo' => null],
+                    'slip'    => ['date' => '2020-01-20'],
                 ],
-                false,
-                false,
-            ],
-            [
-                ['outline' => '  '],
-                [
-                    'success' => false,
-                    'slip' => ['memo' => null],
-                ],
-                false,
-                false,
-            ],
-            [
-                ['date' => '2020-01-01'],
-                ['success' => false, 'slip' => ['date' => '2020-01-01', 'memo' => null]],
                 true,
                 true,
             ],
             [
-                ['outline' => '  outline1'],
-                ['outline' => 'outline1', 'entries' => [], 'memo' => null],
-            ],
-            [
-                ['outline' => ['  outline1']],
-                ['entries' => [], 'memo' => null],
-            ],
-            [
-                ['date' => '  2020-01-31'],
-                ['date' => '2020-01-31', 'entries' => [], 'memo' => null],
-            ],
-            [
-                ['date' => ['  2020-01-31']],
-                ['entries' => [], 'memo' => null],
-            ],
-            [
-                ['entries' => 'entries1'],
-                ['entries' => [], 'memo' => null],
-            ],
-            [
-                ['entries' => ['entries2']],
-                ['entries' => [], 'memo' => null],
-            ],
-            [
-                ['entries' => ['entries2', []]],
-                ['entries' => [], 'memo' => null],
-            ],
-            [
-                ['entries' => [['entries3']]],
-                ['entries' => [], 'memo' => null],
-            ],
-            [
-                ['entries' => []],
-                ['entries' => [], 'memo' => null],
-            ],
-            [
-                ['entries' => [['dummy' => 'dummy1']]],
-                ['entries' => [], 'memo' => null],
-            ],
-            [
-                ['entries' => ['debit' => 'debit1', []]],
-                ['entries' => [], 'memo' => null],
-            ],
-            [
-                ['entries' => ['debit' => '  debit1', ['debit' => '  debit2']]],
-                ['entries' => [['debit' => 'debit2']], 'memo' => null],
-            ],
-            [
-                ['entries' => ['debit' => '  debit1', ['debit' => ['  debit2']]]],
-                ['entries' => [], 'memo' => null],
-            ],
-            [
-                ['entries' => [['debit' => '  debit1'], ['credit' => '  credit2', 'dummy' => 'dummy2']]],
-                ['entries' => [['debit' => 'debit1'], ['credit' => 'credit2']], 'memo' => null],
-            ],
-            [
-                ['entries' => [['debit' => '  debit1'], ['credit' => ['  credit2'], 'dummy' => 'dummy2']]],
-                ['entries' => [['debit' => 'debit1']], 'memo' => null],
-            ],
-            [
-                ['entries' => [['amount' => 1010]]],
-                ['entries' => [['amount' => 1010]], 'memo' => null],
-            ],
-            [
-                ['entries' => [['client' => '  client1']]],
-                ['entries' => [['client' => 'client1']], 'memo' => null],
-            ],
-            [
-                ['entries' => [['client' => ['  client1']]]],
-                ['entries' => [], 'memo' => null],
-            ],
-            [
-                ['entries' => [['outline' => '  outline1']]],
-                ['entries' => [['outline' => 'outline1']], 'memo' => null],
-            ],
-            [
-                ['entries' => [['outline' => ['  outline1']]]],
-                ['entries' => [], 'memo' => null],
-            ],
-            [
-                ['memo' => null],
-                ['entries' => [], 'memo' => null],
-            ],
-            [
-                ['memo' => ' '],
-                ['entries' => [], 'memo' => null],
-            ],
-            [
-                ['memo' => '  memo1'],
-                ['entries' => [], 'memo' => 'memo1'],
-            ],
-            [
-                ['memo' => ['  memo1']],
-                ['entries' => [], 'memo' => null],
-            ],
-            [
-                ['dummy' => 'dummy3'],
-                ['entries' => [], 'memo' => null],
+                [
+                    'entries' => 'entries1',
+                    'memo' => [],
+                ],
+                [
+                    'success' => false,
+                    'slip'    => [],
+                ],
+                false,
+                false,
             ],
             [
                 [
-                    'dummy'   => 'dummyX',
-                    'outline' => '  outlineX  ',
-                    'date'    => '  2019-12-31  ',
-                    'entries' => [
-                        [
-                            'debit' => 'debitXX  ',
-                            'credit' => '  creditXX',
-                            'amount' => 100,
-                            'client' => '  clientXX  ',
-                            'outline' => '  outlineXX  ',
-                        ],
-                        [
-                            'debit' => '  debitYY',
-                            'credit' => 'creditYY  ',
-                            'amount' => 200,
-                            'client' => '  clientYY',
-                            'outline' => 'outlineYY  ',
-                        ],
-                        [
-                            'dummy'   => 'dummyZZZ',
-                            'credit' => 'creditZZ  ',
-                            'amount' => 300,
-                            'client' => '  ',
-                            'outline' => '  ',
-                        ],
-                    ],
-                    'memo'    => '    memo11',
+                    'entries' => [[]],
+                    'memo' => [],
                 ],
                 [
-                    'outline' => 'outlineX',
-                    'date'    => '2019-12-31',
+                    'success' => false,
+                    'slip'    => ['entries' => []],
+                ],
+                false,
+                false,
+            ],
+            [
+                [
+                    'entries' => ['entries1'],
+                    'memo' => [],
+                ],
+                [
+                    'success' => false,
+                    'slip'    => ['entries' => []],
+                ],
+                false,
+                false,
+            ],
+            [
+                [
+                    'entries' => [['debit' => '   3274cc74-f7ab-40a4-984a-186a593401f7']],
+                    'memo' => [],
+                ],
+                [
+                    'success' => false,
+                    'slip'    => ['entries' => [['debit' => '3274cc74-f7ab-40a4-984a-186a593401f7']]],
+                ],
+                false,
+                false,
+            ],
+            [
+                [
+                    'entries' => [['debit' => '   90dc7df5-07ea-4086-9461-0555c2a9d03c']],
+                    'memo' => [],
+                ],
+                [
+                    'success' => false,
+                    'slip'    => ['entries' => []],
+                ],
+                false,
+                false,
+            ],
+            [
+                [
+                    'entries' => [['debit' => '   3274cc74-f7ab-40a4-984a-186a593401f7']],
+                    'memo' => [],
+                ],
+                [
+                    'success' => false,
+                    'slip'    => ['entries' => [['debit' => '3274cc74-f7ab-40a4-984a-186a593401f7']]],
+                ],
+                false,
+                false,
+            ],
+            [
+                [
+                    'entries' => [[], ['debit' => '   3274cc74-f7ab-40a4-984a-186a593401f7']],
+                    'memo' => [],
+                ],
+                [
+                    'success' => false,
+                    'slip'    => ['entries' => [['debit' => '3274cc74-f7ab-40a4-984a-186a593401f7']]],
+                ],
+                false,
+                false,
+            ],
+            [
+                [
                     'entries' => [
                         [
-                            'debit' => 'debitXX',
-                            'credit' => 'creditXX',
-                            'amount' => 100,
-                            'client' => 'clientXX',
-                            'outline' => 'outlineXX',
+                            'debit'   => '  3274cc74-f7ab-40a4-984a-186a593401f7',
+                            'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a  ',
+                            'amount'  => 4630,
+                            'client'  => ' client464',
+                            'outline' => 'outline465 ',
                         ],
                         [
-                            'debit' => 'debitYY',
-                            'credit' => 'creditYY',
-                            'amount' => 200,
-                            'client' => 'clientYY',
-                            'outline' => 'outlineYY',
-                        ],
-                        [
-                            'credit' => 'creditZZ',
-                            'amount' => 300,
-                            'client' => '',
-                            'outline' => '',
+                            'debit'   => '  3274cc74-f7ab-40a4-984a-186a593401f7  ',
+                            'credit'  => '8548f227-7be9-42be-b5c7-66da432f5dad    ',
+                            'amount'  => 4700,
+                            'client'  => 'client471 ',
+                            'outline' => ' outline472',
                         ],
                     ],
-                    'memo' => 'memo11',
+                    'memo' => [],
                 ],
+                [
+                    'success' => false,
+                    'slip'    => ['entries' => [
+                        [
+                            'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
+                            'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
+                            'amount'  => 4630,
+                            'client'  => 'client464',
+                            'outline' => 'outline465',
+                        ],
+                        [
+                            'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
+                            'credit'  => '8548f227-7be9-42be-b5c7-66da432f5dad',
+                            'amount'  => 4700,
+                            'client'  => 'client471',
+                            'outline' => 'outline472',
+                        ],
+                    ]],
+                ],
+                false,
+                false,
             ],
-            */
+            [
+                [
+                    'outline' => '   outline501',
+                    'date'    => '   2020-03-31',
+                    'entries' => [
+                        [
+                            'debit'   => '  3274cc74-f7ab-40a4-984a-186a593401f7',
+                            'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a  ',
+                            'amount'  => 5070,
+                            'client'  => ' client508',
+                            'outline' => 'outline509 ',
+                        ],
+                    ],
+                    'memo' => 'memo1',
+                ],
+                [
+                    'success' => true,
+                    'slip'    => [
+                        'outline' => 'outline501',
+                        'date'    => '2020-03-31',
+                        'entries' => [
+                            [
+                                'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
+                                'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
+                                'amount'  => 5070,
+                                'client'  => 'client508',
+                                'outline' => 'outline509',
+                            ],
+                        ],
+                        'memo' => 'memo1',
+                    ],
+                ],
+                true,
+                true,
+            ],
+            [
+                [
+                    'outline' => '   outline536',
+                    'date'    => '   2020-02-28',
+                    'entries' => [
+                        [
+                            'debit'   => '  3274cc74-f7ab-40a4-984a-186a593401f7',
+                            'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a  ',
+                            'amount'  => 5420,
+                            'client'  => ' client543',
+                            'outline' => 'outline544 ',
+                        ],
+                    ],
+                ],
+                [
+                    'success' => true,
+                    'slip'    => [
+                        'outline' => 'outline536',
+                        'date'    => '2020-02-28',
+                        'entries' => [
+                            [
+                                'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
+                                'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
+                                'amount'  => 5420,
+                                'client'  => 'client543',
+                                'outline' => 'outline544',
+                            ],
+                        ],
+                        'memo' => null,
+                    ],
+                ],
+                true,
+                true,
+            ],
+            [
+                [
+                    'outline' => '   outline570',
+                    'date'    => '   2019-12-31',
+                    'entries' => [
+                        [
+                            'debit'   => '  3274cc74-f7ab-40a4-984a-186a593401f7',
+                            'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a  ',
+                            'amount'  => 5760,
+                            'client'  => ' client577',
+                            'outline' => 'outline578 ',
+                        ],
+                    ],
+                    'memo' => null,
+                ],
+                [
+                    'success' => true,
+                    'slip'    => [
+                        'outline' => 'outline570',
+                        'date'    => '2019-12-31',
+                        'entries' => [
+                            [
+                                'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
+                                'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
+                                'amount'  => 5760,
+                                'client'  => 'client577',
+                                'outline' => 'outline578',
+                            ],
+                        ],
+                        'memo' => null,
+                    ],
+                ],
+                true,
+                true,
+            ],
+            [
+                [
+                    'outline' => '   outline605',
+                    'date'    => '   2019-11-30',
+                    'entries' => [
+                        [
+                            'debit'   => '  3274cc74-f7ab-40a4-984a-186a593401f7',
+                            'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a  ',
+                            'amount'  => 6110,
+                            'client'  => ' client612',
+                            'outline' => 'outline613 ',
+                        ],
+                    ],
+                    'memo' => ['memo1'],
+                ],
+                [
+                    'success' => false,
+                    'slip'    => [
+                        'outline' => 'outline605',
+                        'date'    => '2019-11-30',
+                        'entries' => [
+                            [
+                                'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
+                                'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
+                                'amount'  => 6110,
+                                'client'  => 'client612',
+                                'outline' => 'outline613',
+                            ],
+                        ],
+                    ],
+                ],
+                true,
+                true,
+            ],
+            [
+                [
+                    'outline' => '   outline539',
+                    'date'    => '   2019-10-31',
+                    'entries' => [
+                        [
+                            'debit'   => '  3274cc74-f7ab-40a4-984a-186a593401f7',
+                            'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a  ',
+                            'amount'  => 6450,
+                            'client'  => ' client646',
+                            'outline' => 'outline647 ',
+                        ],
+                    ],
+                    'memo' => '  ',
+                ],
+                [
+                    'success' => true,
+                    'slip'    => [
+                        'outline' => 'outline539',
+                        'date'    => '2019-10-31',
+                        'entries' => [
+                            [
+                                'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
+                                'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
+                                'amount'  => 6450,
+                                'client'  => 'client646',
+                                'outline' => 'outline647',
+                            ],
+                        ],
+                        'memo' => null,
+                    ],
+                ],
+                true,
+                true,
+            ],
         ];
     }
 }
