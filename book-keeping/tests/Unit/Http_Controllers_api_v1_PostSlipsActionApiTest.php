@@ -488,8 +488,8 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
                     'outline' => ['outline123'],
                 ],
                 [
-                    'success'    => false,
-                    'slip_entry' => [],
+                    'success'   => false,
+                    'slipEntry' => [],
                 ],
             ],
             [
@@ -500,8 +500,8 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
                     'outline' => ['outline135'],
                 ],
                 [
-                    'success'    => false,
-                    'slip_entry' => [
+                    'success'   => false,
+                    'slipEntry' => [
                         'debit' => '3274cc74-f7ab-40a4-984a-186a593401f7',
                     ],
                 ],
@@ -514,8 +514,8 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
                     'outline' => ['outline149'],
                 ],
                 [
-                    'success'    => false,
-                    'slip_entry' => [
+                    'success'   => false,
+                    'slipEntry' => [
                         'credit' => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
                     ],
                 ],
@@ -528,8 +528,8 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
                     'outline' => ['outline163'],
                 ],
                 [
-                    'success'    => false,
-                    'slip_entry' => [
+                    'success'   => false,
+                    'slipEntry' => [
                         'client' => 'client162',
                     ],
                 ],
@@ -542,8 +542,8 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
                     'outline' => 'outline177  ',
                 ],
                 [
-                    'success'    => false,
-                    'slip_entry' => [
+                    'success'   => false,
+                    'slipEntry' => [
                         'outline' => 'outline177',
                     ],
                 ],
@@ -557,8 +557,8 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
                     'outline' => '  outline192  ',
                 ],
                 [
-                    'success'    => true,
-                    'slip_entry' => [
+                    'success'   => true,
+                    'slipEntry' => [
                         'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
                         'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
                         'amount'  => 1900,
@@ -576,8 +576,8 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
                     'outline' => 'outline211',
                 ],
                 [
-                    'success'    => false,
-                    'slip_entry' => [
+                    'success'   => false,
+                    'slipEntry' => [
                         'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
                         'credit'  => '3274cc74-f7ab-40a4-984a-186a593401f7',
                         'amount'  => 2090,
@@ -594,8 +594,8 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
                     'outline' => 'outline229',
                 ],
                 [
-                    'success'    => false,
-                    'slip_entry' => [
+                    'success'   => false,
+                    'slipEntry' => [
                         'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
                         'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
                         'client'  => 'client228',
@@ -612,8 +612,8 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
                     'outline' => 'outline247',
                 ],
                 [
-                    'success'    => false,
-                    'slip_entry' => [
+                    'success'   => false,
+                    'slipEntry' => [
                         'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
                         'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
                         'client'  => 'client246',
@@ -630,8 +630,8 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
                     'outline' => 'outline265',
                 ],
                 [
-                    'success'    => false,
-                    'slip_entry' => [
+                    'success'   => false,
+                    'slipEntry' => [
                         'debit'   => '3274cc74-f7ab-40a4-984a-186a593401f7',
                         'credit'  => '471b26d0-99a1-47f4-aa57-2722f6011f2a',
                         'client'  => 'client264',
