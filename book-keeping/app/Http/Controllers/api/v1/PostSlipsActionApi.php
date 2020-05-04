@@ -55,7 +55,6 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
         return $response;
     }
 
-
     private function validateAndTrimString(array $array_in, string $key): ?string
     {
         if (!array_key_exists($key, $array_in) || !is_string($array_in[$key])) {
@@ -101,7 +100,10 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
         } else {
             $slipEntry_out['credit'] = $trim_credit;
         }
-        if (!array_key_exists('amount', $slipEntry_in) || empty($slipEntry_in['amount']) || !is_numeric($slipEntry_in['amount'])) {
+        if (array_key_exists('debit', $slipEntry_out) && array_key_exists('credit', $slipEntry_out) && ($slipEntry_out['debit'] == $slipEntry_out['credit'])) {
+            $success = false;
+        }
+        if (!array_key_exists('amount', $slipEntry_in) || empty($slipEntry_in['amount']) || !is_int($slipEntry_in['amount'])) {
             $success = false;
         } else {
             $slipEntry_out['amount'] = $slipEntry_in['amount'];
