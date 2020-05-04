@@ -55,6 +55,22 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
         return $response;
     }
 
+
+    private function validateAndTrimString(array $array_in, string $key): ?string
+    {
+        if (!array_key_exists($key, $array_in) || !is_string($array_in[$key])) {
+            $string_out = null;
+        } else {
+            $trim_string = trim($array_in[$key]);
+            if (empty($trim_string)) {
+                $string_out = null;
+            } else {
+                $string_out = $trim_string;
+            }
+        }
+
+        return $string_out;
+    }
     /**
      * Validate draft slip and trim string data.
      *
@@ -68,19 +84,28 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
         $success = true;
         $slip_out = [];
 
-        if (!array_key_exists('outline', $slip_in) || empty($slip_in['outline']) || !is_string($slip_in['outline'])) {
+        if (!array_key_exists('outline', $slip_in) || !is_string($slip_in['outline'])) {
             $success = false;
         } else {
-            $slip_out['outline'] = trim($slip_in['outline']);
+            $trim_outline = trim($slip_in['outline']);
+            if (empty($trim_outline)) {
+                $success = false;
+            } else {
+                $slip_out['outline'] = $trim_outline;
+            }
         }
-        if (!array_key_exists('date', $slip_in) || empty($slip_in['date']) || !is_string($slip_in['date'])) {
+        if (!array_key_exists('date', $slip_in) || !is_string($slip_in['date'])) {
             $success = false;
         } else {
             $trim_date = trim($slip_in['date']);
-            if (!($this->BookKeeping->validateDateFormat($trim_date))) {
+            if (empty($trim_date)) {
                 $success = false;
             } else {
-                $slip_out['date'] = $trim_date;
+                if (!($this->BookKeeping->validateDateFormat($trim_date))) {
+                    $success = false;
+                } else {
+                    $slip_out['date'] = $trim_date;
+                }
             }
         }
         if (!array_key_exists('entries', $slip_in) || empty($slip_in['entries'])) {
@@ -95,24 +120,32 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
                         $success = false;
                     } else {
                         $slipEntry_out = [];
-                        if (!array_key_exists('debit', $slipEntry_in) || empty($slipEntry_in['debit']) || !is_string($slipEntry_in['debit'])) {
+                        if (!array_key_exists('debit', $slipEntry_in) || !is_string($slipEntry_in['debit'])) {
                             $success = false;
                         } else {
                             $trim_debit = trim($slipEntry_in['debit']);
-                            if (!array_key_exists($trim_debit, $accounts)) {
+                            if (empty($trim_debit)) {
                                 $success = false;
                             } else {
-                                $slipEntry_out['debit'] = $trim_debit;
+                                if (!array_key_exists($trim_debit, $accounts)) {
+                                    $success = false;
+                                } else {
+                                    $slipEntry_out['debit'] = $trim_debit;
+                                }
                             }
                         }
-                        if (!array_key_exists('credit', $slipEntry_in) || empty($slipEntry_in['credit']) || !is_string($slipEntry_in['credit'])) {
+                        if (!array_key_exists('credit', $slipEntry_in) || !is_string($slipEntry_in['credit'])) {
                             $success = false;
                         } else {
                             $trim_credit = trim($slipEntry_in['credit']);
-                            if (!array_key_exists($trim_credit, $accounts)) {
+                            if (empty($trim_credit)) {
                                 $success = false;
                             } else {
-                                $slipEntry_out['credit'] = $trim_credit;
+                                if (!array_key_exists($trim_credit, $accounts)) {
+                                    $success = false;
+                                } else {
+                                    $slipEntry_out['credit'] = $trim_credit;
+                                }
                             }
                         }
                         if (!array_key_exists('amount', $slipEntry_in) || empty($slipEntry_in['amount']) || !is_numeric($slipEntry_in['amount'])) {
@@ -120,15 +153,25 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
                         } else {
                             $slipEntry_out['amount'] = $slipEntry_in['amount'];
                         }
-                        if (!array_key_exists('client', $slipEntry_in) || empty($slipEntry_in['client']) || !is_string($slipEntry_in['client'])) {
+                        if (!array_key_exists('client', $slipEntry_in) || !is_string($slipEntry_in['client'])) {
                             $success = false;
                         } else {
-                            $slipEntry_out['client'] = trim($slipEntry_in['client']);
+                            $trim_client = trim($slipEntry_in['client']);
+                            if (empty($trim_client)) {
+                                $success = false;
+                            } else {
+                                $slipEntry_out['client'] = $trim_client;
+                            }
                         }
-                        if (!array_key_exists('outline', $slipEntry_in) || empty($slipEntry_in['outline']) || !is_string($slipEntry_in['outline'])) {
+                        if (!array_key_exists('outline', $slipEntry_in) || !is_string($slipEntry_in['outline'])) {
                             $success = false;
                         } else {
-                            $slipEntry_out['outline'] = trim($slipEntry_in['outline']);
+                            $trim_entry_outline = trim($slipEntry_in['outline']);
+                            if (empty($trim_entry_outline)) {
+                                $success = false;
+                            } else {
+                                $slipEntry_out['outline'] = $trim_entry_outline;
+                            }
                         }
                         if (!empty($slipEntry_out)) {
                             $slip_out['entries'][] = $slipEntry_out;
@@ -137,13 +180,18 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
                 }
             }
         }
-        if (!array_key_exists('memo', $slip_in) || empty($slip_in['memo'])) {
+        if (!array_key_exists('memo', $slip_in) || is_null($slip_in['memo'])) {
             $slip_out['memo'] = null;
         } else {
             if (!is_string($slip_in['memo'])) {
                 $success = false;
             } else {
-                $slip_out['memo'] = $slip_in['memo'];
+                $trim_memo = trim($slip_in['memo']);
+                if (empty($trim_memo)) {
+                    $slip_out['memo'] = null;
+                } else {
+                    $slip_out['memo'] = $trim_memo;
+                }
             }
         }
 
