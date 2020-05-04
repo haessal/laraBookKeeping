@@ -49,10 +49,10 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
     public function forValidateAndTrimString()
     {
         return [
-            [[], 'outline', null,],
-            [['outline' => ['  outline1']], 'outline', null,],
-            [['outline' => '  '], 'outline', null,],
-            [['outline' => '  outline1'], 'outline', 'outline1',],
+            [[], 'outline', null],
+            [['outline' => ['  outline1']], 'outline', null],
+            [['outline' => '  '], 'outline', null],
+            [['outline' => '  outline1'], 'outline', 'outline1'],
         ];
     }
 
@@ -74,7 +74,6 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
         $string_actual = $method->invoke($controller, $array_in, $key, $accounts);
 
         $this->assertSame($string_expected, $string_actual);
-
     }
 
     public function forValidateAndTrimAccounts()
@@ -83,19 +82,19 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
             [
                 ['debit' => 0],
                 'debit',
-                ['3274cc74-f7ab-40a4-984a-186a593401f7' => null,],
+                ['3274cc74-f7ab-40a4-984a-186a593401f7' => null],
                 null,
             ],
             [
                 ['debit' => '  471b26d0-99a1-47f4-aa57-2722f6011f2a'],
                 'debit',
-                ['3274cc74-f7ab-40a4-984a-186a593401f7' => null,],
+                ['3274cc74-f7ab-40a4-984a-186a593401f7' => null],
                 null,
             ],
             [
                 ['debit' => '3274cc74-f7ab-40a4-984a-186a593401f7  '],
                 'debit',
-                ['3274cc74-f7ab-40a4-984a-186a593401f7' => null,],
+                ['3274cc74-f7ab-40a4-984a-186a593401f7' => null],
                 '3274cc74-f7ab-40a4-984a-186a593401f7',
             ],
         ];
@@ -140,7 +139,7 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
                 [],
                 [
                     'success' => false,
-                    'slip' => ['memo' => null],
+                    'slip'    => ['memo' => null],
                 ],
                 false,
                 false,
