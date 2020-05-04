@@ -126,25 +126,17 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
                         $success = false;
                     } else {
                         $slipEntry_out = [];
-                        $trim_debit = $this->validateAndTrimString($slipEntry_in, 'debit');
+                        $trim_debit = $this->validateAndTrimAccounts($slipEntry_in, 'debit', $accounts);
                         if (is_null($trim_debit)) {
                             $success = false;
                         } else {
-                            if (!array_key_exists($trim_debit, $accounts)) {
-                                $success = false;
-                            } else {
-                                $slipEntry_out['debit'] = $trim_debit;
-                            }
+                            $slipEntry_out['debit'] = $trim_debit;
                         }
-                        $trim_credit = $this->validateAndTrimString($slipEntry_in, 'credit');
+                        $trim_credit = $this->validateAndTrimAccounts($slipEntry_in, 'credit', $accounts);
                         if (is_null($trim_credit)) {
                             $success = false;
                         } else {
-                            if (!array_key_exists($trim_credit, $accounts)) {
-                                $success = false;
-                            } else {
-                                $slipEntry_out['credit'] = $trim_credit;
-                            }
+                            $slipEntry_out['credit'] = $trim_credit;
                         }
                         if (!array_key_exists('amount', $slipEntry_in) || empty($slipEntry_in['amount']) || !is_numeric($slipEntry_in['amount'])) {
                             $success = false;
