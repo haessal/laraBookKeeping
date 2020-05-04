@@ -5,6 +5,9 @@ namespace Tests\Unit;
 use App\Http\Controllers\api\v1\PostSlipsActionApi;
 use App\Http\Responder\api\v1\SlipJsonResponder;
 use App\Service\BookKeepingService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Mockery;
 use ReflectionClass;
 use Tests\TestCase;
@@ -17,13 +20,115 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
     }
 
     /**
-     * A basic unit test example.
-     *
-     * @return void
+     * @test
      */
-    public function testExample()
+    public function __invoke_MakeContextAndReturnResponseForRequestedDate()
     {
-        $this->assertTrue(true);
+        $accountId_1 = (string) Str::uuid();
+        $accountId_2 = (string) Str::uuid();
+        $slipId_1 = (string) Str::uuid();
+        $slipEntryId_1 = (string) Str::uuid();
+        $accounts = [
+            $accountId_1 => ['account_title' => 'accountTitle_1'],
+            $accountId_2 => ['account_title' => 'accountTitle_2'],
+        ];
+        $slip = [
+            'outline' => 'outline32',
+            'date'    => '2020-01-01',
+            'entries' => [
+                [
+                    'debit'   => $accountId_1,
+                    'credit'  => $accountId_2,
+                    'amount'  => 380,
+                    'client'  => 'client39',
+                    'outline' => 'outline40',
+                ],
+            ],
+            'memo' => 'memo43',
+        ];
+        $context['slips'] = [
+            $slipId_1 => [
+                'date'         => '2020-01-01',
+                'slip_outline' => 'outline32',
+                'slip_memo'    => 'memo43',
+                'items'        => [
+                    $slipEntryId_1 => [
+                        'debit'   => ['account_id' => $accountId_1, 'account_title' => 'accountTitle_1'],
+                        'credit'  => ['account_id' => $accountId_2, 'account_title' => 'accountTitle_2'],
+                        'amount'  => 380,
+                        'client'  => 'client39',
+                        'outline' => 'outline40',
+                    ],
+                ],
+            ],
+        ];
+        $response_expected = new JsonResponse();
+        /** @var \App\Service\BookKeepingService|\Mockery\MockInterface $BookKeepingMock */
+        $BookKeepingMock = Mockery::mock(BookKeepingService::class);
+        $BookKeepingMock->shouldReceive('retrieveAccountsList')
+            ->once()
+            ->andReturn($accounts);
+        $BookKeepingMock->shouldReceive('createSlip')
+            ->once()
+            ->with($slip['outline'], $slip['date'], $slip['entries'], $slip['memo'])
+            ->andReturn($slipId_1);
+        $BookKeepingMock->shouldReceive('retrieveSlip')
+            ->once()
+            ->with($slipId_1)
+            ->andReturn($context['slips']);
+        $BookKeepingMock->shouldReceive('validateDateFormat')
+            ->once()
+            ->with($slip['date'])
+            ->andReturn(true);
+        /** @var \App\Http\Responder\api\v1\SlipJsonResponder|\Mockery\MockInterface $responderMock */
+        $responderMock = Mockery::mock(SlipJsonResponder::class);
+        $responderMock->shouldReceive('response')
+            ->once()
+            ->with($context)
+            ->andReturn($response_expected);
+        /** @var \Illuminate\Http\Request|\Mockery\MockInterface $requestMock */
+        $requestMock = Mockery::mock(Request::class);
+        $requestMock->shouldReceive('all')
+            ->once()
+            ->andReturn($slip);
+
+        $controller = new PostSlipsActionApi($BookKeepingMock, $responderMock);
+        $response_actual = $controller->__invoke($requestMock);
+
+        $this->assertSame($response_expected, $response_actual);
+    }
+
+    /**
+     * @test
+     */
+    public function __invoke_MakeContextAndReturnResponseWithNoDateRequest()
+    {
+        $accountId_1 = (string) Str::uuid();
+        $accountId_2 = (string) Str::uuid();
+        $accounts = [
+            $accountId_1 => ['account_title' => 'accountTitle_1'],
+            $accountId_2 => ['account_title' => 'accountTitle_2'],
+        ];
+        /** @var \App\Service\BookKeepingService|\Mockery\MockInterface $BookKeepingMock */
+        $BookKeepingMock = Mockery::mock(BookKeepingService::class);
+        $BookKeepingMock->shouldReceive('retrieveAccountsList')
+            ->once()
+            ->andReturn($accounts);
+        $BookKeepingMock->shouldNotReceive('createSlip');
+        $BookKeepingMock->shouldNotReceive('retrieveSlip');
+        /** @var \App\Http\Responder\api\v1\SlipJsonResponder|\Mockery\MockInterface $responderMock */
+        $responderMock = Mockery::mock(SlipJsonResponder::class);
+        $responderMock->shouldNotReceive('response');
+        /** @var \Illuminate\Http\Request|\Mockery\MockInterface $requestMock */
+        $requestMock = Mockery::mock(Request::class);
+        $requestMock->shouldReceive('all')
+            ->once()
+            ->andReturn([]);
+
+        $controller = new PostSlipsActionApi($BookKeepingMock, $responderMock);
+        $response_actual = $controller->__invoke($requestMock);
+
+        $this->assertSame(JsonResponse::HTTP_BAD_REQUEST, $response_actual->getStatusCode());
     }
 
     /**
