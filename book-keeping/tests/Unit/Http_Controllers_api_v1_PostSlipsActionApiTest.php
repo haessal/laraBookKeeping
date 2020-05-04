@@ -30,7 +30,7 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
      * @test
      * @dataProvider forValidateAndTrimString
      */
-    public function validateAndTrimString($array_in, $key, $string_expected)
+    public function validateAndTrimString_MachValidationResult($array_in, $key, $string_expected)
     {
         /** @var \App\Service\BookKeepingService|\Mockery\MockInterface $BookKeepingMock */
         $BookKeepingMock = Mockery::mock(BookKeepingService::class);
@@ -60,7 +60,7 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
      * @test
      * @dataProvider forValidateAndTrimAccounts
      */
-    public function validateAndTrimAccounts($array_in, $key, $string_expected)
+    public function validateAndTrimAccounts_MachValidationResult($array_in, $key, $string_expected)
     {
         $accounts = [
             '3274cc74-f7ab-40a4-984a-186a593401f7' => null,
@@ -92,7 +92,7 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
      * @test
      * @dataProvider forValidateAndTrimDraftSlipEntry
      */
-    public function validateAndTrimDraftSlipEntry($slipEntry_in, $result_expected)
+    public function validateAndTrimDraftSlipEntry_MachValidationResult($slipEntry_in, $result_expected)
     {
         $accounts = [
             '3274cc74-f7ab-40a4-984a-186a593401f7' => null,
@@ -281,7 +281,7 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
      * @test
      * @dataProvider forTestTrimDraftSlip
      */
-    public function validateAndTrimDraftSlip_($slip_in, $result_expected, $callValidateDateFormat, $validateDateFormatResult)
+    public function validateAndTrimDraftSlip_MachValidationResult($slip_in, $result_expected, $callValidateDateFormat, $validateDateFormatResult)
     {
         $accounts = [
             '3274cc74-f7ab-40a4-984a-186a593401f7' => null,
