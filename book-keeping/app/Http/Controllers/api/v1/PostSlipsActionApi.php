@@ -89,20 +89,20 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
         $success = true;
         $slip_out = [];
 
-        $trim_outline = $this->validateAndTrimString($slip_in, 'outline');
-        if (is_null($trim_outline)) {
+        $trimmed_outline = $this->validateAndTrimString($slip_in, 'outline');
+        if (is_null($trimmed_outline)) {
             $success = false;
         } else {
-            $slip_out['outline'] = $trim_outline;
+            $slip_out['outline'] = $trimmed_outline;
         }
-        $trim_date = $this->validateAndTrimString($slip_in, 'date');
-        if (is_null($trim_date)) {
+        $trimmed_date = $this->validateAndTrimString($slip_in, 'date');
+        if (is_null($trimmed_date)) {
             $success = false;
         } else {
-            if (!($this->BookKeeping->validateDateFormat($trim_date))) {
+            if (!($this->BookKeeping->validateDateFormat($trimmed_date))) {
                 $success = false;
             } else {
-                $slip_out['date'] = $trim_date;
+                $slip_out['date'] = $trimmed_date;
             }
         }
         if (!array_key_exists('entries', $slip_in) || empty($slip_in['entries'])) {
@@ -134,11 +134,11 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
             if (!is_string($slip_in['memo'])) {
                 $success = false;
             } else {
-                $trim_memo = trim($slip_in['memo']);
-                if (empty($trim_memo)) {
+                $trimmed_memo = trim($slip_in['memo']);
+                if (empty($trimmed_memo)) {
                     $slip_out['memo'] = null;
                 } else {
-                    $slip_out['memo'] = $trim_memo;
+                    $slip_out['memo'] = $trimmed_memo;
                 }
             }
         }
@@ -159,17 +159,17 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
         $success = true;
         $slipEntry_out = [];
 
-        $trim_debit = $this->validateAndTrimAccounts($slipEntry_in, 'debit', $accounts);
-        if (is_null($trim_debit)) {
+        $trimmed_debit = $this->validateAndTrimAccounts($slipEntry_in, 'debit', $accounts);
+        if (is_null($trimmed_debit)) {
             $success = false;
         } else {
-            $slipEntry_out['debit'] = $trim_debit;
+            $slipEntry_out['debit'] = $trimmed_debit;
         }
-        $trim_credit = $this->validateAndTrimAccounts($slipEntry_in, 'credit', $accounts);
-        if (is_null($trim_credit)) {
+        $trimmed_credit = $this->validateAndTrimAccounts($slipEntry_in, 'credit', $accounts);
+        if (is_null($trimmed_credit)) {
             $success = false;
         } else {
-            $slipEntry_out['credit'] = $trim_credit;
+            $slipEntry_out['credit'] = $trimmed_credit;
         }
         if (array_key_exists('debit', $slipEntry_out) && array_key_exists('credit', $slipEntry_out) && ($slipEntry_out['debit'] == $slipEntry_out['credit'])) {
             $success = false;
@@ -179,17 +179,17 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
         } else {
             $slipEntry_out['amount'] = $slipEntry_in['amount'];
         }
-        $trim_client = $this->validateAndTrimString($slipEntry_in, 'client');
-        if (is_null($trim_client)) {
+        $trimmed_client = $this->validateAndTrimString($slipEntry_in, 'client');
+        if (is_null($trimmed_client)) {
             $success = false;
         } else {
-            $slipEntry_out['client'] = $trim_client;
+            $slipEntry_out['client'] = $trimmed_client;
         }
-        $trim_entry_outline = $this->validateAndTrimString($slipEntry_in, 'outline');
-        if (is_null($trim_entry_outline)) {
+        $trimmed_outline = $this->validateAndTrimString($slipEntry_in, 'outline');
+        if (is_null($trimmed_outline)) {
             $success = false;
         } else {
-            $slipEntry_out['outline'] = $trim_entry_outline;
+            $slipEntry_out['outline'] = $trimmed_outline;
         }
 
         return ['success' => $success, 'slip_entry' => $slipEntry_out];
@@ -208,11 +208,11 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
         if (!array_key_exists($key, $array_in) || !is_string($array_in[$key])) {
             $string_out = null;
         } else {
-            $trim_string = trim($array_in[$key]);
-            if (empty($trim_string)) {
+            $trimmed_string = trim($array_in[$key]);
+            if (empty($trimmed_string)) {
                 $string_out = null;
             } else {
-                $string_out = $trim_string;
+                $string_out = $trimmed_string;
             }
         }
 
