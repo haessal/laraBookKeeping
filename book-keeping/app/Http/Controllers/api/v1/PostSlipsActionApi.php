@@ -84,6 +84,44 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
         return $string_out;
     }
 
+    private function validateAndTrimDraftSlipEntry(array $slipEntry_in, array $accounts): array
+    {
+        $success = true;
+        $slipEntry_out = [];
+
+        $trim_debit = $this->validateAndTrimAccounts($slipEntry_in, 'debit', $accounts);
+        if (is_null($trim_debit)) {
+            $success = false;
+        } else {
+            $slipEntry_out['debit'] = $trim_debit;
+        }
+        $trim_credit = $this->validateAndTrimAccounts($slipEntry_in, 'credit', $accounts);
+        if (is_null($trim_credit)) {
+            $success = false;
+        } else {
+            $slipEntry_out['credit'] = $trim_credit;
+        }
+        if (!array_key_exists('amount', $slipEntry_in) || empty($slipEntry_in['amount']) || !is_numeric($slipEntry_in['amount'])) {
+            $success = false;
+        } else {
+            $slipEntry_out['amount'] = $slipEntry_in['amount'];
+        }
+        $trim_client = $this->validateAndTrimString($slipEntry_in, 'client');
+        if (is_null($trim_client)) {
+            $success = false;
+        } else {
+            $slipEntry_out['client'] = $trim_client;
+        }
+        $trim_entry_outline = $this->validateAndTrimString($slipEntry_in, 'outline');
+        if (is_null($trim_entry_outline)) {
+            $success = false;
+        } else {
+            $slipEntry_out['outline'] = $trim_entry_outline;
+        }
+
+        return ['success' => $success, 'slip_entry' => $slipEntry_out];
+    }
+
     /**
      * Validate draft slip and trim string data.
      *
