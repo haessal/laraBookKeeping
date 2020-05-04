@@ -55,6 +55,14 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
         return $response;
     }
 
+    /**
+     * Validate and trim string data.
+     *
+     * @param array  $array_in
+     * @param string $key
+     *
+     * @return string|null
+     */
     private function validateAndTrimString(array $array_in, string $key): ?string
     {
         if (!array_key_exists($key, $array_in) || !is_string($array_in[$key])) {
@@ -71,6 +79,15 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
         return $string_out;
     }
 
+    /**
+     * Validate and trim string data for accounts.
+     *
+     * @param array  $array_in
+     * @param string $key
+     * @param array  $accounts
+     *
+     * @return string|null
+     */
     private function validateAndTrimAccounts(array $array_in, string $key, array $accounts): ?string
     {
         $string_out = $this->validateAndTrimString($array_in, $key);
@@ -83,6 +100,14 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
         return $string_out;
     }
 
+    /**
+     * Validate draft slip entry and trim string data.
+     *
+     * @param array  $slipEntry_in
+     * @param array  $accounts
+     *
+     * @return array
+     */
     private function validateAndTrimDraftSlipEntry(array $slipEntry_in, array $accounts): array
     {
         $success = true;
@@ -127,7 +152,7 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
     /**
      * Validate draft slip and trim string data.
      *
-     * @param array $slip
+     * @param array $slip_in
      * @param array $accounts
      *
      * @return array
