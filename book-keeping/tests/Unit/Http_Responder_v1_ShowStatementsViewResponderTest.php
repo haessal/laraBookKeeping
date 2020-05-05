@@ -314,6 +314,7 @@ class Http_Responder_v1_ShowStatementsViewResponderTest extends TestCase
 
         $this->assertTrue(true);
     }
+
     /**
      * @test
      */
