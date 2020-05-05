@@ -298,7 +298,7 @@ class Http_Responder_v1_ShowStatementsViewResponderTest extends TestCase
                     ],
                 ],
             ],
-            'message' => null,
+            'message'            => null,
             'display_statements' => true,
         ];
         /** @var \Illuminate\Http\Response|\Mockery\MockInterface $ResponseMock */
