@@ -59,10 +59,10 @@
                         </td>
                     </tr>
                 </table>
-            @endif
-            @isset($message)
-                {{ $message }}
-            @endisset
+                @endif
+                @isset($message)
+                    {{ $message }}
+                @endisset
             </td>
         </tr>
     </table>
