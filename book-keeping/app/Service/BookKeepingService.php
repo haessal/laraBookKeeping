@@ -431,4 +431,19 @@ class BookKeepingService
 
         return $success;
     }
+
+    /**
+     * Validate period.
+     *
+     * @param string $fromDate
+     * @param string $toDate
+     *
+     * @return bool
+     */
+    public function validatePeriod(string $fromDate, string $toDate): bool
+    {
+        $success = true;
+
+        return $success;
+    }
 }
