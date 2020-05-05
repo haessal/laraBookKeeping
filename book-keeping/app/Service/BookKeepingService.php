@@ -444,6 +444,29 @@ class BookKeepingService
     {
         $success = true;
 
+        if (empty($fromDate)) {
+            $fromDate = self::ORIGIN_DATE;
+        } else {
+            if (!$this->validateDateFormat($fromDate)) {
+                $success = false;
+            }
+        }
+        if (empty($toDate)) {
+            $date = new Carbon();
+            $toDate = $date->format('Y-m-d');
+        } else {
+            if (!$this->validateDateFormat($toDate)) {
+                $success = false;
+            }
+        }
+        if ($success) {
+            $fromDateObj = new Carbon($fromDate);
+            $tomDateObj = new Carbon($toDate);
+            if ($fromDateObj->gt($tomDateObj)) {
+                $success = false;
+            }
+        }
+
         return $success;
     }
 }
