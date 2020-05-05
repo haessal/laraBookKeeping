@@ -15,6 +15,11 @@ class ShowStatementsViewResponder extends BaseViewResponder
      */
     public function response(array $context): Response
     {
+        $income_statement = [];
+        $trial_balance_of_real_flow = [];
+        $previous_balance_sheet = [];
+        $balance_sheet = [];
+        $formatted_slips = [];
         if ($context['display_statements']) {
             $statements = $context['statements'];
             $PreviousBalanceSheet = $context['previous_balance_sheet'];
@@ -65,12 +70,6 @@ class ShowStatementsViewResponder extends BaseViewResponder
                 'net_asset' => $balanceSheet['net_asset'],
             ]);
             $formatted_slips = $this->translateSlipsFormat($slips);
-        } else {
-            $income_statement = null;
-            $trial_balance_of_real_flow = null;
-            $previous_balance_sheet = null;
-            $balance_sheet = null;
-            $formatted_slips = null;
         }
         $this->response->setContent($this->view->make('bookkeeping.v1.pagestatements', [
             'navilinks'                  => $this->navilinks(),
