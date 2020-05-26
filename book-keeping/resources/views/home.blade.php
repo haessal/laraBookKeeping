@@ -10,7 +10,7 @@
                     <ul class="list-group">
                         <li class="list-group-item" style="border: 0 none;">
                             <div class="text-right">
-                                <button onclick="location.href='{{ route('v1_top') }}'" class="btn btn-success">
+                                <button onclick="location.href='{{ route($v2_create_book_page) }}'" class="btn btn-success">
                                     <i class="fa fa-book"></i>　新規作成
                                 </button>
                             </div>

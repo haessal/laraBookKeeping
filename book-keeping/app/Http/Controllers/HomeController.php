@@ -21,6 +21,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        return view('home', ['v2_create_book_page' => 'v1_top']);
     }
 }
