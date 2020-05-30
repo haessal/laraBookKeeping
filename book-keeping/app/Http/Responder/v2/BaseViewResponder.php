@@ -48,7 +48,6 @@ class BaseViewResponder extends BaseLayoutViewResponder
             ['link' => null],
             ['link' => null],
             ['link' => null],
-            ['link' => null],
         ];
     }
 }
