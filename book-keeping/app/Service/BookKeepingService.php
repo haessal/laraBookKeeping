@@ -188,6 +188,25 @@ class BookKeepingService
     }
 
     /**
+     * Retrieve available Books.
+     *
+     * @return array
+     */
+    public function retrieveAvailableBook() : array
+    {
+        $books = [];
+
+        $bookList = $this->book->retrieveBookList(Auth::id());
+        foreach ($bookList as $book) {
+            $id = $book['book_id'];
+            $owner = $this->book->ownerName($id);
+            $books[] = ['id' => $id, 'owner' => $owner, 'name' => $book['book_name']];
+        }
+
+        return $books;
+    }
+
+    /**
      * Retrieve draft slips.
      *
      * @param string $bookId

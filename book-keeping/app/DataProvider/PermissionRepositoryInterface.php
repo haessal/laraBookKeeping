@@ -24,6 +24,15 @@ interface PermissionRepositoryInterface
     public function findDefaultBook(int $userId);
 
     /**
+     * Find owner of the book.
+     *
+     * @param string $bookId
+     *
+     * @return int | null
+     */
+    public function findOwnerOfBook(string $bookId): ?int;
+
+    /**
      * Search book list that the user can access.
      *
      * @param int $userId
