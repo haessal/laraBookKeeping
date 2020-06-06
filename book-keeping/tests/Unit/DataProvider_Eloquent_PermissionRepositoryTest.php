@@ -77,6 +77,30 @@ class DataProvider_Eloquent_PermissionRepositoryTest extends DataProvider_Permis
     /**
      * @test
      */
+    public function findOwnerOfBook_ReturnUserIdOfOwner()
+    {
+        $userId_expected = 82;
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $bookId = factory(Book::class)->create([
+            'book_name' => 'book_name82',
+        ])->book_id;
+        $permissionId = factory(Permission::class)->create([
+            'permitted_user' => $userId_expected,
+            'readable_book'  => $bookId,
+            'modifiable'     => true,
+            'is_owner'       => true,
+            'is_default'     => true,
+        ])->permission_id;
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        $userId_actual = $this->permission->findOwnerOfBook($bookId);
+
+        $this->assertSame($userId_expected, $userId_actual);
+    }
+
+    /**
+     * @test
+     */
     public function searchBookList_ReturnedArrayHasKeysAsBookList()
     {
         $userId = 31;
