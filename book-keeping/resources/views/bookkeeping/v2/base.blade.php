@@ -1,11 +1,10 @@
 @extends('layouts.bookkeeping')
 
 @section('content')
+@isset($book)
 <div class="container-fuid bg-light">
     <div class="container text-center py-2 mb-4">
-        @isset($bookName)
-        <p class="h4 mb-0"><i class="fa fa-book"></i>&nbsp {{{ $bookName['owner'] }}} / {{{ $bookName['name'] }}}</p>
-        @endisset
+        <p class="h4 mb-0"><i class="fa fa-book"></i>&nbsp {{{ $book['owner'] }}} / {{{ $book['name'] }}}</p>
     </div>
     <div class="container-fuid">
         <div class="row">
@@ -44,4 +43,5 @@
 <div class="container-fuid">
     @yield('v2_page_content')
 </div>
+@endisset
 @endsection
