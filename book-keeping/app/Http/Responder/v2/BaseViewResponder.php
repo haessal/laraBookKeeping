@@ -42,7 +42,7 @@ class BaseViewResponder extends BaseLayoutViewResponder
     public function navilinks(): array
     {
         return [
-            ['link' => null],
+            ['link' => 'v2_home', 'caption' => __('Home'), 'icon' => 'fa fa-home'],
             ['link' => null],
             ['link' => null],
             ['link' => null],
