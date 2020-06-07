@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\AuthenticatedBookKeepingAction;
 use App\Http\Responder\ShowDashboardViewResponder;
 use App\Service\BookKeepingService;
 use Illuminate\Http\Request;
