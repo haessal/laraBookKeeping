@@ -20,6 +20,7 @@ class ShowDashboardViewResponder extends BaseLayoutViewResponder
         $this->response->setContent($this->view->make('home', [
             'dropdownmenuLinks' => $this->dropdownMenuLinks(),
             'book_list'         => $book_list,
+            'v2_book_page'      => 'v2',
         ]));
         $this->response->setStatusCode(Response::HTTP_OK);
 
