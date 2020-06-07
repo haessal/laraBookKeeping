@@ -24,7 +24,7 @@ class Http_Controllers_ShowDashboardActionHtmlTest extends TestCase
     public function __invoke_MakeContextAndReturnResponse()
     {
         $context['books'] = [
-            ['id' => (string) Str::uuid(), 'owner' => 'owner', 'name' => 'name']
+            ['id' => (string) Str::uuid(), 'owner' => 'owner', 'name' => 'name'],
         ];
         $response_expected = new Response();
         /** @var \App\Service\BookKeepingService|\Mockery\MockInterface $BookKeepingMock */

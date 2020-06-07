@@ -22,7 +22,7 @@ class Http_Responder_ShowDashboardViewResponderTest extends TestCase
     public function response_ReturnResponse()
     {
         $context['books'] = [
-            ['id' => (string) Str::uuid(), 'owner' => 'owner', 'name' => 'name']
+            ['id' => (string) Str::uuid(), 'owner' => 'owner', 'name' => 'name'],
         ];
         /** @var \Illuminate\Http\Response|\Mockery\MockInterface $ResponseMock */
         $ResponseMock = Mockery::mock(Response::class);
