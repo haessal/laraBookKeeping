@@ -23,7 +23,7 @@
                         @isset($book_list)
                         @foreach ($book_list as $book)
                         @isset($v2_book_page)
-                        <a href="'{{ route($v2_book_page, $book['id']) }}'" class="list-group-item list-group-item-action"><i class="fa fa-book"></i>&nbsp {{{ $book['owner'] }}} / {{{ $book['name'] }}}</a>
+                        <a href="{{ route($v2_book_page, $book['id']) }}" class="list-group-item list-group-item-action"><i class="fa fa-book"></i>&nbsp {{{ $book['owner'] }}} / {{{ $book['name'] }}}</a>
                         @else
                         <span class="list-group-item list-group-item-action"><i class="fa fa-book"></i>&nbsp {{{ $book['owner'] }}} / {{{ $book['name'] }}}</span>
                         @endisset
