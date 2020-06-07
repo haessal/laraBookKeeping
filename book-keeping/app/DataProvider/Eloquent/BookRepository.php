@@ -21,4 +21,20 @@ class BookRepository implements BookRepositoryInterface
 
         return $book->book_id;
     }
+
+    /**
+     * Find book.
+     *
+     * @param string $bookId
+     *
+     * @return array | null
+     */
+    public function findById(string $bookId): ?array
+    {
+        $book = Book::select('book_id', 'book_name')
+            ->where('book_id', $bookId)
+            ->first();
+
+        return is_null($book) ? null : $book->toArray();
+    }
 }
