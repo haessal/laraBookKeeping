@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fuid bg-light">
     <div class="container text-center py-2 mb-4">
-        <p class="h4 mb-0"><i class="fa fa-book"></i>&nbsp m-rky / m-rkyのブック</p>
+        <p class="h4 mb-0"><i class="fa fa-book"></i>&nbsp XXXX / XXXXのブック</p>
     </div>
     <div class="container-fuid">
         <div class="row">
