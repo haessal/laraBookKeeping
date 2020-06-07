@@ -192,7 +192,7 @@ class BookKeepingService
      *
      * @return array
      */
-    public function retrieveAvailableBook() : array
+    public function retrieveAvailableBook(): array
     {
         $books = [];
 
