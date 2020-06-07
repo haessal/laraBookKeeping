@@ -31,11 +31,11 @@ Route::match(['get', 'post'], '/page/v1/statements', v1\ShowStatementsActionHTML
 Route::get('/page/v1/accountslist', v1\ShowAccountsListActionHTML::class)->name('v1_accountslist');
 
 Route::prefix('/page/v2/books/{bookId}')->group(function () {
-    Route::get('', function($bookId) {
+    Route::get('', function ($bookId) {
         return redirect()->route('v2_home', ['bookId' => $bookId]);
     })->name('v2');
     Route::get('/home', v2\ShowHomeActionHtml::class)->name('v2_home');
-    Route::get('/settings', function() {
+    Route::get('/settings', function () {
         return view('welcome');
     })->name('v2_settings');
 });
