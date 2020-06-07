@@ -3,7 +3,9 @@
 @section('content')
 <div class="container-fuid bg-light">
     <div class="container text-center py-2 mb-4">
-        <p class="h4 mb-0"><i class="fa fa-book"></i>&nbsp XXXX / XXXXのブック</p>
+        @isset($bookName)
+        <p class="h4 mb-0"><i class="fa fa-book"></i>&nbsp {{{ $bookName['owner'] }}} / {{{ $bookName['name'] }}}</p>
+        @endisset
     </div>
     <div class="container-fuid">
         <div class="row">
