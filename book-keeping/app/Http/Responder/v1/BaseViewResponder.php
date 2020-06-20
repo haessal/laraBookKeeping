@@ -2,11 +2,14 @@
 
 namespace App\Http\Responder\v1;
 
+use App\Http\Responder\AccountsListConverter;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Http\Response;
 
 class BaseViewResponder
 {
+    use AccountsListConverter;
+
     /**
      * Response instance.
      *
@@ -50,18 +53,6 @@ class BaseViewResponder
     }
 
     /**
-     * Sort accounts in ascending order of account code for version 1.
-     *
-     * @param array $groupedList
-     *
-     * @return array
-     */
-    public function sortAccountInAscendingCodeOrder(array $groupedList): array
-    {
-        return $this->sortAccountGrouptListInAscendingCodeOrder($groupedList);
-    }
-
-    /**
      * Translate account list format for view.
      *
      * @param array $accounts
@@ -99,28 +90,6 @@ class BaseViewResponder
         }
 
         return $account_list;
-    }
-
-    /**
-     * Translate account list to title list for view.
-     *
-     * @param array $accounts
-     *
-     * @return array
-     */
-    public function translateAccountListToTitleList(array $accounts): array
-    {
-        $account_title_list = [];
-
-        foreach ($accounts as $accountType) {
-            foreach ($accountType['groups'] as $accountGroupItem) {
-                foreach ($accountGroupItem['items'] as $accountId => $accountItem) {
-                    $account_title_list[$accountId] = $accountItem['title'];
-                }
-            }
-        }
-
-        return $account_title_list;
     }
 
     /**
@@ -217,79 +186,6 @@ class BaseViewResponder
         }
 
         return $slipentryline;
-    }
-
-    /**
-     * Get associative array which has account ID as key sorted in ascending order of value that is specified keyword.
-     *
-     * @param array $listWithKeyword
-     *
-     * @return array
-     */
-    private function getIdsSortedInAscendingOrder(array $listWithKeyword): array
-    {
-        $sortedIds_isCurrent_withCode = [];
-        $sortedIds_isCurrent_withoutCode = [];
-        $sortedIds_isNotCurrent_withCode = [];
-        $sortedIds_isNotCurrent_withoutCode = [];
-        foreach ($listWithKeyword as $Ids => $item) {
-            if (array_key_exists('isCurrent', $item) && ($item['isCurrent'] == true)) {
-                if (!is_null($item['bk_code'])) {
-                    $sortedIds_isCurrent_withCode[$Ids] = $item['bk_code'];
-                } else {
-                    $sortedIds_isCurrent_withoutCode[$Ids] = $item['createdAt'];
-                }
-            } else {
-                if (!is_null($item['bk_code'])) {
-                    $sortedIds_isNotCurrent_withCode[$Ids] = $item['bk_code'];
-                } else {
-                    $sortedIds_isNotCurrent_withoutCode[$Ids] = $item['createdAt'];
-                }
-            }
-        }
-        asort($sortedIds_isCurrent_withCode);
-        asort($sortedIds_isCurrent_withoutCode);
-        asort($sortedIds_isNotCurrent_withCode);
-        asort($sortedIds_isNotCurrent_withoutCode);
-
-        return $sortedIds_isCurrent_withCode + $sortedIds_isCurrent_withoutCode + $sortedIds_isNotCurrent_withCode + $sortedIds_isNotCurrent_withoutCode;
-    }
-
-    /**
-     * Sort account group list in ascending order of account code for version 1.
-     *
-     * @param array $groupedList
-     *
-     * @return array
-     */
-    private function sortAccountGrouptListInAscendingCodeOrder(array $groupedList): array
-    {
-        $reordered = [];
-        $sortedKeys = $this->getIdsSortedInAscendingOrder($groupedList);
-        foreach ($sortedKeys as $groupId => $keyword) {
-            $reordered[$groupId] = $groupedList[$groupId];
-            $reordered[$groupId]['items'] = $this->sortAccountListInAscendingCodeOrder($groupedList[$groupId]['items']);
-        }
-
-        return $reordered;
-    }
-
-    /**
-     * Sort account list in ascending order of account code for version 1.
-     *
-     * @param array $groupedList
-     *
-     * @return array
-     */
-    private function sortAccountListInAscendingCodeOrder(array $list): array
-    {
-        $reordered = [];
-        $sortedKeys = $this->getIdsSortedInAscendingOrder($list);
-        foreach ($sortedKeys as $id => $keyword) {
-            $reordered[$id] = $list[$id];
-        }
-
-        return $reordered;
     }
 
     /**
