@@ -2,11 +2,11 @@
 
 @section('content')
 @isset($book)
-<div class="container-fuid bg-light">
+<div class="container-fluid bg-light">
     <div class="container text-center py-2 mb-4">
         <p class="h4 mb-0"><i class="fa fa-book"></i>&nbsp {{{ $book['owner'] }}} / {{{ $book['name'] }}}</p>
     </div>
-    <div class="container-fuid">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-6 col-md-1 border-bottom px-0"></div>
             <div class="col-md-10 px-0 d-none d-md-block">
@@ -42,7 +42,7 @@
         </div>
     </div>
 </div>
-<div class="container-fuid">
+<div class="container-fluid">
     @yield('v2_page_content')
 </div>
 @endisset
