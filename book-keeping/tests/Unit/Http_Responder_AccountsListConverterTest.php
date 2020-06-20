@@ -331,7 +331,9 @@ class Http_Responder_AccountsListConverterTest extends TestCase
             ],
         ];
 
-        $responder = new class { use AccountsListConverter; };
+        $responder = new class() {
+            use AccountsListConverter;
+        };
         $formattedAccountGroupsAndItems_actual = $responder->translateAccountListToTitleList($accounts, true);
 
         $this->assertSame($formattedAccountGroupsAndItems_expected, $formattedAccountGroupsAndItems_actual);
