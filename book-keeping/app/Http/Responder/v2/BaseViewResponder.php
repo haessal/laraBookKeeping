@@ -48,7 +48,6 @@ class BaseViewResponder extends BaseLayoutViewResponder
             ['link' => null],
             ['link' => 'v2_accounts', 'caption' => __('Accounts'), 'icon' => 'fa fa-shopping-cart'],
             ['link' => null],
-            ['link' => null],
         ];
     }
 }
