@@ -205,4 +205,131 @@ class Http_Responder_AccountsListConverterTest extends TestCase
 
         $this->assertSame($formattedAccountList_expected, $formattedAccountList_actual);
     }
+
+    /**
+     * @test
+     */
+    public function translateAccountListToTitleList_FormattedAccountGroupsAndItemsListIsReturned()
+    {
+        $accountId_1 = (string) Str::uuid();
+        $accountId_2 = (string) Str::uuid();
+        $accountId_3 = (string) Str::uuid();
+        $accountId_4 = (string) Str::uuid();
+        $accountId_5 = (string) Str::uuid();
+        $accountId_6 = (string) Str::uuid();
+        $accountGroupId_1 = (string) Str::uuid();
+        $accountGroupId_2 = (string) Str::uuid();
+        $accountGroupId_3 = (string) Str::uuid();
+        $accountGroupId_4 = (string) Str::uuid();
+        $accountGroupId_5 = (string) Str::uuid();
+        $accounts = [
+            'asset' => [
+                'groups' => [
+                    $accountGroupId_1 => [
+                        'title'        => 'accountGroupTitle_1',
+                        'isCurrent'    => 0,
+                        'bk_code'      => 1200,
+                        'createdAt'    => '2019-12-01 12:00:12',
+                        'items'        => [
+                            $accountId_1 => [
+                                'title'    => 'accountTitle_1',
+                                'bk_code'  => 1201,
+                                'createdAt'=> '2019-12-02 12:00:01',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'liability' => [
+                'groups' => [
+                    $accountGroupId_2 => [
+                        'title'        => 'accountGroupTitle_2',
+                        'isCurrent'    => 0,
+                        'bk_code'      => 2300,
+                        'createdAt'    => '2019-12-01 12:00:23',
+                        'items'        => [
+                            $accountId_2 => [
+                                'title'    => 'accountTitle_2',
+                                'bk_code'  => 2302,
+                                'createdAt'=> '2019-12-02 12:00:02',
+                            ],
+                            $accountId_3 => [
+                                'title'    => 'accountTitle_3',
+                                'bk_code'  => 2303,
+                                'createdAt'=> '2019-12-02 12:00:03',
+                            ],
+                        ],
+                    ],
+                    $accountGroupId_3 => [
+                        'title'        => 'accountGroupTitle_3',
+                        'isCurrent'    => 0,
+                        'bk_code'      => 2400,
+                        'createdAt'    => '2019-12-01 12:00:24',
+                        'items'        => [
+                            $accountId_4 => [
+                                'title'    => 'accountTitle_4',
+                                'bk_code'  => 2404,
+                                'createdAt'=> '2019-12-02 12:00:04',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'expense' => [
+                'groups' => [],
+            ],
+            'revenue' => [
+                'groups' => [
+                    $accountGroupId_4 => [
+                        'title'        => 'accountGroupTitle_4',
+                        'isCurrent'    => 1,
+                        'bk_code'      => 5100,
+                        'createdAt'    => '2019-12-01 12:00:51',
+                        'items'        => [
+                            $accountId_5 => [
+                                'title'    => 'accountTitle_5',
+                                'bk_code'  => 5105,
+                                'createdAt'=> '2019-12-02 12:00:06',
+                            ],
+                        ],
+                    ],
+                    $accountGroupId_5 => [
+                        'title'        => 'accountGroupTitle_5',
+                        'isCurrent'    => 1,
+                        'bk_code'      => 5200,
+                        'createdAt'    => '2019-12-01 12:00:51',
+                        'items'        => [
+                            $accountId_6 => [
+                                'title'    => 'accountTitle_6',
+                                'bk_code'  => 5206,
+                                'createdAt'=> '2019-12-02 12:00:06',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $formattedAccountGroupsAndItems_expected = [
+            'groups' => [
+                $accountGroupId_1 => 'accountGroupTitle_1',
+                $accountGroupId_2 => 'accountGroupTitle_2',
+                $accountGroupId_3 => 'accountGroupTitle_3',
+                $accountGroupId_4 => 'accountGroupTitle_4',
+                $accountGroupId_5 => 'accountGroupTitle_5',
+            ],
+            'items' => [
+                $accountId_1 => 'accountTitle_1',
+                $accountId_2 => 'accountTitle_2',
+                $accountId_3 => 'accountTitle_3',
+                $accountId_4 => 'accountTitle_4',
+                $accountId_5 => 'accountTitle_5',
+                $accountId_6 => 'accountTitle_6',
+            ],
+        ];
+
+        $responder = new class { use AccountsListConverter; };
+        $formattedAccountGroupsAndItems_actual = $responder->translateAccountListToTitleList($accounts, true);
+
+        $this->assertSame($formattedAccountGroupsAndItems_expected, $formattedAccountGroupsAndItems_actual);
+    }
 }
