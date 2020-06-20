@@ -108,6 +108,7 @@ class Http_Responder_AccountsListConverterTest extends TestCase
             'asset' => [
                 'groups' => [
                     $accountGroupId_1 => [
+                        'title'        => 'accountGroupTitle_1',
                         'isCurrent'    => 0,
                         'bk_code'      => 1200,
                         'createdAt'    => '2019-12-01 12:00:12',
@@ -124,6 +125,7 @@ class Http_Responder_AccountsListConverterTest extends TestCase
             'liability' => [
                 'groups' => [
                     $accountGroupId_2 => [
+                        'title'        => 'accountGroupTitle_2',
                         'isCurrent'    => 0,
                         'bk_code'      => 2300,
                         'createdAt'    => '2019-12-01 12:00:23',
@@ -141,6 +143,7 @@ class Http_Responder_AccountsListConverterTest extends TestCase
                         ],
                     ],
                     $accountGroupId_3 => [
+                        'title'        => 'accountGroupTitle_3',
                         'isCurrent'    => 0,
                         'bk_code'      => 2400,
                         'createdAt'    => '2019-12-01 12:00:24',
@@ -160,6 +163,7 @@ class Http_Responder_AccountsListConverterTest extends TestCase
             'revenue' => [
                 'groups' => [
                     $accountGroupId_4 => [
+                        'title'        => 'accountGroupTitle_4',
                         'isCurrent'    => 1,
                         'bk_code'      => 5100,
                         'createdAt'    => '2019-12-01 12:00:51',
@@ -172,6 +176,7 @@ class Http_Responder_AccountsListConverterTest extends TestCase
                         ],
                     ],
                     $accountGroupId_5 => [
+                        'title'        => 'accountGroupTitle_5',
                         'isCurrent'    => 1,
                         'bk_code'      => 5200,
                         'createdAt'    => '2019-12-01 12:00:51',
