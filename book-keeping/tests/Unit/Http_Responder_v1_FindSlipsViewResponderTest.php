@@ -37,6 +37,7 @@ class Http_Responder_v1_FindSlipsViewResponderTest extends TestCase
                 'asset' => [
                     'groups' => [
                         $accountGroupId_1 => [
+                            'title'        => 'accountGroupTitle_1',
                             'isCurrent'    => 0,
                             'bk_code'      => 1200,
                             'createdAt'    => '2020-01-01 12:00:12',
@@ -53,6 +54,7 @@ class Http_Responder_v1_FindSlipsViewResponderTest extends TestCase
                 'liability' => [
                     'groups' => [
                         $accountGroupId_2 => [
+                            'title'        => 'accountGroupTitle_2',
                             'isCurrent'    => 0,
                             'bk_code'      => 2300,
                             'createdAt'    => '2020-01-01 12:00:23',
@@ -69,6 +71,7 @@ class Http_Responder_v1_FindSlipsViewResponderTest extends TestCase
                 'expense' => [
                     'groups' => [
                         $accountGroupId_3 => [
+                            'title'        => 'accountGroupTitle_3',
                             'isCurrent'    => 0,
                             'bk_code'      => 2400,
                             'createdAt'    => '2020-01-01 12:00:24',
@@ -85,6 +88,7 @@ class Http_Responder_v1_FindSlipsViewResponderTest extends TestCase
                 'revenue' => [
                     'groups' => [
                         $accountGroupId_4 => [
+                            'title'        => 'accountGroupTitle_4',
                             'isCurrent'    => 1,
                             'bk_code'      => 5100,
                             'createdAt'    => '2020-01-01 12:00:51',
