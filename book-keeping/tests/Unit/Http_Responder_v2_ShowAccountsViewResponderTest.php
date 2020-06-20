@@ -43,6 +43,5 @@ class Http_Responder_v2_ShowAccountsViewResponderTest extends TestCase
         $response = $responder->response($context);
 
         $this->assertTrue(true);
-
     }
 }
