@@ -20,19 +20,27 @@ trait AccountsListConverter
      * Translate account list to title list for view.
      *
      * @param array $accounts
+     * @param bool  $withGroupList
      *
      * @return array
      */
-    public function translateAccountListToTitleList(array $accounts): array
+    public function translateAccountListToTitleList(array $accounts, bool $withGroupList = false): array
     {
-        $account_title_list = [];
+        $accountItem_title_list = [];
+        $accountGroup_title_list = [];
 
         foreach ($accounts as $accountType) {
-            foreach ($accountType['groups'] as $accountGroupItem) {
+            foreach ($accountType['groups'] as $accountGroupId => $accountGroupItem) {
+                $accountGroup_title_list[$accountGroupId] = $accountGroupItem['title'];
                 foreach ($accountGroupItem['items'] as $accountId => $accountItem) {
-                    $account_title_list[$accountId] = $accountItem['title'];
+                    $accountItem_title_list[$accountId] = $accountItem['title'];
                 }
             }
+        }
+        if ($withGroupList) {
+            $account_title_list = ['groups' => $accountGroup_title_list, 'items' => $accountItem_title_list];
+        } else {
+            $account_title_list = $accountItem_title_list;
         }
 
         return $account_title_list;
