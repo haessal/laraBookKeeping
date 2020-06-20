@@ -420,6 +420,7 @@ class Service_BookKeepingServiceTest extends TestCase
                             $accountId_1 => [
                                 'title'       => 'accountTitle_1',
                                 'description' => 'description_1',
+                                'selectable'  => 1,
                                 'bk_code'     => 1201,
                                 'createdAt'   => '2019-12-02 12:00:01',
                             ],
@@ -438,12 +439,14 @@ class Service_BookKeepingServiceTest extends TestCase
                             $accountId_2 => [
                                 'title'       => 'accountTitle_2',
                                 'description' => 'description_2',
+                                'selectable'  => 1,
                                 'bk_code'     => 2302,
                                 'createdAt'   => '2019-12-02 12:00:02',
                             ],
                             $accountId_3 => [
                                 'title'       => 'accountTitle_3',
                                 'description' => 'description_3',
+                                'selectable'  => 1,
                                 'bk_code'     => 2303,
                                 'createdAt'   => '2019-12-02 12:00:03',
                             ],
@@ -458,6 +461,7 @@ class Service_BookKeepingServiceTest extends TestCase
                             $accountId_4 => [
                                 'title'       => 'accountTitle_4',
                                 'description' => 'description_4',
+                                'selectable'  => 1,
                                 'bk_code'     => 2404,
                                 'createdAt'   => '2019-12-02 12:00:04',
                             ],
@@ -479,12 +483,14 @@ class Service_BookKeepingServiceTest extends TestCase
                             $accountId_6 => [
                                 'title'       => 'accountTitle_6',
                                 'description' => 'description_6',
+                                'selectable'  => 1,
                                 'bk_code'     => 5106,
                                 'createdAt'   => '2019-12-02 12:00:06',
                             ],
                             $accountId_8 => [
                                 'title'       => 'accountTitle_8',
                                 'description' => 'description_8',
+                                'selectable'  => 1,
                                 'bk_code'     => 5108,
                                 'createdAt'   => '2019-12-02 12:00:08',
                             ],
@@ -568,6 +574,7 @@ class Service_BookKeepingServiceTest extends TestCase
                             $accountId_1 => [
                                 'title'       => 'accountTitle_1',
                                 'description' => 'description_1',
+                                'selectable'  => 1,
                                 'bk_code'     => 1201,
                                 'createdAt'   => '2019-12-02 12:00:01',
                             ],
@@ -586,6 +593,7 @@ class Service_BookKeepingServiceTest extends TestCase
                             $accountId_2 => [
                                 'title'       => 'accountTitle_2',
                                 'description' => 'description_2',
+                                'selectable'  => 0,
                                 'bk_code'     => 2302,
                                 'createdAt'   => '2019-12-02 12:00:02',
                             ],
