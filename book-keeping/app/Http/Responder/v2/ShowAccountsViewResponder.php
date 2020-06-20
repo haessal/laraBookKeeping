@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 class ShowAccountsViewResponder extends BaseViewResponder
 {
     /**
-     * Respond the ShowHomeView.
+     * Respond the ShowAccountsView.
      *
      * @param array $context
      *

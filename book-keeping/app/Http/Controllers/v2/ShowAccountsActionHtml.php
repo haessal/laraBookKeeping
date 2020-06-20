@@ -11,7 +11,7 @@ use Illuminate\Http\Response;
 class ShowAccountsActionHtml extends AuthenticatedBookKeepingAction
 {
     /**
-     * ShowHomeView responder instance.
+     * ShowAccountsView responder instance.
      *
      * @var \App\Http\Responder\v2\ShowAccountsViewResponder
      */
