@@ -30,5 +30,4 @@ class Http_Responder_v2_BaseAccountsViewResponderTest extends TestCase
 
         $this->assertIsArray($navilinks);
     }
-
 }
