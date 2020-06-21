@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\DataProvider\Eloquent\AccountGroup;
 use App\DataProvider\Eloquent\AccountGroupRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Artisan;
@@ -50,6 +51,44 @@ class DataProvider_Eloquent_AccountGroupRepositoryTest extends DataProvider_Acco
             'bk_uid'                => $bk_uid,
             'account_group_bk_code' => $bk_code,
             'is_current'            => $isCurrent,
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function update_OneRecordIsUpdated()
+    {
+        $bookId = (string) Str::uuid();
+        $accountType = 'asset';
+        $title = 'title63';
+        $isCurrent = true;
+        $title_updated = 'title65';
+        $isCurrent_updated = false;
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $accountGroupId = factory(AccountGroup::class)->create([
+            'book_id'               => $bookId,
+            'account_type'          => $accountType,
+            'account_group_title'   => $title,
+            'is_current'            => $isCurrent,
+            'bk_uid'                => null,
+            'account_group_bk_code' => null,
+        ])->account_group_id;
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        $this->accountGroup->update($accountGroupId, [
+            'title'      => $title_updated,
+            'is_current' => $isCurrent_updated,
+        ]);
+
+        $this->assertDatabaseHas('bk2_0_account_groups', [
+            'account_group_id'      => $accountGroupId,
+            'book_id'               => $bookId,
+            'account_type'          => 'asset',
+            'account_group_title'   => $title_updated,
+            'is_current'            => $isCurrent_updated,
+            'bk_uid'                => null,
+            'account_group_bk_code' => null,
         ]);
     }
 }
