@@ -43,4 +43,19 @@ abstract class DataProvider_AccountGroupRepositoryInterfaceTest extends TestCase
 
         $this->assertTrue(is_string($accountGroupId));
     }
+
+    /**
+     * @test
+     */
+    public function update_CalledWithStringAndArray()
+    {
+        $accountGroupId = (string) Str::uuid();
+        $newData = [];
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $this->accountGroup->update($accountGroupId, $newData);
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        $this->assertTrue(true);
+    }
 }

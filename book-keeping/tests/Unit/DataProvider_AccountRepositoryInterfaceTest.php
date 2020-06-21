@@ -53,4 +53,19 @@ abstract class DataProvider_AccountRepositoryInterfaceTest extends TestCase
 
         $this->assertTrue(is_array($accountList));
     }
+
+    /**
+     * @test
+     */
+    public function update_CalledWithStringAndArray()
+    {
+        $accountId = (string) Str::uuid();
+        $newData = [];
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $this->account->update($accountId, $newData);
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        $this->assertTrue(true);
+    }
 }

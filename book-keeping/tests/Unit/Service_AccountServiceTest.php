@@ -96,4 +96,47 @@ class Service_AccountServiceTest extends TestCase
 
         $this->assertSame($accounts_expected, $accounts_actual);
     }
+
+    /**
+     * @test
+     */
+    public function updateAccount_CallRepositoryWithArgumentsAsItIs()
+    {
+        $accountId = (string) Str::uuid();
+        $accountGroupId = (string) Str::uuid();
+        $newData = ['group' => $accountGroupId, 'title' => 'title106', 'description' => 'description106', 'selectable' => false];
+        /** @var \App\DataProvider\AccountGroupRepositoryInterface|\Mockery\MockInterface $accountGroupMock */
+        $accountGroupMock = Mockery::mock(AccountGroupRepositoryInterface::class);
+        /** @var \App\DataProvider\AccountRepositoryInterface|\Mockery\MockInterface $accountMock */
+        $accountMock = Mockery::mock(AccountRepositoryInterface::class);
+        $accountMock->shouldReceive('update')
+            ->once()
+            ->with($accountId, $newData);
+
+        $account = new AccountService($accountMock, $accountGroupMock);
+        $account->updateAccount($accountId, $newData);
+
+        $this->assertTrue(true);
+    }
+
+    /**
+     * @test
+     */
+    public function updateAccountGroup_CallRepositoryWithArgumentsAsItIs()
+    {
+        $accountGroupId = (string) Str::uuid();
+        $newData = ['title' => 'title127', 'is_current' => true];
+        /** @var \App\DataProvider\AccountGroupRepositoryInterface|\Mockery\MockInterface $accountGroupMock */
+        $accountGroupMock = Mockery::mock(AccountGroupRepositoryInterface::class);
+        $accountGroupMock->shouldReceive('update')
+            ->once()
+            ->with($accountGroupId, $newData);
+        /** @var \App\DataProvider\AccountRepositoryInterface|\Mockery\MockInterface $accountMock */
+        $accountMock = Mockery::mock(AccountRepositoryInterface::class);
+
+        $account = new AccountService($accountMock, $accountGroupMock);
+        $account->updateAccountGroup($accountGroupId, $newData);
+
+        $this->assertTrue(true);
+    }
 }
