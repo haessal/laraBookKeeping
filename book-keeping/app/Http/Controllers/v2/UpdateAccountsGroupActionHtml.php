@@ -52,7 +52,7 @@ class UpdateAccountsGroupActionHtml extends AuthenticatedBookKeepingAction
                 $is_current = false;
             }
             $newData = ['title' => $title, 'is_current' => $is_current];
-            $this->BookKeeping->updateAccountGroup($bookId, $accountsGroupId, $newData);
+            $this->BookKeeping->updateAccountGroup($accountsGroupId, $newData, $bookId);
         }
         $context['book'] = $this->BookKeeping->retrieveBookInfomation($bookId);
         $context['accounts'] = $this->BookKeeping->retrieveAccounts(false, $bookId);

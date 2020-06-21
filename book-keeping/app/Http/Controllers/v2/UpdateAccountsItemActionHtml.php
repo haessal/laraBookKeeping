@@ -54,7 +54,7 @@ class UpdateAccountsItemActionHtml extends AuthenticatedBookKeepingAction
                 $selectable = false;
             }
             $newData = ['group' => $group, 'title' => $title, 'description' => $description, 'selectable' => $selectable];
-            $this->BookKeeping->updateAccount($bookId, $accountsItemId, $newData);
+            $this->BookKeeping->updateAccount($accountsItemId, $newData, $bookId);
         }
         $context['book'] = $this->BookKeeping->retrieveBookInfomation($bookId);
         $context['accounts'] = $this->BookKeeping->retrieveAccounts(false, $bookId);
