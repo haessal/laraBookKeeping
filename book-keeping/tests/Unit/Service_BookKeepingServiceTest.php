@@ -1720,6 +1720,59 @@ class Service_BookKeepingServiceTest extends TestCase
 
     /**
      * @test
+     */
+    public function updateAccount_UpdateTheSpecifiedAcount()
+    {
+        $bookId = (string) Str::uuid();
+        $accountId = (string) Str::uuid();
+        $accountGroupId = (string) Str::uuid();
+        $newData = ['group' => $accountGroupId, 'title' => 'title1729', 'description' => 'description1729', 'selectable' => false];
+        /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
+        $bookMock = Mockery::mock(BookService::class);
+        /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
+        $accountMock = Mockery::mock(AccountService::class);
+        $accountMock->shouldReceive('updateAccount')
+            ->once()
+            ->with($accountId, $newData);
+        /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
+        $budgetMock = Mockery::mock(BudgetService::class);
+        /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
+        $slipMock = Mockery::mock(SlipService::class);
+
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $BookKeeping->updateAccount($accountId, $newData, $bookId);
+
+        $this->assertTrue(true);
+    }
+
+    /**
+     * @test
+     */
+    public function updateAccountGroup_UpdateTheSpecifiedAcountGroup()
+    {
+        $bookId = (string) Str::uuid();
+        $accountGroupId = (string) Str::uuid();
+        $newData = ['title' => 'title1755', 'is_current' => true];
+        /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
+        $bookMock = Mockery::mock(BookService::class);
+        /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
+        $accountMock = Mockery::mock(AccountService::class);
+        $accountMock->shouldReceive('updateAccountGroup')
+            ->once()
+            ->with($accountGroupId, $newData);
+        /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
+        $budgetMock = Mockery::mock(BudgetService::class);
+        /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
+        $slipMock = Mockery::mock(SlipService::class);
+
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $BookKeeping->updateAccountGroup($accountGroupId, $newData, $bookId);
+
+        $this->assertTrue(true);
+    }
+
+    /**
+     * @test
      * @dataProvider forTestValidateDateFormat
      */
     public function validateDateFormat_MachValidationResult($date, $success_expected)
