@@ -452,11 +452,11 @@ class BookKeepingService
     /**
      * Update Account.
      *
-     * @param string $bookId
      * @param string $accountId
      * @param array  $newData
+     * @param string $bookId
      */
-    public function updateAccount(string $bookId, string $accountId, array $newData)
+    public function updateAccount(string $accountId, array $newData, string $bookId = null)
     {
         $this->account->updateAccount($accountId, $newData);
     }
@@ -464,11 +464,11 @@ class BookKeepingService
     /**
      * Update Account Group.
      *
-     * @param string $bookId
      * @param string $accountGroupId
      * @param array  $newData
+     * @param string $bookId
      */
-    public function updateAccountGroup(string $bookId, string $accountGroupId, array $newData)
+    public function updateAccountGroup(string $accountGroupId, array $newData, string $bookId = null)
     {
         $this->account->updateAccountGroup($accountGroupId, $newData);
     }
