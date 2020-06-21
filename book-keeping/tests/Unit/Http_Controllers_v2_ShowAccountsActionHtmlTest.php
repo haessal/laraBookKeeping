@@ -42,7 +42,7 @@ class Http_Controllers_v2_ShowAccountsActionHtmlTest extends TestCase
             ->andReturn($context['book']);
         $BookKeepingMock->shouldReceive('retrieveAccounts')
             ->once()
-            ->with($bookId)
+            ->with(false, $bookId)
             ->andReturn($context['accounts']);
         /** @var \App\Http\Responder\v2\ShowAccountsViewResponder|\Mockery\MockInterface $responderMock */
         $responderMock = Mockery::mock(ShowAccountsViewResponder::class);
