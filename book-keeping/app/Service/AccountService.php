@@ -99,6 +99,28 @@ class AccountService
     }
 
     /**
+     * Update Account.
+     *
+     * @param string $accountId
+     * @param array  $newData
+     */
+    public function updateAccount(string $accountId, array $newData)
+    {
+        $this->account->update($accountId, $newData);
+    }
+
+    /**
+     * Update Account Group.
+     *
+     * @param string $accountGroupId
+     * @param array  $newData
+     */
+    public function updateAccountGroup(string $accountGroupId, array $newData)
+    {
+        $this->accountGroup->update($accountGroupId, $newData);
+    }
+
+    /**
      * Retrieve list of account.
      *
      * @param string $bookId

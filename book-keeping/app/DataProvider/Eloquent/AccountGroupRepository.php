@@ -31,4 +31,24 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
 
         return $accountGroup->account_group_id;
     }
+
+    /**
+     * Update account group.
+     *
+     * @param string $accountGroupId
+     * @param array  $newData
+     */
+    public function update(string $accountGroupId, array $newData)
+    {
+        $accountGroup = AccountGroup::find($accountGroupId);
+        if (!is_null($accountGroup)) {
+            if (array_key_exists('title', $newData)) {
+                $accountGroup->account_group_title = $newData['title'];
+            }
+            if (array_key_exists('is_current', $newData)) {
+                $accountGroup->is_current = $newData['is_current'];
+            }
+            $accountGroup->save();
+        }
+    }
 }

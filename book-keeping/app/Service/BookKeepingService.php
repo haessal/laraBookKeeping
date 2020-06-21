@@ -450,6 +450,30 @@ class BookKeepingService
     }
 
     /**
+     * Update Account.
+     *
+     * @param string $bookId
+     * @param string $accountId
+     * @param array  $newData
+     */
+    public function updateAccount(string $bookId, string $accountId, array $newData)
+    {
+        $this->account->updateAccount($accountId, $newData);
+    }
+
+    /**
+     * Update Account Group.
+     *
+     * @param string $bookId
+     * @param string $accountGroupId
+     * @param array  $newData
+     */
+    public function updateAccountGroup(string $bookId, string $accountGroupId, array $newData)
+    {
+        $this->account->updateAccountGroup($accountGroupId, $newData);
+    }
+
+    /**
      * Validate date format.
      *
      * @param string $date
