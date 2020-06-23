@@ -44,6 +44,12 @@ class UpdateAccountsGroupActionHtml extends AuthenticatedBookKeepingAction
     {
         $context = [];
 
+        $accountTypeCaption = [
+            'asset'     => __('Assets'),
+            'liability' => __('Liabilities'),
+            'expense'   => __('Expense'),
+            'revenue'   => __('Revenue'),
+        ];
         if ($request->isMethod('post')) {
             $title = trim($request->input('title'));
             if (array_key_exists('attribute_current', $request->all())) {
@@ -61,25 +67,8 @@ class UpdateAccountsGroupActionHtml extends AuthenticatedBookKeepingAction
         foreach ($accounts as $accountTypeKey => $accountType) {
             if (array_key_exists($accountsGroupId, $accountType['groups'])) {
                 $context['accountsgroup']['id'] = $accountsGroupId;
-                switch ($accountTypeKey) {
-                    case 'asset':
-                        $context['accountsgroup']['type'] = __('Assets');
-                        break;
-                    case 'liability':
-                        $context['accountsgroup']['type'] = __('Liabilities');
-                        break;
-                    case 'expense':
-                        $context['accountsgroup']['type'] = __('Expense');
-                        break;
-                    case 'revenue':
-                        $context['accountsgroup']['type'] = __('Revenue');
-                        break;
-                    default:
-                        $context['accountsgroup']['type'] = null;
-                        break;
-                }
+                $context['accountsgroup']['type'] = $accountTypeCaption[$accountTypeKey];
                 $context['accountsgroup']['title'] = $accountType['groups'][$accountsGroupId]['title'];
-
                 $context['accountsgroup']['attribute_current'] = $accountType['groups'][$accountsGroupId]['isCurrent'] ? 'checked' : null;
                 $context['accountsgroup']['bk_code'] = $accountType['groups'][$accountsGroupId]['bk_code'];
             }

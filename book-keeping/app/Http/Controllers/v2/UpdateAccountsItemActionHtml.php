@@ -44,6 +44,12 @@ class UpdateAccountsItemActionHtml extends AuthenticatedBookKeepingAction
     {
         $context = [];
 
+        $accountTypeCaption = [
+            'asset'     => __('Assets'),
+            'liability' => __('Liabilities'),
+            'expense'   => __('Expense'),
+            'revenue'   => __('Revenue'),
+        ];
         if ($request->isMethod('post')) {
             $group = trim($request->input('accountgroup'));
             $title = trim($request->input('title'));
@@ -63,27 +69,11 @@ class UpdateAccountsItemActionHtml extends AuthenticatedBookKeepingAction
         foreach ($accounts as $accountTypeKey => $accountType) {
             foreach ($accountType['groups'] as $accountGroupKey => $accountGroup) {
                 if (array_key_exists($accountsItemId, $accountGroup['items'])) {
-                    $context['accountsitem']['id'] = $accountsItemId;
                     $context['accounttypekey'] = $accountTypeKey;
-                    switch ($accountTypeKey) {
-                        case 'asset':
-                            $context['accountsitem']['type'] = __('Assets');
-                            break;
-                        case 'liability':
-                            $context['accountsitem']['type'] = __('Liabilities');
-                            break;
-                        case 'expense':
-                            $context['accountsitem']['type'] = __('Expense');
-                            break;
-                        case 'revenue':
-                            $context['accountsitem']['type'] = __('Revenue');
-                            break;
-                        default:
-                            $context['accountsitem']['type'] = null;
-                            break;
-                    }
-                    $accountItem = $accountGroup['items'][$accountsItemId];
+                    $context['accountsitem']['id'] = $accountsItemId;
+                    $context['accountsitem']['type'] = $accountTypeCaption[$accountTypeKey];
                     $context['accountsitem']['groupid'] = $accountGroupKey;
+                    $accountItem = $accountGroup['items'][$accountsItemId];
                     $context['accountsitem']['title'] = $accountItem['title'];
                     $context['accountsitem']['description'] = $accountItem['description'];
                     $context['accountsitem']['attribute_selectable'] = $accountItem['selectable'] ? 'checked' : null;
