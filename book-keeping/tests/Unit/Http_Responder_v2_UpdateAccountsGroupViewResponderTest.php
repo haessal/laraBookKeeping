@@ -35,7 +35,7 @@ class Http_Responder_v2_UpdateAccountsGroupViewResponderTest extends TestCase
                 'id'                => $accountsGroupId,
                 'type'              => __('Assets'),
                 'title'             => 'title36',
-                'attribute_current' => true,
+                'attribute_current' => 'checked',
                 'bk_code'           => 1100,
             ],
         ];

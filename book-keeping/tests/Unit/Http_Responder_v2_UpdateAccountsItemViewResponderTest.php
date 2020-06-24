@@ -39,7 +39,7 @@ class Http_Responder_v2_UpdateAccountsItemViewResponderTest extends TestCase
                 'groupid'              => $accountsGroupId,
                 'title'                => 'title40',
                 'description'          => 'description41',
-                'attribute_selectable' => true,
+                'attribute_selectable' => 'checked',
                 'bk_code'              => 1101,
             ],
         ];

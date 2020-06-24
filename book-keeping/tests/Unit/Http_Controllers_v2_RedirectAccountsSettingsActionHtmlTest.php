@@ -43,7 +43,7 @@ class Http_Controllers_v2_RedirectAccountsSettingsActionHtmlTest extends TestCas
         $controller = new RedirectAccountsSettingsActionHtml($BookKeepingMock);
         $response = $controller->__invoke($requestMock, $bookId);
 
-        $this->assertSame(route('v2_accounts_groups', ['bookId' => $bookId, 'accountsGroupId' => $accountGroupId]) ,$response->getTargetUrl());
+        $this->assertSame(route('v2_accounts_groups', ['bookId' => $bookId, 'accountsGroupId' => $accountGroupId]), $response->getTargetUrl());
     }
 
     /**
@@ -73,7 +73,7 @@ class Http_Controllers_v2_RedirectAccountsSettingsActionHtmlTest extends TestCas
         $controller = new RedirectAccountsSettingsActionHtml($BookKeepingMock);
         $response = $controller->__invoke($requestMock, $bookId);
 
-        $this->assertSame(route('v2_accounts_items', ['bookId' => $bookId, 'accountsItemId' => $accountId]) ,$response->getTargetUrl());
+        $this->assertSame(route('v2_accounts_items', ['bookId' => $bookId, 'accountsItemId' => $accountId]), $response->getTargetUrl());
     }
 
     /**
@@ -102,6 +102,6 @@ class Http_Controllers_v2_RedirectAccountsSettingsActionHtmlTest extends TestCas
         $controller = new RedirectAccountsSettingsActionHtml($BookKeepingMock);
         $response = $controller->__invoke($requestMock, $bookId);
 
-        $this->assertSame(route('v2_accounts_settings', ['book/Id' => $bookId]) ,$response->getTargetUrl());
+        $this->assertSame(route('v2_accounts_settings', ['book/Id' => $bookId]), $response->getTargetUrl());
     }
 }
