@@ -24,8 +24,8 @@ class UpdateAccountsItemViewResponder extends BaseAccountsViewResponder
         ];
         $accounts_title = $this->translateAccountListToTitleList($accounts_sorted, true);
         $accounts_groups = $this->translateAccountListToTitleList([
-            $context['accounttypekey'] => ['groups' => $accounts_sorted[$context['accounttypekey']]['groups']]
-        ], true);;
+            $context['accounttypekey'] => ['groups' => $accounts_sorted[$context['accounttypekey']]['groups']],
+        ], true);
         $this->response->setContent($this->view->make('bookkeeping.v2.pageaccountssettingsitem', [
             'dropdownmenuLinks' => $this->dropdownMenuLinks(),
             'book'              => $context['book'],

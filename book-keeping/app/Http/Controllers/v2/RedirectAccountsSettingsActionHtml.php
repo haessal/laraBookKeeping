@@ -4,9 +4,9 @@ namespace App\Http\Controllers\v2;
 
 use App\Http\Controllers\AuthenticatedBookKeepingAction;
 use App\Service\BookKeepingService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Http\RedirectResponse;
 
 class RedirectAccountsSettingsActionHtml extends AuthenticatedBookKeepingAction
 {
@@ -35,13 +35,13 @@ class RedirectAccountsSettingsActionHtml extends AuthenticatedBookKeepingAction
         $redirect = redirect()->route('v2_accounts_settings', ['bookId' => $book['id']], Response::HTTP_SEE_OTHER);
         $accountsgroup = $request->input('accountsgroup');
         if (!is_null($accountsgroup)) {
-            if (strcmp($accountsgroup, "0") != 0) {
+            if (strcmp($accountsgroup, '0') != 0) {
                 $redirect = redirect()->route('v2_accounts_groups', ['bookId' => $book['id'], 'accountsGroupId' => $accountsgroup], Response::HTTP_SEE_OTHER);
             }
         }
         $accountsitem = $request->input('accountsitem');
         if (!is_null($accountsitem)) {
-            if (strcmp($accountsitem, "0") != 0) {
+            if (strcmp($accountsitem, '0') != 0) {
                 $redirect = redirect()->route('v2_accounts_items', ['bookId' => $book['id'], 'accountsItemId' => $accountsitem], Response::HTTP_SEE_OTHER);
             }
         }
