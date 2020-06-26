@@ -37,7 +37,6 @@ Route::prefix('/page/v2/books/{bookId}')->group(function () {
     Route::get('/home', v2\ShowHomeActionHtml::class)->name('v2_home');
     Route::get('/accounts', v2\ShowAccountsActionHtml::class)->name('v2_accounts');
     Route::get('/accounts/groups/new', v2\CreateAccountsGroupActionHtml::class)->name('v2_accounts_groups_new');
-    Route::get('/accounts/items/new', v2\CreateAccountsItemActionHtml::class)->name('v2_accounts_items_new');
     Route::get('/accounts/settings', v2\ShowAccountsSettingsActionHtml::class)->name('v2_accounts_settings');
     Route::post('/accounts/settings', v2\RedirectAccountsSettingsActionHtml::class)->name('v2_accounts_settings_redirect');
     Route::match(['get', 'post'], '/accounts/settings/groups/{accountsGroupId}', v2\UpdateAccountsGroupActionHtml::class)->name('v2_accounts_groups');
