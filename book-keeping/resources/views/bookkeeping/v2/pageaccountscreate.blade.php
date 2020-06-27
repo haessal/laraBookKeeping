@@ -5,11 +5,11 @@
     <div class="row justify-content-center">
         <div class="col-12 col-md-10">
             <div class="container-fluid rounded border py-0">
-                <div class="h4 pt-3">{{{ __('Edit Account Group') }}}</div>
+                <div class="h4 pt-3">{{{ __('Add Account Group') }}}</div>
                 <hr>
                 <div class="container-fluid">
                     <div class="row d-none d-md-block"> 
-                        <form method="POST" action="#">
+                        <form method="POST" action="{{ route('v2_accounts_new', ['bookId' => $book['id']]) }}">
                             @csrf
                             <div class="form-group">
                                 <table class="table table-bordered">
@@ -19,19 +19,19 @@
                                             <td class="border border-secondary">
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio" name="radio1" id="radio1a" checked>
-                                                    <label class="form-check-label" for="radio1a">資産&nbsp;&nbsp;&nbsp;</label>
+                                                    <label class="form-check-label" for="radio1a">{{{ __('Assets') }}}&nbsp;&nbsp;&nbsp;</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio" name="radio1" id="radio1b">
-                                                    <label class="form-check-label" for="radio1b">資産&nbsp;&nbsp;&nbsp;</label>
+                                                    <label class="form-check-label" for="radio1b">{{{ __('Liabilities') }}}&nbsp;&nbsp;&nbsp;</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio" name="radio1" id="radio1b">
-                                                    <label class="form-check-label" for="radio1b">資産&nbsp;&nbsp;&nbsp;</label>
+                                                    <label class="form-check-label" for="radio1b">{{{ __('Expense') }}}&nbsp;&nbsp;&nbsp;</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio" name="radio1" id="radio1b">
-                                                    <label class="form-check-label" for="radio1b">資産&nbsp;&nbsp;&nbsp;</label>
+                                                    <label class="form-check-label" for="radio1b">{{{ __('Revenue') }}}&nbsp;&nbsp;&nbsp;</label>
                                                 </div>
                                             </td>
                                         </tr>
@@ -42,7 +42,7 @@
                                     </tbody>
                                 </table>
                                 <div class="text-right">
-                                    <button name="update" value="update" type="submit" class="btn btn-success">{{{ __('Update') }}}</button>
+                                    <button name="update" value="update" type="submit" class="btn btn-success">{{{ __('Add') }}}</button>
                                 </div>
                             </div>
                         </form>
@@ -53,12 +53,11 @@
                 </div>
             </div>
             <div class="container-fluid rounded border mt-2">
-                <div class="h4 pt-3">{{{ __('Edit Account Group') }}}</div>
+                <div class="h4 pt-3">{{{ __('Add Account Item') }}}</div>
                 <hr>
                 <div class="container-fluid">
-
                     <div class="row d-none d-md-block">
-                        <form method="POST" action="#">
+                        <form method="POST" action="{{ route('v2_accounts_new', ['bookId' => $book['id']]) }}">
                             @csrf
                             <div class="form-group">
                                 <table class="table table-bordered">
@@ -85,7 +84,7 @@
                                     </tbody>
                                 </table>
                                 <div class="text-right">
-                                    <button name="update" value="update" type="submit" class="btn btn-success">{{{ __('Update') }}}</button>
+                                    <button name="update" value="update" type="submit" class="btn btn-success">{{{ __('Add') }}}</button>
                                 </div>
                             </div>
                         </form>
