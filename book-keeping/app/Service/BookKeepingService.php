@@ -456,7 +456,7 @@ class BookKeepingService
      * @param array  $newData
      * @param string $bookId
      */
-    public function updateAccount(string $accountId, array $newData, string $bookId = null)
+    public function updateAccount(string $accountId, array $newData, string $bookId)
     {
         $this->account->updateAccount($accountId, $newData);
     }
@@ -468,7 +468,7 @@ class BookKeepingService
      * @param array  $newData
      * @param string $bookId
      */
-    public function updateAccountGroup(string $accountGroupId, array $newData, string $bookId = null)
+    public function updateAccountGroup(string $accountGroupId, array $newData, string $bookId)
     {
         $this->account->updateAccountGroup($accountGroupId, $newData);
     }
