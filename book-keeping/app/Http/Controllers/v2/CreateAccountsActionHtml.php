@@ -55,22 +55,110 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
             $button_action = $request->input('create');
             switch ($button_action) {
                 case 'group':
-                    $context['accounttype'] = $request->input('accounttype');
-                    $context['accountcreate']['grouptitle'] = trim($request->input('title'));
+                    $result = $this->validateAndTrimForCreateAccountGroup($request->all(), $bookId);
+                    $accountGroup = $result['accountGroup'];
+                    if ($result['success']) {
+                        $this->BookKeeping->createAccountGroup($accountGroup['accounttype'], $accountGroup['title'], $bookId);
+                    } else {
+                        $context['accounttype'] = $accountGroup['accounttype'];
+                        $context['accountcreate']['grouptitle'] = $accountGroup['title'];
+                    }
                     break;
                 case 'item':
-                    $context['accountcreate']['groupid'] = $request->input('accountgroup');
-                    $context['accountcreate']['itemtitle'] = trim($request->input('title'));
-                    $context['accountcreate']['description'] = trim($request->input('description'));
+                    $result = $this->validateAndTrimForCreateAccount($request->all(), $bookId);
+                    $account = $result['account'];
+                    if ($result['success']) {
+                        $this->BookKeeping->createAccount($account['accountgroup'], $account['title'], $account['description'], $bookId);
+                    } else {
+                        $context['accountcreate']['groupid'] = $account['accountgroup'];
+                        $context['accountcreate']['itemtitle'] = $account['title'];
+                        $context['accountcreate']['description'] = $account['description'];
+                    }
                     break;
                 default:
                     break;
             }
-
-
-            var_dump($request->all());
         }
 
         return $this->responder->response($context);
+    }
+
+    /**
+     * Validate arguments and trim string data for create Account.
+     *
+     * @param array  $account_in
+     * @param string $bookId
+     *
+     * @return array
+     */
+    private function validateAndTrimForCreateAccount(array $account_in, string $bookId): array
+    {
+        $success = true;
+        $trimmed_account = [];
+
+        $accountGroupId = trim($account_in['accountgroup']);
+        if (!empty($accountGroupId)) {
+            $trimmed_account['accountgroup'] = $accountGroupId;
+        } else {
+            $success = false;
+            $trimmed_account['accountgroup'] = null;
+        }
+        $title = trim($account_in['title']);
+        if (!empty($title)) {
+            $trimmed_account['title'] = $title;
+        } else {
+            $success = false;
+            $trimmed_account['title'] = null;
+        }
+        $description = trim($account_in['description']);
+        if (!empty($description)) {
+            $trimmed_account['description'] = $description;
+        } else {
+            $success = false;
+            $trimmed_account['description'] = null;
+        }
+        return ['success' => $success, 'account' => $trimmed_account];
+    }
+
+    /**
+     * Validate arguments and trim string data for create AccountGroup.
+     *
+     * @param array  $accountGroup_in
+     * @param string $bookId
+     *
+     * @return array
+     */
+    private function validateAndTrimForCreateAccountGroup(array $accountGroup_in, string $bookId): array
+    {
+        $success = true;
+        $trimmed_accountGroup = [];
+
+        if (array_key_exists('accounttype', $accountGroup_in)) {
+            $accountType = trim($accountGroup_in['accounttype']);
+            switch ($accountType) {
+                case 'asset':
+                case 'liability':
+                case 'expense':
+                case 'revenue':
+                    $trimmed_accountGroup['accounttype'] = $accountType;
+                    break;
+                default:
+                    $success = false;
+                    $trimmed_accountGroup['accounttype'] = null;
+                    break;
+            }
+        } else {
+            $success = false;
+            $trimmed_accountGroup['accounttype'] = null;
+        }
+        $title = trim($accountGroup_in['title']);
+        if (!empty($title)) {
+            $trimmed_accountGroup['title'] = $title;
+        } else {
+            $success = false;
+            $trimmed_accountGroup['title'] = null;
+        }
+
+        return ['success' => $success, 'accountGroup' => $trimmed_accountGroup];
     }
 }
