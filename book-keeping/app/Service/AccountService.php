@@ -118,6 +118,25 @@ class AccountService
     }
 
     /**
+     * Retrieve list of account group.
+     *
+     * @param string $bookId
+     *
+     * @return array
+     */
+    public function retrieveAccountGroups(string $bookId): array
+    {
+        $accountGroups = [];
+        $accountGroupList = $this->accountGroup->search($bookId);
+
+        foreach ($accountGroupList as $accountGroup) {
+            $accountGroups[$accountGroup['account_group_id']] = $accountGroup;
+        }
+
+        return $accountGroups;
+    }
+
+    /**
      * Update Account.
      *
      * @param string $accountId
