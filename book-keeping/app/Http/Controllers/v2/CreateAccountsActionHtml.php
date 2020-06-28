@@ -41,7 +41,35 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
     public function __invoke(Request $request, string $bookId): Response
     {
         $context = [];
+
         $context['book'] = $this->BookKeeping->retrieveBookInfomation($bookId);
+        $context['accounts'] = $this->BookKeeping->retrieveAccounts(false, $bookId);
+        $context['accounttype'] = null;
+        $context['accountcreate'] = [
+            'grouptitle'  => null,
+            'groupid'     => null,
+            'itemtitle'   => null,
+            'description' => null,
+        ];
+        if ($request->isMethod('post')) {
+            $button_action = $request->input('create');
+            switch ($button_action) {
+                case 'group':
+                    $context['accounttype'] = $request->input('accounttype');
+                    $context['accountcreate']['grouptitle'] = trim($request->input('title'));
+                    break;
+                case 'item':
+                    $context['accountcreate']['groupid'] = $request->input('accountgroup');
+                    $context['accountcreate']['itemtitle'] = trim($request->input('title'));
+                    $context['accountcreate']['description'] = trim($request->input('description'));
+                    break;
+                default:
+                    break;
+            }
+
+
+            var_dump($request->all());
+        }
 
         return $this->responder->response($context);
     }

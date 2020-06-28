@@ -18,31 +18,31 @@
                                             <th class="table-active border border-secondary" width="25%">{{{ __('Type') }}}</th>
                                             <td class="border border-secondary">
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="radio1" id="radio1a" checked>
-                                                    <label class="form-check-label" for="radio1a">{{{ __('Assets') }}}&nbsp;&nbsp;&nbsp;</label>
+                                                    <input class="form-check-input" type="radio" name="accounttype" value="asset" id="radio_asset" {{{ $accounttype['asset'] }}}>
+                                                    <label class="form-check-label" for="radio_asset">{{{ __('Assets') }}}&nbsp;&nbsp;&nbsp;</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="radio1" id="radio1b">
-                                                    <label class="form-check-label" for="radio1b">{{{ __('Liabilities') }}}&nbsp;&nbsp;&nbsp;</label>
+                                                    <input class="form-check-input" type="radio" name="accounttype" value="liability" id="radio_liability" {{{ $accounttype['liability'] }}}>
+                                                    <label class="form-check-label" for="radio_liability">{{{ __('Liabilities') }}}&nbsp;&nbsp;&nbsp;</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="radio1" id="radio1b">
-                                                    <label class="form-check-label" for="radio1b">{{{ __('Expense') }}}&nbsp;&nbsp;&nbsp;</label>
+                                                    <input class="form-check-input" type="radio" name="accounttype" value="expense" id="radio_expense" {{{ $accounttype['expense'] }}}>
+                                                    <label class="form-check-label" for="radio_expense">{{{ __('Expense') }}}&nbsp;&nbsp;&nbsp;</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="radio1" id="radio1b">
-                                                    <label class="form-check-label" for="radio1b">{{{ __('Revenue') }}}&nbsp;&nbsp;&nbsp;</label>
+                                                    <input class="form-check-input" type="radio" name="accounttype" value="revenue" id="radio_revenue" {{{ $accounttype['revenue'] }}}>
+                                                    <label class="form-check-label" for="radio_revenue">{{{ __('Revenue') }}}&nbsp;&nbsp;&nbsp;</label>
                                                 </div>
                                             </td>
                                         </tr>
                                         <tr>
                                             <th class="table-active border border-secondary" width="25%">{{{ __('Name') }}}</th>
-                                            <td class="border border-secondary"><input type="text" class="form-control" name="title" value="title"></td>
+                                            <td class="border border-secondary"><input type="text" class="form-control" name="title" value="{{{ $accountcreate['grouptitle'] }}}"></td>
                                         </tr>
                                     </tbody>
                                 </table>
                                 <div class="text-right">
-                                    <button name="update" value="update" type="submit" class="btn btn-success">{{{ __('Add') }}}</button>
+                                    <button name="create" value="group" type="submit" class="btn btn-success">{{{ __('Add') }}}</button>
                                 </div>
                             </div>
                         </form>
@@ -66,25 +66,31 @@
                                             <th class="table-active border border-secondary" width="25%">{{{ __('Accounts Group') }}}</th>
                                             <td class="border border-secondary">
                                                 <select name="accountgroup" class="form-control">
-                                                    <option value="1" selected>$type - $accountGroup</option>
-                                                    <option value="2">$type - $accountGroup</option>
+                                                    <option value="0"></option>
+                                                    @foreach ($accountstitle as $accountGroupKey => $accountGroup)
+                                                    @if ($accountcreate['groupid'] == $accountGroupKey)
+                                                    <option value="{{ $accountGroupKey }}" selected>{{{ $accountGroup }}}</option>
+                                                    @else
+                                                    <option value="{{ $accountGroupKey }}">{{{ $accountGroup }}}</option>
+                                                    @endif
+                                                    @endforeach
                                                 </select>
                                             </td>
                                         </tr>
                                         <tr>
                                             <th class="table-active border border-secondary" width="25%">{{{ __('Name') }}}</th>
-                                            <td class="border border-secondary"><input type="text" class="form-control" name="title" value="$title"></td>
+                                            <td class="border border-secondary"><input type="text" class="form-control" name="title" value="{{{ $accountcreate['itemtitle'] }}}"></td>
                                         </tr>
                                         <tr>
                                             <th class="table-active border border-secondary" width="25%">{{{ __('Description') }}}</th>
                                             <td class="border border-secondary">
-                                                <textarea class="form-control" name="description">$description</textarea>
+                                                <textarea class="form-control" name="description">{{{ $accountcreate['description'] }}}</textarea>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                                 <div class="text-right">
-                                    <button name="update" value="update" type="submit" class="btn btn-success">{{{ __('Add') }}}</button>
+                                    <button name="create" value="item" type="submit" class="btn btn-success">{{{ __('Add') }}}</button>
                                 </div>
                             </div>
                         </form>
