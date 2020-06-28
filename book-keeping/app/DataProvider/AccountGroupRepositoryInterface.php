@@ -19,6 +19,15 @@ interface AccountGroupRepositoryInterface
     public function create(string $bookId, string $accountType, string $title, bool $isCurrent, $bk_uid, $bk_code): string;
 
     /**
+     * Search account group.
+     *
+     * @param string $bookId
+     *
+     * @return array
+     */
+    public function search(string $bookId): array;
+
+    /**
      * Update account group.
      *
      * @param string $accountGroupId

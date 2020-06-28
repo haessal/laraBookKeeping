@@ -33,6 +33,32 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
     }
 
     /**
+     * Search account group.
+     *
+     * @param string $bookId
+     *
+     * @return array
+     */
+    public function search(string $bookId): array
+    {
+        $list = AccountGroup::select(
+            'account_group_id',
+            'account_type',
+            'account_group_title',
+            'is_current',
+            'account_group_bk_code',
+            'created_at',
+        )
+            ->where('book_id', $bookId)
+            ->whereNull('deleted_at')
+            ->orderBy('account_type')
+            ->orderBy('account_group_id')
+            ->get()->toArray();
+
+        return $list;
+    }
+
+    /**
      * Update account group.
      *
      * @param string $accountGroupId
