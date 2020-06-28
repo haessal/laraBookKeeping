@@ -294,6 +294,7 @@ class Service_BookKeepingServiceTest extends TestCase
         $accountGroupId_3 = (string) Str::uuid();
         $accountGroupId_4 = (string) Str::uuid();
         $accountGroupId_5 = (string) Str::uuid();
+        $accountGroupId_6 = (string) Str::uuid();
         $accounts = [
             $accountId_1 => [
                 'account_type'             => AccountService::ACCOUNT_TYPE_ASSET,
@@ -408,6 +409,24 @@ class Service_BookKeepingServiceTest extends TestCase
                 'account_group_created_at' => '2019-12-01 12:00:51',
             ],
         ];
+        $accountGroups = [
+            $accountGroupId_1 => [
+                'account_group_id'      => $accountGroupId_1,
+                'account_type'          => 'asset',
+                'account_group_title'   => 'accountGroupTitle_1_NG',
+                'is_current'            => 1,
+                'account_group_bk_code' => 1212,
+                'created_at'            => '2020-05-05 12:00:12',
+            ],
+            $accountGroupId_6 => [
+                'account_group_id'      => $accountGroupId_6,
+                'account_type'          => 'asset',
+                'account_group_title'   => 'accountGroupTitle_6',
+                'is_current'            => 1,
+                'account_group_bk_code' => null,
+                'created_at'            => '2020-06-26 12:00:12',
+            ],
+        ];
         $accounts_expected = [
             'asset' => [
                 'groups' => [
@@ -425,6 +444,13 @@ class Service_BookKeepingServiceTest extends TestCase
                                 'createdAt'   => '2019-12-02 12:00:01',
                             ],
                         ],
+                    ],
+                    $accountGroupId_6 => [
+                        'title'        => 'accountGroupTitle_6',
+                        'isCurrent'    => 1,
+                        'bk_code'      => null,
+                        'createdAt'    => '2020-06-26 12:00:12',
+                        'items'        => [],
                     ],
                 ],
             ],
@@ -511,6 +537,10 @@ class Service_BookKeepingServiceTest extends TestCase
             ->once()
             ->with($bookId)
             ->andReturn($accounts);
+        $accountMock->shouldReceive('retrieveAccountGroups')
+            ->once()
+            ->with($bookId)
+            ->andReturn($accountGroups);
         /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
         $budgetMock = Mockery::mock(BudgetService::class);
         /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
@@ -562,6 +592,7 @@ class Service_BookKeepingServiceTest extends TestCase
                 'account_group_created_at' => '2019-12-01 12:00:23',
             ],
         ];
+        $accountGroups = [];
         $accounts_expected = [
             'asset' => [
                 'groups' => [
@@ -616,6 +647,10 @@ class Service_BookKeepingServiceTest extends TestCase
             ->once()
             ->with($bookId)
             ->andReturn($accounts);
+        $accountMock->shouldReceive('retrieveAccountGroups')
+            ->once()
+            ->with($bookId)
+            ->andReturn($accountGroups);
         /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
         $budgetMock = Mockery::mock(BudgetService::class);
         /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
