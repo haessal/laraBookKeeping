@@ -321,6 +321,13 @@ class Http_Responder_AccountsListConverterTest extends TestCase
                 $accountGroupId_4 => 'accountGroupTitle_4',
                 $accountGroupId_5 => 'accountGroupTitle_5',
             ],
+            'groupsWithType' => [
+                $accountGroupId_1 => __('Assets').' - accountGroupTitle_1',
+                $accountGroupId_2 => __('Liabilities').' - accountGroupTitle_2',
+                $accountGroupId_3 => __('Liabilities').' - accountGroupTitle_3',
+                $accountGroupId_4 => __('Revenue').' - accountGroupTitle_4',
+                $accountGroupId_5 => __('Revenue').' - accountGroupTitle_5',
+            ],
             'items' => [
                 $accountId_1 => 'accountTitle_1',
                 $accountId_2 => 'accountTitle_2',
