@@ -139,6 +139,7 @@ class BookKeepingService
             $bookId = $this->book->retrieveDefaultBook(Auth::id());
         }
         $accounts = $this->account->retrieveAccounts($bookId);
+        $accountGroups = $this->account->retrieveAccountGroups($bookId);
 
         $accounts_menu = [
             AccountService::ACCOUNT_TYPE_ASSET     => ['groups' => []],
@@ -164,6 +165,17 @@ class BookKeepingService
                     'selectable'  => $accountsItem['selectable'],
                     'bk_code'     => $accountsItem['account_bk_code'],
                     'createdAt'   => $accountsItem['created_at'],
+                ];
+            }
+        }
+        foreach ($accountGroups as $accountGroupsKey => $accountGroup) {
+            if (!array_key_exists($accountGroupsKey, $accounts_menu[$accountGroup['account_type']]['groups'])) {
+                $accounts_menu[$accountGroup['account_type']]['groups'][$accountGroupsKey] = [
+                    'title'        => $accountGroup['account_group_title'],
+                    'isCurrent'    => $accountGroup['is_current'],
+                    'bk_code'      => $accountGroup['account_group_bk_code'],
+                    'createdAt'    => $accountGroup['created_at'],
+                    'items'        => [],
                 ];
             }
         }
