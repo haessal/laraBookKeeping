@@ -28,17 +28,29 @@ trait AccountsListConverter
     {
         $accountItem_title_list = [];
         $accountGroup_title_list = [];
+        $accountTypeGroup_title_list = [];
 
-        foreach ($accounts as $accountType) {
+        $accountTypeCaption = [
+            'asset'     => __('Assets'),
+            'liability' => __('Liabilities'),
+            'expense'   => __('Expense'),
+            'revenue'   => __('Revenue'),
+        ];
+        foreach ($accounts as $accountTypeKey => $accountType) {
             foreach ($accountType['groups'] as $accountGroupId => $accountGroupItem) {
                 $accountGroup_title_list[$accountGroupId] = $accountGroupItem['title'];
+                $accountTypeGroup_title_list[$accountGroupId] = $accountTypeCaption[$accountTypeKey].' - '.$accountGroupItem['title'];
                 foreach ($accountGroupItem['items'] as $accountId => $accountItem) {
                     $accountItem_title_list[$accountId] = $accountItem['title'];
                 }
             }
         }
         if ($withGroupList) {
-            $account_title_list = ['groups' => $accountGroup_title_list, 'items' => $accountItem_title_list];
+            $account_title_list = [
+                'groups'         => $accountGroup_title_list,
+                'groupsWithType' => $accountTypeGroup_title_list,
+                'items'          => $accountItem_title_list,
+            ];
         } else {
             $account_title_list = $accountItem_title_list;
         }
