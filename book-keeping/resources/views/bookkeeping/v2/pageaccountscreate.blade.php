@@ -48,7 +48,41 @@
                         </form>
                     </div>
                     <div class="row d-block d-md-none">
-                        for mibile phone
+                        <form method="POST" action="{{ route('v2_accounts_new', ['bookId' => $book['id']]) }}">
+                            @csrf
+                            <div class="form-group">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr><th class="table-active border border-secondary">{{{ __('Type') }}}</th></tr>
+                                        <tr>
+                                            <td class="border border-secondary">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="accounttype" value="asset" id="radio_md_asset" {{{ $accounttype['asset'] }}}>
+                                                    <label class="form-check-label" for="radio_md_asset">{{{ __('Assets') }}}&nbsp;&nbsp;&nbsp;</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="accounttype" value="liability" id="radio_md_liability" {{{ $accounttype['liability'] }}}>
+                                                    <label class="form-check-label" for="radio_md_liability">{{{ __('Liabilities') }}}&nbsp;&nbsp;&nbsp;</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="accounttype" value="expense" id="radio_md_expense" {{{ $accounttype['expense'] }}}>
+                                                    <label class="form-check-label" for="radio_md_expense">{{{ __('Expense') }}}&nbsp;&nbsp;&nbsp;</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="accounttype" value="revenue" id="radio_md_revenue" {{{ $accounttype['revenue'] }}}>
+                                                    <label class="form-check-label" for="radio_md_revenue">{{{ __('Revenue') }}}&nbsp;&nbsp;&nbsp;</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr><th class="table-active border border-secondary">{{{ __('Name') }}}</th></tr>
+                                        <tr><td class="border border-secondary"><input type="text" class="form-control" name="title" value="{{{ $accountcreate['grouptitle'] }}}"></td></tr>
+                                    </tbody>
+                                </table>
+                                <div class="text-right">
+                                    <button name="create" value="group" type="submit" class="btn btn-success">{{{ __('Add') }}}</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -96,7 +130,41 @@
                         </form>
                     </div>
                     <div class="row d-block d-md-none">
-                        for mibile phone
+                        <form method="POST" action="{{ route('v2_accounts_new', ['bookId' => $book['id']]) }}">
+                            @csrf
+                            <div class="form-group">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr><th class="table-active border border-secondary">{{{ __('Accounts Group') }}}</th></tr>
+                                        <tr>
+                                            <td class="border border-secondary">
+                                                <select name="accountgroup" class="form-control">
+                                                    <option value="0"></option>
+                                                    @foreach ($accountstitle as $accountGroupKey => $accountGroup)
+                                                    @if ($accountcreate['groupid'] == $accountGroupKey)
+                                                    <option value="{{ $accountGroupKey }}" selected>{{{ $accountGroup }}}</option>
+                                                    @else
+                                                    <option value="{{ $accountGroupKey }}">{{{ $accountGroup }}}</option>
+                                                    @endif
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr><th class="table-active border border-secondary">{{{ __('Name') }}}</th>
+                                        <tr><td class="border border-secondary"><input type="text" class="form-control" name="title" value="{{{ $accountcreate['itemtitle'] }}}"></td></tr>
+                                        <tr><th class="table-active border border-secondary">{{{ __('Description') }}}</th></tr>
+                                        <tr>
+                                            <td class="border border-secondary">
+                                                <textarea class="form-control" name="description">{{{ $accountcreate['description'] }}}</textarea>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="text-right">
+                                    <button name="create" value="item" type="submit" class="btn btn-success">{{{ __('Add') }}}</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
