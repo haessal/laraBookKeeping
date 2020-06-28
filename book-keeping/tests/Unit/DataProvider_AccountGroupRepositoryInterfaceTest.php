@@ -47,6 +47,18 @@ abstract class DataProvider_AccountGroupRepositoryInterfaceTest extends TestCase
     /**
      * @test
      */
+    public function search_ReturnValueTypeIsArray()
+    {
+        $bookId = (string) Str::uuid();
+
+        $accountGroupList = $this->accountGroup->search($bookId);
+
+        $this->assertTrue(is_array($accountGroupList));
+    }
+
+    /**
+     * @test
+     */
     public function update_CalledWithStringAndArray()
     {
         $accountGroupId = (string) Str::uuid();
