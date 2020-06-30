@@ -117,6 +117,7 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
             $success = false;
             $trimmed_account['description'] = null;
         }
+
         return ['success' => $success, 'account' => $trimmed_account];
     }
 
