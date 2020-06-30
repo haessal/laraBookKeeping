@@ -39,7 +39,7 @@ trait AccountsListConverter
         foreach ($accounts as $accountTypeKey => $accountType) {
             foreach ($accountType['groups'] as $accountGroupId => $accountGroupItem) {
                 $accountGroup_title_list[$accountGroupId] = $accountGroupItem['title'];
-                $accountTypeGroup_title_list[$accountGroupId] = $accountTypeCaption[$accountTypeKey] . ' - ' . $accountGroupItem['title'];
+                $accountTypeGroup_title_list[$accountGroupId] = $accountTypeCaption[$accountTypeKey].' - '.$accountGroupItem['title'];
                 foreach ($accountGroupItem['items'] as $accountId => $accountItem) {
                     $accountItem_title_list[$accountId] = $accountItem['title'];
                 }
@@ -49,7 +49,7 @@ trait AccountsListConverter
             $account_title_list = [
                 'groups'         => $accountGroup_title_list,
                 'groupsWithType' => $accountTypeGroup_title_list,
-                'items'          => $accountItem_title_list
+                'items'          => $accountItem_title_list,
             ];
         } else {
             $account_title_list = $accountItem_title_list;
