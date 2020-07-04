@@ -80,6 +80,7 @@ class Http_Controllers_api_v1_GetSlipEntriesActionApiTest extends TestCase
 
         $this->assertSame($response_expected, $response_actual);
     }
+
     /**
      * @test
      */
@@ -133,6 +134,7 @@ class Http_Controllers_api_v1_GetSlipEntriesActionApiTest extends TestCase
     {
         $accountId_1 = (string) Str::uuid();
         $accountId_2 = (string) Str::uuid();
+
         return [
             [
                 [
@@ -202,7 +204,7 @@ class Http_Controllers_api_v1_GetSlipEntriesActionApiTest extends TestCase
             ],
             [
                 [
-                    'debit' => $accountId_1,
+                    'debit'  => $accountId_1,
                     'credit' => $accountId_2,
                 ],
                 null,
