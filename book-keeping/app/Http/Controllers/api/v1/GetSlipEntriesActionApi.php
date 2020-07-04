@@ -94,7 +94,7 @@ class GetSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
                     break;
             }
         }
-        if (empty($from) && empty($to) && empty($debit) && empty($credit) && empty($keyword) ) {
+        if (empty($from) && empty($to) && empty($debit) && empty($credit) && empty($keyword)) {
             $success = false;
         }
         if (!($this->BookKeeping->validatePeriod($from, $to))) {
@@ -126,6 +126,6 @@ class GetSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
      */
     private function validateUuid(string $uuid): bool
     {
-        return (preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/', $uuid) === 1);
+        return preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/', $uuid) === 1;
     }
 }
