@@ -29,7 +29,7 @@ class SlipEntriesJsonResponder extends BaseJsonResponder
      *
      * @return array
      */
-    public function translateSlipsFormat(array $slips): array
+    private function translateSlipsFormat(array $slips): array
     {
         $translatedSlipEntries = [];
 
