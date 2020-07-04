@@ -1833,6 +1833,7 @@ class Service_BookKeepingServiceTest extends TestCase
     public function forTestValidatePeriod()
     {
         return [
+            [null,         null,         true],
             ['',           '',           true],
             ['',           '2020-04-31', false],
             ['',           '2020-05-01', true],
