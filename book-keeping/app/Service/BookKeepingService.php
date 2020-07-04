@@ -504,7 +504,7 @@ class BookKeepingService
      *
      * @return bool
      */
-    public function validatePeriod(string $fromDate, string $toDate): bool
+    public function validatePeriod(?string $fromDate, ?string $toDate): bool
     {
         $success = true;
 
