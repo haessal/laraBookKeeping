@@ -59,7 +59,7 @@ class GetSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
      *
      * @return array
      */
-    public function validateAndTrimSlipEntriesQuery($queries): array
+    private function validateAndTrimSlipEntriesQuery($query): array
     {
         $success = true;
         $from = null;
@@ -69,25 +69,25 @@ class GetSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
         $operand = null;
         $keyword = null;
 
-        foreach ($queries as $queryKey => $query) {
+        foreach ($query as $queryKey => $queryItem) {
             switch ($queryKey) {
                 case 'from':
-                    $from = trim($query);
+                    $from = trim($queryItem);
                     break;
                 case 'to':
-                    $to = trim($query);
+                    $to = trim($queryItem);
                     break;
                 case 'debit':
-                    $debit = trim($query);
+                    $debit = trim($queryItem);
                     break;
                 case 'credit':
-                    $credit = trim($query);
+                    $credit = trim($queryItem);
                     break;
                 case 'operand':
-                    $operand = trim($query);
+                    $operand = trim($queryItem);
                     break;
                 case 'keyword':
-                    $keyword = trim($query);
+                    $keyword = trim($queryItem);
                     break;
                 default:
                     $success = false;
