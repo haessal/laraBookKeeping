@@ -109,13 +109,26 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
      * Find slip entry.
      *
      * @param string $slipEntryId
+     * @param string $bookId
      *
      * @return array | null
      */
-    public function findById(string $slipEntryId): ?array
+    public function findById(string $slipEntryId, string $bookId): ?array
     {
-        $slipEntry = SlipEntry::select('slip_entry_id', 'slip_id', 'debit', 'credit', 'amount', 'client', 'outline')
+        $slipEntry = SlipEntry::join('bk2_0_slips', 'bk2_0_slips.slip_id', '=', 'bk2_0_slip_entries.slip_id')
+            ->select(
+                'slip_entry_id',
+                'bk2_0_slips.slip_id',
+                'debit',
+                'credit',
+                'amount',
+                'client',
+                'outline'
+            )
             ->where('slip_entry_id', $slipEntryId)
+            ->where('book_id', $bookId)
+            ->whereNull('bk2_0_slips.deleted_at')
+            ->whereNull('bk2_0_slip_entries.deleted_at')
             ->first();
 
         return is_null($slipEntry) ? null : $slipEntry->toArray();
