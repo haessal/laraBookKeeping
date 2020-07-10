@@ -145,12 +145,16 @@ class BookKeepingService
      * Delete the specified slip entry.
      *
      * @param string $slipEntryId
+     * @param string $bookId
      *
      * @return void
      */
-    public function deleteSlipEntryAsDraft(string $slipEntryId)
+    public function deleteSlipEntryAsDraft(string $slipEntryId, string $bookId = null)
     {
-        $slipId = $this->slip->retrieveSlipThatBound($slipEntryId);
+        if (is_null($bookId)) {
+            $bookId = $this->book->retrieveDefaultBook(Auth::id());
+        }
+        $slipId = $this->slip->retrieveSlipThatBound($slipEntryId, $bookId);
         $this->slip->deleteSlipEntry($slipEntryId);
         $slipEntries = $this->slip->retrieveSlipEntriesBoundTo($slipId);
         if (empty($slipEntries)) {
