@@ -325,6 +325,7 @@ class Service_SlipServiceTest extends TestCase
      */
     public function retrieveSlipThatBound_CallRepositoryWithArgumentsAsItIs()
     {
+        $bookId = (string) Str::uuid();
         $slipId_expected = (string) Str::uuid();
         $slipEntryId = (string) Str::uuid();
         $accountId1 = (string) Str::uuid();
@@ -344,11 +345,11 @@ class Service_SlipServiceTest extends TestCase
         $slipEntryMock = Mockery::mock(SlipEntryRepositoryInterface::class);
         $slipEntryMock->shouldReceive('findById')
             ->once()
-            ->with($slipEntryId)
+            ->with($slipEntryId, $bookId)
             ->andReturn($slipEntry);
 
         $slip = new SlipService($slipMock, $slipEntryMock);
-        $slipId_actual = $slip->retrieveSlipThatBound($slipEntryId);
+        $slipId_actual = $slip->retrieveSlipThatBound($slipEntryId, $bookId);
 
         $this->assertSame($slipId_expected, $slipId_actual);
     }
@@ -358,6 +359,7 @@ class Service_SlipServiceTest extends TestCase
      */
     public function retrieveSlipThatBound_CallRepositoryWithArgumentsAsItIsAndReturnNull()
     {
+        $bookId = (string) Str::uuid();
         $slipEntryId = (string) Str::uuid();
         /** @var \App\DataProvider\SlipRepositoryInterface|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipRepositoryInterface::class);
@@ -365,11 +367,11 @@ class Service_SlipServiceTest extends TestCase
         $slipEntryMock = Mockery::mock(SlipEntryRepositoryInterface::class);
         $slipEntryMock->shouldReceive('findById')
             ->once()
-            ->with($slipEntryId)
+            ->with($slipEntryId, $bookId)
             ->andReturn(null);
 
         $slip = new SlipService($slipMock, $slipEntryMock);
-        $slipId = $slip->retrieveSlipThatBound($slipEntryId);
+        $slipId = $slip->retrieveSlipThatBound($slipEntryId, $bookId);
 
         $this->assertNull($slipId);
     }

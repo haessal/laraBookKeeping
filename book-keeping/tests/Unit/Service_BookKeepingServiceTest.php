@@ -251,6 +251,11 @@ class Service_BookKeepingServiceTest extends TestCase
      */
     public function deleteSlipEntryAsDraft_DeleteOnlySlipEntryWhenAnotherSlipEntryIsRemaining()
     {
+        $bookId = (string) Str::uuid();
+        $userId = 255;
+        $user = new User();
+        $user->id = $userId;
+        $this->be($user);
         $slipId = (string) Str::uuid();
         $slipEntryId = (string) Str::uuid();
         $slipEntryId_r = (string) Str::uuid();
@@ -258,6 +263,10 @@ class Service_BookKeepingServiceTest extends TestCase
         $credit = (string) Str::uuid();
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
+        $bookMock->shouldReceive('retrieveDefaultBook')
+            ->once()
+            ->with($userId)
+            ->andReturn($bookId);
         /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
         $accountMock = Mockery::mock(AccountService::class);
         /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
@@ -266,7 +275,7 @@ class Service_BookKeepingServiceTest extends TestCase
         $slipMock = Mockery::mock(SlipService::class);
         $slipMock->shouldReceive('retrieveSlipThatBound')
             ->once()
-            ->with($slipEntryId)
+            ->with($slipEntryId, $bookId)
             ->andReturn($slipId);
         $slipMock->shouldReceive('deleteSlipEntry')
             ->once()
@@ -298,6 +307,7 @@ class Service_BookKeepingServiceTest extends TestCase
      */
     public function deleteSlipEntryAsDraft_DeleteSlipTooWhenTheSlipEntryIsLastOne()
     {
+        $bookId = (string) Str::uuid();
         $slipId = (string) Str::uuid();
         $slipEntryId = (string) Str::uuid();
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
@@ -310,7 +320,7 @@ class Service_BookKeepingServiceTest extends TestCase
         $slipMock = Mockery::mock(SlipService::class);
         $slipMock->shouldReceive('retrieveSlipThatBound')
             ->once()
-            ->with($slipEntryId)
+            ->with($slipEntryId, $bookId)
             ->andReturn($slipId);
         $slipMock->shouldReceive('deleteSlipEntry')
             ->once()
@@ -323,7 +333,7 @@ class Service_BookKeepingServiceTest extends TestCase
             ->once()
             ->with($slipId);
         $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
-        $BookKeeping->deleteSlipEntryAsDraft($slipEntryId);
+        $BookKeeping->deleteSlipEntryAsDraft($slipEntryId, $bookId);
 
         $this->assertTrue(true);
     }
