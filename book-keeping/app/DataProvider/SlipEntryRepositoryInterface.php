@@ -43,10 +43,11 @@ interface SlipEntryRepositoryInterface
      * Find slip entry.
      *
      * @param string $slipEntryId
+     * @param string $bookId
      *
      * @return array | null
      */
-    public function findById(string $slipEntryId): ?array;
+    public function findById(string $slipEntryId, string $bookId): ?array;
 
     /**
      * Find the slip entries that belongs to the specified slip.

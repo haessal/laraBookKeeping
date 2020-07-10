@@ -170,12 +170,13 @@ class SlipService
      * Retrieve slip that bound specify slip entry.
      *
      * @param string $slipEntryId
+     * @param string $bookId
      *
      * @return string | null
      */
-    public function retrieveSlipThatBound(string $slipEntryId)
+    public function retrieveSlipThatBound(string $slipEntryId, string $bookId): ?string
     {
-        $slipEntry = $this->slipEntry->findById($slipEntryId);
+        $slipEntry = $this->slipEntry->findById($slipEntryId, $bookId);
 
         return is_null($slipEntry) ? null : $slipEntry['slip_id'];
     }
