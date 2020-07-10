@@ -44,10 +44,11 @@ interface SlipEntryRepositoryInterface
      *
      * @param string $slipEntryId
      * @param string $bookId
+     * @param bool   $draftInclude
      *
      * @return array | null
      */
-    public function findById(string $slipEntryId, string $bookId): ?array;
+    public function findById(string $slipEntryId, string $bookId, bool $draftInclude): ?array;
 
     /**
      * Find the slip entries that belongs to the specified slip.
