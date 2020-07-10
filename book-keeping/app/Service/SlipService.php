@@ -171,12 +171,13 @@ class SlipService
      *
      * @param string $slipEntryId
      * @param string $bookId
+     * @param bool   $draftInclude
      *
      * @return string | null
      */
-    public function retrieveSlipThatBound(string $slipEntryId, string $bookId): ?string
+    public function retrieveSlipThatBound(string $slipEntryId, string $bookId, bool $draftInclude): ?string
     {
-        $slipEntry = $this->slipEntry->findById($slipEntryId, $bookId);
+        $slipEntry = $this->slipEntry->findById($slipEntryId, $bookId, $draftInclude);
 
         return is_null($slipEntry) ? null : $slipEntry['slip_id'];
     }

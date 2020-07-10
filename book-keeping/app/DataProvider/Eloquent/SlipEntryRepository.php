@@ -110,12 +110,13 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
      *
      * @param string $slipEntryId
      * @param string $bookId
+     * @param bool   $draftInclude
      *
      * @return array | null
      */
-    public function findById(string $slipEntryId, string $bookId): ?array
+    public function findById(string $slipEntryId, string $bookId, bool $draftInclude): ?array
     {
-        $slipEntry = SlipEntry::join('bk2_0_slips', 'bk2_0_slips.slip_id', '=', 'bk2_0_slip_entries.slip_id')
+        $query = SlipEntry::join('bk2_0_slips', 'bk2_0_slips.slip_id', '=', 'bk2_0_slip_entries.slip_id')
             ->select(
                 'slip_entry_id',
                 'bk2_0_slips.slip_id',
@@ -128,8 +129,11 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
             ->where('slip_entry_id', $slipEntryId)
             ->where('book_id', $bookId)
             ->whereNull('bk2_0_slips.deleted_at')
-            ->whereNull('bk2_0_slip_entries.deleted_at')
-            ->first();
+            ->whereNull('bk2_0_slip_entries.deleted_at');
+        if (!$draftInclude) {
+            $query = $query->where('is_draft', false);
+        }
+        $slipEntry = $query->first();
 
         return is_null($slipEntry) ? null : $slipEntry->toArray();
     }
