@@ -74,8 +74,9 @@ abstract class DataProvider_SlipEntryRepositoryInterfaceTest extends TestCase
     public function findById_ReturnValueTypeIsArrayOrNull()
     {
         $slipEntryId = (string) Str::uuid();
+        $bookId = (string) Str::uuid();
 
-        $slipEntries = $this->slipEntry->findById($slipEntryId);
+        $slipEntries = $this->slipEntry->findById($slipEntryId, $bookId);
 
         if (is_null($slipEntries)) {
             $this->assertNull($slipEntries);
