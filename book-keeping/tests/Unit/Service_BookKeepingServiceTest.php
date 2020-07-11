@@ -2013,4 +2013,25 @@ class Service_BookKeepingServiceTest extends TestCase
             ['1970-01-01', '2020-05-05', true],
         ];
     }
+
+    /**
+     * @test
+     */
+    public function validateUuid_MachValidationResult()
+    {
+        $Uuid = (string) Str::uuid();
+        /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
+        $bookMock = Mockery::mock(BookService::class);
+        /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
+        $accountMock = Mockery::mock(AccountService::class);
+        /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
+        $budgetMock = Mockery::mock(BudgetService::class);
+        /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
+        $slipMock = Mockery::mock(SlipService::class);
+
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $success = $BookKeeping->validateUuid($Uuid);
+
+        $this->assertTrue($success);
+    }
 }

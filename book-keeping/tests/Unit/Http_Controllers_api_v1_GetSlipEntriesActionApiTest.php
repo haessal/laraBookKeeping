@@ -59,6 +59,14 @@ class Http_Controllers_api_v1_GetSlipEntriesActionApiTest extends TestCase
             ->once()
             ->with(trim($query['from']), trim($query['to']))
             ->andReturn(true);
+        $BookKeepingMock->shouldReceive('validateUuid')
+            ->once()
+            ->with($accountId_1)
+            ->andReturn(true);
+        $BookKeepingMock->shouldReceive('validateUuid')
+            ->once()
+            ->with($accountId_2)
+            ->andReturn(true);
         $BookKeepingMock->shouldReceive('retrieveSlips')
             ->once()
             ->with(trim($query['from']), trim($query['to']), trim($query['debit']), trim($query['credit']), trim($query['operand']), trim($query['keyword']))
@@ -110,7 +118,7 @@ class Http_Controllers_api_v1_GetSlipEntriesActionApiTest extends TestCase
      * @test
      * @dataProvider forValidateAndTrimSlipEntriesQuery
      */
-    public function validateAndTrimSlipEntriesQuery_MachValidationResult($query, $validatePeriod_from, $validatePeriod_to, $validatePeriod_return, $success_expected)
+    public function validateAndTrimSlipEntriesQuery_MachValidationResult($query, $validateUuid_debit, $validateUuid_credit, $validatePeriod_from, $validatePeriod_to, $validatePeriod_return, $success_expected)
     {
         /** @var \App\Service\BookKeepingService|\Mockery\MockInterface $BookKeepingMock */
         $BookKeepingMock = Mockery::mock(BookKeepingService::class);
@@ -118,6 +126,18 @@ class Http_Controllers_api_v1_GetSlipEntriesActionApiTest extends TestCase
             ->once()
             ->with($validatePeriod_from, $validatePeriod_to)
             ->andReturn($validatePeriod_return);
+        if (array_key_exists('debit', $query)) {
+            $BookKeepingMock->shouldReceive('validateUuid')
+                ->once()
+                ->with($query['debit'])
+                ->andReturn($validateUuid_debit);
+        }
+        if (array_key_exists('credit', $query)) {
+            $BookKeepingMock->shouldReceive('validateUuid')
+                ->once()
+                ->with($query['credit'])
+                ->andReturn($validateUuid_credit);
+        }
         /** @var \App\Http\Responder\api\v1\SlipEntriesJsonResponder|\Mockery\MockInterface $responderMock */
         $responderMock = Mockery::mock(SlipEntriesJsonResponder::class);
 
@@ -145,6 +165,8 @@ class Http_Controllers_api_v1_GetSlipEntriesActionApiTest extends TestCase
                     'operand' => ' and ',
                     'keyword' => ' keyword ',
                 ],
+                true,
+                true,
                 '2020-01-01',
                 '2020-01-31',
                 true,
@@ -156,11 +178,15 @@ class Http_Controllers_api_v1_GetSlipEntriesActionApiTest extends TestCase
                 ],
                 null,
                 null,
+                null,
+                null,
                 true,
                 false,
             ],
             [
                 [],
+                null,
+                null,
                 null,
                 null,
                 true,
@@ -170,6 +196,8 @@ class Http_Controllers_api_v1_GetSlipEntriesActionApiTest extends TestCase
                 [
                     'from' => ' 2020-01-40 ',
                 ],
+                null,
+                null,
                 '2020-01-40',
                 null,
                 false,
@@ -181,6 +209,8 @@ class Http_Controllers_api_v1_GetSlipEntriesActionApiTest extends TestCase
                 ],
                 null,
                 null,
+                null,
+                null,
                 true,
                 false,
             ],
@@ -188,6 +218,8 @@ class Http_Controllers_api_v1_GetSlipEntriesActionApiTest extends TestCase
                 [
                     'debit' => 'debit',
                 ],
+                false,
+                null,
                 null,
                 null,
                 true,
@@ -198,6 +230,8 @@ class Http_Controllers_api_v1_GetSlipEntriesActionApiTest extends TestCase
                     'credit' => 'credit',
                 ],
                 null,
+                false,
+                null,
                 null,
                 true,
                 false,
@@ -207,6 +241,8 @@ class Http_Controllers_api_v1_GetSlipEntriesActionApiTest extends TestCase
                     'debit'  => $accountId_1,
                     'credit' => $accountId_2,
                 ],
+                true,
+                true,
                 null,
                 null,
                 true,
