@@ -118,8 +118,11 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     {
         $query = SlipEntry::join('bk2_0_slips', 'bk2_0_slips.slip_id', '=', 'bk2_0_slip_entries.slip_id')
             ->select(
-                'slip_entry_id',
                 'bk2_0_slips.slip_id',
+                'date',
+                'slip_outline',
+                'slip_memo',
+                'slip_entry_id',
                 'debit',
                 'credit',
                 'amount',
