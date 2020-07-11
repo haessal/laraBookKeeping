@@ -368,6 +368,35 @@ class Service_BookKeepingServiceTest extends TestCase
     /**
      * @test
      */
+    public function deleteSlipEntryAsDraft_TheSlipEntryToBeDeletedIsNotFound()
+    {
+        $bookId = (string) Str::uuid();
+        $slipEntryId = (string) Str::uuid();
+        /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
+        $bookMock = Mockery::mock(BookService::class);
+        /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
+        $accountMock = Mockery::mock(AccountService::class);
+        /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
+        $budgetMock = Mockery::mock(BudgetService::class);
+        /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
+        $slipMock = Mockery::mock(SlipService::class);
+        $slipMock->shouldReceive('retrieveSlipThatBound')
+            ->once()
+            ->with($slipEntryId, $bookId, true)
+            ->andReturn(null);
+        $slipMock->shouldNotReceive('deleteSlipEntry');
+        $slipMock->shouldNotReceive('retrieveSlipEntriesBoundTo');
+        $slipMock->shouldNotReceive('deleteSlip');
+
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $BookKeeping->deleteSlipEntryAsDraft($slipEntryId, $bookId);
+
+        $this->assertTrue(true);
+    }
+
+    /**
+     * @test
+     */
     public function retrieveAccounts_RetrieveTheDefaultBookAccountsWhichIsSelectable()
     {
         $bookId = (string) Str::uuid();
