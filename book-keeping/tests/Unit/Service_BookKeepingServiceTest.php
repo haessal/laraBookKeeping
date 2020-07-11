@@ -275,7 +275,7 @@ class Service_BookKeepingServiceTest extends TestCase
         $slipMock = Mockery::mock(SlipService::class);
         $slipMock->shouldReceive('retrieveSlipThatBound')
             ->once()
-            ->with($slipEntryId, $bookId)
+            ->with($slipEntryId, $bookId, true)
             ->andReturn($slipId);
         $slipMock->shouldNotReceive('deleteSlipEntry')
             ->once()
@@ -320,7 +320,7 @@ class Service_BookKeepingServiceTest extends TestCase
         $slipMock = Mockery::mock(SlipService::class);
         $slipMock->shouldReceive('retrieveSlipThatBound')
             ->once()
-            ->with($slipEntryId, $bookId)
+            ->with($slipEntryId, $bookId, true)
             ->andReturn($slipId);
         $slipMock->shouldNotReceive('deleteSlipEntry')
             ->once()

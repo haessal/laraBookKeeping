@@ -228,9 +228,42 @@ class DataProvider_Eloquent_SlipEntryRepositoryTest extends DataProvider_SlipEnt
             'outline'       => $outline,
         ];
 
-        $slipEntry_actual = $this->slipEntry->findById($slipEntryId, $bookId);
+        $slipEntry_actual = $this->slipEntry->findById($slipEntryId, $bookId, true);
 
         $this->assertSame($slipEntry_expected, $slipEntry_actual);
+    }
+
+    /**
+     * @test
+     */
+    public function findById_ReturnOneSlipEntryExceptDraft()
+    {
+        $bookId = (string) Str::uuid();
+        $accountId1 = (string) Str::uuid();
+        $accountId2 = (string) Str::uuid();
+        $amount = 36912;
+        $client = 'client7';
+        $outline = 'outline7';
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $slipId = factory(Slip::class)->create([
+            'book_id'      => $bookId,
+            'slip_outline' => 'slip_outline208',
+            'date'         => '2020-05-31',
+            'is_draft'     => true,
+        ])->slip_id;
+        $slipEntryId = factory(SlipEntry::class)->create([
+            'slip_id'       => $slipId,
+            'debit'         => $accountId1,
+            'credit'        => $accountId2,
+            'amount'        => $amount,
+            'client'        => $client,
+            'outline'       => $outline,
+        ])->slip_entry_id;
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        $slipEntry_actual = $this->slipEntry->findById($slipEntryId, $bookId, false);
+
+        $this->assertNull($slipEntry_actual);
     }
 
     /**
