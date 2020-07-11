@@ -103,10 +103,10 @@ class GetSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
         if (!empty($operand) && ($operand != 'and') && ($operand != 'or')) {
             $success = false;
         }
-        if (!empty($debit) && !($this->validateUuid($debit))) {
+        if (!empty($debit) && !($this->BookKeeping->validateUuid($debit))) {
             $success = false;
         }
-        if (!empty($credit) && !($this->validateUuid($credit))) {
+        if (!empty($credit) && !($this->BookKeeping->validateUuid($credit))) {
             $success = false;
         }
         if (!empty($debit) && !empty($credit) && empty($operand)) {
@@ -115,17 +115,5 @@ class GetSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
         $trimmed_query = ['from' => $from, 'to' => $to, 'debit' => $debit, 'credit' => $credit, 'operand' => $operand, 'keyword' => $keyword];
 
         return ['success' => $success, 'query' => $trimmed_query];
-    }
-
-    /**
-     * Check if UUID is in valid format.
-     *
-     * @param array $uuid
-     *
-     * @return bool
-     */
-    private function validateUuid(string $uuid): bool
-    {
-        return preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/', $uuid) === 1;
     }
 }
