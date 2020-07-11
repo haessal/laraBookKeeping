@@ -154,7 +154,8 @@ class BookKeepingService
         if (is_null($bookId)) {
             $bookId = $this->book->retrieveDefaultBook(Auth::id());
         }
-        $slipId = $this->slip->retrieveSlipThatBound($slipEntryId, $bookId, true);
+        $slip = $this->slip->retrieveSlipThatBound($slipEntryId, $bookId, true);
+        $slipId = is_null($slip) ? null : $slip['slip_id'];
         $this->slip->deleteSlipEntry($slipEntryId);
         $slipEntries = $this->slip->retrieveSlipEntriesBoundTo($slipId);
         if (empty($slipEntries)) {
