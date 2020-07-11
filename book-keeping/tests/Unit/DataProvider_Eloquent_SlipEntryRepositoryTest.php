@@ -199,14 +199,16 @@ class DataProvider_Eloquent_SlipEntryRepositoryTest extends DataProvider_SlipEnt
         $bookId = (string) Str::uuid();
         $accountId1 = (string) Str::uuid();
         $accountId2 = (string) Str::uuid();
+        $date = '2020-05-31';
+        $slip_outline = 'slip_outline208';
         $amount = 36912;
         $client = 'client7';
         $outline = 'outline7';
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $slipId = factory(Slip::class)->create([
             'book_id'      => $bookId,
-            'slip_outline' => 'slip_outline208',
-            'date'         => '2020-05-31',
+            'slip_outline' => $slip_outline,
+            'date'         => $date,
             'is_draft'     => true,
         ])->slip_id;
         $slipEntryId = factory(SlipEntry::class)->create([
@@ -219,8 +221,11 @@ class DataProvider_Eloquent_SlipEntryRepositoryTest extends DataProvider_SlipEnt
         ])->slip_entry_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $slipEntry_expected = [
-            'slip_entry_id' => $slipEntryId,
             'slip_id'       => $slipId,
+            'date'          => $date,
+            'slip_outline'  => $slip_outline,
+            'slip_memo'     => null,
+            'slip_entry_id' => $slipEntryId,
             'debit'         => $accountId1,
             'credit'        => $accountId2,
             'amount'        => $amount,
