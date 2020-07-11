@@ -76,7 +76,7 @@ abstract class DataProvider_SlipEntryRepositoryInterfaceTest extends TestCase
         $slipEntryId = (string) Str::uuid();
         $bookId = (string) Str::uuid();
 
-        $slipEntries = $this->slipEntry->findById($slipEntryId, $bookId);
+        $slipEntries = $this->slipEntry->findById($slipEntryId, $bookId, true);
 
         if (is_null($slipEntries)) {
             $this->assertNull($slipEntries);

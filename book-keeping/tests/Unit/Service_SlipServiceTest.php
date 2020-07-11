@@ -339,17 +339,18 @@ class Service_SlipServiceTest extends TestCase
             'client'        => 'client6',
             'outline'       => 'outline6',
         ];
+        $draftInclude = true;
         /** @var \App\DataProvider\SlipRepositoryInterface|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipRepositoryInterface::class);
         /** @var \App\DataProvider\SlipEntryRepositoryInterface|\Mockery\MockInterface $slipEntryMock */
         $slipEntryMock = Mockery::mock(SlipEntryRepositoryInterface::class);
         $slipEntryMock->shouldReceive('findById')
             ->once()
-            ->with($slipEntryId, $bookId)
+            ->with($slipEntryId, $bookId, $draftInclude)
             ->andReturn($slipEntry);
 
         $slip = new SlipService($slipMock, $slipEntryMock);
-        $slipId_actual = $slip->retrieveSlipThatBound($slipEntryId, $bookId);
+        $slipId_actual = $slip->retrieveSlipThatBound($slipEntryId, $bookId, $draftInclude);
 
         $this->assertSame($slipId_expected, $slipId_actual);
     }
@@ -361,17 +362,18 @@ class Service_SlipServiceTest extends TestCase
     {
         $bookId = (string) Str::uuid();
         $slipEntryId = (string) Str::uuid();
+        $draftInclude = false;
         /** @var \App\DataProvider\SlipRepositoryInterface|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipRepositoryInterface::class);
         /** @var \App\DataProvider\SlipEntryRepositoryInterface|\Mockery\MockInterface $slipEntryMock */
         $slipEntryMock = Mockery::mock(SlipEntryRepositoryInterface::class);
         $slipEntryMock->shouldReceive('findById')
             ->once()
-            ->with($slipEntryId, $bookId)
+            ->with($slipEntryId, $bookId, $draftInclude)
             ->andReturn(null);
 
         $slip = new SlipService($slipMock, $slipEntryMock);
-        $slipId = $slip->retrieveSlipThatBound($slipEntryId, $bookId);
+        $slipId = $slip->retrieveSlipThatBound($slipEntryId, $bookId, $draftInclude);
 
         $this->assertNull($slipId);
     }
