@@ -353,6 +353,42 @@ class BookKeepingService
     }
 
     /**
+     * Retrieve slip entry.
+     *
+     * @param string $slipEntryId
+     * @param string $bookId
+     *
+     * @return array | null
+     */
+    public function retrieveSlipEntry(string $slipEntryId, string $bookId = null): ?array
+    {
+        if (is_null($bookId)) {
+            $bookId = $this->book->retrieveDefaultBook(Auth::id());
+        }
+        $accounts = $this->account->retrieveAccounts($bookId);
+        $slipEntry = $this->slip->retrieveSlipThatBound($slipEntryId, $bookId, false);
+        $slips = [];
+        if (!is_null($slipEntry)) {
+            $slips[$slipEntry['slip_id']] = [
+                'date'         => $slipEntry['date'],
+                'slip_outline' => $slipEntry['slip_outline'],
+                'slip_memo'    => $slipEntry['slip_memo'],
+                'items'        => [
+                    $slipEntry['slip_entry_id'] => [
+                        'debit'   => ['account_id' => $slipEntry['debit'], 'account_title' => $accounts[$slipEntry['debit']]['account_title']],
+                        'credit'  => ['account_id' => $slipEntry['credit'], 'account_title' => $accounts[$slipEntry['credit']]['account_title']],
+                        'amount'  => $slipEntry['amount'],
+                        'client'  => $slipEntry['client'],
+                        'outline' => $slipEntry['outline'],
+                    ],
+                ],
+            ];
+        }
+
+        return $slips;
+    }
+
+    /**
      * Retrieve slips.
      *
      * @param string $fromDate
