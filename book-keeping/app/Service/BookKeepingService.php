@@ -526,6 +526,18 @@ class BookKeepingService
     }
 
     /**
+     * Update Slip Entry.
+     *
+     * @param string $accountGroupId
+     * @param array  $newData
+     * @param string $bookId
+     */
+    public function updateSlipEntry(string $slipEntryId, array $newData, string $bookId = null)
+    {
+        $this->slip->updateSlipEntry($slipEntryId, $newData);
+    }
+
+    /**
      * Validate date format.
      *
      * @param string $date

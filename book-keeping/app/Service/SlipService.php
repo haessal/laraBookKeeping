@@ -200,4 +200,15 @@ class SlipService
     {
         $this->slip->update($slipId, ['date' => $date]);
     }
+
+    /**
+     * Update the slip entry
+     *
+     * @param string $slipEntryId
+     * @param array  $newData
+     */
+    public function updateSlipEntry(string $slipEntryId, array $newData)
+    {
+        $this->slipEntry->update($slipEntryId, $newData);
+    }
 }
