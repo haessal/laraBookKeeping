@@ -69,6 +69,7 @@ class PatchSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
      *
      * @param array $slipEntryContents
      * @param array $accounts
+     *
      * @return array
      */
     private function validateAndTrimSlipEntryContents(array $slipEntryContents, array $accounts): array

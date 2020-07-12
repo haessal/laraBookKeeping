@@ -202,7 +202,7 @@ class SlipService
     }
 
     /**
-     * Update the slip entry
+     * Update the slip entry.
      *
      * @param string $slipEntryId
      * @param array  $newData
