@@ -70,4 +70,14 @@ interface SlipEntryRepositoryInterface
      * @return array
      */
     public function searchSlipEntries(string $fromDate, string $toDate, array $condition, string $bookId): array;
+
+    /**
+     * Update the specified slip entry.
+     *
+     * @param string $slipEntryId
+     * @param array  $newData
+     *
+     * @return void
+     */
+    public function update(string $slipEntryId, array $newData);
 }
