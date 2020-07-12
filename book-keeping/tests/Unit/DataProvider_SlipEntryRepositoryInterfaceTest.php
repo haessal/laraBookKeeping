@@ -98,4 +98,19 @@ abstract class DataProvider_SlipEntryRepositoryInterfaceTest extends TestCase
 
         $this->assertTrue(is_array($slipEntries));
     }
+
+    /**
+     * @test
+     */
+    public function update_CalledWithStringAndArray()
+    {
+        $slipEntryId = (string) Str::uuid();
+        $newData = [];
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $this->slipEntry->update($slipEntryId, $newData);
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        $this->assertTrue(true);
+    }
 }

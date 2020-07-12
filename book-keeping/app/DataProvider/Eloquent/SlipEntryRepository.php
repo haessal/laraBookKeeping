@@ -176,6 +176,37 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     }
 
     /**
+     * Update the specified slip entry.
+     *
+     * @param string $slipEntryId
+     * @param array  $newData
+     *
+     * @return void
+     */
+    public function update(string $slipEntryId, array $newData)
+    {
+        $slipEntry = SlipEntry::find($slipEntryId);
+        if (!is_null($slipEntry)) {
+            if (array_key_exists('debit', $newData)) {
+                $slipEntry->debit = $newData['debit'];
+            }
+            if (array_key_exists('credit', $newData)) {
+                $slipEntry->credit = $newData['credit'];
+            }
+            if (array_key_exists('amount', $newData)) {
+                $slipEntry->amount = $newData['amount'];
+            }
+            if (array_key_exists('client', $newData)) {
+                $slipEntry->client = $newData['client'];
+            }
+            if (array_key_exists('outline', $newData)) {
+                $slipEntry->outline = $newData['outline'];
+            }
+            $slipEntry->save();
+        }
+    }
+
+    /**
      * Query to get slip entries between specified date.
      *
      * @param string $fromDate
