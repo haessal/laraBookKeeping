@@ -358,9 +358,9 @@ class BookKeepingService
      * @param string $slipEntryId
      * @param string $bookId
      *
-     * @return array | null
+     * @return array
      */
-    public function retrieveSlipEntry(string $slipEntryId, string $bookId = null): ?array
+    public function retrieveSlipEntry(string $slipEntryId, string $bookId = null): array
     {
         if (is_null($bookId)) {
             $bookId = $this->book->retrieveDefaultBook(Auth::id());
