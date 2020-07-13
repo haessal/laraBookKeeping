@@ -35,6 +35,7 @@ class PatchSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
      * Handle the incoming request.
      *
      * @param \Illuminate\Http\Request $request
+     * @param string                   $slipEntryId
      *
      * @return \Illuminate\Http\JsonResponse
      */
