@@ -1188,6 +1188,10 @@ class Service_BookKeepingServiceTest extends TestCase
     public function retrieveSlip_SlipIsFoundByIdAndRetrieved()
     {
         $bookId = (string) Str::uuid();
+        $userId = 1191;
+        $user = new User();
+        $user->id = $userId;
+        $this->be($user);
         $slipId = (string) Str::uuid();
         $accountId_1 = (string) Str::uuid();
         $accountId_2 = (string) Str::uuid();
@@ -1250,6 +1254,10 @@ class Service_BookKeepingServiceTest extends TestCase
         ];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
+        $bookMock->shouldReceive('retrieveDefaultBook')
+            ->once()
+            ->with($userId)
+            ->andReturn($bookId);
         /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
         $accountMock = Mockery::mock(AccountService::class);
         $accountMock->shouldReceive('retrieveAccounts')
@@ -1262,7 +1270,7 @@ class Service_BookKeepingServiceTest extends TestCase
         $slipMock = Mockery::mock(SlipService::class);
         $slipMock->shouldReceive('retrieveSlip')
             ->once()
-            ->with($slipId)
+            ->with($slipId, $bookId)
             ->andReturn($slip_head);
         $slipMock->shouldReceive('retrieveSlipEntriesBoundTo')
             ->once()
@@ -1280,6 +1288,7 @@ class Service_BookKeepingServiceTest extends TestCase
      */
     public function retrieveSlip_SlipIsNotFound()
     {
+        $bookId = (string) Str::uuid();
         $slipId = (string) Str::uuid();
         $slips_expected = [];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
@@ -1293,12 +1302,12 @@ class Service_BookKeepingServiceTest extends TestCase
         $slipMock = Mockery::mock(SlipService::class);
         $slipMock->shouldReceive('retrieveSlip')
             ->once()
-            ->with($slipId)
+            ->with($slipId, $bookId)
             ->andReturn(null);
         $slipMock->shouldNotReceive('retrieveSlipEntriesBoundTo');
 
         $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
-        $slips_actual = $BookKeeping->retrieveSlip($slipId);
+        $slips_actual = $BookKeeping->retrieveSlip($slipId, $bookId);
 
         $this->assertSame($slips_expected, $slips_actual);
     }
