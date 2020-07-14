@@ -40,10 +40,11 @@ interface SlipRepositoryInterface
      * Find a slip.
      *
      * @param string $slipId
+     * @param string $bookId
      *
      * @return array|null
      */
-    public function findById(string $slipId): ?array;
+    public function findById(string $slipId, string $bookId): ?array;
 
     /**
      * Update the specified slip.

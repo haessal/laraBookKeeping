@@ -131,12 +131,13 @@ class SlipService
      * Retrieve a slip.
      *
      * @param string $slipId
+     * @param string $bookId
      *
      * @return array|null
      */
-    public function retrieveSlip(string $slipId): ?array
+    public function retrieveSlip(string $slipId, string $bookId): ?array
     {
-        return $this->slip->findById($slipId);
+        return $this->slip->findById($slipId, $bookId);
     }
 
     /**
