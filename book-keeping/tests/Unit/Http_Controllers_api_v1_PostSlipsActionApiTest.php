@@ -85,7 +85,7 @@ class Http_Controllers_api_v1_PostSlipsActionApiTest extends TestCase
         $responderMock = Mockery::mock(SlipJsonResponder::class);
         $responderMock->shouldReceive('response')
             ->once()
-            ->with($context)
+            ->with($context, JsonResponse::HTTP_CREATED)
             ->andReturn($response_expected);
         /** @var \Illuminate\Http\Request|\Mockery\MockInterface $requestMock */
         $requestMock = Mockery::mock(Request::class);
