@@ -232,13 +232,13 @@ class Service_SlipServiceTest extends TestCase
         $slipMock = Mockery::mock(SlipRepositoryInterface::class);
         $slipMock->shouldReceive('findById')
             ->once()
-            ->with($slipId)
+            ->with($slipId, $bookId)
             ->andReturn($slip_expected);
         /** @var \App\DataProvider\SlipEntryRepositoryInterface|\Mockery\MockInterface $slipEntryMock */
         $slipEntryMock = Mockery::mock(SlipEntryRepositoryInterface::class);
 
         $slip = new SlipService($slipMock, $slipEntryMock);
-        $slip_actual = $slip->retrieveSlip($slipId);
+        $slip_actual = $slip->retrieveSlip($slipId, $bookId);
 
         $this->assertSame($slip_expected, $slip_actual);
     }
