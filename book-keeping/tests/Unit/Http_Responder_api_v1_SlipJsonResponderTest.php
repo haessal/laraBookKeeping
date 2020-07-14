@@ -77,6 +77,7 @@ class Http_Responder_api_v1_SlipJsonResponderTest extends TestCase
                 ],
             ],
         ];
+        $status = JsonResponse::HTTP_CREATED;
         /** @var \Illuminate\Http\JsonResponse|\Mockery\MockInterface $JsonResponseMock */
         $JsonResponseMock = Mockery::mock(JsonResponse::class);
         $JsonResponseMock->shouldReceive('setData')
@@ -84,10 +85,10 @@ class Http_Responder_api_v1_SlipJsonResponderTest extends TestCase
             ->with($response_body);
         $JsonResponseMock->shouldReceive('setStatusCode')
             ->once()
-            ->with(JsonResponse::HTTP_CREATED);
+            ->with($status);
 
         $responder = new SlipJsonResponder($JsonResponseMock);
-        $response = $responder->response($context);
+        $response = $responder->response($context, $status);
 
         $this->assertTrue(true);
     }
