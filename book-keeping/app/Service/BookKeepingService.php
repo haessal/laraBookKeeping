@@ -324,12 +324,14 @@ class BookKeepingService
      *
      * @return array
      */
-    public function retrieveSlip(string $slipId): array
+    public function retrieveSlip(string $slipId, string $bookId = null): array
     {
+        if (is_null($bookId)) {
+            $bookId = $this->book->retrieveDefaultBook(Auth::id());
+        }
         $slips = [];
-        $slip_head = $this->slip->retrieveSlip($slipId);
+        $slip_head = $this->slip->retrieveSlip($slipId, $bookId);
         if (!is_null($slip_head)) {
-            $bookId = $slip_head['book_id'];
             $accounts = $this->account->retrieveAccounts($bookId);
             $slips[$slipId] = [
                 'date'         => $slip_head['date'],
