@@ -14,10 +14,10 @@ class SlipJsonResponder extends BaseJsonResponder
      *
      * @return Illuminate\Http\JsonResponse
      */
-    public function response(array $context): JsonResponse
+    public function response(array $context, int $status = JsonResponse::HTTP_OK): JsonResponse
     {
         $this->response->setData($this->translateSlipFormat($context['slips']));
-        $this->response->setStatusCode(JsonResponse::HTTP_CREATED);
+        $this->response->setStatusCode($status);
 
         return $this->response;
     }

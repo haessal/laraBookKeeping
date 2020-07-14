@@ -51,7 +51,7 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
             }
             $slipId = $this->BookKeeping->createSlip($slip['outline'], $slip['date'], $slipEntries, $slip['memo']);
             $context['slips'] = $this->BookKeeping->retrieveSlip($slipId);
-            $response = $this->responder->response($context);
+            $response = $this->responder->response($context, JsonResponse::HTTP_CREATED);
         } else {
             $response = new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
         }
