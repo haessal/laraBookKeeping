@@ -566,7 +566,7 @@ class BookKeepingService
     /**
      * Update Slip Entry.
      *
-     * @param string $accountGroupId
+     * @param string $slipEntryId
      * @param array  $newData
      * @param string $bookId
      */
