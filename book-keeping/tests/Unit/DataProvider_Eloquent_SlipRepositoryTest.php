@@ -131,7 +131,7 @@ class DataProvider_Eloquent_SlipRepositoryTest extends DataProvider_SlipReposito
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $slip_expected = ['book_id' => $bookId, 'slip_id' => $slipId, 'date' => $date, 'slip_outline' => $outline, 'slip_memo' => $memo];
 
-        $slip_actual = $this->slip->findById($slipId);
+        $slip_actual = $this->slip->findById($slipId, $bookId);
 
         $this->assertSame($slip_expected, $slip_actual);
     }
