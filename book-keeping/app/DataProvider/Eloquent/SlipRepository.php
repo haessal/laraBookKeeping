@@ -68,12 +68,14 @@ class SlipRepository implements SlipRepositoryInterface
      * Find a slip.
      *
      * @param string $slipId
+     * @param string $bookId
      *
      * @return array|null
      */
-    public function findById(string $slipId): ?array
+    public function findById(string $slipId, string $bookId): ?array
     {
         $slip = Slip::select('book_id', 'slip_id', 'date', 'slip_outline', 'slip_memo')
+            ->where('book_id', $bookId)
             ->where('slip_id', $slipId)
             ->where('is_draft', false)
             ->first();
