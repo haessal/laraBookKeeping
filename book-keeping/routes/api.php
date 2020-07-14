@@ -20,6 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('/v1/accounts', api\v1\GetAccountsActionApi::class);
 
 Route::post('/v1/slips', api\v1\PostSlipsActionApi::class);
+Route::get('/v1/slips/{slipId}', api\v1\GetSlipsSlipIdActionApi::class);
 
 Route::get('/v1/slipentries', api\v1\GetSlipEntriesActionApi::class);
 Route::patch('/v1/slipentries/{slipEntryId}', api\v1\PatchSlipEntriesActionApi::class);
