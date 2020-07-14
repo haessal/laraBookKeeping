@@ -564,6 +564,18 @@ class BookKeepingService
     }
 
     /**
+     * Update Slip.
+     *
+     * @param string $slipId
+     * @param array  $newData
+     * @param string $bookId
+     */
+    public function updateSlip(string $slipId, array $newData, string $bookId = null)
+    {
+        $this->slip->updateSlip($slipId, $newData);
+    }
+
+    /**
      * Update Slip Entry.
      *
      * @param string $slipEntryId
