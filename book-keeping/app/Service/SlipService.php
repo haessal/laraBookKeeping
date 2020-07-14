@@ -203,6 +203,17 @@ class SlipService
     }
 
     /**
+     * Update the slip.
+     *
+     * @param string $slipId
+     * @param array  $newData
+     */
+    public function updateSlip(string $slipId, array $newData)
+    {
+        $this->slip->update($slipId, $newData);
+    }
+
+    /**
      * Update the slip entry.
      *
      * @param string $slipEntryId

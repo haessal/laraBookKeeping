@@ -425,6 +425,27 @@ class Service_SlipServiceTest extends TestCase
     /**
      * @test
      */
+    public function updateSlip_CallRepositoryWithArgumentsAsItIs()
+    {
+        $slipId = (string) Str::uuid();
+        $newData = ['outline' => 'outline431'];
+        /** @var \App\DataProvider\SlipRepositoryInterface|\Mockery\MockInterface $slipMock */
+        $slipMock = Mockery::mock(SlipRepositoryInterface::class);
+        $slipMock->shouldReceive('update')
+            ->once()
+            ->with($slipId, $newData);
+        /** @var \App\DataProvider\SlipEntryRepositoryInterface|\Mockery\MockInterface $slipEntryMock */
+        $slipEntryMock = Mockery::mock(SlipEntryRepositoryInterface::class);
+
+        $slip = new SlipService($slipMock, $slipEntryMock);
+        $slip->updateSlip($slipId, $newData);
+
+        $this->assertTrue(true);
+    }
+
+    /**
+     * @test
+     */
     public function updateSlipEntry_CallRepositoryWithArgumentsAsItIs()
     {
         $slipEntryId = (string) Str::uuid();
