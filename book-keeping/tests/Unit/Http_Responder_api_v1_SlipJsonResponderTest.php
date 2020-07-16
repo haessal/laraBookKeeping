@@ -61,16 +61,16 @@ class Http_Responder_api_v1_SlipJsonResponderTest extends TestCase
             'entries' => [
                 [
                     'id'      => $slipEntryId_1,
-                    'debit'   => $accountId_1,
-                    'credit'  => $accountId_2,
+                    'debit'   => ['id' => $accountId_1, 'title' => 'accountTitle_1'],
+                    'credit'  => ['id' => $accountId_2, 'title' => 'accountTitle_2'],
                     'amount'  => 500,
                     'client'  => 'client_42',
                     'outline' => 'outline_43',
                 ],
                 [
                     'id'      => $slipEntryId_2,
-                    'debit'   => $accountId_3,
-                    'credit'  => $accountId_4,
+                    'debit'   => ['id' => $accountId_3, 'title' => 'accountTitle_3'],
+                    'credit'  => ['id' => $accountId_4, 'title' => 'accountTitle_4'],
                     'amount'  => 600,
                     'client'  => 'client_50',
                     'outline' => 'outline_51',

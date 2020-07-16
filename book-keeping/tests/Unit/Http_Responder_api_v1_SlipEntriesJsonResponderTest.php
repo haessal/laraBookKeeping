@@ -77,8 +77,8 @@ class Http_Responder_api_v1_SlipEntriesJsonResponderTest extends TestCase
         $response_body = [
             [
                 'id'      => $slipEntryId_1,
-                'debit'   => $accountId_1,
-                'credit'  => $accountId_2,
+                'debit'   => ['id' => $accountId_1, 'title' => 'accountTitle_1'],
+                'credit'  => ['id' => $accountId_2, 'title' => 'accountTitle_2'],
                 'amount'  => 500,
                 'client'  => 'client_50',
                 'outline' => 'outline_51',
@@ -91,8 +91,8 @@ class Http_Responder_api_v1_SlipEntriesJsonResponderTest extends TestCase
             ],
             [
                 'id'      => $slipEntryId_2,
-                'debit'   => $accountId_3,
-                'credit'  => $accountId_4,
+                'debit'   => ['id' => $accountId_3, 'title' => 'accountTitle_3'],
+                'credit'  => ['id' => $accountId_4, 'title' => 'accountTitle_4'],
                 'amount'  => 600,
                 'client'  => 'client_57',
                 'outline' => 'outline_58',
@@ -105,8 +105,8 @@ class Http_Responder_api_v1_SlipEntriesJsonResponderTest extends TestCase
             ],
             [
                 'id'      => $slipEntryId_3,
-                'debit'   => $accountId_5,
-                'credit'  => $accountId_6,
+                'debit'   => ['id' => $accountId_5, 'title' => 'accountTitle_5'],
+                'credit'  => ['id' => $accountId_6, 'title' => 'accountTitle_6'],
                 'amount'  => 700,
                 'client'  => 'client_72',
                 'outline' => 'outline_73',
