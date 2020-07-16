@@ -43,8 +43,8 @@ class SlipJsonResponder extends BaseJsonResponder
         foreach ($slips[$slipId]['items'] as $slipEntryId => $slipEntryItem) {
             $slip['entries'][] = [
                 'id'      => $slipEntryId,
-                'debit'   => $slipEntryItem['debit']['account_id'],
-                'credit'  => $slipEntryItem['credit']['account_id'],
+                'debit'   => ['id' => $slipEntryItem['debit']['account_id'], 'title' => $slipEntryItem['debit']['account_title']],
+                'credit'  => ['id' => $slipEntryItem['credit']['account_id'], 'title' => $slipEntryItem['credit']['account_title']],
                 'amount'  => $slipEntryItem['amount'],
                 'client'  => $slipEntryItem['client'],
                 'outline' => $slipEntryItem['outline'],
