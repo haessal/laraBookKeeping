@@ -102,6 +102,6 @@ class Http_Controllers_v2_RedirectAccountsSettingsActionHtmlTest extends TestCas
         $controller = new RedirectAccountsSettingsActionHtml($BookKeepingMock);
         $response = $controller->__invoke($requestMock, $bookId);
 
-        $this->assertSame(route('v2_accounts_settings', ['book/Id' => $bookId]), $response->getTargetUrl());
+        $this->assertSame(route('v2_accounts_settings', ['bookId' => $bookId]), $response->getTargetUrl());
     }
 }
