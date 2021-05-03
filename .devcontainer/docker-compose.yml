@@ -28,7 +28,7 @@ services:
     depends_on:
       - db
   db:
-    image: mysql:5.7
+    image: mariadb:10.5.9
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_USER=default
