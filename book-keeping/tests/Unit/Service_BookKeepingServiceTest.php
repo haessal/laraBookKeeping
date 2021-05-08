@@ -718,6 +718,47 @@ class Service_BookKeepingServiceTest extends TestCase
     /**
      * @test
      */
+    public function retrieveAvailableBook_RetrieveBooks()
+    {
+        $userId = 723;
+        $user = new User();
+        $user->id = $userId;
+        $this->be($user);
+        $ownerName = 'owner727';
+        $bookId = (string) Str::uuid();
+        $bookName = 'book734';
+        $bookList = [
+            ['book_id' => $bookId, 'book_name' => $bookName, 'modifiable' => true, 'is_owner' => false, 'is_default' => false, 'created_at' => new Carbon()],
+        ];
+        $books_expected = [
+            ['id' => $bookId, 'owner' => $ownerName, 'name' => $bookName],
+        ];
+        /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
+        $bookMock = Mockery::mock(BookService::class);
+        $bookMock->shouldReceive('retrieveBookList')
+            ->once()
+            ->with($userId)
+            ->andReturn($bookList);
+        $bookMock->shouldReceive('ownerName')
+            ->once()
+            ->with($bookId)
+            ->andReturn($ownerName);
+        /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
+        $accountMock = Mockery::mock(AccountService::class);
+        /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
+        $budgetMock = Mockery::mock(BudgetService::class);
+        /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
+        $slipMock = Mockery::mock(SlipService::class);
+
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $books_actual = $BookKeeping->retrieveAvailableBook();
+
+        $this->assertSame($books_expected, $books_actual);
+    }
+
+    /**
+     * @test
+     */
     public function retrieveDraftSlips_RetrieveTheDefaultBookDraftSlips()
     {
         $bookId = (string) Str::uuid();
