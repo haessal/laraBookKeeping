@@ -41,6 +41,10 @@ class AppServiceProvider extends ServiceProvider
             \App\DataProvider\SlipRepositoryInterface::class,
             \App\DataProvider\Eloquent\SlipRepository::class
         );
+        $this->app->bind(
+            \App\DataProvider\UserRepositoryInterface::class,
+            \App\DataProvider\Eloquent\UserRepository::class
+        );
     }
 
     /**
