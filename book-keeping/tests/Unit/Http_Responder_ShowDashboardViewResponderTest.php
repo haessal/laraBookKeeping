@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Http\Responder\ShowDashboardViewResponder;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 use Mockery;
 use Tests\TestCase;
 
@@ -20,7 +21,9 @@ class Http_Responder_ShowDashboardViewResponderTest extends TestCase
      */
     public function response_ReturnResponse()
     {
-        $context = [];
+        $context['books'] = [
+            ['id' => (string) Str::uuid(), 'owner' => 'owner', 'name' => 'name'],
+        ];
         /** @var \Illuminate\Http\Response|\Mockery\MockInterface $ResponseMock */
         $ResponseMock = Mockery::mock(Response::class);
         $ResponseMock->shouldReceive('setContent')->once();
