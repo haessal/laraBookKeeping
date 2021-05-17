@@ -41,6 +41,8 @@ class ShowDashboardActionHtml extends AuthenticatedBookKeepingAction
     {
         $context = [];
 
+        $context['books'] = $this->BookKeeping->retrieveAvailableBook();
+
         return $this->responder->response($context);
     }
 }
