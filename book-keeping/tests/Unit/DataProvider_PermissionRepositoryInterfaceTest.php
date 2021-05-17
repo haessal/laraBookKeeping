@@ -42,6 +42,22 @@ abstract class DataProvider_PermissionRepositoryInterfaceTest extends TestCase
     /**
      * @test
      */
+    public function findOwnerOfBook_ReturnValueTypeIsIntOrNull()
+    {
+        $bookId = (string) Str::uuid();
+
+        $userId = $this->permission->findOwnerOfBook($bookId);
+
+        if (is_null($userId)) {
+            $this->assertTrue(is_null($userId));
+        } else {
+            $this->assertTrue(is_int($userId));
+        }
+    }
+
+    /**
+     * @test
+     */
     public function searchBookList_ReturnValueTypeIsArray()
     {
         $userId = 30;
