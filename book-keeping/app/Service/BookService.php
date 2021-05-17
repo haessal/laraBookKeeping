@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\DataProvider\BookRepositoryInterface;
 use App\DataProvider\PermissionRepositoryInterface;
+use App\DataProvider\UserRepositoryInterface;
 
 class BookService
 {
@@ -22,15 +23,24 @@ class BookService
     private $permission;
 
     /**
+     * User repository instance.
+     *
+     * @var \App\DataProvider\UserRepositoryInterface
+     */
+    private $user;
+
+    /**
      * Create a new BookService instance.
      *
      * @param \App\DataProvider\BookRepositoryInterface       $book
      * @param \App\DataProvider\PermissionRepositoryInterface $app
+     * @param \App\DataProvider\UserRepositoryInterface       $user
      */
-    public function __construct(BookRepositoryInterface $book, PermissionRepositoryInterface $permission)
+    public function __construct(BookRepositoryInterface $book, PermissionRepositoryInterface $permission, UserRepositoryInterface $user)
     {
         $this->book = $book;
         $this->permission = $permission;
+        $this->user = $user;
     }
 
     /**
@@ -47,6 +57,25 @@ class BookService
         $permissionId = $this->permission->create($userId, $bookId);
 
         return $bookId;
+    }
+
+    /**
+     * Owner of the specified Book.
+     *
+     * @param int $bookId
+     *
+     * @return string | null
+     */
+    public function ownerName(string $bookId): ?string
+    {
+        $ownerName = null;
+        $userId = $this->permission->findOwnerOfBook($bookId);
+        if (!empty($userId)) {
+            $user = $this->user->findById($userId);
+            $ownerName = $user['name'];
+        }
+
+        return $ownerName;
     }
 
     /**
