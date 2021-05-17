@@ -8,8 +8,10 @@
     "And" : "かつ",
     "Assets" : "資産",
     "Balance sheet" : "貸借対照表",
+    "Book List" : "帳簿一覧",
     "Client" : "取引相手",
     "Code" : "コード",
+    "Create your first book to start." : "最初の帳簿を作成してください",
     "Credit" : "貸方",
     "Current Net Asset" : "当座純資産",
     "Date" : "日付",
@@ -27,6 +29,7 @@
     "Make sure to copy your new personal access token now." : "発行した個人用アクセストークンを保存してください。",
     "Net Asset" : "純資産",
     "Net Income" : "当期利益",
+    "New" : "新規作成",
     "Or" : "または",
     "Outline" : "概要",
     "Period-end Balance sheet" : "期末貸借対照表",
@@ -45,6 +48,7 @@
     "To" : "至",
     "Trial Balance Of Real Flow" : "実在フロー試算表",
     "Type" : "種別",
+    "You don't have any books yet." : "まだ、帳簿がありません",
     "You won’t be able to see it again!" : "この文字列は再表示できません。",
     "'s state" : "の家計状況"
 }
