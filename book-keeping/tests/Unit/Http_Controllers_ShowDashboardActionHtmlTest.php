@@ -7,6 +7,7 @@ use App\Http\Responder\ShowDashboardViewResponder;
 use App\Service\BookKeepingService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 use Mockery;
 use Tests\TestCase;
 
@@ -22,10 +23,15 @@ class Http_Controllers_ShowDashboardActionHtmlTest extends TestCase
      */
     public function __invoke_MakeContextAndReturnResponse()
     {
-        $context = [];
+        $context['books'] = [
+            ['id' => (string) Str::uuid(), 'owner' => 'owner', 'name' => 'name'],
+        ];
         $response_expected = new Response();
         /** @var \App\Service\BookKeepingService|\Mockery\MockInterface $BookKeepingMock */
         $BookKeepingMock = Mockery::mock(BookKeepingService::class);
+        $BookKeepingMock->shouldReceive('retrieveAvailableBook')
+            ->once()
+            ->andReturn($context['books']);
         /** @var \App\Http\Responder\ShowDashboardViewResponder|\Mockery\MockInterface $responderMock */
         $responderMock = Mockery::mock(ShowDashboardViewResponder::class);
         $responderMock->shouldReceive('response')
