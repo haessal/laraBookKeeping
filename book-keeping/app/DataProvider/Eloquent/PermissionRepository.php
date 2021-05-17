@@ -48,6 +48,23 @@ class PermissionRepository implements PermissionRepositoryInterface
     }
 
     /**
+     * Find owner of the book.
+     *
+     * @param string $bookId
+     *
+     * @return int | null
+     */
+    public function findOwnerOfBook(string $bookId): ?int
+    {
+        $list = Permission::select('permitted_user')
+            ->where('readable_book', $bookId)
+            ->where('is_owner', true)
+            ->first();
+
+        return empty($list) ? null : $list['permitted_user'];
+    }
+
+    /**
      * Search book list that the user can access.
      *
      * @param int $userId
