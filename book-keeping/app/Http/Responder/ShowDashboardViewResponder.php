@@ -15,8 +15,11 @@ class ShowDashboardViewResponder extends BaseLayoutViewResponder
      */
     public function response(array $context): Response
     {
+        $book_list = empty($context['books']) ? null : $context['books'];
+
         $this->response->setContent($this->view->make('home', [
             'dropdownmenuLinks' => $this->dropdownMenuLinks(),
+            'book_list'         => $book_list,
         ]));
         $this->response->setStatusCode(Response::HTTP_OK);
 
