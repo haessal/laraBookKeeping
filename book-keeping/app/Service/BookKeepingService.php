@@ -213,7 +213,7 @@ class BookKeepingService
      *
      * @return array | null
      */
-    public function retrieveBookInfomation(string $bookId): ?array
+    public function retrieveBookInformation(string $bookId): ?array
     {
         $information = null;
 
