@@ -207,6 +207,26 @@ class BookKeepingService
     }
 
     /**
+     * Retrieve information about the specified book.
+     *
+     * @param string $bookId
+     *
+     * @return array | null
+     */
+    public function retrieveBookInformation(string $bookId): ?array
+    {
+        $information = null;
+
+        $owner = $this->book->ownerName($bookId);
+        $book = $this->book->retrieveInformation($bookId);
+        if ((!empty($owner)) && (!empty($book))) {
+            $information = ['id' => $bookId, 'owner' => $owner, 'name' => $book['book_name']];
+        }
+
+        return $information;
+    }
+
+    /**
      * Retrieve draft slips.
      *
      * @param string $bookId
