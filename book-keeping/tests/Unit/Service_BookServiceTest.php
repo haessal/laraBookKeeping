@@ -150,4 +150,28 @@ class Service_BookServiceTest extends TestCase
 
         $this->assertSame($bookId_expected, $bookId_actual);
     }
+
+    /**
+     * @test
+     */
+    public function retrieveInformation_CallRepositoryWithArgumentsAsItIs()
+    {
+        $bookId = (string) Str::uuid();
+        $book_expected = ['book_id' => $bookId, 'book_name' => 'bookName160'];
+        /** @var \App\DataProvider\BookRepositoryInterface|\Mockery\MockInterface $bookMock */
+        $bookMock = Mockery::mock(BookRepositoryInterface::class);
+        $bookMock->shouldReceive('findById')
+            ->once()
+            ->with($bookId)
+            ->andReturn($book_expected);
+        /** @var \App\DataProvider\PermissionRepositoryInterface|\Mockery\MockInterface $permissionMock */
+        $permissionMock = Mockery::mock(PermissionRepositoryInterface::class);
+        /** @var \App\DataProvider\UserRepositoryInterface|\Mockery\MockInterface $userMock */
+        $userMock = Mockery::mock(UserRepositoryInterface::class);
+
+        $book = new BookService($bookMock, $permissionMock, $userMock);
+        $book_actual = $book->retrieveInformation($bookId);
+
+        $this->assertSame($book_expected, $book_actual);
+    }
 }
