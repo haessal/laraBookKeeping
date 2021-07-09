@@ -12,4 +12,13 @@ interface BookRepositoryInterface
      * @return string $bookId
      */
     public function create(string $title): string;
+
+    /**
+     * Find book.
+     *
+     * @param string $bookId
+     *
+     * @return array | null
+     */
+    public function findById(string $bookId): ?array;
 }
