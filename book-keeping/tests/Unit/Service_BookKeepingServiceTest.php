@@ -759,6 +759,100 @@ class Service_BookKeepingServiceTest extends TestCase
     /**
      * @test
      */
+    public function retrieveBookInformation_InformationNotFound()
+    {
+        $bookId = (string) Str::uuid();
+        $owner = 'owner765';
+        /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
+        $bookMock = Mockery::mock(BookService::class);
+        $bookMock->shouldReceive('ownerName')
+            ->once()
+            ->with($bookId)
+            ->andReturn($owner);
+        $bookMock->shouldReceive('retrieveInformation')
+            ->once()
+            ->with($bookId)
+            ->andReturn(null);
+        /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
+        $accountMock = Mockery::mock(AccountService::class);
+        /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
+        $budgetMock = Mockery::mock(BudgetService::class);
+        /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
+        $slipMock = Mockery::mock(SlipService::class);
+
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $information = $BookKeeping->retrieveBookInformation($bookId);
+
+        $this->assertNull($information);
+    }
+
+    /**
+     * @test
+     */
+    public function retrieveBookInformation_OwnerNotFound()
+    {
+        $bookId = (string) Str::uuid();
+        $bookName = 'bookName795';
+        $book = ['book_id' => $bookId, 'book_name' => $bookName];
+        /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
+        $bookMock = Mockery::mock(BookService::class);
+        $bookMock->shouldReceive('ownerName')
+            ->once()
+            ->with($bookId)
+            ->andReturn(null);
+        $bookMock->shouldReceive('retrieveInformation')
+            ->once()
+            ->with($bookId)
+            ->andReturn($book);
+        /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
+        $accountMock = Mockery::mock(AccountService::class);
+        /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
+        $budgetMock = Mockery::mock(BudgetService::class);
+        /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
+        $slipMock = Mockery::mock(SlipService::class);
+
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $information = $BookKeeping->retrieveBookInformation($bookId);
+
+        $this->assertNull($information);
+    }
+
+    /**
+     * @test
+     */
+    public function retrieveBookInformation_RetrieveTheInformation()
+    {
+        $bookId = (string) Str::uuid();
+        $owner = 'owner826';
+        $bookName = 'bookName827';
+        $book = ['book_id' => $bookId, 'book_name' => $bookName];
+        $information_expected = ['id' => $bookId, 'owner' => $owner, 'name' => $bookName];
+        /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
+        $bookMock = Mockery::mock(BookService::class);
+        $bookMock->shouldReceive('ownerName')
+            ->once()
+            ->with($bookId)
+            ->andReturn($owner);
+        $bookMock->shouldReceive('retrieveInformation')
+            ->once()
+            ->with($bookId)
+            ->andReturn($book);
+        /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
+        $accountMock = Mockery::mock(AccountService::class);
+        /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
+        $budgetMock = Mockery::mock(BudgetService::class);
+        /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
+        $slipMock = Mockery::mock(SlipService::class);
+
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $information_actual = $BookKeeping->retrieveBookInformation($bookId);
+
+        $this->assertSame($information_expected, $information_actual);
+    }
+
+    /**
+     * @test
+     */
     public function retrieveDraftSlips_RetrieveTheDefaultBookDraftSlips()
     {
         $bookId = (string) Str::uuid();
