@@ -105,4 +105,18 @@ class BookService
 
         return $bookId;
     }
+
+    /**
+     * Retrieve information.
+     *
+     * @param string $bookId
+     *
+     * @return array | null
+     */
+    public function retrieveInformation(string $bookId): ?array
+    {
+        $book = $this->book->findById($bookId);
+
+        return $book;
+    }
 }
