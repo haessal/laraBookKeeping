@@ -35,6 +35,7 @@ Route::prefix('/page/v2/books/{bookId}')->group(function () {
         return redirect()->route('v2_home', ['bookId' => $bookId]);
     })->name('v2');
     Route::get('/home', v2\ShowHomeActionHtml::class)->name('v2_home');
+    Route::get('/accounts', v2\ShowAccountsActionHtml::class)->name('v2_accounts');
     Route::get('/settings', function () {
         return view('welcome');
     })->name('v2_settings');
