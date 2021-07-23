@@ -82,7 +82,9 @@ class Http_Responder_AccountsListConverterTest extends TestCase
             ],
         ];
 
-        $responder = new class { use AccountsListConverter; };
+        $responder = new class() {
+            use AccountsListConverter;
+        };
         $reordered_actual = $responder->sortAccountInAscendingCodeOrder($groupedList);
 
         $this->assertSame($reordered_expected, $reordered_actual);
@@ -195,7 +197,9 @@ class Http_Responder_AccountsListConverterTest extends TestCase
             $accountId_6 => 'accountTitle_6',
         ];
 
-        $responder = new class { use AccountsListConverter; };
+        $responder = new class() {
+            use AccountsListConverter;
+        };
         $formattedAccountList_actual = $responder->translateAccountListToTitleList($accounts);
 
         $this->assertSame($formattedAccountList_expected, $formattedAccountList_actual);
