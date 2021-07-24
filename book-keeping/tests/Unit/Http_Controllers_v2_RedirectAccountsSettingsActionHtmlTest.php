@@ -25,7 +25,7 @@ class Http_Controllers_v2_RedirectAccountsSettingsActionHtmlTest extends TestCas
         $accountGroupId = (string) Str::uuid();
         /** @var \App\Service\BookKeepingService|\Mockery\MockInterface $BookKeepingMock */
         $BookKeepingMock = Mockery::mock(BookKeepingService::class);
-        $BookKeepingMock->shouldReceive('retrieveBookInfomation')
+        $BookKeepingMock->shouldReceive('retrieveBookInformation')
             ->once()
             ->with($bookId)
             ->andReturn(['id' => $bookId]);
@@ -55,7 +55,7 @@ class Http_Controllers_v2_RedirectAccountsSettingsActionHtmlTest extends TestCas
         $accountId = (string) Str::uuid();
         /** @var \App\Service\BookKeepingService|\Mockery\MockInterface $BookKeepingMock */
         $BookKeepingMock = Mockery::mock(BookKeepingService::class);
-        $BookKeepingMock->shouldReceive('retrieveBookInfomation')
+        $BookKeepingMock->shouldReceive('retrieveBookInformation')
             ->once()
             ->with($bookId)
             ->andReturn(['id' => $bookId]);
@@ -84,7 +84,7 @@ class Http_Controllers_v2_RedirectAccountsSettingsActionHtmlTest extends TestCas
         $bookId = (string) Str::uuid();
         /** @var \App\Service\BookKeepingService|\Mockery\MockInterface $BookKeepingMock */
         $BookKeepingMock = Mockery::mock(BookKeepingService::class);
-        $BookKeepingMock->shouldReceive('retrieveBookInfomation')
+        $BookKeepingMock->shouldReceive('retrieveBookInformation')
             ->once()
             ->with($bookId)
             ->andReturn(['id' => $bookId]);
