@@ -64,4 +64,30 @@ class AccountRepository implements AccountRepositoryInterface
 
         return $list;
     }
+
+    /**
+     * Update account.
+     *
+     * @param string $accountId
+     * @param array  $newData
+     */
+    public function update(string $accountId, array $newData)
+    {
+        $account = Account::find($accountId);
+        if (!is_null($account)) {
+            if (array_key_exists('group', $newData)) {
+                $account->account_group_id = $newData['group'];
+            }
+            if (array_key_exists('title', $newData)) {
+                $account->account_title = $newData['title'];
+            }
+            if (array_key_exists('description', $newData)) {
+                $account->description = $newData['description'];
+            }
+            if (array_key_exists('selectable', $newData)) {
+                $account->selectable = $newData['selectable'];
+            }
+            $account->save();
+        }
+    }
 }

@@ -25,4 +25,12 @@ interface AccountRepositoryInterface
      * @return array
      */
     public function searchAccount(string $bookId): array;
+
+    /**
+     * Update account.
+     *
+     * @param string $accountId
+     * @param array  $newData
+     */
+    public function update(string $accountId, array $newData);
 }
