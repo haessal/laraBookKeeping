@@ -17,4 +17,12 @@ interface AccountGroupRepositoryInterface
      * @return string $accountGroupId
      */
     public function create(string $bookId, string $accountType, string $title, bool $isCurrent, $bk_uid, $bk_code): string;
+
+    /**
+     * Update account group.
+     *
+     * @param string $accountGroupId
+     * @param array  $newData
+     */
+    public function update(string $accountGroupId, array $newData);
 }
