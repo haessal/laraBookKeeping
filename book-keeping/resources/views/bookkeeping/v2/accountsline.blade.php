@@ -1,21 +1,21 @@
 <div class="card mb-2">
     <div class="card-header">
-        <span class="card-link">
+        <a href="{{ route('v2_accounts_groups', ['bookId' => $book['id'], 'accountsGroupId' => $accountsGroupId]) }}" class="card-link">
             <div class="text-dark">{{{ $accountsGroup['title'] }}}</div>
-        </span>
+        </a>
     </div>
     <div class="card-body">
         @isset($accountsGroup['items'])
         <div class="list-group">
             @foreach ($accountsGroup['items'] as $accountsItemId => $accountsItem)
             @if ($accountsItem['selectable'] == 1)
-            <span class="list-group-item list-group-item-light">
+            <a href="{{ route('v2_accounts_items', ['bookId' => $book['id'], 'accountsItemId' => $accountsItemId]) }}" class="list-group-item list-group-item-light">
                 <div class="text-dark">{{{ $accountsItem['title'] }}}</div>
-            </span>
+            </a>
             @else
-            <span class="list-group-item list-group-item-secondary">
+            <a href="{{ route('v2_accounts_items', ['bookId' => $book['id'], 'accountsItemId' => $accountsItemId]) }}" class="list-group-item list-group-item-secondary">
                 <div class="text-dark">{{{ $accountsItem['title'] }}}</div>
-            </span>
+            </a>
             @endif
             @endforeach
         </div>
