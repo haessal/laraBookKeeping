@@ -59,6 +59,39 @@ class BookKeepingService
     }
 
     /**
+     * Create a new account.
+     *
+     * @param string $accountGroupId
+     * @param string $title
+     * @param string $description
+     * @param string $bookId
+     *
+     * @return string
+     */
+    public function createAccount(string $accountGroupId, string $title, string $description, string $bookId): string
+    {
+        $accountId = $this->account->createAccount($accountGroupId, $title, $description);
+
+        return $accountId;
+    }
+
+    /**
+     * Create a new account group.
+     *
+     * @param string $accountType
+     * @param string $title
+     * @param string $bookId
+     *
+     * @return string
+     */
+    public function createAccountGroup(string $accountType, string $title, string $bookId): string
+    {
+        $accountGroupId = $this->account->createAccountGroup($bookId, $accountType, $title);
+
+        return $accountGroupId;
+    }
+
+    /**
      * Create a new slip.
      *
      * @param string $outline
