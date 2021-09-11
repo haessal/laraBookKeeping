@@ -24,6 +24,63 @@ class Service_BookKeepingServiceTest extends TestCase
     /**
      * @test
      */
+    public function createAccount_CreateAccount()
+    {
+        $bookId = (string) Str::uuid();
+        $accountGroupId = (string) Str::uuid();
+        $title = 'title31';
+        $description = 'description32';
+        $accountId_expected = (string) Str::uuid();
+        /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
+        $bookMock = Mockery::mock(BookService::class);
+        /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
+        $accountMock = Mockery::mock(AccountService::class);
+        $accountMock->shouldReceive('createAccount')
+            ->once()
+            ->with($accountGroupId, $title, $description)
+            ->andReturn($accountId_expected);
+        /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
+        $budgetMock = Mockery::mock(BudgetService::class);
+        /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
+        $slipMock = Mockery::mock(SlipService::class);
+
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $accountId_actual = $BookKeeping->createAccount($accountGroupId, $title, $description, $bookId);
+
+        $this->assertSame($accountId_expected, $accountId_actual);
+    }
+
+    /**
+     * @test
+     */
+    public function createAccountGroup_CreateAccountGroup()
+    {
+        $bookId = (string) Str::uuid();
+        $accountType = 'asset';
+        $title = 'title60';
+        $accountGroupId_expected = (string) Str::uuid();
+        /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
+        $bookMock = Mockery::mock(BookService::class);
+        /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
+        $accountMock = Mockery::mock(AccountService::class);
+        $accountMock->shouldReceive('createAccountGroup')
+            ->once()
+            ->with($bookId, $accountType, $title)
+            ->andReturn($accountGroupId_expected);
+        /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
+        $budgetMock = Mockery::mock(BudgetService::class);
+        /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
+        $slipMock = Mockery::mock(SlipService::class);
+
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $accountGroupId_actual = $BookKeeping->createAccountGroup($accountType, $title, $bookId);
+
+        $this->assertSame($accountGroupId_expected, $accountGroupId_actual);
+    }
+
+    /**
+     * @test
+     */
     public function createSlip_CreateNewSlipForTheDefaultBook()
     {
         $bookId = (string) Str::uuid();
