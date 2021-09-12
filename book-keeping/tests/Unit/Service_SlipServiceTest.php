@@ -326,21 +326,18 @@ class Service_SlipServiceTest extends TestCase
     public function retrieveSlipThatBound_CallRepositoryWithArgumentsAsItIs()
     {
         $bookId = (string) Str::uuid();
-        $slipId = (string) Str::uuid();
+        $slipId_expected = (string) Str::uuid();
         $slipEntryId = (string) Str::uuid();
         $accountId1 = (string) Str::uuid();
         $accountId2 = (string) Str::uuid();
-        $slip_expected = [
-            'slip_id'       => $slipId,
-            'date'          => '2020-03-31',
-            'slip_outline'  => 'slip_outline336',
-            'slip_memo'     => null,
+        $slipEntry = [
             'slip_entry_id' => $slipEntryId,
+            'slip_id'       => $slipId_expected,
             'debit'         => $accountId1,
             'credit'        => $accountId2,
-            'amount'        => 341,
-            'client'        => 'client342',
-            'outline'       => 'outline343',
+            'amount'        => 2560,
+            'client'        => 'client6',
+            'outline'       => 'outline6',
         ];
         $draftInclude = true;
         /** @var \App\DataProvider\SlipRepositoryInterface|\Mockery\MockInterface $slipMock */
@@ -350,12 +347,12 @@ class Service_SlipServiceTest extends TestCase
         $slipEntryMock->shouldReceive('findById')
             ->once()
             ->with($slipEntryId, $bookId, $draftInclude)
-            ->andReturn($slip_expected);
+            ->andReturn($slipEntry);
 
         $slip = new SlipService($slipMock, $slipEntryMock);
-        $slip_actual = $slip->retrieveSlipThatBound($slipEntryId, $bookId, $draftInclude);
+        $slipId_actual = $slip->retrieveSlipThatBound($slipEntryId, $bookId, $draftInclude);
 
-        $this->assertSame($slip_expected, $slip_actual);
+        $this->assertSame($slipId_expected, $slipId_actual);
     }
 
     /**

@@ -259,10 +259,8 @@ class Service_BookKeepingServiceTest extends TestCase
         $slipId = (string) Str::uuid();
         $slipEntryId = (string) Str::uuid();
         $slipEntryId_r = (string) Str::uuid();
-        $accountId1 = (string) Str::uuid();
-        $accountId2 = (string) Str::uuid();
-        $accountId3 = (string) Str::uuid();
-        $accountId4 = (string) Str::uuid();
+        $debit = (string) Str::uuid();
+        $credit = (string) Str::uuid();
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
         $bookMock->shouldReceive('retrieveDefaultBook')
@@ -278,19 +276,8 @@ class Service_BookKeepingServiceTest extends TestCase
         $slipMock->shouldReceive('retrieveSlipThatBound')
             ->once()
             ->with($slipEntryId, $bookId, true)
-            ->andReturn([
-                'slip_id'       => $slipId,
-                'date'          => '2020-04-30',
-                'slip_outline'  => 'slip_outline284',
-                'slip_memo'     => null,
-                'slip_entry_id' => $slipEntryId,
-                'debit'         => $accountId1,
-                'credit'        => $accountId2,
-                'amount'        => 289,
-                'client'        => 'client290',
-                'outline'       => 'outline291',
-            ]);
-        $slipMock->shouldReceive('deleteSlipEntry')
+            ->andReturn($slipId);
+        $slipMock->shouldNotReceive('deleteSlipEntry')
             ->once()
             ->with($slipEntryId);
         $slipMock->shouldReceive('retrieveSlipEntriesBoundTo')
@@ -300,8 +287,8 @@ class Service_BookKeepingServiceTest extends TestCase
                 [
                     'slip_entry_id' => $slipEntryId_r,
                     'slip_id'       => $slipId,
-                    'debit'         => $accountId3,
-                    'credit'        => $accountId4,
+                    'debit'         => $debit,
+                    'credit'        => $credit,
                     'amount'        => 1340,
                     'client'        => 'client135',
                     'outline'       => 'outline136',
@@ -323,8 +310,6 @@ class Service_BookKeepingServiceTest extends TestCase
         $bookId = (string) Str::uuid();
         $slipId = (string) Str::uuid();
         $slipEntryId = (string) Str::uuid();
-        $accountId1 = (string) Str::uuid();
-        $accountId2 = (string) Str::uuid();
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
         /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
@@ -336,19 +321,8 @@ class Service_BookKeepingServiceTest extends TestCase
         $slipMock->shouldReceive('retrieveSlipThatBound')
             ->once()
             ->with($slipEntryId, $bookId, true)
-            ->andReturn([
-                'slip_id'       => $slipId,
-                'date'          => '2020-04-30',
-                'slip_outline'  => 'slip_outline284',
-                'slip_memo'     => null,
-                'slip_entry_id' => $slipEntryId,
-                'debit'         => $accountId1,
-                'credit'        => $accountId2,
-                'amount'        => 289,
-                'client'        => 'client290',
-                'outline'       => 'outline291',
-            ]);
-        $slipMock->shouldReceive('deleteSlipEntry')
+            ->andReturn($slipId);
+        $slipMock->shouldNotReceive('deleteSlipEntry')
             ->once()
             ->with($slipEntryId);
         $slipMock->shouldReceive('retrieveSlipEntriesBoundTo')
@@ -358,7 +332,6 @@ class Service_BookKeepingServiceTest extends TestCase
         $slipMock->shouldReceive('deleteSlip')
             ->once()
             ->with($slipId);
-
         $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
         $BookKeeping->deleteSlipEntryAsDraft($slipEntryId, $bookId);
 
