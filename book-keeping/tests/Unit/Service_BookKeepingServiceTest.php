@@ -277,7 +277,9 @@ class Service_BookKeepingServiceTest extends TestCase
             ->once()
             ->with($slipEntryId, $bookId, true)
             ->andReturn($slipId);
-        $slipMock->shouldNotReceive('deleteSlipEntry');
+        $slipMock->shouldReceive('deleteSlipEntry')
+            ->once()
+            ->with($slipEntryId);
         $slipMock->shouldReceive('retrieveSlipEntriesBoundTo')
             ->once()
             ->with($slipId)
@@ -320,7 +322,9 @@ class Service_BookKeepingServiceTest extends TestCase
             ->once()
             ->with($slipEntryId, $bookId, true)
             ->andReturn($slipId);
-        $slipMock->shouldNotReceive('deleteSlipEntry');
+        $slipMock->shouldReceive('deleteSlipEntry')
+            ->once()
+            ->with($slipEntryId);
         $slipMock->shouldReceive('retrieveSlipEntriesBoundTo')
             ->once()
             ->with($slipId)
