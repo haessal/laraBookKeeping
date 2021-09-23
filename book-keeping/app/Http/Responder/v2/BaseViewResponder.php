@@ -43,10 +43,10 @@ class BaseViewResponder extends BaseLayoutViewResponder
     {
         return [
             ['link' => 'v2_home', 'caption' => __('Home'), 'icon' => 'fa fa-home'],
-            ['link' => null],
-            ['link' => null],
-            ['link' => null],
             ['link' => 'v2_accounts', 'caption' => __('Accounts'), 'icon' => 'fa fa-shopping-cart'],
+            ['link' => null],
+            ['link' => null],
+            ['link' => null],
             ['link' => null],
         ];
     }
