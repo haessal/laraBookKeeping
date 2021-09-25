@@ -212,7 +212,7 @@ class Http_Controllers_v1_ShowStatementsActionHTMLTest extends TestCase
         $response_expected = new Response();
         /** @var \App\Service\BookKeepingService|\Mockery\MockInterface $BookKeepingMock */
         $BookKeepingMock = Mockery::mock(BookKeepingService::class);
-        $BookKeepingMock->shouldNotReceive('validatePeriod')
+        $BookKeepingMock->shouldReceive('validatePeriod')
             ->once()
             ->with($beginning_date, $end_date)
             ->andReturn(false);
