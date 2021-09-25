@@ -2152,6 +2152,32 @@ class Service_BookKeepingServiceTest extends TestCase
 
     /**
      * @test
+     */
+    public function updateSlip_UpdateTheSpecifiedSlip()
+    {
+        $bookId = (string) Str::uuid();
+        $slipId = (string) Str::uuid();
+        $newData = ['date' => '2020-06-21'];
+        /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
+        $bookMock = Mockery::mock(BookService::class);
+        /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
+        $accountMock = Mockery::mock(AccountService::class);
+        /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
+        $budgetMock = Mockery::mock(BudgetService::class);
+        /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
+        $slipMock = Mockery::mock(SlipService::class);
+        $slipMock->shouldReceive('updateSlip')
+            ->once()
+            ->with($slipId, $newData);
+
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $BookKeeping->updateSlip($slipId, $newData, $bookId);
+
+        $this->assertTrue(true);
+    }
+
+    /**
+     * @test
      * @dataProvider forTestValidateDateFormat
      */
     public function validateDateFormat_MachValidationResult($date, $success_expected)
