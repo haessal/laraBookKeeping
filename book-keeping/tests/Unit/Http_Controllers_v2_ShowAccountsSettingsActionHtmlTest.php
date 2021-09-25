@@ -36,7 +36,7 @@ class Http_Controllers_v2_ShowAccountsSettingsActionHtmlTest extends TestCase
         $response_expected = new Response();
         /** @var \App\Service\BookKeepingService|\Mockery\MockInterface $BookKeepingMock */
         $BookKeepingMock = Mockery::mock(BookKeepingService::class);
-        $BookKeepingMock->shouldReceive('retrieveBookInfomation')
+        $BookKeepingMock->shouldReceive('retrieveBookInformation')
             ->once()
             ->with($bookId)
             ->andReturn($context['book']);

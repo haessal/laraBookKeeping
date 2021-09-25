@@ -41,7 +41,7 @@ class ShowHomeActionHtml extends AuthenticatedBookKeepingAction
     public function __invoke(Request $request, string $bookId): Response
     {
         $context = [];
-        $context['book'] = $this->BookKeeping->retrieveBookInfomation($bookId);
+        $context['book'] = $this->BookKeeping->retrieveBookInformation($bookId);
 
         return $this->responder->response($context);
     }

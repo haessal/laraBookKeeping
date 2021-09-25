@@ -925,7 +925,7 @@ class Service_BookKeepingServiceTest extends TestCase
     /**
      * @test
      */
-    public function retrieveBookInfomation_InformationNotFound()
+    public function retrieveBookInformation_InformationNotFound()
     {
         $bookId = (string) Str::uuid();
         $owner = 'owner765';
@@ -947,7 +947,7 @@ class Service_BookKeepingServiceTest extends TestCase
         $slipMock = Mockery::mock(SlipService::class);
 
         $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
-        $information = $BookKeeping->retrieveBookInfomation($bookId);
+        $information = $BookKeeping->retrieveBookInformation($bookId);
 
         $this->assertNull($information);
     }
@@ -955,7 +955,7 @@ class Service_BookKeepingServiceTest extends TestCase
     /**
      * @test
      */
-    public function retrieveBookInfomation_OwnerNotFound()
+    public function retrieveBookInformation_OwnerNotFound()
     {
         $bookId = (string) Str::uuid();
         $bookName = 'bookName795';
@@ -978,7 +978,7 @@ class Service_BookKeepingServiceTest extends TestCase
         $slipMock = Mockery::mock(SlipService::class);
 
         $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
-        $information = $BookKeeping->retrieveBookInfomation($bookId);
+        $information = $BookKeeping->retrieveBookInformation($bookId);
 
         $this->assertNull($information);
     }
@@ -986,7 +986,7 @@ class Service_BookKeepingServiceTest extends TestCase
     /**
      * @test
      */
-    public function retrieveBookInfomation_RetrieveTheInformation()
+    public function retrieveBookInformation_RetrieveTheInformation()
     {
         $bookId = (string) Str::uuid();
         $owner = 'owner826';
@@ -1011,7 +1011,7 @@ class Service_BookKeepingServiceTest extends TestCase
         $slipMock = Mockery::mock(SlipService::class);
 
         $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
-        $information_actual = $BookKeeping->retrieveBookInfomation($bookId);
+        $information_actual = $BookKeeping->retrieveBookInformation($bookId);
 
         $this->assertSame($information_expected, $information_actual);
     }

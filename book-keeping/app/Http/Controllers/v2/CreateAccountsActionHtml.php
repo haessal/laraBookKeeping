@@ -42,7 +42,7 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
     {
         $context = [];
 
-        $context['book'] = $this->BookKeeping->retrieveBookInfomation($bookId);
+        $context['book'] = $this->BookKeeping->retrieveBookInformation($bookId);
         $context['accounts'] = $this->BookKeeping->retrieveAccounts(false, $bookId);
         $context['accounttype'] = null;
         $context['accountcreate'] = [

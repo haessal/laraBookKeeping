@@ -60,7 +60,7 @@ class Http_Controllers_v2_UpdateAccountsItemActionHtmlTest extends TestCase
         $response_expected = new Response();
         /** @var \App\Service\BookKeepingService|\Mockery\MockInterface $BookKeepingMock */
         $BookKeepingMock = Mockery::mock(BookKeepingService::class);
-        $BookKeepingMock->shouldReceive('retrieveBookInfomation')
+        $BookKeepingMock->shouldReceive('retrieveBookInformation')
             ->once()
             ->with($bookId)
             ->andReturn($context['book']);
@@ -138,7 +138,7 @@ class Http_Controllers_v2_UpdateAccountsItemActionHtmlTest extends TestCase
         $BookKeepingMock->shouldReceive('updateAccount')
             ->once()
             ->with($accountsItemId, $newData, $bookId);
-        $BookKeepingMock->shouldReceive('retrieveBookInfomation')
+        $BookKeepingMock->shouldReceive('retrieveBookInformation')
             ->once()
             ->with($bookId)
             ->andReturn($context['book']);
@@ -232,7 +232,7 @@ class Http_Controllers_v2_UpdateAccountsItemActionHtmlTest extends TestCase
         $BookKeepingMock->shouldReceive('updateAccount')
             ->once()
             ->with($accountsItemId, $newData, $bookId);
-        $BookKeepingMock->shouldReceive('retrieveBookInfomation')
+        $BookKeepingMock->shouldReceive('retrieveBookInformation')
             ->once()
             ->with($bookId)
             ->andReturn($context['book']);

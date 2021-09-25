@@ -31,7 +31,7 @@ class RedirectAccountsSettingsActionHtml extends AuthenticatedBookKeepingAction
      */
     public function __invoke(Request $request, string $bookId): RedirectResponse
     {
-        $book = $this->BookKeeping->retrieveBookInfomation($bookId);
+        $book = $this->BookKeeping->retrieveBookInformation($bookId);
         $redirect = redirect()->route('v2_accounts_settings', ['bookId' => $book['id']], Response::HTTP_SEE_OTHER);
         $accountsgroup = $request->input('accountsgroup');
         if (!is_null($accountsgroup)) {
