@@ -19,7 +19,7 @@ class Http_Responder_v1_FindSlipsViewResponderTest extends TestCase
     /**
      * @test
      */
-    public function response_ReturnResponseWithoutSpecifiyingAndOR()
+    public function response_ReturnResponseWithoutSpecifyingAndOR()
     {
         $accountId_1 = (string) Str::uuid();
         $accountId_2 = (string) Str::uuid();
@@ -151,7 +151,7 @@ class Http_Responder_v1_FindSlipsViewResponderTest extends TestCase
     /**
      * @test
      */
-    public function response_ReturnResponseWithSpecifiyingAndOR()
+    public function response_ReturnResponseWithSpecifyingAndOR()
     {
         $accountId_1 = (string) Str::uuid();
         $accountId_2 = (string) Str::uuid();
