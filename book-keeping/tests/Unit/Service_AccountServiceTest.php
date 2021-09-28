@@ -23,7 +23,7 @@ class Service_AccountServiceTest extends TestCase
     {
         $accountGroupId = (string) Str::uuid();
         $title = 'title';
-        $description = 'dscription';
+        $description = 'description';
         $bk_uid = 22;
         $bk_code = 1101;
         $accountId_expected = (string) Str::uuid();
