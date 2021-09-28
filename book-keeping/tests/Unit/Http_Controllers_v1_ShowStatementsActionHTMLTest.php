@@ -34,17 +34,17 @@ class Http_Controllers_v1_ShowStatementsActionHTMLTest extends TestCase
                 'income_statement_item3' => ['amount' => 13, 'groups' => []],
             ],
             'previous_balance_sheet' => [
-                'previous_balance_sheet_itme1' => ['amount' => 11, 'groups' => []],
-                'previous_balance_sheet_itme2' => ['amount' => 21, 'groups' => []],
-                'previous_balance_sheet_itme3' => ['amount' => 31, 'groups' => []],
+                'previous_balance_sheet_item1' => ['amount' => 11, 'groups' => []],
+                'previous_balance_sheet_item2' => ['amount' => 21, 'groups' => []],
+                'previous_balance_sheet_item3' => ['amount' => 31, 'groups' => []],
             ],
             'balance_sheet' => [
-                'balance_sheet_itme1' => ['amount' => 11, 'groups' => []],
-                'balance_sheet_itme2' => ['amount' => 21, 'groups' => []],
-                'balance_sheet_itme3' => ['amount' => 31, 'groups' => []],
+                'balance_sheet_item1' => ['amount' => 11, 'groups' => []],
+                'balance_sheet_item2' => ['amount' => 21, 'groups' => []],
+                'balance_sheet_item3' => ['amount' => 31, 'groups' => []],
             ],
             'slips' => [
-                'slips_itme1' => [
+                'slips_item1' => [
                     'date'         => 'date1',
                     'slip_outline' => 'slip_outline1',
                     'slip_memo'    => 'slip_memo1',
@@ -263,17 +263,17 @@ class Http_Controllers_v1_ShowStatementsActionHTMLTest extends TestCase
                 'income_statement_item3' => ['amount' => 13, 'groups' => []],
             ],
             'previous_balance_sheet' => [
-                'previous_balance_sheet_itme1' => ['amount' => 11, 'groups' => []],
-                'previous_balance_sheet_itme2' => ['amount' => 21, 'groups' => []],
-                'previous_balance_sheet_itme3' => ['amount' => 31, 'groups' => []],
+                'previous_balance_sheet_item1' => ['amount' => 11, 'groups' => []],
+                'previous_balance_sheet_item2' => ['amount' => 21, 'groups' => []],
+                'previous_balance_sheet_item3' => ['amount' => 31, 'groups' => []],
             ],
             'balance_sheet' => [
-                'balance_sheet_itme1' => ['amount' => 11, 'groups' => []],
-                'balance_sheet_itme2' => ['amount' => 21, 'groups' => []],
-                'balance_sheet_itme3' => ['amount' => 31, 'groups' => []],
+                'balance_sheet_item1' => ['amount' => 11, 'groups' => []],
+                'balance_sheet_item2' => ['amount' => 21, 'groups' => []],
+                'balance_sheet_item3' => ['amount' => 31, 'groups' => []],
             ],
             'slips' => [
-                'slips_itme1' => [
+                'slips_item1' => [
                     'date'         => 'date1',
                     'slip_outline' => 'slip_outline1',
                     'slip_memo'    => 'slip_memo1',
