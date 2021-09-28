@@ -5,7 +5,7 @@ namespace App\DataProvider;
 interface BookRepositoryInterface
 {
     /**
-     * Create new book and regist the user as its owner.
+     * Create new book and register the user as its owner.
      *
      * @param string $title
      *
