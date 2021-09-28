@@ -66,7 +66,7 @@ class PermissionRepository implements PermissionRepositoryInterface
     }
 
     /**
-     * Check if the book is registerd.
+     * Check if the book is registered.
      *
      * @param string $bookId
      *
@@ -80,7 +80,7 @@ class PermissionRepository implements PermissionRepositoryInterface
     }
 
     /**
-     * Check if the user is registerd.
+     * Check if the user is registered.
      *
      * @param int $userId
      *
