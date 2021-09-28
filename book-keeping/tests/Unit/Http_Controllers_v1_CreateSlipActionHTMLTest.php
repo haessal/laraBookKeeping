@@ -518,7 +518,7 @@ class Http_Controllers_v1_CreateSlipActionHTMLTest extends TestCase
         $requestMock->shouldReceive('input')
             ->once()
             ->with('buttons')
-            ->andReturn(['other' => 'Othere']);
+            ->andReturn(['other' => 'Other']);
 
         $controller = new CreateSlipActionHTML($BookKeepingMock, $responderMock);
         $response_actual = $controller->__invoke($requestMock);
