@@ -346,13 +346,13 @@ class BookKeepingService
             'net_asset'                            => ['amount' => 0],
         ];
 
-        foreach ($amountFlows as $accountId => $sumVaule) {
-            if (($sumVaule['debit'] - $sumVaule['credit']) != 0) {
+        foreach ($amountFlows as $accountId => $sumValue) {
+            if (($sumValue['debit'] - $sumValue['credit']) != 0) {
                 $accountType = $accounts[$accountId]['account_type'];
                 if (($accountType == AccountService::ACCOUNT_TYPE_ASSET) || ($accountType == AccountService::ACCOUNT_TYPE_EXPENSE)) {
-                    $amount = $sumVaule['debit'] - $sumVaule['credit'];
+                    $amount = $sumValue['debit'] - $sumValue['credit'];
                 } else {
-                    $amount = $sumVaule['credit'] - $sumVaule['debit'];
+                    $amount = $sumValue['credit'] - $sumValue['debit'];
                 }
                 $accountGroupId = $accounts[$accountId]['account_group_id'];
                 $statements[$accountType]['amount'] += $amount;
