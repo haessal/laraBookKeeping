@@ -2074,7 +2074,7 @@ class Service_BookKeepingServiceTest extends TestCase
     /**
      * @test
      */
-    public function updateAccount_UpdateTheSpecifiedAcount()
+    public function updateAccount_UpdateTheSpecifiedAccount()
     {
         $bookId = (string) Str::uuid();
         $accountId = (string) Str::uuid();
@@ -2101,7 +2101,7 @@ class Service_BookKeepingServiceTest extends TestCase
     /**
      * @test
      */
-    public function updateAccountGroup_UpdateTheSpecifiedAcountGroup()
+    public function updateAccountGroup_UpdateTheSpecifiedAccountGroup()
     {
         $bookId = (string) Str::uuid();
         $accountGroupId = (string) Str::uuid();
