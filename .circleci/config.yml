@@ -18,6 +18,14 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install Node.js and CSpell(spell checker)
+          command: |
+            sudo apt update
+            sudo apt install -y nodejs npm
+            sudo npm install -g n
+            sudo n stable
+            sudo npm install -g cspell
+      - run:
           name: Install MySQL packages
           command: |
             sudo -E docker-php-ext-install pdo_mysql
@@ -48,6 +56,9 @@ jobs:
       - run: mkdir -p build/logs
       - run: dockerize -wait tcp://localhost:3306 -timeout 1m
       - run: mysql -h 127.0.0.1 -u root -e "create database testing_circleci;"
+      - run:
+          command: cspell "**/*.php"
+          working_directory: ~/laraBookKeeping
       # run tests with phpunit or codecept
       - run:
           command: XDEBUG_MODE=coverage vendor/bin/phpunit -d memory_limit=512M --coverage-clover ../build/logs/clover.xml

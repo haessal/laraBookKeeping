@@ -1,0 +1,34 @@
+# Well known file or directory
+sbin
+
+# Well known abbreviation
+XSRF
+
+# Common words of Laravel Framework
+Authenticatable
+encrypter
+
+# Names of tools or service
+beanstalkd
+gstatic
+
+# Developer's name
+haessal
+Otwell
+
+# Terms for HTML view
+accountsnavi
+accountsnavilinks
+ANDOR
+inmain
+intop
+navi
+navibar
+navilinks
+settingnavilinks
+trclass
+
+# Terms of BookKeeping
+groupid
+modifyno
+slipno
