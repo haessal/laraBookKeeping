@@ -1,7 +1,7 @@
 FROM php:7.3-apache
 LABEL  maintainer "haessal <haessal@mizutamauki.net>"
 
-# Enabla apache module 'rewrite'
+# Enable apache module 'rewrite'
 RUN a2enmod rewrite
 
 # Install 'unzip' command. (It is used by Composer)
