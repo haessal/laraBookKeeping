@@ -174,7 +174,7 @@ class Http_Controllers_api_v1_GetSlipEntriesActionApiTest extends TestCase
             ],
             [
                 [
-                    'othre' => 'other',
+                    'other' => 'other',
                 ],
                 null,
                 null,
