@@ -1,0 +1,20 @@
+// cSpell Settings
+{
+    "version": "0.2",
+    "language": "en",
+    "ignorePaths": [
+        "book-keeping/bootstrap/cache/**",
+        "book-keeping/storage/framework/**",
+        "book-keeping/vendor/**"
+    ],
+    "allowCompoundWords": true,
+    "dictionaries": ["php", "custom-words"],
+    // Tell CSpell about your dictionary
+    "dictionaryDefinitions": [
+        {
+            "name": "custom-words",
+            "path": "./.cSpell.words.txt",
+            "addWords": true
+        }
+    ]
+}
