@@ -1,0 +1,9 @@
+# A part of name of developers and packages
+arjun
+bmewburn
+eamodio
+felixfbecker
+humao
+intelephense
+mysqld
+ryanluker
