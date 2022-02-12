@@ -32,6 +32,9 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
         && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN npm install -g npm && npm install -g npm-check-updates
 
+# Install CSpell(command line tool for spell checking code)
+RUN npm install -g cspell
+
 # Install MySQL and related extention
 RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
             default-mysql-client \
