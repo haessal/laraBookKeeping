@@ -43,8 +43,8 @@ return [
     'digits_between' => 'The :attribute must be between :min and :max digits.',
     'dimensions' => 'The :attribute has invalid image dimensions.',
     'distinct' => 'The :attribute field has a duplicate value.',
-    'doesnt_end_with' => 'The :attribute may not end with one of the following: :values.',
-    'doesnt_start_with' => 'The :attribute may not start with one of the following: :values.',
+    'doesnt_end_with' => 'The :attribute may not end with one of the following: :values.', // cspell:disable-line
+    'doesnt_start_with' => 'The :attribute may not start with one of the following: :values.', // cspell:disable-line
     'email' => 'The :attribute must be a valid email address.',
     'ends_with' => 'The :attribute must end with one of the following: :values.',
     'enum' => 'The selected :attribute is invalid.',
@@ -109,7 +109,7 @@ return [
         'mixed' => 'The :attribute must contain at least one uppercase and one lowercase letter.',
         'numbers' => 'The :attribute must contain at least one number.',
         'symbols' => 'The :attribute must contain at least one symbol.',
-        'uncompromised' => 'The given :attribute has appeared in a data leak. Please choose a different :attribute.',
+        'uncompromised' => 'The given :attribute has appeared in a data leak. Please choose a different :attribute.', // cspell:disable-line
     ],
     'present' => 'The :attribute field must be present.',
     'prohibited' => 'The :attribute field is prohibited.',

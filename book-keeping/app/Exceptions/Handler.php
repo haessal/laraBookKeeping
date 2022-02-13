@@ -21,7 +21,7 @@ class Handler extends ExceptionHandler
      *
      * @var array<int, class-string<\Throwable>>
      */
-    protected $dontReport = [
+    protected $dontReport = [ // cspell:disable-line
         //
     ];
 
@@ -30,7 +30,7 @@ class Handler extends ExceptionHandler
      *
      * @var array<int, string>
      */
-    protected $dontFlash = [
+    protected $dontFlash = [ // cspell:disable-line
         'current_password',
         'password',
         'password_confirmation',
