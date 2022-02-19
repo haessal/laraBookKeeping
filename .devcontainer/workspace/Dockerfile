@@ -19,6 +19,10 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
                -o /usr/local/etc/git-completion.bash \
                https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
 
+# Install an extension with PECL
+RUN pecl install xdebug \
+        && docker-php-ext-enable xdebug
+
 # Install Node.js
 RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
             nodejs \
