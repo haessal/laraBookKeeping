@@ -3,6 +3,7 @@
     "version": "0.2",
     "language": "en",
     "ignorePaths": [
+        "book-keeping/cov.xml",
         "book-keeping/bootstrap/cache/**",
         "book-keeping/storage/framework/**",
         "book-keeping/vendor/**"
