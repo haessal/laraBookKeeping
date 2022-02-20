@@ -5,6 +5,9 @@
     "ignorePaths": [
         "book-keeping/cov.xml",
         "book-keeping/bootstrap/cache/**",
+        "book-keeping/node_modules/**",
+        "book-keeping/public/css/app.css",
+        "book-keeping/public/js/app.js",
         "book-keeping/storage/framework/**",
         "book-keeping/vendor/**"
     ],
