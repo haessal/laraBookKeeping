@@ -3,6 +3,7 @@ Authenticatable
 encrypter
 
 # A part of name of developers, company, services, packages and tools
+alpinejs
 arjun
 beanstalkd
 bmewburn
