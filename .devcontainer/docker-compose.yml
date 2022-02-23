@@ -10,6 +10,7 @@ services:
     environment:
       - TZ=Asia/Tokyo
       - DB_DATABASE=devcontainer_testing
+      - APP_ENV=testing
     volumes:
       - ..:/workspace:cached
       - ./workspace/php.ini:/usr/local/etc/php/php.ini:ro
