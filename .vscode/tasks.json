@@ -29,6 +29,18 @@
                     "XDEBUG_MODE": "coverage"
                 }
             }
+        },
+        {
+            "label": "migrate:fresh",
+            "type": "shell",
+            "command": "php artisan migrate:fresh",
+            "options": {
+                "cwd": "${workspaceFolder}/book-keeping",
+                "env": {
+                    "XDEBUG_MODE": "off",
+                    "DB_DATABASE": "devcontainer"
+                }
+            }
         }
     ]
 }
