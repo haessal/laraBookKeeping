@@ -6,6 +6,10 @@
             </a>
         </x-slot>
 
+        <div class="mb-4 text-sm text-gray-600">
+            {{ __('Change password for ') }}{{ $request->name }}
+        </div>
+
         <!-- Validation Errors -->
         <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
@@ -15,12 +19,8 @@
             <!-- Password Reset Token -->
             <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
-            <!-- Email Address -->
-            <div>
-                <x-label for="email" :value="__('Email')" />
-
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus />
-            </div>
+            <!-- Name -->
+            <input type="hidden" name="name" value="{{ $request->name }}">
 
             <!-- Password -->
             <div class="mt-4">
