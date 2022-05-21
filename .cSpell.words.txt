@@ -7,12 +7,14 @@ alpinejs
 arjun
 beanstalkd
 bmewburn
+buildx
 circleci
 Cubet
 Curotec
 eamodio
 Envoyer
 felixfbecker
+haessal
 humao
 intelephense
 mysqld
@@ -21,3 +23,7 @@ nunomaduro
 Otwell
 ryanluker
 Vehikl
+
+# Misc
+a2enmod
+NOWARNINGS
