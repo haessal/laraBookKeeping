@@ -8,6 +8,7 @@ arjun
 beanstalkd
 bmewburn
 bradlc
+buildx
 circleci
 Cubet
 Curotec
@@ -26,5 +27,7 @@ ryanluker
 Vehikl
 
 # Misc
+a2enmod
 EHLO
 fbclid
+NOWARNINGS
