@@ -9,6 +9,7 @@
         "book-keeping/public/build/**",
         "book-keeping/public/css/app.css",
         "book-keeping/public/js/app.js",
+        "book-keeping/storage/logs/**",
         "book-keeping/storage/framework/**",
         "book-keeping/vendor/**"
     ],
