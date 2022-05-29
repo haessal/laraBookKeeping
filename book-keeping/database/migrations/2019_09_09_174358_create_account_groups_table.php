@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAccountGroupsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class CreateAccountGroupsTable extends Migration
     public function up()
     {
         Schema::create('bk2_0_account_groups', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->timestamps();
         });
     }
@@ -28,4 +28,4 @@ class CreateAccountGroupsTable extends Migration
     {
         Schema::dropIfExists('bk2_0_account_groups');
     }
-}
+};
