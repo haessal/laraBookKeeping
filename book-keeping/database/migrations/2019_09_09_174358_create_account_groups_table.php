@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('account_group_title', 40);
             $table->unsignedBigInteger('bk_uid')->nullable();
             $table->unsignedBigInteger('bk_code')->nullable();
+            $table->boolean('is_current');
             $table->timestamps();
             $table->softDeletes();
         });
