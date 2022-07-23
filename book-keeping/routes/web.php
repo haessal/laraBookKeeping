@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Settings\UpdateAccessTokenActionHtml;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,5 +21,7 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::match(['get', 'post', 'delete'], '/settings/tokens', UpdateAccessTokenActionHtml::class)->middleware(['verified'])->name('settings_tokens');
 
 require __DIR__.'/auth.php';
