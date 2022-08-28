@@ -26,13 +26,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/v1/accounts', GetAccountsActionApi::class);
+Route::prefix('v1')->group(function () {
+    Route::get('/accounts', GetAccountsActionApi::class);
 
-Route::post('/v1/slips', PostSlipsActionApi::class);
-Route::get('/v1/slips/{slipId}', GetSlipsSlipIdActionApi::class);
-Route::patch('/v1/slips/{slipId}', PatchSlipsActionApi::class);
+    Route::post('/slips', PostSlipsActionApi::class);
+    Route::get('/slips/{slipId}', GetSlipsSlipIdActionApi::class);
+    Route::patch('/slips/{slipId}', PatchSlipsActionApi::class);
 
-Route::get('/v1/slipentries', GetSlipEntriesActionApi::class);
-Route::get('/v1/slipentries/{slipEntryId}', GetSlipEntriesSlipEntryIdActionApi::class);
-Route::patch('/v1/slipentries/{slipEntryId}', PatchSlipEntriesActionApi::class);
-Route::delete('/v1/slipentries/{slipEntryId}', DeleteSlipEntriesActionApi::class);
+    Route::get('/slipentries', GetSlipEntriesActionApi::class);
+    Route::get('/slipentries/{slipEntryId}', GetSlipEntriesSlipEntryIdActionApi::class);
+    Route::patch('/slipentries/{slipEntryId}', PatchSlipEntriesActionApi::class);
+    Route::delete('/slipentries/{slipEntryId}', DeleteSlipEntriesActionApi::class);
+});
