@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\DataProvider\Eloquent\PermissionRepository;
 use App\Models\Book;
 use App\Models\Permission;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -72,13 +73,16 @@ class DataProvider_Eloquent_PermissionRepositoryTest extends DataProvider_Permis
      */
     public function findOwnerOfBook_ReturnUserIdOfOwner()
     {
-        $userId_expected = 82;
+        $userName_expected = 'book_name82';
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $userId = User::factory()->create([
+            'name' => $userName_expected,
+        ])->id;
         $bookId = Book::factory()->create([
             'book_name' => 'book_name82',
         ])->book_id;
         $permissionId = Permission::factory()->create([
-            'permitted_user' => $userId_expected,
+            'permitted_user' => $userId,
             'readable_book'  => $bookId,
             'modifiable'     => true,
             'is_owner'       => true,
@@ -86,9 +90,9 @@ class DataProvider_Eloquent_PermissionRepositoryTest extends DataProvider_Permis
         ])->permission_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-        $userId_actual = $this->permission->findOwnerOfBook($bookId);
+        $user_actual = $this->permission->findOwnerOfBook($bookId);
 
-        $this->assertSame($userId_expected, $userId_actual);
+        $this->assertSame($userName_expected, $user_actual['name']);
     }
 
     /**
