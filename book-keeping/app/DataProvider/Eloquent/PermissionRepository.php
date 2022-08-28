@@ -4,6 +4,7 @@ namespace App\DataProvider\Eloquent;
 
 use App\DataProvider\PermissionRepositoryInterface;
 use App\Models\Permission;
+use App\Models\User;
 
 class PermissionRepository implements PermissionRepositoryInterface
 {
@@ -50,16 +51,21 @@ class PermissionRepository implements PermissionRepositoryInterface
      * Find owner of the book.
      *
      * @param  string  $bookId
-     * @return int | null
+     * @return array | null
      */
-    public function findOwnerOfBook(string $bookId): ?int
+    public function findOwnerOfBook(string $bookId): ?array
     {
+        $owner = null;
         $list = Permission::select('permitted_user')
             ->where('readable_book', $bookId)
             ->where('is_owner', true)
             ->first();
+        if (!empty($list)) {
+            $user = User::find($list['permitted_user']);
+            $owner = is_null($user) ? null : $user->toArray();
+        }
 
-        return empty($list) ? null : $list['permitted_user'];
+        return $owner;
     }
 
     /**
