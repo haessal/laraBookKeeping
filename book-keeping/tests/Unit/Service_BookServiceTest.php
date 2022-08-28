@@ -4,7 +4,6 @@ namespace Tests\Unit;
 
 use App\DataProvider\BookRepositoryInterface;
 use App\DataProvider\PermissionRepositoryInterface;
-use App\DataProvider\UserRepositoryInterface;
 use App\Service\BookService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -39,10 +38,8 @@ class Service_BookServiceTest extends TestCase
             ->once()
             ->with($userId, $bookId_expected)
             ->andReturn($permissionId);
-        /** @var \App\DataProvider\UserRepositoryInterface|\Mockery\MockInterface $userMock */
-        $userMock = Mockery::mock(UserRepositoryInterface::class);
 
-        $book = new BookService($bookMock, $permissionMock, $userMock);
+        $book = new BookService($bookMock, $permissionMock);
         $bookId_actual = $book->createBook($userId, $title);
 
         $this->assertSame($bookId_expected, $bookId_actual);
@@ -51,11 +48,11 @@ class Service_BookServiceTest extends TestCase
     /**
      * @test
      */
-    public function ownerName_FindOwnerNameByUserId()
+    public function ownerName_FindOwnerName()
     {
         $userId = 56;
         $ownerName_expected = 'user56';
-        $user = ['name' => $ownerName_expected];
+        $user = ['id' => $userId, 'name' => $ownerName_expected];
         $bookId = (string) Str::uuid();
         /** @var \App\DataProvider\BookRepositoryInterface|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookRepositoryInterface::class);
@@ -64,14 +61,8 @@ class Service_BookServiceTest extends TestCase
         $permissionMock->shouldReceive('findOwnerOfBook')
             ->once()
             ->with($bookId)
-            ->andReturn($userId);
-        /** @var \App\DataProvider\UserRepositoryInterface|\Mockery\MockInterface $userMock */
-        $userMock = Mockery::mock(UserRepositoryInterface::class);
-        $userMock->shouldReceive('findById')
-            ->once()
-            ->with($userId)
             ->andReturn($user);
-        $book = new BookService($bookMock, $permissionMock, $userMock);
+        $book = new BookService($bookMock, $permissionMock);
         $ownerName_actual = $book->ownerName($bookId);
 
         $this->assertSame($ownerName_expected, $ownerName_actual);
@@ -91,10 +82,7 @@ class Service_BookServiceTest extends TestCase
             ->once()
             ->with($bookId)
             ->andReturn(null);
-        /** @var \App\DataProvider\UserRepositoryInterface|\Mockery\MockInterface $userMock */
-        $userMock = Mockery::mock(UserRepositoryInterface::class);
-        $userMock->shouldNotReceive('findById');
-        $book = new BookService($bookMock, $permissionMock, $userMock);
+        $book = new BookService($bookMock, $permissionMock);
         $ownerName = $book->ownerName($bookId);
 
         $this->assertNull($ownerName);
@@ -118,10 +106,8 @@ class Service_BookServiceTest extends TestCase
             ->once()
             ->with($userId)
             ->andReturn($booklist_expected);
-        /** @var \App\DataProvider\UserRepositoryInterface|\Mockery\MockInterface $userMock */
-        $userMock = Mockery::mock(UserRepositoryInterface::class);
 
-        $book = new BookService($bookMock, $permissionMock, $userMock);
+        $book = new BookService($bookMock, $permissionMock);
         $booklist_actual = $book->retrieveBookList($userId);
 
         $this->assertSame($booklist_expected, $booklist_actual);
@@ -142,10 +128,8 @@ class Service_BookServiceTest extends TestCase
             ->once()
             ->with($userId)
             ->andReturn($bookId_expected);
-        /** @var \App\DataProvider\UserRepositoryInterface|\Mockery\MockInterface $userMock */
-        $userMock = Mockery::mock(UserRepositoryInterface::class);
 
-        $book = new BookService($bookMock, $permissionMock, $userMock);
+        $book = new BookService($bookMock, $permissionMock);
         $bookId_actual = $book->retrieveDefaultBook($userId);
 
         $this->assertSame($bookId_expected, $bookId_actual);
@@ -166,10 +150,8 @@ class Service_BookServiceTest extends TestCase
             ->andReturn($book_expected);
         /** @var \App\DataProvider\PermissionRepositoryInterface|\Mockery\MockInterface $permissionMock */
         $permissionMock = Mockery::mock(PermissionRepositoryInterface::class);
-        /** @var \App\DataProvider\UserRepositoryInterface|\Mockery\MockInterface $userMock */
-        $userMock = Mockery::mock(UserRepositoryInterface::class);
 
-        $book = new BookService($bookMock, $permissionMock, $userMock);
+        $book = new BookService($bookMock, $permissionMock);
         $book_actual = $book->retrieveInformation($bookId);
 
         $this->assertSame($book_expected, $book_actual);
