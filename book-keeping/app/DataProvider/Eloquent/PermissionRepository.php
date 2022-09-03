@@ -60,7 +60,7 @@ class PermissionRepository implements PermissionRepositoryInterface
             ->where('readable_book', $bookId)
             ->where('is_owner', true)
             ->first();
-        if (!empty($list)) {
+        if (! empty($list)) {
             $user = User::find($list['permitted_user']);
             $owner = is_null($user) ? null : $user->toArray();
         }
