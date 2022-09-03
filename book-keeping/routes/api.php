@@ -1,13 +1,13 @@
 <?php
 
+use App\Http\Controllers\api\v1\DeleteSlipEntriesActionApi;
 use App\Http\Controllers\api\v1\GetAccountsActionApi;
-use App\Http\Controllers\api\v1\PostSlipsActionApi;
-use App\Http\Controllers\api\v1\GetSlipsSlipIdActionApi;
-use App\Http\Controllers\api\v1\PatchSlipsActionApi;
 use App\Http\Controllers\api\v1\GetSlipEntriesActionApi;
 use App\Http\Controllers\api\v1\GetSlipEntriesSlipEntryIdActionApi;
+use App\Http\Controllers\api\v1\GetSlipsSlipIdActionApi;
 use App\Http\Controllers\api\v1\PatchSlipEntriesActionApi;
-use App\Http\Controllers\api\v1\DeleteSlipEntriesActionApi;
+use App\Http\Controllers\api\v1\PatchSlipsActionApi;
+use App\Http\Controllers\api\v1\PostSlipsActionApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

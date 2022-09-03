@@ -20,9 +20,8 @@ class GetSlipsSlipIdActionApi extends AuthenticatedBookKeepingActionApi
     /**
      * Create a new controller instance.
      *
-     * @param \App\Service\BookKeepingService              $BookKeeping
-     * @param \App\Http\Responder\api\v1\SlipJsonResponder $responder
-     *
+     * @param  \App\Service\BookKeepingService  $BookKeeping
+     * @param  \App\Http\Responder\api\v1\SlipJsonResponder  $responder
      * @return void
      */
     public function __construct(BookKeepingService $BookKeeping, SlipJsonResponder $responder)
@@ -34,16 +33,15 @@ class GetSlipsSlipIdActionApi extends AuthenticatedBookKeepingActionApi
     /**
      * Handle the incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $slipId
-     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $slipId
      * @return \Illuminate\Http\JsonResponse
      */
     public function __invoke(Request $request, string $slipId): JsonResponse
     {
         $context = [];
 
-        if (!($this->BookKeeping->validateUuid($slipId))) {
+        if (! ($this->BookKeeping->validateUuid($slipId))) {
             $response = new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
         } else {
             $slips = $this->BookKeeping->retrieveSlip($slipId);

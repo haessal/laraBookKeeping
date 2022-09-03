@@ -10,8 +10,7 @@ class SlipEntriesJsonResponder extends BaseJsonResponder
     /**
      * Respond with the SlipEntries JSON.
      *
-     * @param array $context
-     *
+     * @param  array  $context
      * @return \Illuminate\Http\JsonResponse
      */
     public function response(array $context): JsonResponse
@@ -25,8 +24,7 @@ class SlipEntriesJsonResponder extends BaseJsonResponder
     /**
      * Translate slips to slip entry format for JSON.
      *
-     * @param array $slips
-     *
+     * @param  array  $slips
      * @return array
      */
     private function translateSlipsFormat(array $slips): array

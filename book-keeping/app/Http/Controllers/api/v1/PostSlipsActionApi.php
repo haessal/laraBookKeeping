@@ -20,9 +20,8 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
     /**
      * Create a new controller instance.
      *
-     * @param \App\Service\BookKeepingService              $BookKeeping
-     * @param \App\Http\Responder\api\v1\SlipJsonResponder $responder
-     *
+     * @param  \App\Service\BookKeepingService  $BookKeeping
+     * @param  \App\Http\Responder\api\v1\SlipJsonResponder  $responder
      * @return void
      */
     public function __construct(BookKeepingService $BookKeeping, SlipJsonResponder $responder)
@@ -34,8 +33,7 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
     /**
      * Handle the incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function __invoke(Request $request): JsonResponse
@@ -62,17 +60,16 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
     /**
      * Validate and trim string data for accounts.
      *
-     * @param array  $array_in
-     * @param string $key
-     * @param array  $accounts
-     *
+     * @param  array  $array_in
+     * @param  string  $key
+     * @param  array  $accounts
      * @return string|null
      */
     private function validateAndTrimAccounts(array $array_in, string $key, array $accounts): ?string
     {
         $string_out = $this->validateAndTrimString($array_in, $key);
-        if (!is_null($string_out)) {
-            if (!array_key_exists($string_out, $accounts)) {
+        if (! is_null($string_out)) {
+            if (! array_key_exists($string_out, $accounts)) {
                 $string_out = null;
             }
         }
@@ -83,9 +80,8 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
     /**
      * Validate draft slip and trim string data.
      *
-     * @param array $slip
-     * @param array $accounts
-     *
+     * @param  array  $slip
+     * @param  array  $accounts
      * @return array
      */
     private function validateAndTrimDraftSlip(array $slip, array $accounts): array
@@ -103,39 +99,39 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
         if (is_null($trimmed_date)) {
             $success = false;
         } else {
-            if (!($this->BookKeeping->validateDateFormat($trimmed_date))) {
+            if (! ($this->BookKeeping->validateDateFormat($trimmed_date))) {
                 $success = false;
             } else {
                 $trimmed_slip['date'] = $trimmed_date;
             }
         }
-        if (!array_key_exists('entries', $slip) || empty($slip['entries'])) {
+        if (! array_key_exists('entries', $slip) || empty($slip['entries'])) {
             $success = false;
         } else {
-            if (!is_array($slip['entries'])) {
+            if (! is_array($slip['entries'])) {
                 $success = false;
             } else {
                 $trimmed_slip['entries'] = [];
                 foreach ($slip['entries'] as $slipEntry) {
-                    if (empty($slipEntry) || !is_array($slipEntry)) {
+                    if (empty($slipEntry) || ! is_array($slipEntry)) {
                         $success = false;
                     } else {
                         $result = $this->validateAndTrimDraftSlipEntry($slipEntry, $accounts);
                         $trimmed_slipEntry = $result['slipEntry'];
-                        if (!empty($trimmed_slipEntry)) {
+                        if (! empty($trimmed_slipEntry)) {
                             $trimmed_slip['entries'][] = $trimmed_slipEntry;
                         }
-                        if (!$result['success']) {
+                        if (! $result['success']) {
                             $success = false;
                         }
                     }
                 }
             }
         }
-        if (!array_key_exists('memo', $slip) || is_null($slip['memo'])) {
+        if (! array_key_exists('memo', $slip) || is_null($slip['memo'])) {
             $trimmed_slip['memo'] = null;
         } else {
-            if (!is_string($slip['memo'])) {
+            if (! is_string($slip['memo'])) {
                 $success = false;
             } else {
                 $trimmed_memo = trim($slip['memo']);
@@ -153,9 +149,8 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
     /**
      * Validate draft slip entry and trim string data.
      *
-     * @param array $slipEntry
-     * @param array $accounts
-     *
+     * @param  array  $slipEntry
+     * @param  array  $accounts
      * @return array
      */
     private function validateAndTrimDraftSlipEntry(array $slipEntry, array $accounts): array
@@ -178,7 +173,7 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
         if (array_key_exists('debit', $trimmed_slipEntry) && array_key_exists('credit', $trimmed_slipEntry) && ($trimmed_slipEntry['debit'] == $trimmed_slipEntry['credit'])) {
             $success = false;
         }
-        if (!array_key_exists('amount', $slipEntry) || empty($slipEntry['amount']) || !is_int($slipEntry['amount'])) {
+        if (! array_key_exists('amount', $slipEntry) || empty($slipEntry['amount']) || ! is_int($slipEntry['amount'])) {
             $success = false;
         } else {
             $trimmed_slipEntry['amount'] = $slipEntry['amount'];
@@ -202,14 +197,13 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
     /**
      * Validate and trim string data.
      *
-     * @param array  $array_in
-     * @param string $key
-     *
+     * @param  array  $array_in
+     * @param  string  $key
      * @return string|null
      */
     private function validateAndTrimString(array $array_in, string $key): ?string
     {
-        if (!array_key_exists($key, $array_in) || !is_string($array_in[$key])) {
+        if (! array_key_exists($key, $array_in) || ! is_string($array_in[$key])) {
             $string_out = null;
         } else {
             $trimmed_string = trim($array_in[$key]);
