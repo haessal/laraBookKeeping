@@ -897,7 +897,7 @@ class Service_BookKeepingServiceTest extends TestCase
             ['book_id' => $bookId, 'book_name' => $bookName, 'modifiable' => true, 'is_owner' => false, 'is_default' => false, 'created_at' => new Carbon()],
         ];
         $books_expected = [
-            ['id' => $bookId, 'owner' => $ownerName, 'name' => $bookName],
+            ['id' => $bookId, 'name' => $bookName, 'is_default' => false, 'is_owner' => false, 'modifiable' => true, 'owner' => $ownerName],
         ];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
