@@ -66,6 +66,25 @@ class BookService
     }
 
     /**
+     * Retrieve a Book.
+     *
+     * @param  string  $bookId
+     * @param  int  $userId
+     * @return array | null
+     */
+    public function retrieveBook(string $bookId, int $userId): ?array
+    {
+        $booklist = $this->permission->searchBookList($userId, $bookId);
+        if (count($booklist) == 1) {
+            $book = $booklist[0];
+        } else {
+            $book = null;
+        }
+
+        return $book;
+    }
+
+    /**
      * Retrieve list of accessable Book.
      *
      * @param  int  $userId

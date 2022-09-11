@@ -260,6 +260,32 @@ class BookKeepingService
     }
 
     /**
+     * Retrieve the specified book.
+     *
+     * @param  string  $bookId
+     * @return array | null
+     */
+    public function retrieveBook(string $bookId): ?array
+    {
+        $book = null;
+
+        $bookItem = $this->book->retrieveBook($bookId, Auth::id());
+        if (! empty($bookItem)) {
+            $owner = $this->book->ownerName($bookId);
+            $book = [
+                'id'         => $bookId,
+                'name'       => $bookItem['book_name'],
+                'is_default' => $bookItem['is_default'],
+                'is_owner'   => $bookItem['is_owner'],
+                'modifiable' => $bookItem['modifiable'],
+                'owner'      => $owner,
+            ];
+        }
+
+        return $book;
+    }
+
+    /**
      * Retrieve information about the specified book.
      *
      * @param  string  $bookId

@@ -33,7 +33,8 @@ interface PermissionRepositoryInterface
      * Search book list that the user can access.
      *
      * @param  int  $userId
+     * @param  string  $bookId
      * @return array
      */
-    public function searchBookList(int $userId): array;
+    public function searchBookList(int $userId, string $bookId = null): array;
 }
