@@ -90,6 +90,33 @@ class PermissionRepository implements PermissionRepositoryInterface
     }
 
     /**
+     * Search book list that the user can access.(TODO: merge with findAccessibleBooks)
+     *
+     * @param  int  $userId
+     * @param  string  $bookId
+     * @return array
+     */
+    public function searchBookList(int $userId, string $bookId = null): array
+    {
+        if (! empty($bookId)) {
+            $list = Permission::select('book_id', 'book_name', 'modifiable', 'is_owner', 'is_default', 'bk2_0_books.created_at')
+                ->join('bk2_0_books', 'bk2_0_books.book_id', '=', 'bk2_0_permissions.readable_book')
+                ->where('permitted_user', $userId)
+                ->where('book_id', $bookId)
+                ->orderBy('bk2_0_books.created_at')
+                ->get()->toArray();
+        } else {
+            $list = Permission::select('book_id', 'book_name', 'modifiable', 'is_owner', 'is_default', 'bk2_0_books.created_at')
+                ->join('bk2_0_books', 'bk2_0_books.book_id', '=', 'bk2_0_permissions.readable_book')
+                ->where('permitted_user', $userId)
+                ->orderBy('bk2_0_books.created_at')
+                ->get()->toArray();
+        }
+
+        return $list;
+    }
+
+    /**
      * Check if the book is registered.
      *
      * @param  string  $bookId

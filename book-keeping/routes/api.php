@@ -35,9 +35,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::prefix('v1')->group(function () {
     Route::get('/books', GetBooksActionApi::class);
+
+    Route::get('/books/{bookId}', GetBooksBookIdActionApi::class);
     /*
         Route::post('/books', PostBooksActionApi::class);
-        Route::get('/books/{bookId}', GetBooksBookIdActionApi::class);
         Route::patch('/books/{bookId}', PatchBooksActionApi::class);
 
         Route::get('/books/{bookId}/permissions', GetBooksPermissions::class);

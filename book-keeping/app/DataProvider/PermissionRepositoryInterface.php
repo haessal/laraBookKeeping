@@ -40,4 +40,13 @@ interface PermissionRepositoryInterface
      * @return array<string, string>|null
      */
     public function findOwnerOfBook(string $bookId): ?array;
+
+    /**
+     * Search book list that the user can access.(TODO: merge with findAccessibleBooks)
+     *
+     * @param  int  $userId
+     * @param  string  $bookId
+     * @return array
+     */
+    public function searchBookList(int $userId, string $bookId = null): array;
 }
