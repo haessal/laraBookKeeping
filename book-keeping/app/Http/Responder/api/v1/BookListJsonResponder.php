@@ -34,7 +34,7 @@ class BookListJsonResponder extends BaseJsonResponder
         foreach ($books as $bookItem) {
             $isDefault = ($bookItem['is_default'] == 1) ? true : false;
             $own = ($bookItem['is_owner'] == 1) ? true : false;
-            $mode =  ($bookItem['modifiable'] == 1) ? "ReadWrite" : "ReadOnly";
+            $mode = ($bookItem['modifiable'] == 1) ? 'ReadWrite' : 'ReadOnly';
             $book_list[] = [
                 'id'           => $bookItem['id'],
                 'name'         => $bookItem['name'],
