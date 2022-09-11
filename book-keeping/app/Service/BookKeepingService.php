@@ -246,7 +246,14 @@ class BookKeepingService
         foreach ($bookList as $book) {
             $id = $book['book_id'];
             $owner = $this->book->ownerName($id);
-            $books[] = ['id' => $id, 'owner' => $owner, 'name' => $book['book_name']];
+            $books[] = [
+                'id' => $id,
+                'name' => $book['book_name'],
+                'is_default' => $book['is_default'],
+                'is_owner' => $book['is_owner'],
+                'modifiable' => $book['modifiable'],
+                'owner' => $owner,
+            ];
         }
 
         return $books;
@@ -635,7 +642,7 @@ class BookKeepingService
     /**
      * Check if UUID is in valid format.
      *
-     * @param  array  $uuid
+     * @param  string  $uuid
      * @return bool
      */
     public function validateUuid(string $uuid): bool
