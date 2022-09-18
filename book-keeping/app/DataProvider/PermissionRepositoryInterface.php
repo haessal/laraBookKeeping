@@ -9,9 +9,12 @@ interface PermissionRepositoryInterface
      *
      * @param  int  $userId
      * @param  string  $bookId
+     * @param  bool  $modifiable
+     * @param  bool  $is_owner
+     * @param  bool  $is_default
      * @return string $permissionId
      */
-    public function create(int $userId, string $bookId): string;
+    public function create(int $userId, string $bookId, bool $modifiable, bool $is_owner, bool $is_default): string;
 
     /**
      * Find default book of the user.

@@ -17,7 +17,7 @@ abstract class DataProvider_PermissionRepositoryInterfaceTest extends TestCase
         $bookId = (string) Str::uuid();
 
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        $permissionId = $this->permission->create($userId, $bookId);
+        $permissionId = $this->permission->create($userId, $bookId, true, true, true);
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $this->assertTrue(is_string($permissionId));

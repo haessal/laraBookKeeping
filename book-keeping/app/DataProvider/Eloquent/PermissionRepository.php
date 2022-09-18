@@ -13,16 +13,17 @@ class PermissionRepository implements PermissionRepositoryInterface
      *
      * @param  int  $userId
      * @param  string  $bookId
+     * @param  bool  $modifiable
+     * @param  bool  $is_owner
+     * @param  bool  $is_default
      * @return string $permissionId
      */
-    public function create(int $userId, string $bookId): string
+    public function create(int $userId, string $bookId, bool $modifiable, bool $is_owner, bool $is_default): string
     {
-        $is_default = $this->isRegisteredUser($userId) ? false : true;
-        $is_owner = $this->isRegisteredBook($bookId) ? false : true;
         $permission = new Permission();
         $permission->permitted_user = $userId;
         $permission->readable_book = $bookId;
-        $permission->modifiable = true;
+        $permission->modifiable = $modifiable;
         $permission->is_owner = $is_owner;
         $permission->is_default = $is_default;
         $permission->save();

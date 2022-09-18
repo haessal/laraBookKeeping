@@ -11,12 +11,13 @@ class BookJsonResponder extends BaseJsonResponder
      * Respond with the Book JSON.
      *
      * @param  array  $context
+     * @param  int  $status
      * @return \Illuminate\Http\JsonResponse
      */
-    public function response(array $context): JsonResponse
+    public function response(array $context, int $status = JsonResponse::HTTP_OK): JsonResponse
     {
         $this->response->setData($this->translateBookFormat($context['book']));
-        $this->response->setStatusCode(JsonResponse::HTTP_OK);
+        $this->response->setStatusCode($status);
 
         return $this->response;
     }
