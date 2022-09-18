@@ -29,18 +29,21 @@ class DataProvider_Eloquent_PermissionRepositoryTest extends DataProvider_Permis
     {
         $userId = 11;
         $bookId = (string) Str::uuid();
+        $modifiable = true;
+        $is_owner = false;
+        $is_default = false;
 
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        $permissionId = $this->permission->create($userId, $bookId);
+        $permissionId = $this->permission->create($userId, $bookId, $modifiable, $is_owner, $is_default);
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $this->assertDatabaseHas('bk2_0_permissions', [
             'permission_id'  => $permissionId,
             'permitted_user' => $userId,
             'readable_book'  => $bookId,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => true,
+            'modifiable'     => $modifiable,
+            'is_owner'       => $is_owner,
+            'is_default'     => $is_default,
         ]);
     }
 

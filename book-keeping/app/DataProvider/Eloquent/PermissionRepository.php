@@ -9,7 +9,7 @@ use App\Models\User;
 class PermissionRepository implements PermissionRepositoryInterface
 {
     /**
-     * Create a permission for the user to modify the book.
+     * Create a permission for the user to modify the book.(TODO: Update the description)
      *
      * If the permission is the first one for the user, the book is mark as the
      * default book for the user. And If no user has permission to access the
@@ -17,16 +17,17 @@ class PermissionRepository implements PermissionRepositoryInterface
      *
      * @param  int  $userId
      * @param  string  $bookId
+     * @param  bool  $modifiable
+     * @param  bool  $is_owner
+     * @param  bool  $is_default
      * @return string
      */
-    public function create(int $userId, string $bookId): string
+    public function create(int $userId, string $bookId, bool $modifiable, bool $is_owner, bool $is_default): string
     {
-        $is_default = $this->isRegisteredUser($userId) ? false : true;
-        $is_owner = $this->isRegisteredBook($bookId) ? false : true;
         $permission = new Permission();
         $permission->permitted_user = $userId;
         $permission->readable_book = $bookId;
-        $permission->modifiable = true;
+        $permission->modifiable = $modifiable;
         $permission->is_owner = $is_owner;
         $permission->is_default = $is_default;
         $permission->save();

@@ -90,6 +90,19 @@ class BookKeepingService
     }
 
     /**
+     * Create a new book.
+     *
+     * @param  string  $title
+     * @return string $bookId
+     */
+    public function createBook(string $title): string
+    {
+        $bookId = $this->book->createBook(Auth::id(), $title);
+
+        return $bookId;
+    }
+
+    /**
      * Create a new slip.
      *
      * @param  string  $outline

@@ -24,6 +24,9 @@ class Service_BookServiceTest extends TestCase
     {
         $userId = 1;
         $title = 'title';
+        $modifiable = true;
+        $is_owner = true;
+        $is_default = false;
         $bookId_expected = (string) Str::uuid();
         $permissionId = (string) Str::uuid();
         /** @var \App\DataProvider\BookRepositoryInterface|\Mockery\MockInterface $bookMock */
@@ -36,7 +39,7 @@ class Service_BookServiceTest extends TestCase
         $permissionMock = Mockery::mock(PermissionRepositoryInterface::class);
         $permissionMock->shouldReceive('create')
             ->once()
-            ->with($userId, $bookId_expected)
+            ->with($userId, $bookId_expected, $modifiable, $is_owner, $is_default)
             ->andReturn($permissionId);
 
         $book = new BookService($bookMock, $permissionMock);

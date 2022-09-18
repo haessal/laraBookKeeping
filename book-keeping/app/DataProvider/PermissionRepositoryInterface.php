@@ -5,7 +5,7 @@ namespace App\DataProvider;
 interface PermissionRepositoryInterface
 {
     /**
-     * Create a permission for the user to modify the book.
+     * Create a permission for the user to modify the book.(TODO: Update the description)
      *
      * If the permission is the first one for the user, the book is mark as the
      * default book for the user. And If no user has permission to access the
@@ -13,9 +13,12 @@ interface PermissionRepositoryInterface
      *
      * @param  int  $userId
      * @param  string  $bookId
+     * @param  bool  $modifiable
+     * @param  bool  $is_owner
+     * @param  bool  $is_default
      * @return string
      */
-    public function create(int $userId, string $bookId): string;
+    public function create(int $userId, string $bookId, bool $modifiable, bool $is_owner, bool $is_default): string;
 
     /**
      * Find the books that the user can access.

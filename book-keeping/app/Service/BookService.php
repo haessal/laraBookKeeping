@@ -43,7 +43,7 @@ class BookService
     public function createBook(int $userId, string $title): string
     {
         $bookId = $this->book->create($title);
-        $permissionId = $this->permission->create($userId, $bookId);
+        $this->permission->create($userId, $bookId, true, true, false);
 
         return $bookId;
     }
