@@ -36,4 +36,17 @@ class BookRepository implements BookRepositoryInterface
 
         return is_null($book) ? null : $book->toArray();
     }
+
+    /**
+     * Update the name.
+     *
+     * @param  string  $bookId
+     * @param  string  $newName
+     */
+    public function updateName(string $bookId, string $newName)
+    {
+        $book = Book::find($bookId);
+        $book->book_name = $newName;
+        $book->save();
+    }
 }

@@ -19,4 +19,12 @@ interface BookRepositoryInterface
      * @return array<string, string>|null
      */
     public function findById(string $bookId): ?array;
+
+    /**
+     * Update the name.
+     *
+     * @param  string  $bookId
+     * @param  string  $newName
+     */
+    public function updateName(string $bookId, string $newName);
 }

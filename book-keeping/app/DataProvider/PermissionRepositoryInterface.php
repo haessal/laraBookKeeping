@@ -52,4 +52,13 @@ interface PermissionRepositoryInterface
      * @return array
      */
     public function searchBookList(int $userId, string $bookId = null): array;
+
+    /**
+     * Update the flag which indicates that the book is default one.
+     *
+     * @param  int  $userId
+     * @param  string  $bookId
+     * @param  int  $isDefault
+     */
+    public function updateBookIsDefault(int $userId, string $bookId, bool $isDefault);
 }
