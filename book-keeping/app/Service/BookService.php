@@ -122,4 +122,27 @@ class BookService
 
         return $book;
     }
+
+    /**
+     * Update the books is default one or not.
+     *
+     * @param  string  $bookId
+     * @param  int  $userId
+     * @param  int  $isDefault
+     */
+    public function updateIsDefault(string $bookId, int $userId, bool $isDefault)
+    {
+        $this->permission->updateBookIsDefault($userId, $bookId, $isDefault);
+    }
+
+    /**
+     * Update the book name.
+     *
+     * @param  string  $bookId
+     * @param  string  $newName
+     */
+    public function updateName(string $bookId, string $newName)
+    {
+        $this->book->updateName($bookId, $newName);
+    }
 }

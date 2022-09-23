@@ -15,6 +15,15 @@ class BookKeepingService
     const ORIGIN_DATE = '1970-01-02';
 
     /**
+     * The status code of the service.
+     *
+     * @var int
+     */
+    const STATUS_NORMAL = 0;
+    const STATUS_ERROR_AUTH_NOTAVAILABLE = 1;
+    const STATUS_ERROR_AUTH_FORBIDDEN = 2;
+
+    /**
      * Account service instance.
      *
      * @var \App\Service\AccountService
@@ -318,6 +327,23 @@ class BookKeepingService
     }
 
     /**
+     * Retrieve default Book.
+     *
+     * @return array
+     */
+    public function retrieveDefaultBook(): array
+    {
+        $bookId = $this->book->retrieveDefaultBook(Auth::id());
+        if (! is_null($bookId)) {
+            $book = $this->retrieveBook($bookId);
+
+            return [self::STATUS_NORMAL, $book];
+        } else {
+            return [self::STATUS_ERROR_AUTH_NOTAVAILABLE, null];
+        }
+    }
+
+    /**
      * Retrieve draft slips.
      *
      * @param  string  $bookId
@@ -553,6 +579,46 @@ class BookKeepingService
     }
 
     /**
+     * Set the book as the default one.
+     *
+     * @param  string  $bookId
+     * @return array
+     */
+    public function setBookAsDefault(string $bookId): array
+    {
+        [$authorized, $reason] = $this->canAccessAsOwner($bookId);
+        if (! $authorized) {
+            return [$reason, null];
+        }
+        $previous_default = $this->book->retrieveDefaultBook(Auth::id());
+        if (is_null($previous_default)) {
+            $this->book->updateIsDefault($bookId, Auth::id(), true);
+
+            return [self::STATUS_NORMAL, $this->retrieveBook($bookId)];
+        } else {
+            return [self::STATUS_NORMAL, null];
+        }
+    }
+
+    /**
+     * Set the book as the not default one.
+     *
+     * @param  string  $bookId
+     * @return array
+     */
+    public function setBookAsNotDefault(string $bookId): array
+    {
+        [$authorized, $reason] = $this->canAccessAsOwner($bookId);
+        if (! $authorized) {
+            return [$reason, null];
+        }
+        $this->book->updateIsDefault($bookId, Auth::id(), false);
+        $book = $this->retrieveBook($bookId);
+
+        return [self::STATUS_NORMAL, $book];
+    }
+
+    /**
      * Submit Slip with specified date.
      *
      * @param  string  $date
@@ -593,6 +659,25 @@ class BookKeepingService
     public function updateAccountGroup(string $accountGroupId, array $newData, string $bookId)
     {
         $this->account->updateAccountGroup($accountGroupId, $newData);
+    }
+
+    /**
+     * Update the book name.
+     *
+     * @param  string  $bookId
+     * @param  string  $newName
+     * @return array
+     */
+    public function updateBookName(string $bookId, string $newName): array
+    {
+        [$authorized, $reason] = $this->canAccessAsOwner($bookId);
+        if (! $authorized) {
+            return [$reason, null];
+        }
+
+        $this->book->updateName($bookId, $newName);
+
+        return [self::STATUS_NORMAL, null];
     }
 
     /**
@@ -687,5 +772,18 @@ class BookKeepingService
     public function validateUuid(string $uuid): bool
     {
         return preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/', $uuid) === 1;
+    }
+
+    private function canAccessAsOwner($bookId): array
+    {
+        $bookItem = $this->book->retrieveBook($bookId, Auth::id());
+        if (empty($bookItem)) {
+            return [false, self::STATUS_ERROR_AUTH_NOTAVAILABLE];
+        }
+        if ($bookItem['is_owner'] == 0) {
+            return [false, self::STATUS_ERROR_AUTH_FORBIDDEN];
+        }
+
+        return [true, self::STATUS_NORMAL];
     }
 }

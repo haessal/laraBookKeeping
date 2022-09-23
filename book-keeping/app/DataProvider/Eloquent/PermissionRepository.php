@@ -97,6 +97,27 @@ class PermissionRepository implements PermissionRepositoryInterface
     }
 
     /**
+     * Update the flag which indicates that the book is default one.
+     *
+     * @param  int  $userId
+     * @param  string  $bookId
+     * @param  int  $isDefault
+     */
+    public function updateBookIsDefault(int $userId, string $bookId, bool $isDefault)
+    {
+        $selected = Permission::select('permission_id')
+            ->where('permitted_user', $userId)
+            ->where('readable_book', $bookId)
+            ->where('is_owner', true)
+            ->first();
+        if (! empty($selected)) {
+            $permission = Permission::find($selected['permission_id']);
+            $permission->is_default = $isDefault;
+            $permission->save();
+        }
+    }
+
+    /**
      * Check if the book is registered.
      *
      * @param  string  $bookId
