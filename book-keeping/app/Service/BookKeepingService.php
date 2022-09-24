@@ -112,6 +112,33 @@ class BookKeepingService
     }
 
     /**
+     * Create a permission to access the book.
+     *
+     * @param  string  $bookId
+     * @param  string  $userName
+     * @param  string  $mode
+     * @return array
+     */
+    public function createBookPermission(string $bookId, string $userName, string $mode): array
+    {
+        [$authorized, $reason] = $this->canAccessAsOwner($bookId);
+        if (! $authorized) {
+            return [$reason, null];
+        }
+
+        $status = self::STATUS_NORMAL;
+        $permissionList = $this->book->retrievePermissions($bookId);
+        foreach ($permissionList as $permissionItem) {
+            if ($permissionItem['user'] == $userName) {
+                return [$status, null];
+            }
+        }
+        $bookPermission = $this->book->createPermission($bookId, $userName, $mode);
+
+        return [$status, $bookPermission];
+    }
+
+    /**
      * Create a new slip.
      *
      * @param  string  $outline
@@ -340,14 +367,9 @@ class BookKeepingService
         }
 
         $status = self::STATUS_NORMAL;
-        $book_information = $this->book->retrieveInformation($bookId);
-        $book_permission = [
-            'id'          => $bookId,
-            'name'        => $book_information['book_name'],
-            'permissions' => $this->book->retrievePermissions($bookId),
-        ];
+        $permissionList = $this->book->retrievePermissions($bookId);
 
-        return [$status, $book_permission];
+        return [$status, $permissionList];
     }
 
     /**
