@@ -45,6 +45,14 @@ interface PermissionRepositoryInterface
     public function findOwnerOfBook(string $bookId): ?array;
 
     /**
+     * Find user.(TODO: update the description and array type)
+     *
+     * @param  int  $userId
+     * @return array|null
+     */
+    public function findUser(int $userId): ?array;
+
+    /**
      * Search book list that the user can access.(TODO: merge with findAccessibleBooks)
      *
      * @param  int  $userId
@@ -52,6 +60,14 @@ interface PermissionRepositoryInterface
      * @return array
      */
     public function searchBookList(int $userId, string $bookId = null): array;
+
+    /**
+     * Search permission list for the book.
+     *
+     * @param  string  $bookId
+     * @return array
+     */
+    public function searchPermissionList(string $bookId): array;
 
     /**
      * Update the flag which indicates that the book is default one.

@@ -327,6 +327,30 @@ class BookKeepingService
     }
 
     /**
+     * Retrieve permission to access the book.
+     *
+     * @param  string  $bookId
+     * @return array
+     */
+    public function retrieveBookPermission(string $bookId): array
+    {
+        [$authorized, $reason] = $this->canAccessAsOwner($bookId);
+        if (! $authorized) {
+            return [$reason, null];
+        }
+
+        $status = self::STATUS_NORMAL;
+        $book_information = $this->book->retrieveInformation($bookId);
+        $book_permission = [
+            'id'          => $bookId,
+            'name'        => $book_information['book_name'],
+            'permissions' => $this->book->retrievePermissions($bookId),
+        ];
+
+        return [$status, $book_permission];
+    }
+
+    /**
      * Retrieve default Book.
      *
      * @return array
