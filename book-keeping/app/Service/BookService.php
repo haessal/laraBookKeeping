@@ -124,6 +124,27 @@ class BookService
     }
 
     /**
+     * Retrieve permissions.
+     *
+     * @param  string  $bookId
+     * @return array
+     */
+    public function retrievePermissions(string $bookId): array
+    {
+        $permissions = [];
+        $permission_list = $this->permission->searchPermissionList($bookId);
+        foreach ($permission_list as $item) {
+            $user = $this->permission->findUser($item['permitted_user']);
+            $permissions[] = [
+                'user' => $user['name'],
+                'permitted_to' => ($item['modifiable'] != 0) ? 'ReadWrite' : 'ReadOnly',
+            ];
+        }
+
+        return $permissions;
+    }
+
+    /**
      * Update the books is default one or not.
      *
      * @param  string  $bookId

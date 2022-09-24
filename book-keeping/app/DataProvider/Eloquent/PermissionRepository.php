@@ -70,6 +70,19 @@ class PermissionRepository implements PermissionRepositoryInterface
     }
 
     /**
+     * Find user.
+     *
+     * @param  int  $userId
+     * @return array | null
+     */
+    public function findUser(int $userId): ?array
+    {
+        $user = User::find($userId);
+
+        return is_null($user) ? null : $user->toArray();
+    }
+
+    /**
      * Search book list that the user can access.
      *
      * @param  int  $userId
@@ -92,6 +105,21 @@ class PermissionRepository implements PermissionRepositoryInterface
                 ->orderBy('bk2_0_books.created_at')
                 ->get()->toArray();
         }
+
+        return $list;
+    }
+
+    /**
+     * Search permission list for the book.
+     *
+     * @param  string  $bookId
+     * @return array
+     */
+    public function searchPermissionList(string $bookId): array
+    {
+        $list = Permission::select('permitted_user', 'modifiable', 'is_owner', 'is_default')
+            ->where('readable_book', $bookId)
+            ->get()->toArray();
 
         return $list;
     }

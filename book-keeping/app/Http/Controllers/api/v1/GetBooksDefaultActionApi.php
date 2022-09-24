@@ -34,7 +34,6 @@ class GetBooksDefaultActionApi extends AuthenticatedBookKeepingActionApi
      * Handle the incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  string  $bookId
      * @return \Illuminate\Http\JsonResponse
      */
     public function __invoke(Request $request): JsonResponse
