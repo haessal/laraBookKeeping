@@ -53,6 +53,14 @@ interface PermissionRepositoryInterface
     public function findUser(int $userId): ?array;
 
     /**
+     * Find user by name.(TODO: update the description and array type)
+     *
+     * @param  string  $name
+     * @return array|null
+     */
+    public function findUserByName(string $name): ?array;
+
+    /**
      * Search book list that the user can access.(TODO: merge with findAccessibleBooks)
      *
      * @param  int  $userId

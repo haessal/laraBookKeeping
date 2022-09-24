@@ -45,8 +45,8 @@ Route::prefix('v1')->group(function () {
     Route::post('/books/{bookId}/default', PostBooksDefaultActionApi::class);
     Route::delete('/books/{bookId}/default', DeleteBooksDefaultActionApi::class);
     Route::get('/books/{bookId}/permissions', GetBooksPermissionsActionApi::class);
+    Route::post('/books/{bookId}/permissions', PostBooksPermissionsActionApi::class);
     /*
-        Route::post('/books/{bookId}/permissions', PostBooksPermissionsActionApi::class);
         Route::delete('/books/{bookId}/permissions', DeleteBooksPermissionsActionApi::class);
     */
 

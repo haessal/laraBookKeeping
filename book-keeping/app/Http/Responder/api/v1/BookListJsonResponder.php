@@ -29,13 +29,13 @@ class BookListJsonResponder extends BaseJsonResponder
      */
     private function translateBookListFormat(array $books): array
     {
-        $book_list = [];
+        $bookList = [];
 
         foreach ($books as $bookItem) {
             $isDefault = ($bookItem['is_default'] == 1) ? true : false;
             $own = ($bookItem['is_owner'] == 1) ? true : false;
             $mode = ($bookItem['modifiable'] == 1) ? 'ReadWrite' : 'ReadOnly';
-            $book_list[] = [
+            $bookList[] = [
                 'id'           => $bookItem['id'],
                 'name'         => $bookItem['name'],
                 'default'      => $isDefault,
@@ -45,6 +45,6 @@ class BookListJsonResponder extends BaseJsonResponder
             ];
         }
 
-        return $book_list;
+        return $bookList;
     }
 }

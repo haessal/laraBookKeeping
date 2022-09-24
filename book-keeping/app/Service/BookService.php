@@ -49,6 +49,27 @@ class BookService
     }
 
     /**
+     * Create a permission.
+     *
+     * @param  string  $bookId
+     * @param  string  $userName
+     * @param  string  $mode
+     * @return array | null
+     */
+    public function createPermission(string $bookId, string $userName, string $mode): ?array
+    {
+        $permission = null;
+        $user = $this->permission->findUserByName($userName);
+        if (! is_null($user)) {
+            $modifiable = ($mode == 'ReadWrite') ? true : false;
+            $this->permission->create($user['id'], $bookId, $modifiable, false, false);
+            $permission = ['user' => $userName, 'permitted_to' => $mode];
+        }
+
+        return $permission;
+    }
+
+    /**
      * Owner of the specified Book.
      *
      * @param  int  $bookId

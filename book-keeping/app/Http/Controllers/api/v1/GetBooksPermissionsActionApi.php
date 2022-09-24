@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\api\AuthenticatedBookKeepingActionApi;
-use App\Http\Responder\api\v1\BookAccessPermissionJsonResponder;
+use App\Http\Responder\api\v1\BookAccessPermissionListJsonResponder;
 use App\Service\BookKeepingService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,9 +11,9 @@ use Illuminate\Http\Request;
 class GetBooksPermissionsActionApi extends AuthenticatedBookKeepingActionApi
 {
     /**
-     * BookAccessPermissionJson responder instance.
+     * BookAccessPermissionListJson responder instance.
      *
-     * @var \App\Http\Responder\api\v1\BookAccessPermissionJsonResponder
+     * @var \App\Http\Responder\api\v1\BookAccessPermissionListJsonResponder
      */
     private $responder;
 
@@ -21,10 +21,10 @@ class GetBooksPermissionsActionApi extends AuthenticatedBookKeepingActionApi
      * Create a new controller instance.
      *
      * @param  \App\Service\BookKeepingService  $BookKeeping
-     * @param  \App\Http\Responder\api\v1\BookAccessPermissionJsonResponder  $responder
+     * @param  \App\Http\Responder\api\v1\BookAccessPermissionListJsonResponder  $responder
      * @return void
      */
-    public function __construct(BookKeepingService $BookKeeping, BookAccessPermissionJsonResponder $responder)
+    public function __construct(BookKeepingService $BookKeeping, BookAccessPermissionListJsonResponder $responder)
     {
         parent::__construct($BookKeeping);
         $this->responder = $responder;
@@ -41,10 +41,10 @@ class GetBooksPermissionsActionApi extends AuthenticatedBookKeepingActionApi
     {
         if ($this->BookKeeping->validateUuid($bookId)) {
             $context = [];
-            [$status, $book_permission] = $this->BookKeeping->retrieveBookPermission($bookId);
+            [$status, $permissionList] = $this->BookKeeping->retrieveBookPermission($bookId);
             switch ($status) {
                 case BookKeepingService::STATUS_NORMAL:
-                    $context['book_permission'] = $book_permission;
+                    $context['permission_list'] = $permissionList;
                     $response = $this->responder->response($context);
                     break;
                 case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:

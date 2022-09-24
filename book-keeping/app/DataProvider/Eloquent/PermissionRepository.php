@@ -104,6 +104,19 @@ class PermissionRepository implements PermissionRepositoryInterface
     }
 
     /**
+     * Find user by name.(TODO: update the description and array type)
+     *
+     * @param  string  $name
+     * @return array|null
+     */
+    public function findUserByName(string $name): ?array
+    {
+        $user = User::where('name', $name)->first();
+
+        return is_null($user) ? null : $user->toArray();
+    }
+
+    /**
      * Search book list that the user can access.(TODO: merge with findAccessibleBooks)
      *
      * @param  int  $userId
