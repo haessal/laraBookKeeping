@@ -29,6 +29,15 @@ interface PermissionRepositoryInterface
     public function findAccessibleBooks(int $userId): array;
 
     /**
+     * Delete the permission.(TODO: update the description)
+     *
+     * @param  int  $userId
+     * @param  string  $bookId
+     * @return void
+     */
+    public function delete(int $userId, string $bookId);
+
+    /**
      * Find the default book of the user.
      *
      * @param  int  $userId

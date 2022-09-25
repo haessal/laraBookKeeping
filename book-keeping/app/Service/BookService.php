@@ -70,6 +70,21 @@ class BookService
     }
 
     /**
+     * Delete the permission.
+     *
+     * @param  string  $bookId
+     * @param  string  $userName
+     * @return void
+     */
+    public function deletePermission(string $bookId, string $userName)
+    {
+        $user = $this->permission->findUserByName($userName);
+        if (! is_null($user)) {
+            $this->permission->delete($user['id'], $bookId);
+        }
+    }
+
+    /**
      * Owner of the specified Book.
      *
      * @param  int  $bookId

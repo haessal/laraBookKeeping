@@ -125,7 +125,6 @@ class BookKeepingService
         if (! $authorized) {
             return [$reason, null];
         }
-
         $status = self::STATUS_NORMAL;
         $permissionList = $this->book->retrievePermissions($bookId);
         foreach ($permissionList as $permissionItem) {
@@ -184,6 +183,36 @@ class BookKeepingService
         } else {
             $this->slip->createSlipEntry($draftSlips[0]['slip_id'], $debit, $credit, $amount, $client, $outline);
         }
+    }
+
+    /**
+     * Delete the permission to access the book.
+     *
+     * @param  string  $bookId
+     * @param  string  $userName
+     * @return array | null
+     */
+    public function deleteBookPermission(string $bookId, string $userName): ?array
+    {
+        [$authorized, $reason] = $this->canAccessAsOwner($bookId);
+        if (! $authorized) {
+            return [$reason, null];
+        }
+        $status = self::STATUS_NORMAL;
+        if ($userName == $this->book->ownerName($bookId)) {
+            return [$status, null];
+        }
+        $bookPermission = null;
+        $permissionList = $this->book->retrievePermissions($bookId);
+        foreach ($permissionList as $permissionItem) {
+            if ($permissionItem['user'] == $userName) {
+                $bookPermission = $permissionItem;
+                $this->book->deletePermission($bookId, $userName);
+                break;
+            }
+        }
+
+        return [$status, $bookPermission];
     }
 
     /**
@@ -365,7 +394,6 @@ class BookKeepingService
         if (! $authorized) {
             return [$reason, null];
         }
-
         $status = self::STATUS_NORMAL;
         $permissionList = $this->book->retrievePermissions($bookId);
 
@@ -720,7 +748,6 @@ class BookKeepingService
         if (! $authorized) {
             return [$reason, null];
         }
-
         $this->book->updateName($bookId, $newName);
 
         return [self::STATUS_NORMAL, null];
