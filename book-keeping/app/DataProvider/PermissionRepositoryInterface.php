@@ -17,6 +17,15 @@ interface PermissionRepositoryInterface
     public function create(int $userId, string $bookId, bool $modifiable, bool $is_owner, bool $is_default): string;
 
     /**
+     * Delete the permission.
+     *
+     * @param  int  $userId
+     * @param  string  $bookId
+     * @return void
+     */
+    public function delete(int $userId, string $bookId);
+
+    /**
      * Find default book of the user.
      *
      * @param  int  $userId

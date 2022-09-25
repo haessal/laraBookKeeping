@@ -32,6 +32,23 @@ class PermissionRepository implements PermissionRepositoryInterface
     }
 
     /**
+     * Delete the permission.
+     *
+     * @param  int  $userId
+     * @param  string  $bookId
+     * @return void
+     */
+    public function delete(int $userId, string $bookId)
+    {
+        $permission = Permission::where('permitted_user', $userId)
+            ->where('readable_book', $bookId)
+            ->first();
+        if (! is_null($permission)) {
+            $permission->forceDelete();
+        }
+    }
+
+    /**
      * Find default book of the user.
      *
      * @param  int  $userId
