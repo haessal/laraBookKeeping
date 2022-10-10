@@ -59,6 +59,13 @@ jobs:
       - run:
           command: cspell "**/*.php"
           working_directory: ~/laraBookKeeping
+      # Install Node packages and build assets and run tests with phpunit
+      - run:
+          command: npm ci
+          working_directory: ~/laraBookKeeping/book-keeping
+      - run:
+          command: npm run build
+          working_directory: ~/laraBookKeeping/book-keeping
       # run tests with phpunit
       - run:
           command: XDEBUG_MODE=coverage vendor/bin/phpunit -d memory_limit=512M --coverage-clover ../build/logs/clover.xml
