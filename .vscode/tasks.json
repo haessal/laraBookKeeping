@@ -41,6 +41,18 @@
                     "DB_DATABASE": "devcontainer"
                 }
             }
+        },
+        {
+            "label": "migrate:fresh with seed",
+            "type": "shell",
+            "command": "php artisan migrate:fresh --seed",
+            "options": {
+                "cwd": "${workspaceFolder}/book-keeping",
+                "env": {
+                    "XDEBUG_MODE": "off",
+                    "DB_DATABASE": "devcontainer"
+                }
+            }
         }
     ]
 }
