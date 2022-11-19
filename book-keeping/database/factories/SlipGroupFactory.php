@@ -17,7 +17,10 @@ class SlipGroupFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'slip_group_id' => fake()->uuid(),
+            'book_id' => fake()->uuid(),
+            'slip_group_outline' => fake()->sentence(),
+            'slip_group_memo' => fake()->paragraph(),
         ];
     }
 }

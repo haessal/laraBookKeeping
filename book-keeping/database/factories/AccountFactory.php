@@ -17,7 +17,11 @@ class AccountFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'account_id' => fake()->uuid(),
+            'account_group_id' => fake()->uuid(),
+            'account_title' => fake()->word(),
+            'description' => fake()->sentence(),
+            'selectable' => fake()->boolean(),
         ];
     }
 }

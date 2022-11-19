@@ -17,7 +17,9 @@ class SlipGroupEntryFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'slip_group_entry_id' => fake()->uuid(),
+            'slip_group_id' => fake()->uuid(),
+            'related_slip' => fake()->uuid(),
         ];
     }
 }
