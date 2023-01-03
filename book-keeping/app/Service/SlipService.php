@@ -178,7 +178,7 @@ class SlipService
      */
     public function submitSlip(string $slipId)
     {
-        $this->slip->updateIsDraft($slipId, false);
+        $this->slip->updateIfDraft($slipId, false);
     }
 
     /**

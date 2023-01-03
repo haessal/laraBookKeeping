@@ -110,7 +110,7 @@ class SlipRepository implements SlipRepositoryInterface
      * @param  string  $slipId
      * @param  bool  $isDraft
      */
-    public function updateIsDraft(string $slipId, bool $isDraft)
+    public function updateIfDraft(string $slipId, bool $isDraft)
     {
         $slip = Slip::find($slipId);
         $slip->is_draft = $isDraft;

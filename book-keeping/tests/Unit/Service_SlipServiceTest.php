@@ -389,7 +389,7 @@ class Service_SlipServiceTest extends TestCase
         $slipId = (string) Str::uuid();
         /** @var \App\DataProvider\SlipRepositoryInterface|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipRepositoryInterface::class);
-        $slipMock->shouldReceive('updateIsDraft')
+        $slipMock->shouldReceive('updateIfDraft')
             ->once()
             ->with($slipId, false);
         /** @var \App\DataProvider\SlipEntryRepositoryInterface|\Mockery\MockInterface $slipEntryMock */

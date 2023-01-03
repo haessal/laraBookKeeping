@@ -171,7 +171,7 @@ class DataProvider_Eloquent_SlipRepositoryTest extends DataProvider_SlipReposito
     /**
      * @test
      */
-    public function updateIsDraft_IsDraftIsUpdated()
+    public function updateIfDraft_IsDraftIsUpdated()
     {
         $bookId = (string) Str::uuid();
         $outline = 'outline3';
@@ -189,7 +189,7 @@ class DataProvider_Eloquent_SlipRepositoryTest extends DataProvider_SlipReposito
         ])->slip_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-        $this->slip->updateIsDraft($slipId, $isDraft_updated);
+        $this->slip->updateIfDraft($slipId, $isDraft_updated);
 
         $this->assertDatabaseHas('bk2_0_slips', [
             'slip_id'       => $slipId,
