@@ -201,6 +201,7 @@ class DataProvider_Eloquent_SlipEntryRepositoryTest extends DataProvider_SlipEnt
         $slipId = Slip::factory()->create([
             'book_id'      => $bookId,
             'slip_outline' => $slip_outline,
+            'slip_memo'     => null,
             'date'         => $date,
             'is_draft'     => true,
         ])->slip_id;
