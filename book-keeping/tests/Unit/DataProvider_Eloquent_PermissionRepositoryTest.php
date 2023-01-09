@@ -98,7 +98,7 @@ class DataProvider_Eloquent_PermissionRepositoryTest extends DataProvider_Permis
     /**
      * @test
      */
-    public function searchBookList_ReturnedArrayHasKeysAsBookList()
+    public function findAccessibleBooks_ReturnedArrayHasKeysAsBookList()
     {
         $userId = 31;
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
@@ -114,7 +114,7 @@ class DataProvider_Eloquent_PermissionRepositoryTest extends DataProvider_Permis
         ])->permission_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-        $bookList = $this->permission->searchBookList($userId);
+        $bookList = $this->permission->findAccessibleBooks($userId);
 
         $this->assertFalse(count($bookList) === 0);
         if (! (count($bookList) === 0)) {

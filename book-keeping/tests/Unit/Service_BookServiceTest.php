@@ -102,7 +102,7 @@ class Service_BookServiceTest extends TestCase
         $bookMock = Mockery::mock(BookRepositoryInterface::class);
         /** @var \App\DataProvider\PermissionRepositoryInterface|\Mockery\MockInterface $permissionMock */
         $permissionMock = Mockery::mock(PermissionRepositoryInterface::class);
-        $permissionMock->shouldReceive('searchBookList')
+        $permissionMock->shouldReceive('findAccessibleBooks')
             ->once()
             ->with($userId)
             ->andReturn($booklist_expected);

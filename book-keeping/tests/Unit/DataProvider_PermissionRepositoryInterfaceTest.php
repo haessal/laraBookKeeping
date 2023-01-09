@@ -8,6 +8,8 @@ use Tests\TestCase;
 
 abstract class DataProvider_PermissionRepositoryInterfaceTest extends TestCase
 {
+    protected $permission;
+
     /**
      * @test
      */
@@ -58,11 +60,11 @@ abstract class DataProvider_PermissionRepositoryInterfaceTest extends TestCase
     /**
      * @test
      */
-    public function searchBookList_ReturnValueTypeIsArray()
+    public function findAccessibleBooks_ReturnValueTypeIsArray()
     {
         $userId = 30;
 
-        $bookList = $this->permission->searchBookList($userId);
+        $bookList = $this->permission->findAccessibleBooks($userId);
 
         $this->assertTrue(is_array($bookList));
     }

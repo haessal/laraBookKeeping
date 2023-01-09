@@ -73,7 +73,7 @@ class BookService
      */
     public function retrieveBookList(int $userId): array
     {
-        $booklist = $this->permission->searchBookList($userId);
+        $booklist = $this->permission->findAccessibleBooks($userId);
 
         return $booklist;
     }
