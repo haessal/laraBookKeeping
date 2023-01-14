@@ -6,6 +6,8 @@ use Tests\TestCase;
 
 abstract class DataProvider_BookRepositoryInterfaceTest extends TestCase
 {
+    protected $book;
+
     /**
      * @test
      */
