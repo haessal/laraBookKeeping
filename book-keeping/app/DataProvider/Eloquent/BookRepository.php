@@ -8,10 +8,10 @@ use App\Models\Book;
 class BookRepository implements BookRepositoryInterface
 {
     /**
-     * Create new book and register the user as its owner.
+     * Create a book.
      *
      * @param  string  $title
-     * @return string $bookId
+     * @return string
      */
     public function create(string $title): string
     {
@@ -23,10 +23,10 @@ class BookRepository implements BookRepositoryInterface
     }
 
     /**
-     * Find book.
+     * Find the book.
      *
      * @param  string  $bookId
-     * @return array | null
+     * @return array<string, string>|null
      */
     public function findById(string $bookId): ?array
     {
