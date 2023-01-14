@@ -8,17 +8,17 @@ use App\Models\AccountGroup;
 class AccountGroupRepository implements AccountGroupRepositoryInterface
 {
     /**
-     * Create new account group.
+     * Create an account group to be bound in the book.
      *
      * @param  string  $bookId
      * @param  string  $accountType
      * @param  string  $title
      * @param  bool  $isCurrent
-     * @param  int  $bk_uid
-     * @param  int  $bk_code
-     * @return string $accountGroupId
+     * @param  int|null  $bk_uid
+     * @param  int|null  $bk_code
+     * @return string
      */
-    public function create(string $bookId, string $accountType, string $title, bool $isCurrent, $bk_uid, $bk_code): string
+    public function create(string $bookId, string $accountType, string $title, bool $isCurrent, ?int $bk_uid, ?int $bk_code): string
     {
         $accountGroup = new AccountGroup();
         $accountGroup->book_id = $bookId;
@@ -33,12 +33,12 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
     }
 
     /**
-     * Search account group.
+     * Search the book for account groups.
      *
      * @param  string  $bookId
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
-    public function search(string $bookId): array
+    public function searchBook(string $bookId): array
     {
         $list = AccountGroup::select(
             'account_group_id',
@@ -58,12 +58,13 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
     }
 
     /**
-     * Update account group.
+     * Update the account group.
      *
      * @param  string  $accountGroupId
-     * @param  array  $newData
+     * @param  array<string, mixed>  $newData
+     * @return void
      */
-    public function update(string $accountGroupId, array $newData)
+    public function update(string $accountGroupId, array $newData): void
     {
         $accountGroup = AccountGroup::find($accountGroupId);
         if (! is_null($accountGroup)) {

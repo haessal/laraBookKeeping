@@ -123,7 +123,7 @@ class AccountService
     public function retrieveAccountGroups(string $bookId): array
     {
         $accountGroups = [];
-        $accountGroupList = $this->accountGroup->search($bookId);
+        $accountGroupList = $this->accountGroup->searchBook($bookId);
 
         foreach ($accountGroupList as $accountGroup) {
             $accountGroups[$accountGroup['account_group_id']] = $accountGroup;

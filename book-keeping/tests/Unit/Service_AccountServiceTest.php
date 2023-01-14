@@ -133,7 +133,7 @@ class Service_AccountServiceTest extends TestCase
         $accountGroups_expected = [$accountGroupId_1 => $accountGroup_1, $accountGroupId_2 => $accountGroup_2, $accountGroupId_3 => $accountGroup_3];
         /** @var \App\DataProvider\AccountGroupRepositoryInterface|\Mockery\MockInterface $accountGroupMock */
         $accountGroupMock = Mockery::mock(AccountGroupRepositoryInterface::class);
-        $accountGroupMock->shouldReceive('search')
+        $accountGroupMock->shouldReceive('searchBook')
             ->once()
             ->with($bookId)
             ->andReturn([$accountGroup_1, $accountGroup_2, $accountGroup_3]);
