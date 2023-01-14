@@ -9,7 +9,8 @@ use App\Models\User;
 class PermissionRepository implements PermissionRepositoryInterface
 {
     /**
-     * Create a new permission for the user to modify the book.
+     * Create a permission for the user to modify the book.
+     *
      * If the permission is the first one for the user, the book is mark as the
      * default book for the user. And If no user has permission to access the
      * book yet, the user is registered as the owner of the book.
@@ -37,7 +38,7 @@ class PermissionRepository implements PermissionRepositoryInterface
      * Find the books that the user can access.
      *
      * @param  int  $userId
-     * @return array
+     * @return array<int, array<string, string>>
      */
     public function findAccessibleBooks(int $userId): array
     {
@@ -71,7 +72,7 @@ class PermissionRepository implements PermissionRepositoryInterface
      * Find the owner of the book.
      *
      * @param  string  $bookId
-     * @return array|null
+     * @return array<string, string>|null
      */
     public function findOwnerOfBook(string $bookId): ?array
     {
