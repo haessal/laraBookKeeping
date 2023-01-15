@@ -50,7 +50,7 @@ class DataProvider_Eloquent_AccountRepositoryTest extends DataProvider_AccountRe
     /**
      * @test
      */
-    public function searchAccount_ReturnedArrayHasKeysAsAccountList()
+    public function searchBook_ReturnedArrayHasKeysAsAccountList()
     {
         $bookId = (string) Str::uuid();
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
@@ -72,7 +72,7 @@ class DataProvider_Eloquent_AccountRepositoryTest extends DataProvider_AccountRe
         ])->account_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-        $accountList = $this->account->searchAccount($bookId);
+        $accountList = $this->account->searchBook($bookId);
 
         $this->assertFalse(count($accountList) === 0);
         if (! (count($accountList) === 0)) {

@@ -8,6 +8,8 @@ use Tests\TestCase;
 
 abstract class DataProvider_AccountRepositoryInterfaceTest extends TestCase
 {
+    protected $account;
+
     /**
      * @test
      */
@@ -45,11 +47,11 @@ abstract class DataProvider_AccountRepositoryInterfaceTest extends TestCase
     /**
      * @test
      */
-    public function searchAccount_ReturnValueTypeIsArray()
+    public function searchBook_ReturnValueTypeIsArray()
     {
         $bookId = (string) Str::uuid();
 
-        $accountList = $this->account->searchAccount($bookId);
+        $accountList = $this->account->searchBook($bookId);
 
         $this->assertTrue(is_array($accountList));
     }

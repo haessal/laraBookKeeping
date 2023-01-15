@@ -105,7 +105,7 @@ class AccountService
     public function retrieveAccounts(string $bookId): array
     {
         $accounts = [];
-        $accountList = $this->account->searchAccount($bookId);
+        $accountList = $this->account->searchBook($bookId);
 
         foreach ($accountList as $accountItem) {
             $accounts[$accountItem['account_id']] = $accountItem;

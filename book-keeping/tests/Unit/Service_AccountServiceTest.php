@@ -85,7 +85,7 @@ class Service_AccountServiceTest extends TestCase
         $accountGroupMock = Mockery::mock(AccountGroupRepositoryInterface::class);
         /** @var \App\DataProvider\AccountRepositoryInterface|\Mockery\MockInterface $accountMock */
         $accountMock = Mockery::mock(AccountRepositoryInterface::class);
-        $accountMock->shouldReceive('searchAccount')
+        $accountMock->shouldReceive('searchBook')
             ->once()
             ->with($bookId)
             ->andReturn([$accountItem_1, $accountItem_2, $accountItem_3]);
