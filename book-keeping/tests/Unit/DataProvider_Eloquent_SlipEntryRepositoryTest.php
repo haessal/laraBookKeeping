@@ -24,70 +24,6 @@ class DataProvider_Eloquent_SlipEntryRepositoryTest extends DataProvider_SlipEnt
     /**
      * @test
      */
-    public function searchBookAndCalculateSum_ReturnPairsOfDebitAndCredit()
-    {
-        $fromDate = '2019-08-01';
-        $toDate = '2019-08-31';
-        $bookId = (string) Str::uuid();
-        $slipOutline = 'slip_outline10';
-        $memo = 'memo10';
-        $date = '2019-08-02';
-        $isDraft = false;
-        $accountId1 = (string) Str::uuid();
-        $accountId2 = (string) Str::uuid();
-        $accountId3 = (string) Str::uuid();
-        $client = 'client10';
-        $outline = 'outline10';
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        $slipId = Slip::factory()->create([
-            'book_id'       => $bookId,
-            'slip_outline'  => $slipOutline,
-            'slip_memo'     => $memo,
-            'date'          => $date,
-            'is_draft'      => $isDraft,
-        ])->slip_id;
-        $slipEntryId1 = SlipEntry::factory()->create([
-            'slip_id'       => $slipId,
-            'debit'         => $accountId1,
-            'credit'        => $accountId2,
-            'amount'        => 10,
-            'client'        => $client,
-            'outline'       => $outline,
-        ])->slip_entry_id;
-        $slipEntryId2 = SlipEntry::factory()->create([
-            'slip_id'       => $slipId,
-            'debit'         => $accountId1,
-            'credit'        => $accountId3,
-            'amount'        => 200,
-            'client'        => $client,
-            'outline'       => $outline,
-        ])->slip_entry_id;
-        $slipEntryId3 = SlipEntry::factory()->create([
-            'slip_id'       => $slipId,
-            'debit'         => $accountId2,
-            'credit'        => $accountId3,
-            'amount'        => 3000,
-            'client'        => $client,
-            'outline'       => $outline,
-        ])->slip_entry_id;
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-
-        $sumList = $this->slipEntry->searchBookAndCalculateSum($bookId, $fromDate, $toDate);
-
-        $this->assertTrue(count($sumList) === 3);
-        if (count($sumList) === 3) {
-            $this->assertSame(210, $sumList[$accountId1]['debit']);
-            $this->assertSame(0, $sumList[$accountId1]['credit']);
-            $this->assertSame(3000, $sumList[$accountId2]['debit']);
-            $this->assertSame(10, $sumList[$accountId2]['credit']);
-            $this->assertSame(0, $sumList[$accountId3]['debit']);
-            $this->assertSame(3200, $sumList[$accountId3]['credit']);
-        }
-    }
-
-    /**
-     * @test
-     */
     public function create_OneRecordIsCreated()
     {
         $slipId = (string) Str::uuid();
@@ -144,44 +80,6 @@ class DataProvider_Eloquent_SlipEntryRepositoryTest extends DataProvider_SlipEnt
             'client'        => $client,
             'outline'       => $outline,
         ]);
-    }
-
-    /**
-     * @test
-     */
-    public function searchSlip_ReturnSlipEntries()
-    {
-        $slipId = (string) Str::uuid();
-        $accountId1 = (string) Str::uuid();
-        $accountId2 = (string) Str::uuid();
-        $amount = 2468;
-        $client = 'client6';
-        $outline = 'outline6';
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        $slipEntryId = SlipEntry::factory()->create([
-            'slip_id'       => $slipId,
-            'debit'         => $accountId1,
-            'credit'        => $accountId2,
-            'amount'        => $amount,
-            'client'        => $client,
-            'outline'       => $outline,
-        ])->slip_entry_id;
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-        $slipEntries_expected = [
-            [
-                'slip_entry_id' => $slipEntryId,
-                'slip_id'       => $slipId,
-                'debit'         => $accountId1,
-                'credit'        => $accountId2,
-                'amount'        => $amount,
-                'client'        => $client,
-                'outline'       => $outline,
-            ],
-        ];
-
-        $slipEntries_actual = $this->slipEntry->searchSlip($slipId);
-
-        $this->assertSame($slipEntries_expected, $slipEntries_actual);
     }
 
     /**
@@ -817,6 +715,108 @@ class DataProvider_Eloquent_SlipEntryRepositoryTest extends DataProvider_SlipEnt
                 'outline',
             ], array_keys($slipEntries[0]));
         }
+    }
+
+    /**
+     * @test
+     */
+    public function searchBookAndCalculateSum_ReturnPairsOfDebitAndCredit()
+    {
+        $fromDate = '2019-08-01';
+        $toDate = '2019-08-31';
+        $bookId = (string) Str::uuid();
+        $slipOutline = 'slip_outline10';
+        $memo = 'memo10';
+        $date = '2019-08-02';
+        $isDraft = false;
+        $accountId1 = (string) Str::uuid();
+        $accountId2 = (string) Str::uuid();
+        $accountId3 = (string) Str::uuid();
+        $client = 'client10';
+        $outline = 'outline10';
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $slipId = Slip::factory()->create([
+            'book_id'       => $bookId,
+            'slip_outline'  => $slipOutline,
+            'slip_memo'     => $memo,
+            'date'          => $date,
+            'is_draft'      => $isDraft,
+        ])->slip_id;
+        $slipEntryId1 = SlipEntry::factory()->create([
+            'slip_id'       => $slipId,
+            'debit'         => $accountId1,
+            'credit'        => $accountId2,
+            'amount'        => 10,
+            'client'        => $client,
+            'outline'       => $outline,
+        ])->slip_entry_id;
+        $slipEntryId2 = SlipEntry::factory()->create([
+            'slip_id'       => $slipId,
+            'debit'         => $accountId1,
+            'credit'        => $accountId3,
+            'amount'        => 200,
+            'client'        => $client,
+            'outline'       => $outline,
+        ])->slip_entry_id;
+        $slipEntryId3 = SlipEntry::factory()->create([
+            'slip_id'       => $slipId,
+            'debit'         => $accountId2,
+            'credit'        => $accountId3,
+            'amount'        => 3000,
+            'client'        => $client,
+            'outline'       => $outline,
+        ])->slip_entry_id;
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        $sumList = $this->slipEntry->searchBookAndCalculateSum($bookId, $fromDate, $toDate);
+
+        $this->assertTrue(count($sumList) === 3);
+        if (count($sumList) === 3) {
+            $this->assertSame(210, $sumList[$accountId1]['debit']);
+            $this->assertSame(0, $sumList[$accountId1]['credit']);
+            $this->assertSame(3000, $sumList[$accountId2]['debit']);
+            $this->assertSame(10, $sumList[$accountId2]['credit']);
+            $this->assertSame(0, $sumList[$accountId3]['debit']);
+            $this->assertSame(3200, $sumList[$accountId3]['credit']);
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function searchSlip_ReturnSlipEntries()
+    {
+        $slipId = (string) Str::uuid();
+        $accountId1 = (string) Str::uuid();
+        $accountId2 = (string) Str::uuid();
+        $amount = 2468;
+        $client = 'client6';
+        $outline = 'outline6';
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $slipEntryId = SlipEntry::factory()->create([
+            'slip_id'       => $slipId,
+            'debit'         => $accountId1,
+            'credit'        => $accountId2,
+            'amount'        => $amount,
+            'client'        => $client,
+            'outline'       => $outline,
+        ])->slip_entry_id;
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        $slipEntries_expected = [
+            [
+                'slip_entry_id' => $slipEntryId,
+                'slip_id'       => $slipId,
+                'debit'         => $accountId1,
+                'credit'        => $accountId2,
+                'amount'        => $amount,
+                'client'        => $client,
+                'outline'       => $outline,
+            ],
+        ];
+
+        $slipEntries_actual = $this->slipEntry->searchSlip($slipId);
+
+        $this->assertSame($slipEntries_expected, $slipEntries_actual);
     }
 
     /**

@@ -8,44 +8,6 @@ use App\Models\SlipEntry;
 class SlipEntryRepository implements SlipEntryRepositoryInterface
 {
     /**
-     * Search the book and calculate the sum of the slip entries between
-     * specified dates for each account's debit and credit.
-     *
-     * @param  string  $bookId
-     * @param  string  $fromDate
-     * @param  string  $toDate
-     * @return array<string, array<string, int>>
-     */
-    public function searchBookAndCalculateSum(string $bookId, string $fromDate, string $toDate): array
-    {
-        $debitSumList = $this->getSlipEntriesQuery($bookId, $fromDate, $toDate, [])
-            ->groupBy('debit')
-            ->selectRaw('debit, sum(amount) as debitsum')
-            ->get()->toArray();
-        $creditSumList = $this->getSlipEntriesQuery($bookId, $fromDate, $toDate, [])
-            ->groupBy('credit')
-            ->selectRaw('credit, sum(amount) as creditsum')
-            ->get()->toArray();
-        $list = [];
-        foreach ($debitSumList as $debit) {
-            $accountId = $debit['debit'];
-            $list[$accountId]['debit'] = intval($debit['debitsum']);
-            if (! array_key_exists('credit', $list[$accountId])) {
-                $list[$accountId]['credit'] = 0;
-            }
-        }
-        foreach ($creditSumList as $credit) {
-            $accountId = $credit['credit'];
-            $list[$accountId]['credit'] = intval($credit['creditsum']);
-            if (! array_key_exists('debit', $list[$accountId])) {
-                $list[$accountId]['debit'] = 0;
-            }
-        }
-
-        return $list;
-    }
-
-    /**
      * Create a slip entry to be bound in the slip.
      *
      * @param  string  $slipId
@@ -84,23 +46,6 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
         if (! is_null($slipEntry)) {
             $slipEntry->delete();
         }
-    }
-
-    /**
-     * Search the slip for its entries.
-     *
-     * @param  string  $slipId
-     * @return array<int, array<string, mixed>>
-     */
-    public function searchSlip(string $slipId): array
-    {
-        $list = SlipEntry::select('slip_entry_id', 'slip_id', 'debit', 'credit', 'amount', 'client', 'outline')
-            ->where('slip_id', $slipId)
-            ->orderBy('created_at')
-            ->orderBy('display_order')
-            ->get()->toArray();
-
-        return $list;
     }
 
     /**
@@ -166,6 +111,61 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
             ->orderBy('bk2_0_slip_entries.created_at')
             ->orderBy('bk2_0_slips.display_order')
             ->orderBy('bk2_0_slip_entries.display_order')
+            ->get()->toArray();
+
+        return $list;
+    }
+
+    /**
+     * Search the book and calculate the sum of the slip entries between
+     * specified dates for each account's debit and credit.
+     *
+     * @param  string  $bookId
+     * @param  string  $fromDate
+     * @param  string  $toDate
+     * @return array<string, array<string, int>>
+     */
+    public function searchBookAndCalculateSum(string $bookId, string $fromDate, string $toDate): array
+    {
+        $debitSumList = $this->getSlipEntriesQuery($bookId, $fromDate, $toDate, [])
+            ->groupBy('debit')
+            ->selectRaw('debit, sum(amount) as debitsum')
+            ->get()->toArray();
+        $creditSumList = $this->getSlipEntriesQuery($bookId, $fromDate, $toDate, [])
+            ->groupBy('credit')
+            ->selectRaw('credit, sum(amount) as creditsum')
+            ->get()->toArray();
+        $list = [];
+        foreach ($debitSumList as $debit) {
+            $accountId = $debit['debit'];
+            $list[$accountId]['debit'] = intval($debit['debitsum']);
+            if (! array_key_exists('credit', $list[$accountId])) {
+                $list[$accountId]['credit'] = 0;
+            }
+        }
+        foreach ($creditSumList as $credit) {
+            $accountId = $credit['credit'];
+            $list[$accountId]['credit'] = intval($credit['creditsum']);
+            if (! array_key_exists('debit', $list[$accountId])) {
+                $list[$accountId]['debit'] = 0;
+            }
+        }
+
+        return $list;
+    }
+
+    /**
+     * Search the slip for its entries.
+     *
+     * @param  string  $slipId
+     * @return array<int, array<string, mixed>>
+     */
+    public function searchSlip(string $slipId): array
+    {
+        $list = SlipEntry::select('slip_entry_id', 'slip_id', 'debit', 'credit', 'amount', 'client', 'outline')
+            ->where('slip_id', $slipId)
+            ->orderBy('created_at')
+            ->orderBy('display_order')
             ->get()->toArray();
 
         return $list;

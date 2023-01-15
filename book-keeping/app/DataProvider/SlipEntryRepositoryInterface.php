@@ -5,17 +5,6 @@ namespace App\DataProvider;
 interface SlipEntryRepositoryInterface
 {
     /**
-     * Search the book and calculate the sum of the slip entries between
-     * specified dates for each account's debit and credit.
-     *
-     * @param  string  $bookId
-     * @param  string  $fromDate
-     * @param  string  $toDate
-     * @return array<string, array<string, int>>
-     */
-    public function searchBookAndCalculateSum(string $bookId, string $fromDate, string $toDate): array;
-
-    /**
      * Create a slip entry to be bound in the slip.
      *
      * @param  string  $slipId
@@ -38,14 +27,6 @@ interface SlipEntryRepositoryInterface
     public function delete(string $slipEntryId): void;
 
     /**
-     * Search the slip for its entries.
-     *
-     * @param  string  $slipId
-     * @return array<int, array<string, mixed>>
-     */
-    public function searchSlip(string $slipId): array;
-
-    /**
      * Find the slip entry.
      *
      * @param  string  $slipEntryId
@@ -65,6 +46,25 @@ interface SlipEntryRepositoryInterface
      * @return array<int, array<string, mixed>>
      */
     public function searchBook(string $bookId, string $fromDate, string $toDate, array $condition): array;
+
+    /**
+     * Search the book and calculate the sum of the slip entries between
+     * specified dates for each account's debit and credit.
+     *
+     * @param  string  $bookId
+     * @param  string  $fromDate
+     * @param  string  $toDate
+     * @return array<string, array<string, int>>
+     */
+    public function searchBookAndCalculateSum(string $bookId, string $fromDate, string $toDate): array;
+
+    /**
+     * Search the slip for its entries.
+     *
+     * @param  string  $slipId
+     * @return array<int, array<string, mixed>>
+     */
+    public function searchSlip(string $slipId): array;
 
     /**
      * Update the slip entry.

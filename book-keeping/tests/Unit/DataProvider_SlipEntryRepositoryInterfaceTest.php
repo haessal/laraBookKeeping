@@ -13,20 +13,6 @@ abstract class DataProvider_SlipEntryRepositoryInterfaceTest extends TestCase
     /**
      * @test
      */
-    public function searchBookAndCalculateSum_ReturnValueTypeIsArray()
-    {
-        $fromDate = '2019-08-01';
-        $toDate = '2019-08-31';
-        $bookId = (string) Str::uuid();
-
-        $sumList = $this->slipEntry->searchBookAndCalculateSum($bookId, $fromDate, $toDate);
-
-        $this->assertTrue(is_array($sumList));
-    }
-
-    /**
-     * @test
-     */
     public function create_ReturnValueTypeIsString()
     {
         $slipId = (string) Str::uuid();
@@ -61,18 +47,6 @@ abstract class DataProvider_SlipEntryRepositoryInterfaceTest extends TestCase
     /**
      * @test
      */
-    public function searchSlip_ReturnValueTypeIsArray()
-    {
-        $slipId = (string) Str::uuid();
-
-        $slipEntries = $this->slipEntry->searchSlip($slipId);
-
-        $this->assertIsArray($slipEntries);
-    }
-
-    /**
-     * @test
-     */
     public function findById_ReturnValueTypeIsArrayOrNull()
     {
         $slipEntryId = (string) Str::uuid();
@@ -99,6 +73,32 @@ abstract class DataProvider_SlipEntryRepositoryInterfaceTest extends TestCase
         $slipEntries = $this->slipEntry->searchBook($bookId, $fromDate, $toDate, []);
 
         $this->assertTrue(is_array($slipEntries));
+    }
+
+    /**
+     * @test
+     */
+    public function searchBookAndCalculateSum_ReturnValueTypeIsArray()
+    {
+        $fromDate = '2019-08-01';
+        $toDate = '2019-08-31';
+        $bookId = (string) Str::uuid();
+
+        $sumList = $this->slipEntry->searchBookAndCalculateSum($bookId, $fromDate, $toDate);
+
+        $this->assertTrue(is_array($sumList));
+    }
+
+    /**
+     * @test
+     */
+    public function searchSlip_ReturnValueTypeIsArray()
+    {
+        $slipId = (string) Str::uuid();
+
+        $slipEntries = $this->slipEntry->searchSlip($slipId);
+
+        $this->assertIsArray($slipEntries);
     }
 
     /**
