@@ -18,11 +18,11 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
      */
     public function searchBookAndCalculateSum(string $bookId, string $fromDate, string $toDate): array
     {
-        $debitSumList = $this->getSlipEntriesQuery($fromDate, $toDate, [], $bookId)
+        $debitSumList = $this->getSlipEntriesQuery($bookId, $fromDate, $toDate, [])
             ->groupBy('debit')
             ->selectRaw('debit, sum(amount) as debitsum')
             ->get()->toArray();
-        $creditSumList = $this->getSlipEntriesQuery($fromDate, $toDate, [], $bookId)
+        $creditSumList = $this->getSlipEntriesQuery($bookId, $fromDate, $toDate, [])
             ->groupBy('credit')
             ->selectRaw('credit, sum(amount) as creditsum')
             ->get()->toArray();
@@ -139,17 +139,17 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     }
 
     /**
-     * Search the book for the slip entries between specified date.
+     * Search the book for the slip entries between specified dates.
      *
      * @param  string  $bookId
      * @param  string  $fromDate
      * @param  string  $toDate
-     * @param  array  $condition
+     * @param  array<string, mixed>  $condition
      * @return array<int, array<string, mixed>>
      */
     public function searchBook(string $bookId, string $fromDate, string $toDate, array $condition): array
     {
-        $list = $this->getSlipEntriesQuery($fromDate, $toDate, $condition, $bookId)
+        $list = $this->getSlipEntriesQuery($bookId, $fromDate, $toDate, $condition)
             ->select(
                 'bk2_0_slips.slip_id',
                 'date',
@@ -202,15 +202,15 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     }
 
     /**
-     * Query to get slip entries between specified date.
+     * Query to get slip entries between specified dates.
      *
+     * @param  string  $bookId
      * @param  string  $fromDate
      * @param  string  $toDate
-     * @param  array  $condition
-     * @param  string  $bookId
+     * @param  array<string, mixed>  $condition
      * @return \Illuminate\Database\Query\Builder
      */
-    private function getSlipEntriesQuery(string $fromDate, string $toDate, array $condition, string $bookId)
+    private function getSlipEntriesQuery(string $bookId, string $fromDate, string $toDate, array $condition)
     {
         $debit = array_key_exists('debit', $condition) ? $condition['debit'] : null;
         $credit = array_key_exists('credit', $condition) ? $condition['credit'] : null;

@@ -56,12 +56,12 @@ interface SlipEntryRepositoryInterface
     public function findById(string $slipEntryId, string $bookId, bool $draftInclude): ?array;
 
     /**
-     * Search the book for the slip entries between specified date.
+     * Search the book for the slip entries between specified dates.
      *
      * @param  string  $bookId
      * @param  string  $fromDate
      * @param  string  $toDate
-     * @param  array  $condition
+     * @param  array<string, mixed>  $condition
      * @return array<int, array<string, mixed>>
      */
     public function searchBook(string $bookId, string $fromDate, string $toDate, array $condition): array;
