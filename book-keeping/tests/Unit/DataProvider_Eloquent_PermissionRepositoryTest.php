@@ -47,6 +47,40 @@ class DataProvider_Eloquent_PermissionRepositoryTest extends DataProvider_Permis
     /**
      * @test
      */
+    public function findAccessibleBooks_ReturnedArrayHasKeysAsBookList()
+    {
+        $userId = 31;
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $bookId = Book::factory()->create([
+            'book_name' => 'book_name31',
+        ])->book_id;
+        $permissionId = Permission::factory()->create([
+            'permitted_user' => $userId,
+            'readable_book'  => $bookId,
+            'modifiable'     => true,
+            'is_owner'       => true,
+            'is_default'     => true,
+        ])->permission_id;
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        $bookList = $this->permission->findAccessibleBooks($userId);
+
+        $this->assertFalse(count($bookList) === 0);
+        if (! (count($bookList) === 0)) {
+            $this->assertSame([
+                'book_id',
+                'book_name',
+                'modifiable',
+                'is_owner',
+                'is_default',
+                'created_at',
+            ], array_keys($bookList[0]));
+        }
+    }
+
+    /**
+     * @test
+     */
     public function findDefaultBook_ReturnBookIdOfDefaultBook()
     {
         $userId = 21;
@@ -93,39 +127,5 @@ class DataProvider_Eloquent_PermissionRepositoryTest extends DataProvider_Permis
         $user_actual = $this->permission->findOwnerOfBook($bookId);
 
         $this->assertSame($userName_expected, $user_actual['name']);
-    }
-
-    /**
-     * @test
-     */
-    public function findAccessibleBooks_ReturnedArrayHasKeysAsBookList()
-    {
-        $userId = 31;
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        $bookId = Book::factory()->create([
-            'book_name' => 'book_name31',
-        ])->book_id;
-        $permissionId = Permission::factory()->create([
-            'permitted_user' => $userId,
-            'readable_book'  => $bookId,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => true,
-        ])->permission_id;
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-
-        $bookList = $this->permission->findAccessibleBooks($userId);
-
-        $this->assertFalse(count($bookList) === 0);
-        if (! (count($bookList) === 0)) {
-            $this->assertSame([
-                'book_id',
-                'book_name',
-                'modifiable',
-                'is_owner',
-                'is_default',
-                'created_at',
-            ], array_keys($bookList[0]));
-        }
     }
 }

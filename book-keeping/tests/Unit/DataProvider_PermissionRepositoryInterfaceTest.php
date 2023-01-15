@@ -28,6 +28,18 @@ abstract class DataProvider_PermissionRepositoryInterfaceTest extends TestCase
     /**
      * @test
      */
+    public function findAccessibleBooks_ReturnValueTypeIsArray()
+    {
+        $userId = 30;
+
+        $bookList = $this->permission->findAccessibleBooks($userId);
+
+        $this->assertTrue(is_array($bookList));
+    }
+
+    /**
+     * @test
+     */
     public function findDefaultBook_ReturnValueTypeIsStringOrNull()
     {
         $userId = 20;
@@ -55,17 +67,5 @@ abstract class DataProvider_PermissionRepositoryInterfaceTest extends TestCase
         } else {
             $this->assertTrue(is_int($userId));
         }
-    }
-
-    /**
-     * @test
-     */
-    public function findAccessibleBooks_ReturnValueTypeIsArray()
-    {
-        $userId = 30;
-
-        $bookList = $this->permission->findAccessibleBooks($userId);
-
-        $this->assertTrue(is_array($bookList));
     }
 }
