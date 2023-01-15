@@ -8,9 +8,9 @@ interface SlipEntryRepositoryInterface
      * Search the book and calculate the sum of the slip entries between
      * specified dates for each account's debit and credit.
      *
+     * @param  string  $bookId
      * @param  string  $fromDate
      * @param  string  $toDate
-     * @param  string  $bookId
      * @return array<string, array<string, int>>
      */
     public function searchBookAndCalculateSum(string $bookId, string $fromDate, string $toDate): array;
@@ -56,22 +56,22 @@ interface SlipEntryRepositoryInterface
     public function findById(string $slipEntryId, string $bookId, bool $draftInclude): ?array;
 
     /**
-     * Search slip entries between specified date.
+     * Search the book for the slip entries between specified date.
      *
+     * @param  string  $bookId
      * @param  string  $fromDate
      * @param  string  $toDate
      * @param  array  $condition
-     * @param  string  $bookId
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
-    public function searchSlipEntries(string $fromDate, string $toDate, array $condition, string $bookId): array;
+    public function searchBook(string $bookId, string $fromDate, string $toDate, array $condition): array;
 
     /**
-     * Update the specified slip entry.
+     * Update the slip entry.
      *
      * @param  string  $slipEntryId
-     * @param  array  $newData
+     * @param  array<string, mixed>  $newData
      * @return void
      */
-    public function update(string $slipEntryId, array $newData);
+    public function update(string $slipEntryId, array $newData): void;
 }

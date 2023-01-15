@@ -274,9 +274,9 @@ class Service_SlipServiceTest extends TestCase
         $slipMock = Mockery::mock(SlipRepositoryInterface::class);
         /** @var \App\DataProvider\SlipEntryRepositoryInterface|\Mockery\MockInterface $slipEntryMock */
         $slipEntryMock = Mockery::mock(SlipEntryRepositoryInterface::class);
-        $slipEntryMock->shouldReceive('searchSlipEntries')
+        $slipEntryMock->shouldReceive('searchBook')
             ->once()
-            ->with($fromDate, $toDate, [], $bookId)
+            ->with($bookId, $fromDate, $toDate, [])
             ->andReturn($slipEntries_expected);
 
         $slip = new SlipService($slipMock, $slipEntryMock);

@@ -268,7 +268,7 @@ class DataProvider_Eloquent_SlipEntryRepositoryTest extends DataProvider_SlipEnt
     /**
      * @test
      */
-    public function searchSlipEntries_ReturnArrayWithSpecifiedCredit()
+    public function searchBook_ReturnArrayWithSpecifiedCredit()
     {
         $fromDate = '2019-01-01';
         $toDate = '2019-01-31';
@@ -360,7 +360,7 @@ class DataProvider_Eloquent_SlipEntryRepositoryTest extends DataProvider_SlipEnt
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $condition = ['credit' => $accountId3];
 
-        $slipEntries = $this->slipEntry->searchSlipEntries($fromDate, $toDate, $condition, $bookId);
+        $slipEntries = $this->slipEntry->searchBook($bookId, $fromDate, $toDate, $condition);
 
         $this->assertSame(4, count($slipEntries));
     }
@@ -368,7 +368,7 @@ class DataProvider_Eloquent_SlipEntryRepositoryTest extends DataProvider_SlipEnt
     /**
      * @test
      */
-    public function searchSlipEntries_ReturnArrayWithSpecifiedDebit()
+    public function searchBook_ReturnArrayWithSpecifiedDebit()
     {
         $fromDate = '2019-02-01';
         $toDate = '2019-02-31';
@@ -460,7 +460,7 @@ class DataProvider_Eloquent_SlipEntryRepositoryTest extends DataProvider_SlipEnt
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $condition = ['debit' => $accountId1];
 
-        $slipEntries = $this->slipEntry->searchSlipEntries($fromDate, $toDate, $condition, $bookId);
+        $slipEntries = $this->slipEntry->searchBook($bookId, $fromDate, $toDate, $condition);
 
         $this->assertSame(2, count($slipEntries));
     }
@@ -468,7 +468,7 @@ class DataProvider_Eloquent_SlipEntryRepositoryTest extends DataProvider_SlipEnt
     /**
      * @test
      */
-    public function searchSlipEntries_ReturnArrayWithSpecifiedDebitAndCredit()
+    public function searchBook_ReturnArrayWithSpecifiedDebitAndCredit()
     {
         $fromDate = '2019-03-01';
         $toDate = '2019-03-31';
@@ -560,7 +560,7 @@ class DataProvider_Eloquent_SlipEntryRepositoryTest extends DataProvider_SlipEnt
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $condition = ['debit' => $accountId1, 'credit' => $accountId3, 'and_or' => 'and'];
 
-        $slipEntries = $this->slipEntry->searchSlipEntries($fromDate, $toDate, $condition, $bookId);
+        $slipEntries = $this->slipEntry->searchBook($bookId, $fromDate, $toDate, $condition);
 
         $this->assertSame(1, count($slipEntries));
     }
@@ -568,7 +568,7 @@ class DataProvider_Eloquent_SlipEntryRepositoryTest extends DataProvider_SlipEnt
     /**
      * @test
      */
-    public function searchSlipEntries_ReturnArrayWithSpecifiedDebitOrCredit()
+    public function searchBook_ReturnArrayWithSpecifiedDebitOrCredit()
     {
         $fromDate = '2019-04-01';
         $toDate = '2019-04-31';
@@ -660,7 +660,7 @@ class DataProvider_Eloquent_SlipEntryRepositoryTest extends DataProvider_SlipEnt
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $condition = ['debit' => $accountId1, 'credit' => $accountId3, 'and_or' => 'or'];
 
-        $slipEntries = $this->slipEntry->searchSlipEntries($fromDate, $toDate, $condition, $bookId);
+        $slipEntries = $this->slipEntry->searchBook($bookId, $fromDate, $toDate, $condition);
 
         $this->assertSame(5, count($slipEntries));
     }
@@ -668,7 +668,7 @@ class DataProvider_Eloquent_SlipEntryRepositoryTest extends DataProvider_SlipEnt
     /**
      * @test
      */
-    public function searchSlipEntries_ReturnArrayWithSpecifiedKeyword()
+    public function searchBook_ReturnArrayWithSpecifiedKeyword()
     {
         $fromDate = '2019-05-01';
         $toDate = '2019-05-31';
@@ -760,7 +760,7 @@ class DataProvider_Eloquent_SlipEntryRepositoryTest extends DataProvider_SlipEnt
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $condition = ['keyword' => $keyword];
 
-        $slipEntries = $this->slipEntry->searchSlipEntries($fromDate, $toDate, $condition, $bookId);
+        $slipEntries = $this->slipEntry->searchBook($bookId, $fromDate, $toDate, $condition);
 
         $this->assertSame(3, count($slipEntries));
     }
@@ -768,7 +768,7 @@ class DataProvider_Eloquent_SlipEntryRepositoryTest extends DataProvider_SlipEnt
     /**
      * @test
      */
-    public function searchSlipEntries_ReturnedArrayHasKeysAsSlipEntry()
+    public function searchBook_ReturnedArrayHasKeysAsSlipEntry()
     {
         $fromDate = '2019-09-15';
         $toDate = '2019-09-30';
@@ -800,7 +800,7 @@ class DataProvider_Eloquent_SlipEntryRepositoryTest extends DataProvider_SlipEnt
         ])->slip_entry_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-        $slipEntries = $this->slipEntry->searchSlipEntries($fromDate, $toDate, [], $bookId);
+        $slipEntries = $this->slipEntry->searchBook($bookId, $fromDate, $toDate, []);
 
         $this->assertFalse(count($slipEntries) === 0);
         if (! (count($slipEntries) === 0)) {

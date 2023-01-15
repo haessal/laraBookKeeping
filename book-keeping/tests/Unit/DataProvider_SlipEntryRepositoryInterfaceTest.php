@@ -90,13 +90,13 @@ abstract class DataProvider_SlipEntryRepositoryInterfaceTest extends TestCase
     /**
      * @test
      */
-    public function searchSlipEntries_ReturnValueTypeIsArray()
+    public function searchBook_ReturnValueTypeIsArray()
     {
         $fromDate = '2019-09-15';
         $toDate = '2019-09-30';
         $bookId = (string) Str::uuid();
 
-        $slipEntries = $this->slipEntry->searchSlipEntries($fromDate, $toDate, [], $bookId);
+        $slipEntries = $this->slipEntry->searchBook($bookId, $fromDate, $toDate, []);
 
         $this->assertTrue(is_array($slipEntries));
     }

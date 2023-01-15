@@ -144,7 +144,7 @@ class SlipService
      */
     public function retrieveSlipEntries(string $fromDate, string $toDate, array $condition, string $bookId): array
     {
-        return $this->slipEntry->searchSlipEntries($fromDate, $toDate, $condition, $bookId);
+        return $this->slipEntry->searchBook($bookId, $fromDate, $toDate, $condition);
     }
 
     /**
