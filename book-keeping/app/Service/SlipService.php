@@ -155,7 +155,7 @@ class SlipService
      */
     public function retrieveSlipEntriesBoundTo(string $slipId): array
     {
-        return $this->slipEntry->findAllBySlipId($slipId);
+        return $this->slipEntry->searchSlip($slipId);
     }
 
     /**

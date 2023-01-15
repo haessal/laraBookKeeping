@@ -8,6 +8,8 @@ use Tests\TestCase;
 
 abstract class DataProvider_SlipEntryRepositoryInterfaceTest extends TestCase
 {
+    protected $slipEntry;
+
     /**
      * @test
      */
@@ -59,11 +61,11 @@ abstract class DataProvider_SlipEntryRepositoryInterfaceTest extends TestCase
     /**
      * @test
      */
-    public function findAllBySlipId_ReturnValueTypeIsArray()
+    public function searchSlip_ReturnValueTypeIsArray()
     {
         $slipId = (string) Str::uuid();
 
-        $slipEntries = $this->slipEntry->findAllBySlipId($slipId);
+        $slipEntries = $this->slipEntry->searchSlip($slipId);
 
         $this->assertIsArray($slipEntries);
     }

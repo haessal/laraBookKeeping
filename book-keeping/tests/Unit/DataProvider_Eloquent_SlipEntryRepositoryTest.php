@@ -149,7 +149,7 @@ class DataProvider_Eloquent_SlipEntryRepositoryTest extends DataProvider_SlipEnt
     /**
      * @test
      */
-    public function findAllBySlipId_ReturnSlipEntries()
+    public function searchSlip_ReturnSlipEntries()
     {
         $slipId = (string) Str::uuid();
         $accountId1 = (string) Str::uuid();
@@ -179,7 +179,7 @@ class DataProvider_Eloquent_SlipEntryRepositoryTest extends DataProvider_SlipEnt
             ],
         ];
 
-        $slipEntries_actual = $this->slipEntry->findAllBySlipId($slipId);
+        $slipEntries_actual = $this->slipEntry->searchSlip($slipId);
 
         $this->assertSame($slipEntries_expected, $slipEntries_actual);
     }

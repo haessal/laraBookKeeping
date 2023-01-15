@@ -46,7 +46,7 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     }
 
     /**
-     * Create new slip entry.
+     * Create a slip entry to be bound in the slip.
      *
      * @param  string  $slipId
      * @param  string  $debit
@@ -54,8 +54,8 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
      * @param  int  $amount
      * @param  string  $client
      * @param  string  $outline
-     * @param  int  $displayOrder
-     * @return string $slipEntryId
+     * @param  int|null  $displayOrder
+     * @return string
      */
     public function create(string $slipId, string $debit, string $credit, int $amount, string $client, string $outline, ?int $displayOrder): string
     {
@@ -73,12 +73,12 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     }
 
     /**
-     * Delete the specified slip entry.
+     * Delete the slip entry.
      *
      * @param  string  $slipEntryId
      * @return void
      */
-    public function delete(string $slipEntryId)
+    public function delete(string $slipEntryId): void
     {
         $slipEntry = SlipEntry::find($slipEntryId);
         if (! is_null($slipEntry)) {
@@ -87,12 +87,12 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     }
 
     /**
-     * Find the slip entries that belongs to the specified slip.
+     * Search the slip for its entries.
      *
      * @param  string  $slipId
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
-    public function findAllBySlipId(string $slipId): array
+    public function searchSlip(string $slipId): array
     {
         $list = SlipEntry::select('slip_entry_id', 'slip_id', 'debit', 'credit', 'amount', 'client', 'outline')
             ->where('slip_id', $slipId)
@@ -104,12 +104,12 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     }
 
     /**
-     * Find slip entry.
+     * Find the slip entry.
      *
      * @param  string  $slipEntryId
      * @param  string  $bookId
      * @param  bool  $draftInclude
-     * @return array | null
+     * @return array<string, mixed>|null
      */
     public function findById(string $slipEntryId, string $bookId, bool $draftInclude): ?array
     {
