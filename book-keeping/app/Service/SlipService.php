@@ -107,7 +107,7 @@ class SlipService
      */
     public function retrieveAmountFlows(string $fromDate, string $toDate, string $bookId): array
     {
-        return $this->slipEntry->calculateSum($fromDate, $toDate, $bookId);
+        return $this->slipEntry->searchBookAndCalculateSum($bookId, $fromDate, $toDate);
     }
 
     /**

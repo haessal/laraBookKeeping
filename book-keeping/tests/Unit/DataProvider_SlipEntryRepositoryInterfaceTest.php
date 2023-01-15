@@ -11,13 +11,13 @@ abstract class DataProvider_SlipEntryRepositoryInterfaceTest extends TestCase
     /**
      * @test
      */
-    public function calculateSum_ReturnValueTypeIsArray()
+    public function searchBookAndCalculateSum_ReturnValueTypeIsArray()
     {
         $fromDate = '2019-08-01';
         $toDate = '2019-08-31';
         $bookId = (string) Str::uuid();
 
-        $sumList = $this->slipEntry->calculateSum($fromDate, $toDate, $bookId);
+        $sumList = $this->slipEntry->searchBookAndCalculateSum($bookId, $fromDate, $toDate);
 
         $this->assertTrue(is_array($sumList));
     }

@@ -184,9 +184,9 @@ class Service_SlipServiceTest extends TestCase
         $slipMock = Mockery::mock(SlipRepositoryInterface::class);
         /** @var \App\DataProvider\SlipEntryRepositoryInterface|\Mockery\MockInterface $slipEntryMock */
         $slipEntryMock = Mockery::mock(SlipEntryRepositoryInterface::class);
-        $slipEntryMock->shouldReceive('calculateSum')
+        $slipEntryMock->shouldReceive('searchBookAndCalculateSum')
             ->once()
-            ->with($fromDate, $toDate, $bookId)
+            ->with($bookId, $fromDate, $toDate)
             ->andReturn($amountFlows_expected);
 
         $slip = new SlipService($slipMock, $slipEntryMock);

@@ -5,14 +5,15 @@ namespace App\DataProvider;
 interface SlipEntryRepositoryInterface
 {
     /**
-     * Calculate the sum of debit and credit for each account about slip entries between the specified date.
+     * Search the book and calculate the sum of the slip entries between
+     * specified dates for each account's debit and credit.
      *
      * @param  string  $fromDate
      * @param  string  $toDate
      * @param  string  $bookId
-     * @return array
+     * @return array<string, array<string, int>>
      */
-    public function calculateSum(string $fromDate, string $toDate, string $bookId): array;
+    public function searchBookAndCalculateSum(string $bookId, string $fromDate, string $toDate): array;
 
     /**
      * Create new slip entry.

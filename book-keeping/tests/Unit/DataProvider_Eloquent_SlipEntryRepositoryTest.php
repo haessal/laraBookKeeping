@@ -24,7 +24,7 @@ class DataProvider_Eloquent_SlipEntryRepositoryTest extends DataProvider_SlipEnt
     /**
      * @test
      */
-    public function calculateSum_ReturnPairsOfDebitAndCredit()
+    public function searchBookAndCalculateSum_ReturnPairsOfDebitAndCredit()
     {
         $fromDate = '2019-08-01';
         $toDate = '2019-08-31';
@@ -72,7 +72,7 @@ class DataProvider_Eloquent_SlipEntryRepositoryTest extends DataProvider_SlipEnt
         ])->slip_entry_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-        $sumList = $this->slipEntry->calculateSum($fromDate, $toDate, $bookId);
+        $sumList = $this->slipEntry->searchBookAndCalculateSum($bookId, $fromDate, $toDate);
 
         $this->assertTrue(count($sumList) === 3);
         if (count($sumList) === 3) {
