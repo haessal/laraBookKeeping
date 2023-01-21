@@ -8,17 +8,17 @@ use App\Models\Slip;
 class SlipRepository implements SlipRepositoryInterface
 {
     /**
-     * Create new slip.
+     * Create a slip to be bound in the book.
      *
      * @param  string  $bookId
      * @param  string  $outline
      * @param  string  $date
-     * @param  string  $memo
-     * @param  int  $displayOrder
+     * @param  string|null  $memo
+     * @param  int|null  $displayOrder
      * @param  bool  $isDraft
-     * @return string $slipId
+     * @return string
      */
-    public function create(string $bookId, string $outline, string $date, $memo, ?int $displayOrder, bool $isDraft): string
+    public function create(string $bookId, string $outline, string $date, ?string $memo, ?int $displayOrder, bool $isDraft): string
     {
         $slip = new Slip();
         $slip->book_id = $bookId;
@@ -33,12 +33,12 @@ class SlipRepository implements SlipRepositoryInterface
     }
 
     /**
-     * Delete the specified slip.
+     * Delete the slip.
      *
      * @param  string  $slipId
      * @return void
      */
-    public function delete(string $slipId)
+    public function delete(string $slipId): void
     {
         $slip = Slip::find($slipId);
         if (! is_null($slip)) {
@@ -47,27 +47,11 @@ class SlipRepository implements SlipRepositoryInterface
     }
 
     /**
-     * Find the draft slips that belongs to the specified book.
-     *
-     * @param  string  $bookId
-     * @return array
-     */
-    public function findAllDraftByBookId(string $bookId): array
-    {
-        $list = Slip::select('slip_id', 'date', 'slip_outline', 'slip_memo')
-            ->where('book_id', $bookId)
-            ->where('is_draft', true)
-            ->get()->toArray();
-
-        return $list;
-    }
-
-    /**
-     * Find a slip.
+     * Find the slip.
      *
      * @param  string  $slipId
      * @param  string  $bookId
-     * @return array|null
+     * @return array<string, string>|null
      */
     public function findById(string $slipId, string $bookId): ?array
     {
@@ -81,13 +65,29 @@ class SlipRepository implements SlipRepositoryInterface
     }
 
     /**
-     * Update the specified slip.
+     * Search the book for draft slips.
+     *
+     * @param  string  $bookId
+     * @return array<int, array<string, string>>
+     */
+    public function searchBookForDraft(string $bookId): array
+    {
+        $list = Slip::select('slip_id', 'date', 'slip_outline', 'slip_memo')
+            ->where('book_id', $bookId)
+            ->where('is_draft', true)
+            ->get()->toArray();
+
+        return $list;
+    }
+
+    /**
+     * Update the slip.
      *
      * @param  string  $slipId
-     * @param  array  $newData
+     * @param  array<string, string>  $newData
      * @return void
      */
-    public function update(string $slipId, array $newData)
+    public function update(string $slipId, array $newData): void
     {
         $slip = Slip::find($slipId);
         if (! is_null($slip)) {
@@ -105,12 +105,13 @@ class SlipRepository implements SlipRepositoryInterface
     }
 
     /**
-     * Update the flag which indicates that the slip is draft.
+     * Update the mark for indicating that the slip is a draft.
      *
      * @param  string  $slipId
      * @param  bool  $isDraft
+     * @return void
      */
-    public function updateIfDraft(string $slipId, bool $isDraft)
+    public function updateDraftMark(string $slipId, bool $isDraft): void
     {
         $slip = Slip::find($slipId);
         $slip->is_draft = $isDraft;
