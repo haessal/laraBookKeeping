@@ -84,7 +84,7 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     }
 
     /**
-     * Search the book for the slip entries between specified dates.
+     * Search the book for slip entries between specified dates.
      *
      * @param  string  $bookId
      * @param  string  $fromDate

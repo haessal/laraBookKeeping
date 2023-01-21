@@ -37,7 +37,7 @@ interface SlipEntryRepositoryInterface
     public function findById(string $slipEntryId, string $bookId, bool $draftInclude): ?array;
 
     /**
-     * Search the book for the slip entries between specified dates.
+     * Search the book for slip entries between specified dates.
      *
      * @param  string  $bookId
      * @param  string  $fromDate
