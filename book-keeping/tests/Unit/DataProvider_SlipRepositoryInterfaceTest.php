@@ -8,6 +8,8 @@ use Tests\TestCase;
 
 abstract class DataProvider_SlipRepositoryInterfaceTest extends TestCase
 {
+    protected $slip;
+
     /**
      * @test
      */
@@ -61,18 +63,6 @@ abstract class DataProvider_SlipRepositoryInterfaceTest extends TestCase
     /**
      * @test
      */
-    public function findAllDraftByBookId_ReturnValueTypeIsArray()
-    {
-        $bookId = (string) Str::uuid();
-
-        $slips = $this->slip->findAllDraftByBookId($bookId);
-
-        $this->assertIsArray($slips);
-    }
-
-    /**
-     * @test
-     */
     public function findById_ReturnValueTypeIsArrayOrNull()
     {
         $bookId = (string) Str::uuid();
@@ -85,6 +75,18 @@ abstract class DataProvider_SlipRepositoryInterfaceTest extends TestCase
         } else {
             $this->assertIsArray($slip);
         }
+    }
+
+    /**
+     * @test
+     */
+    public function searchBookForDraft_ReturnValueTypeIsArray()
+    {
+        $bookId = (string) Str::uuid();
+
+        $slips = $this->slip->searchBookForDraft($bookId);
+
+        $this->assertIsArray($slips);
     }
 
     /**

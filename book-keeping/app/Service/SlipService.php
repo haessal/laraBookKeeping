@@ -118,7 +118,7 @@ class SlipService
      */
     public function retrieveDraftSlips(string $bookId): array
     {
-        return $this->slip->findAllDraftByBookId($bookId);
+        return $this->slip->searchBookForDraft($bookId);
     }
 
     /**
@@ -178,7 +178,7 @@ class SlipService
      */
     public function submitSlip(string $slipId)
     {
-        $this->slip->updateIfDraft($slipId, false);
+        $this->slip->updateDraftMark($slipId, false);
     }
 
     /**

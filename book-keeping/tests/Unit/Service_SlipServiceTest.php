@@ -207,7 +207,7 @@ class Service_SlipServiceTest extends TestCase
         ];
         /** @var \App\DataProvider\SlipRepositoryInterface|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipRepositoryInterface::class);
-        $slipMock->shouldReceive('findAllDraftByBookId')
+        $slipMock->shouldReceive('searchBookForDraft')
             ->once()
             ->with($bookId)
             ->andReturn($slips_expected);
@@ -389,7 +389,7 @@ class Service_SlipServiceTest extends TestCase
         $slipId = (string) Str::uuid();
         /** @var \App\DataProvider\SlipRepositoryInterface|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipRepositoryInterface::class);
-        $slipMock->shouldReceive('updateIfDraft')
+        $slipMock->shouldReceive('updateDraftMark')
             ->once()
             ->with($slipId, false);
         /** @var \App\DataProvider\SlipEntryRepositoryInterface|\Mockery\MockInterface $slipEntryMock */

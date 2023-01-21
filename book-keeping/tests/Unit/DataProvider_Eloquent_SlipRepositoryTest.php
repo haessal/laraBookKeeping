@@ -80,33 +80,6 @@ class DataProvider_Eloquent_SlipRepositoryTest extends DataProvider_SlipReposito
     /**
      * @test
      */
-    public function findAllDraftByBookId_ReturnSlips()
-    {
-        $bookId = (string) Str::uuid();
-        $outline = 'outline5';
-        $memo = 'memo5';
-        $date = '2019-10-03';
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        $slipId = Slip::factory()->create([
-            'book_id'       => $bookId,
-            'slip_outline'  => $outline,
-            'slip_memo'     => $memo,
-            'date'          => $date,
-            'is_draft'      => true,
-        ])->slip_id;
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-        $slips_expected = [
-            ['slip_id' => $slipId, 'date' => $date, 'slip_outline' => $outline, 'slip_memo' => $memo],
-        ];
-
-        $slips_actual = $this->slip->findAllDraftByBookId($bookId);
-
-        $this->assertSame($slips_expected, $slips_actual);
-    }
-
-    /**
-     * @test
-     */
     public function findById_ReturnSlip()
     {
         $bookId = (string) Str::uuid();
@@ -127,6 +100,33 @@ class DataProvider_Eloquent_SlipRepositoryTest extends DataProvider_SlipReposito
         $slip_actual = $this->slip->findById($slipId, $bookId);
 
         $this->assertSame($slip_expected, $slip_actual);
+    }
+
+    /**
+     * @test
+     */
+    public function searchBookForDraft_ReturnSlips()
+    {
+        $bookId = (string) Str::uuid();
+        $outline = 'outline5';
+        $memo = 'memo5';
+        $date = '2019-10-03';
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $slipId = Slip::factory()->create([
+            'book_id'       => $bookId,
+            'slip_outline'  => $outline,
+            'slip_memo'     => $memo,
+            'date'          => $date,
+            'is_draft'      => true,
+        ])->slip_id;
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        $slips_expected = [
+            ['slip_id' => $slipId, 'date' => $date, 'slip_outline' => $outline, 'slip_memo' => $memo],
+        ];
+
+        $slips_actual = $this->slip->searchBookForDraft($bookId);
+
+        $this->assertSame($slips_expected, $slips_actual);
     }
 
     /**
@@ -171,7 +171,7 @@ class DataProvider_Eloquent_SlipRepositoryTest extends DataProvider_SlipReposito
     /**
      * @test
      */
-    public function updateIfDraft_IsDraftIsUpdated()
+    public function updateDraftMark_IsDraftIsUpdated()
     {
         $bookId = (string) Str::uuid();
         $outline = 'outline3';
@@ -189,7 +189,7 @@ class DataProvider_Eloquent_SlipRepositoryTest extends DataProvider_SlipReposito
         ])->slip_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-        $this->slip->updateIfDraft($slipId, $isDraft_updated);
+        $this->slip->updateDraftMark($slipId, $isDraft_updated);
 
         $this->assertDatabaseHas('bk2_0_slips', [
             'slip_id'       => $slipId,
