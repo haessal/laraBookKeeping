@@ -8,6 +8,8 @@ use Tests\TestCase;
 
 abstract class DataProvider_BudgetRepositoryInterfaceTest extends TestCase
 {
+    protected $budget;
+
     /**
      * @test
      */
