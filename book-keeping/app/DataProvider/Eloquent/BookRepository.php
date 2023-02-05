@@ -38,12 +38,13 @@ class BookRepository implements BookRepositoryInterface
     }
 
     /**
-     * Update the name.
+     * Update the name of the book.
      *
      * @param  string  $bookId
      * @param  string  $newName
+     * @return void
      */
-    public function updateName(string $bookId, string $newName)
+    public function updateName(string $bookId, string $newName): void
     {
         $book = Book::find($bookId);
         $book->book_name = $newName;

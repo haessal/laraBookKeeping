@@ -21,10 +21,11 @@ interface BookRepositoryInterface
     public function findById(string $bookId): ?array;
 
     /**
-     * Update the name.
+     * Update the name of the book.
      *
      * @param  string  $bookId
      * @param  string  $newName
+     * @return void
      */
-    public function updateName(string $bookId, string $newName);
+    public function updateName(string $bookId, string $newName): void;
 }

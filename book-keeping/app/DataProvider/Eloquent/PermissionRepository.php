@@ -9,11 +9,7 @@ use App\Models\User;
 class PermissionRepository implements PermissionRepositoryInterface
 {
     /**
-     * Create a permission for the user to modify the book.(TODO: Update the description)
-     *
-     * If the permission is the first one for the user, the book is mark as the
-     * default book for the user. And If no user has permission to access the
-     * book yet, the user is registered as the owner of the book.
+     * Create a permission for the user to access the book.
      *
      * @param  int  $userId
      * @param  string  $bookId
@@ -36,30 +32,13 @@ class PermissionRepository implements PermissionRepositoryInterface
     }
 
     /**
-     * Find the books that the user can access.
-     *
-     * @param  int  $userId
-     * @return array<int, array<string, string>>
-     */
-    public function findAccessibleBooks(int $userId): array
-    {
-        $list = Permission::select('book_id', 'book_name', 'modifiable', 'is_owner', 'is_default', 'bk2_0_books.created_at')
-            ->join('bk2_0_books', 'bk2_0_books.book_id', '=', 'bk2_0_permissions.readable_book')
-            ->where('permitted_user', $userId)
-            ->orderBy('bk2_0_books.created_at')
-            ->get()->toArray();
-
-        return $list;
-    }
-
-    /**
-     * Delete the permission.(TODO: update the description)
+     * Delete the user's permission to access the book.
      *
      * @param  int  $userId
      * @param  string  $bookId
      * @return void
      */
-    public function delete(int $userId, string $bookId)
+    public function delete(int $userId, string $bookId): void
     {
         $permission = Permission::where('permitted_user', $userId)
             ->where('readable_book', $bookId)
@@ -67,6 +46,48 @@ class PermissionRepository implements PermissionRepositoryInterface
         if (! is_null($permission)) {
             $permission->forceDelete();
         }
+    }
+
+    /**
+     * Find the books that the user can access.
+     *
+     * @param  int  $userId
+     * @param  string|null  $bookId
+     * @return array<int, array<string, string>>
+     */
+    public function findAccessibleBooks(int $userId, string $bookId = null): array
+    {
+        if (! empty($bookId)) {
+            $list = Permission::select('book_id', 'book_name', 'modifiable', 'is_owner', 'is_default', 'bk2_0_books.created_at')
+                ->join('bk2_0_books', 'bk2_0_books.book_id', '=', 'bk2_0_permissions.readable_book')
+                ->where('permitted_user', $userId)
+                ->where('book_id', $bookId)
+                ->orderBy('bk2_0_books.created_at')
+                ->get()->toArray();
+        } else {
+            $list = Permission::select('book_id', 'book_name', 'modifiable', 'is_owner', 'is_default', 'bk2_0_books.created_at')
+                ->join('bk2_0_books', 'bk2_0_books.book_id', '=', 'bk2_0_permissions.readable_book')
+                ->where('permitted_user', $userId)
+                ->orderBy('bk2_0_books.created_at')
+                ->get()->toArray();
+        }
+
+        return $list;
+    }
+
+    /**
+     * Find the permission to access the book.
+     *
+     * @param  string  $bookId
+     * @return array<int, array<string, mixed>>
+     */
+    public function findByBookId(string $bookId): array
+    {
+        $list = Permission::select('permitted_user', 'modifiable', 'is_owner', 'is_default')
+            ->where('readable_book', $bookId)
+            ->get()->toArray();
+
+        return $list;
     }
 
     /**
@@ -108,10 +129,10 @@ class PermissionRepository implements PermissionRepositoryInterface
     }
 
     /**
-     * Find user.(TODO: update the description and array type)
+     * Find the user.
      *
      * @param  int  $userId
-     * @return array|null
+     * @return array<string, string>|null
      */
     public function findUser(int $userId): ?array
     {
@@ -121,10 +142,10 @@ class PermissionRepository implements PermissionRepositoryInterface
     }
 
     /**
-     * Find user by name.(TODO: update the description and array type)
+     * Find the user by his/her name.
      *
      * @param  string  $name
-     * @return array|null
+     * @return array<string, string>|null
      */
     public function findUserByName(string $name): ?array
     {
@@ -134,55 +155,14 @@ class PermissionRepository implements PermissionRepositoryInterface
     }
 
     /**
-     * Search book list that the user can access.(TODO: merge with findAccessibleBooks)
+     * Update the mark for indicating that the book is default one for the user.
      *
      * @param  int  $userId
      * @param  string  $bookId
-     * @return array
+     * @param  bool  $isDefault
+     * @return void
      */
-    public function searchBookList(int $userId, string $bookId = null): array
-    {
-        if (! empty($bookId)) {
-            $list = Permission::select('book_id', 'book_name', 'modifiable', 'is_owner', 'is_default', 'bk2_0_books.created_at')
-                ->join('bk2_0_books', 'bk2_0_books.book_id', '=', 'bk2_0_permissions.readable_book')
-                ->where('permitted_user', $userId)
-                ->where('book_id', $bookId)
-                ->orderBy('bk2_0_books.created_at')
-                ->get()->toArray();
-        } else {
-            $list = Permission::select('book_id', 'book_name', 'modifiable', 'is_owner', 'is_default', 'bk2_0_books.created_at')
-                ->join('bk2_0_books', 'bk2_0_books.book_id', '=', 'bk2_0_permissions.readable_book')
-                ->where('permitted_user', $userId)
-                ->orderBy('bk2_0_books.created_at')
-                ->get()->toArray();
-        }
-
-        return $list;
-    }
-
-    /**
-     * Search permission list for the book.
-     *
-     * @param  string  $bookId
-     * @return array
-     */
-    public function searchPermissionList(string $bookId): array
-    {
-        $list = Permission::select('permitted_user', 'modifiable', 'is_owner', 'is_default')
-            ->where('readable_book', $bookId)
-            ->get()->toArray();
-
-        return $list;
-    }
-
-    /**
-     * Update the flag which indicates that the book is default one.
-     *
-     * @param  int  $userId
-     * @param  string  $bookId
-     * @param  int  $isDefault
-     */
-    public function updateBookIsDefault(int $userId, string $bookId, bool $isDefault)
+    public function updateDefaultBookMark(int $userId, string $bookId, bool $isDefault): void
     {
         $selected = Permission::select('permission_id')
             ->where('permitted_user', $userId)
@@ -194,31 +174,5 @@ class PermissionRepository implements PermissionRepositoryInterface
             $permission->is_default = $isDefault;
             $permission->save();
         }
-    }
-
-    /**
-     * Check if the book is registered.
-     *
-     * @param  string  $bookId
-     * @return bool
-     */
-    private function isRegisteredBook(string $bookId): bool
-    {
-        $count = Permission::where('readable_book', $bookId)->count();
-
-        return $count == 0 ? false : true;
-    }
-
-    /**
-     * Check if the user is registered.
-     *
-     * @param  int  $userId
-     * @return bool
-     */
-    private function isRegisteredUser(int $userId): bool
-    {
-        $count = Permission::where('permitted_user', $userId)->count();
-
-        return $count == 0 ? false : true;
     }
 }

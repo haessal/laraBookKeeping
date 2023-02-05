@@ -110,7 +110,7 @@ class BookService
      */
     public function retrieveBook(string $bookId, int $userId): ?array
     {
-        $booklist = $this->permission->searchBookList($userId, $bookId);
+        $booklist = $this->permission->findAccessibleBooks($userId, $bookId);
         if (count($booklist) == 1) {
             $book = $booklist[0];
         } else {
@@ -168,7 +168,7 @@ class BookService
     public function retrievePermissions(string $bookId): array
     {
         $permissions = [];
-        $permission_list = $this->permission->searchPermissionList($bookId);
+        $permission_list = $this->permission->findByBookId($bookId);
         foreach ($permission_list as $item) {
             $user = $this->permission->findUser($item['permitted_user']);
             $permissions[] = [
@@ -189,7 +189,7 @@ class BookService
      */
     public function updateIsDefault(string $bookId, int $userId, bool $isDefault)
     {
-        $this->permission->updateBookIsDefault($userId, $bookId, $isDefault);
+        $this->permission->updateDefaultBookMark($userId, $bookId, $isDefault);
     }
 
     /**
