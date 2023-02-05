@@ -20,9 +20,8 @@ class ShowStatementsActionHTML extends AuthenticatedBookKeepingAction
     /**
      * Create a new controller instance.
      *
-     * @param \App\Service\BookKeepingService                    $BookKeeping
-     * @param \App\Http\Responder\v1\ShowStatementsViewResponder $responder
-     *
+     * @param  \App\Service\BookKeepingService  $BookKeeping
+     * @param  \App\Http\Responder\v1\ShowStatementsViewResponder  $responder
      * @return void
      */
     public function __construct(BookKeepingService $BookKeeping, ShowStatementsViewResponder $responder)
@@ -34,8 +33,7 @@ class ShowStatementsActionHTML extends AuthenticatedBookKeepingAction
     /**
      * Handle the incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function __invoke(Request $request): Response
@@ -53,7 +51,7 @@ class ShowStatementsActionHTML extends AuthenticatedBookKeepingAction
 
         $context['beginning_date'] = $beginning_date;
         $context['end_date'] = $end_date;
-        if (!empty($beginning_date) && !empty($end_date) && $this->BookKeeping->validatePeriod($beginning_date, $end_date)) {
+        if (! empty($beginning_date) && ! empty($end_date) && $this->BookKeeping->validatePeriod($beginning_date, $end_date)) {
             $context['statements'] = $this->BookKeeping->retrieveStatements($beginning_date, $end_date);
             $end_date_of_previous_period = date('Y-m-d', strtotime($beginning_date) - 86400);
             $context['previous_balance_sheet'] = $this->BookKeeping->retrieveStatements('1970-01-01', $end_date_of_previous_period);

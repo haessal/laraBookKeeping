@@ -20,9 +20,8 @@ class ShowAccountsListActionHTML extends AuthenticatedBookKeepingAction
     /**
      * Create a new controller instance.
      *
-     * @param \App\Service\BookKeepingService                      $BookKeeping
-     * @param \App\Http\Responder\v1\ShowAccountsListViewResponder $responder
-     *
+     * @param  \App\Service\BookKeepingService  $BookKeeping
+     * @param  \App\Http\Responder\v1\ShowAccountsListViewResponder  $responder
      * @return void
      */
     public function __construct(BookKeepingService $BookKeeping, ShowAccountsListViewResponder $responder)
@@ -34,8 +33,7 @@ class ShowAccountsListActionHTML extends AuthenticatedBookKeepingAction
     /**
      * Handle the incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function __invoke(Request $request): Response

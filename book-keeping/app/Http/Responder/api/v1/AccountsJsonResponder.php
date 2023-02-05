@@ -10,8 +10,7 @@ class AccountsJsonResponder extends BaseJsonResponder
     /**
      * Respond with the Accounts JSON.
      *
-     * @param array $context
-     *
+     * @param  array  $context
      * @return Illuminate\Http\JsonResponse
      */
     public function response(array $context): JsonResponse
@@ -25,8 +24,7 @@ class AccountsJsonResponder extends BaseJsonResponder
     /**
      * Translate account list format for JSON.
      *
-     * @param array $accounts
-     *
+     * @param  array  $accounts
      * @return array
      */
     private function translateAccountsListFormat(array $accounts): array

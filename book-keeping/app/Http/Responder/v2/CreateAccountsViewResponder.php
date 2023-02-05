@@ -9,8 +9,7 @@ class CreateAccountsViewResponder extends BaseAccountsViewResponder
     /**
      * Respond the CreateAccountsView.
      *
-     * @param array $context
-     *
+     * @param  array  $context
      * @return Illuminate\Http\Response
      */
     public function response(array $context): Response
@@ -26,7 +25,7 @@ class CreateAccountsViewResponder extends BaseAccountsViewResponder
             true
         );
         $accounttype = ['asset' => null, 'liability' => null, 'expense' => null, 'revenue' => null];
-        if (!empty($context['accounttype'])) {
+        if (! empty($context['accounttype'])) {
             $accounttype[$context['accounttype']] = 'checked';
         }
         $this->response->setContent($this->view->make('bookkeeping.v2.pageaccountscreate', [

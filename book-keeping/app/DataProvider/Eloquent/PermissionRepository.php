@@ -9,9 +9,8 @@ class PermissionRepository implements PermissionRepositoryInterface
     /**
      * Create new permission.
      *
-     * @param int    $userId
-     * @param string $bookId
-     *
+     * @param  int  $userId
+     * @param  string  $bookId
      * @return string $permissionId
      */
     public function create(int $userId, string $bookId): string
@@ -32,8 +31,7 @@ class PermissionRepository implements PermissionRepositoryInterface
     /**
      * Find default book of the user.
      *
-     * @param int $userId
-     *
+     * @param  int  $userId
      * @return string | null
      */
     public function findDefaultBook(int $userId)
@@ -50,8 +48,7 @@ class PermissionRepository implements PermissionRepositoryInterface
     /**
      * Find owner of the book.
      *
-     * @param string $bookId
-     *
+     * @param  string  $bookId
      * @return int | null
      */
     public function findOwnerOfBook(string $bookId): ?int
@@ -67,8 +64,7 @@ class PermissionRepository implements PermissionRepositoryInterface
     /**
      * Search book list that the user can access.
      *
-     * @param int $userId
-     *
+     * @param  int  $userId
      * @return array
      */
     public function searchBookList(int $userId): array
@@ -85,8 +81,7 @@ class PermissionRepository implements PermissionRepositoryInterface
     /**
      * Check if the book is registerd.
      *
-     * @param string $bookId
-     *
+     * @param  string  $bookId
      * @return bool
      */
     private function isRegisteredBook(string $bookId): bool
@@ -99,8 +94,7 @@ class PermissionRepository implements PermissionRepositoryInterface
     /**
      * Check if the user is registerd.
      *
-     * @param int $userId
-     *
+     * @param  int  $userId
      * @return bool
      */
     private function isRegisteredUser(int $userId): bool

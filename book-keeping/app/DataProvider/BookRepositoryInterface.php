@@ -7,8 +7,7 @@ interface BookRepositoryInterface
     /**
      * Create new book and regist the user as its owner.
      *
-     * @param string $title
-     *
+     * @param  string  $title
      * @return string $bookId
      */
     public function create(string $title): string;
@@ -16,8 +15,7 @@ interface BookRepositoryInterface
     /**
      * Find book.
      *
-     * @param string $bookId
-     *
+     * @param  string  $bookId
      * @return array | null
      */
     public function findById(string $bookId): ?array;

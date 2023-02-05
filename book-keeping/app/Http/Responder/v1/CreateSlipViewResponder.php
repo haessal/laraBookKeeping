@@ -9,8 +9,7 @@ class CreateSlipViewResponder extends BaseViewResponder
     /**
      * Response the Form to create new Slip.
      *
-     * @param array $context
-     *
+     * @param  array  $context
      * @return Illuminate\Http\Response
      */
     public function response(array $context): Response
@@ -30,7 +29,7 @@ class CreateSlipViewResponder extends BaseViewResponder
             ]
         );
         $draftslip = [];
-        if (!empty($context['draftslip'])) {
+        if (! empty($context['draftslip'])) {
             $draftslip = $this->translateDraftSlipFormat($context['draftslip']);
         }
         $this->response->setContent($this->view->make('bookkeeping.v1.pageslip', [

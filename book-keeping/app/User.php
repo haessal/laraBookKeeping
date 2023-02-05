@@ -43,8 +43,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
     /**
      * Send the password reset notification.
      *
-     * @param string $token
-     *
+     * @param  string  $token
      * @return void
      */
     public function sendPasswordResetNotification($token)
@@ -64,8 +63,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
     /**
      * Get the Index (e-mail address or name) of user who password reset links are sent.
      *
-     * @param string $index_name
-     *
+     * @param  string  $index_name
      * @return string
      */
     public function getIndexForPasswordReset($index_name)

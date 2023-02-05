@@ -20,9 +20,8 @@ class UpdateAccountsGroupActionHtml extends AuthenticatedBookKeepingAction
     /**
      * Create a new controller instance.
      *
-     * @param \App\Service\BookKeepingService                         $BookKeeping
-     * @param \App\Http\Responder\v2\UpdateAccountsGroupViewResponder $responder
-     *
+     * @param  \App\Service\BookKeepingService  $BookKeeping
+     * @param  \App\Http\Responder\v2\UpdateAccountsGroupViewResponder  $responder
      * @return void
      */
     public function __construct(BookKeepingService $BookKeeping, UpdateAccountsGroupViewResponder $responder)
@@ -34,10 +33,9 @@ class UpdateAccountsGroupActionHtml extends AuthenticatedBookKeepingAction
     /**
      * Handle the incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $bookId
-     * @param string                   $accountsGroupId
-     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $bookId
+     * @param  string  $accountsGroupId
      * @return \Illuminate\Http\Response
      */
     public function __invoke(Request $request, string $bookId, string $accountsGroupId): Response

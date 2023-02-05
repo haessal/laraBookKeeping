@@ -20,13 +20,12 @@ class ExDatabaseTokenRepository extends DatabaseTokenRepository
     /**
      * Create a new token repository instance.
      *
-     * @param \Illuminate\Database\ConnectionInterface $connection
-     * @param \Illuminate\Contracts\Hashing\Hasher     $hasher
-     * @param string                                   $table
-     * @param string                                   $hashKey
-     * @param string                                   $index_name
-     * @param int                                      $expires
-     *
+     * @param  \Illuminate\Database\ConnectionInterface  $connection
+     * @param  \Illuminate\Contracts\Hashing\Hasher  $hasher
+     * @param  string  $table
+     * @param  string  $hashKey
+     * @param  string  $index_name
+     * @param  int  $expires
      * @return void
      */
     public function __construct(
@@ -48,8 +47,7 @@ class ExDatabaseTokenRepository extends DatabaseTokenRepository
     /**
      * Create a new token record.
      *
-     * @param Illuminate\Contracts\Auth\CanResetPassword $user
-     *
+     * @param  Illuminate\Contracts\Auth\CanResetPassword  $user
      * @return string
      */
     public function create(CanResetPasswordContract $user)
@@ -71,8 +69,7 @@ class ExDatabaseTokenRepository extends DatabaseTokenRepository
     /**
      * Delete all existing reset tokens from the database.
      *
-     * @param Illuminate\Contracts\Auth\CanResetPassword $user
-     *
+     * @param  Illuminate\Contracts\Auth\CanResetPassword  $user
      * @return int
      */
     protected function deleteExisting(CanResetPasswordContract $user)
@@ -83,9 +80,8 @@ class ExDatabaseTokenRepository extends DatabaseTokenRepository
     /**
      * Build the record payload for the table.
      *
-     * @param string $index
-     * @param string $token
-     *
+     * @param  string  $index
+     * @param  string  $token
      * @return array
      */
     protected function getPayload($index, $token)
@@ -96,9 +92,8 @@ class ExDatabaseTokenRepository extends DatabaseTokenRepository
     /**
      * Determine if a token record exists and is valid.
      *
-     * @param Illuminate\Contracts\Auth\CanResetPassword $user
-     * @param string                                     $token
-     *
+     * @param  Illuminate\Contracts\Auth\CanResetPassword  $user
+     * @param  string  $token
      * @return bool
      */
     public function exists(CanResetPasswordContract $user, $token)
@@ -109,7 +104,7 @@ class ExDatabaseTokenRepository extends DatabaseTokenRepository
         )->first();
 
         return $record &&
-               !$this->tokenExpired($record['created_at']) &&
+               ! $this->tokenExpired($record['created_at']) &&
                  $this->hasher->check($token, $record['token']);
     }
 }

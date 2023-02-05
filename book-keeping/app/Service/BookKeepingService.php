@@ -45,10 +45,10 @@ class BookKeepingService
     /**
      * Create a new BookKeepingService instance.
      *
-     * @param \App\Service\BookService    $book
-     * @param \App\Service\AccountService $account
-     * @param \App\Service\BudgetService  $budget
-     * @param \App\Service\SlipService    $slip
+     * @param  \App\Service\BookService  $book
+     * @param  \App\Service\AccountService  $account
+     * @param  \App\Service\BudgetService  $budget
+     * @param  \App\Service\SlipService  $slip
      */
     public function __construct(BookService $book, AccountService $account, BudgetService $budget, SlipService $slip)
     {
@@ -61,11 +61,10 @@ class BookKeepingService
     /**
      * Create a new account.
      *
-     * @param string $accountGroupId
-     * @param string $title
-     * @param string $description
-     * @param string $bookId
-     *
+     * @param  string  $accountGroupId
+     * @param  string  $title
+     * @param  string  $description
+     * @param  string  $bookId
      * @return string
      */
     public function createAccount(string $accountGroupId, string $title, string $description, string $bookId): string
@@ -78,10 +77,9 @@ class BookKeepingService
     /**
      * Create a new account group.
      *
-     * @param string $accountType
-     * @param string $title
-     * @param string $bookId
-     *
+     * @param  string  $accountType
+     * @param  string  $title
+     * @param  string  $bookId
      * @return string
      */
     public function createAccountGroup(string $accountType, string $title, string $bookId): string
@@ -94,12 +92,11 @@ class BookKeepingService
     /**
      * Create a new slip.
      *
-     * @param string $outline
-     * @param string $date
-     * @param array  $entries
-     * @param string $memo
-     * @param string $bookId
-     *
+     * @param  string  $outline
+     * @param  string  $date
+     * @param  array  $entries
+     * @param  string  $memo
+     * @param  string  $bookId
      * @return string
      */
     public function createSlip(string $outline, string $date, array $entries, ?string $memo, string $bookId = null): string
@@ -116,13 +113,12 @@ class BookKeepingService
     /**
      * Add a new slip entry as draft.
      *
-     * @param string $debit
-     * @param string $client
-     * @param string $outline
-     * @param string $credit
-     * @param int    $amount
-     * @param string $bookId
-     *
+     * @param  string  $debit
+     * @param  string  $client
+     * @param  string  $outline
+     * @param  string  $credit
+     * @param  int  $amount
+     * @param  string  $bookId
      * @return void
      */
     public function createSlipEntryAsDraft(string $debit, string $client, string $outline, string $credit, int $amount, string $bookId = null)
@@ -144,9 +140,8 @@ class BookKeepingService
     /**
      * Delete the specified slip entry.
      *
-     * @param string $slipEntryId
-     * @param string $bookId
-     *
+     * @param  string  $slipEntryId
+     * @param  string  $bookId
      * @return void
      */
     public function deleteSlipEntryAsDraft(string $slipEntryId, string $bookId = null)
@@ -155,7 +150,7 @@ class BookKeepingService
             $bookId = $this->book->retrieveDefaultBook(Auth::id());
         }
         $slip = $this->slip->retrieveSlipThatBound($slipEntryId, $bookId, true);
-        if (!is_null($slip)) {
+        if (! is_null($slip)) {
             $slipId = $slip['slip_id'];
             $this->slip->deleteSlipEntry($slipEntryId);
             $slipEntries = $this->slip->retrieveSlipEntriesBoundTo($slipId);
@@ -168,9 +163,8 @@ class BookKeepingService
     /**
      * Retrieve account list.
      *
-     * @param bool   $selectableOnly
-     * @param string $bookId
-     *
+     * @param  bool  $selectableOnly
+     * @param  string  $bookId
      * @return array
      */
     public function retrieveAccounts(bool $selectableOnly = false, string $bookId = null): array
@@ -189,8 +183,8 @@ class BookKeepingService
         ];
 
         foreach ($accounts as $accountsKey => $accountsItem) {
-            if ((!$selectableOnly) || ($accountsItem['selectable'] == true)) {
-                if (!array_key_exists($accountsItem['account_group_id'], $accounts_menu[$accountsItem['account_type']]['groups'])) {
+            if ((! $selectableOnly) || ($accountsItem['selectable'] == true)) {
+                if (! array_key_exists($accountsItem['account_group_id'], $accounts_menu[$accountsItem['account_type']]['groups'])) {
                     $accounts_menu[$accountsItem['account_type']]['groups'][$accountsItem['account_group_id']] = [
                         'title'        => $accountsItem['account_group_title'],
                         'isCurrent'    => $accountsItem['is_current'],
@@ -209,7 +203,7 @@ class BookKeepingService
             }
         }
         foreach ($accountGroups as $accountGroupsKey => $accountGroup) {
-            if (!array_key_exists($accountGroupsKey, $accounts_menu[$accountGroup['account_type']]['groups'])) {
+            if (! array_key_exists($accountGroupsKey, $accounts_menu[$accountGroup['account_type']]['groups'])) {
                 $accounts_menu[$accountGroup['account_type']]['groups'][$accountGroupsKey] = [
                     'title'        => $accountGroup['account_group_title'],
                     'isCurrent'    => $accountGroup['is_current'],
@@ -226,8 +220,7 @@ class BookKeepingService
     /**
      * Retrieve account list.
      *
-     * @param string $bookId
-     *
+     * @param  string  $bookId
      * @return array
      */
     public function retrieveAccountsList(string $bookId = null): array
@@ -262,8 +255,7 @@ class BookKeepingService
     /**
      * Retrieve information about the specified book.
      *
-     * @param string $bookId
-     *
+     * @param  string  $bookId
      * @return array | null
      */
     public function retrieveBookInfomation(string $bookId): ?array
@@ -272,7 +264,7 @@ class BookKeepingService
 
         $owner = $this->book->ownerName($bookId);
         $book = $this->book->retrieveInformation($bookId);
-        if ((!empty($owner)) && (!empty($book))) {
+        if ((! empty($owner)) && (! empty($book))) {
             $information = ['id' => $bookId, 'owner' => $owner, 'name' => $book['book_name']];
         }
 
@@ -282,8 +274,7 @@ class BookKeepingService
     /**
      * Retrieve draft slips.
      *
-     * @param string $bookId
-     *
+     * @param  string  $bookId
      * @return array
      */
     public function retrieveDraftSlips(string $bookId = null): array
@@ -320,8 +311,7 @@ class BookKeepingService
     /**
      * Retrieve a slip.
      *
-     * @param string $slipId
-     *
+     * @param  string  $slipId
      * @return array
      */
     public function retrieveSlip(string $slipId, string $bookId = null): array
@@ -331,7 +321,7 @@ class BookKeepingService
         }
         $slips = [];
         $slip_head = $this->slip->retrieveSlip($slipId, $bookId);
-        if (!is_null($slip_head)) {
+        if (! is_null($slip_head)) {
             $accounts = $this->account->retrieveAccounts($bookId);
             $slips[$slipId] = [
                 'date'         => $slip_head['date'],
@@ -357,9 +347,8 @@ class BookKeepingService
     /**
      * Retrieve slip entry.
      *
-     * @param string $slipEntryId
-     * @param string $bookId
-     *
+     * @param  string  $slipEntryId
+     * @param  string  $bookId
      * @return array
      */
     public function retrieveSlipEntry(string $slipEntryId, string $bookId = null): array
@@ -370,7 +359,7 @@ class BookKeepingService
         $accounts = $this->account->retrieveAccounts($bookId);
         $slipEntry = $this->slip->retrieveSlipThatBound($slipEntryId, $bookId, false);
         $slips = [];
-        if (!is_null($slipEntry)) {
+        if (! is_null($slipEntry)) {
             $slips[$slipEntry['slip_id']] = [
                 'date'         => $slipEntry['date'],
                 'slip_outline' => $slipEntry['slip_outline'],
@@ -393,14 +382,13 @@ class BookKeepingService
     /**
      * Retrieve slips.
      *
-     * @param string $fromDate
-     * @param string $toDate
-     * @param string $debit
-     * @param string $credit
-     * @param string $and_or
-     * @param string $keyword
-     * @param string $bookId
-     *
+     * @param  string  $fromDate
+     * @param  string  $toDate
+     * @param  string  $debit
+     * @param  string  $credit
+     * @param  string  $and_or
+     * @param  string  $keyword
+     * @param  string  $bookId
      * @return array
      */
     public function retrieveSlips(?string $fromDate, ?string $toDate, ?string $debit, ?string $credit, ?string $and_or, ?string $keyword, string $bookId = null): array
@@ -430,7 +418,7 @@ class BookKeepingService
         $slips = [];
 
         foreach ($slipEntries as $entry) {
-            if (!array_key_exists($entry['slip_id'], $slips)) {  /* This is the first time that the entry which belongs to the slip appears. */
+            if (! array_key_exists($entry['slip_id'], $slips)) {  /* This is the first time that the entry which belongs to the slip appears. */
                 $slips[$entry['slip_id']] = [
                     'date'         => $entry['date'],
                     'slip_outline' => $entry['slip_outline'],
@@ -453,10 +441,9 @@ class BookKeepingService
     /**
      * Retrieve amount changes between the specified date.
      *
-     * @param string $fromDate
-     * @param string $toDate
-     * @param string $bookId
-     *
+     * @param  string  $fromDate
+     * @param  string  $toDate
+     * @param  string  $bookId
      * @return array
      */
     public function retrieveStatements(string $fromDate, string $toDate, string $bookId = null): array
@@ -486,7 +473,7 @@ class BookKeepingService
                 }
                 $accountGroupId = $accounts[$accountId]['account_group_id'];
                 $statements[$accountType]['amount'] += $amount;
-                if (!array_key_exists($accountGroupId, $statements[$accountType]['groups'])) {  /* This is the first time that the account which belongs to the group appears. */
+                if (! array_key_exists($accountGroupId, $statements[$accountType]['groups'])) {  /* This is the first time that the account which belongs to the group appears. */
                     $statements[$accountType]['groups'][$accountGroupId] = [
                         'title'     => $accounts[$accountId]['account_group_title'],
                         'isCurrent' => $accounts[$accountId]['is_current'],
@@ -522,9 +509,8 @@ class BookKeepingService
     /**
      * Submit Slip with specified date.
      *
-     * @param string $date
-     * @param string $bookId
-     *
+     * @param  string  $date
+     * @param  string  $bookId
      * @return void
      */
     public function submitDraftSlip(string $date, string $bookId = null)
@@ -533,7 +519,7 @@ class BookKeepingService
             $bookId = $this->book->retrieveDefaultBook(Auth::id());
         }
         $draftSlips = $this->slip->retrieveDraftSlips($bookId);
-        if (!empty($draftSlips)) {
+        if (! empty($draftSlips)) {
             $this->slip->updateDate($draftSlips[0]['slip_id'], $date);
             $this->slip->submitSlip($draftSlips[0]['slip_id']);
         }
@@ -542,9 +528,9 @@ class BookKeepingService
     /**
      * Update Account.
      *
-     * @param string $accountId
-     * @param array  $newData
-     * @param string $bookId
+     * @param  string  $accountId
+     * @param  array  $newData
+     * @param  string  $bookId
      */
     public function updateAccount(string $accountId, array $newData, string $bookId)
     {
@@ -554,9 +540,9 @@ class BookKeepingService
     /**
      * Update Account Group.
      *
-     * @param string $accountGroupId
-     * @param array  $newData
-     * @param string $bookId
+     * @param  string  $accountGroupId
+     * @param  array  $newData
+     * @param  string  $bookId
      */
     public function updateAccountGroup(string $accountGroupId, array $newData, string $bookId)
     {
@@ -566,9 +552,9 @@ class BookKeepingService
     /**
      * Update Slip.
      *
-     * @param string $slipId
-     * @param array  $newData
-     * @param string $bookId
+     * @param  string  $slipId
+     * @param  array  $newData
+     * @param  string  $bookId
      */
     public function updateSlip(string $slipId, array $newData, string $bookId = null)
     {
@@ -578,9 +564,9 @@ class BookKeepingService
     /**
      * Update Slip Entry.
      *
-     * @param string $slipEntryId
-     * @param array  $newData
-     * @param string $bookId
+     * @param  string  $slipEntryId
+     * @param  array  $newData
+     * @param  string  $bookId
      */
     public function updateSlipEntry(string $slipEntryId, array $newData, string $bookId = null)
     {
@@ -590,8 +576,7 @@ class BookKeepingService
     /**
      * Validate date format.
      *
-     * @param string $date
-     *
+     * @param  string  $date
      * @return bool
      */
     public function validateDateFormat(string $date): bool
@@ -613,9 +598,8 @@ class BookKeepingService
     /**
      * Validate period.
      *
-     * @param string $fromDate
-     * @param string $toDate
-     *
+     * @param  string  $fromDate
+     * @param  string  $toDate
      * @return bool
      */
     public function validatePeriod(?string $fromDate, ?string $toDate): bool
@@ -625,7 +609,7 @@ class BookKeepingService
         if (empty($fromDate)) {
             $fromDate = self::ORIGIN_DATE;
         } else {
-            if (!$this->validateDateFormat($fromDate)) {
+            if (! $this->validateDateFormat($fromDate)) {
                 $success = false;
             }
         }
@@ -633,7 +617,7 @@ class BookKeepingService
             $date = new Carbon();
             $toDate = $date->format('Y-m-d');
         } else {
-            if (!$this->validateDateFormat($toDate)) {
+            if (! $this->validateDateFormat($toDate)) {
                 $success = false;
             }
         }
@@ -651,8 +635,7 @@ class BookKeepingService
     /**
      * Check if UUID is in valid format.
      *
-     * @param array $uuid
-     *
+     * @param  array  $uuid
      * @return bool
      */
     public function validateUuid(string $uuid): bool

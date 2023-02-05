@@ -9,8 +9,7 @@ class FindSlipsViewResponder extends BaseViewResponder
     /**
      * Respond with the FindSlipsView.
      *
-     * @param array $context
-     *
+     * @param  array  $context
      * @return Illuminate\Http\Response
      */
     public function response(array $context): Response

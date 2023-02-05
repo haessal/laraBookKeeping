@@ -19,9 +19,8 @@ class ShowDashboardActionHtml extends AuthenticatedBookKeepingAction
     /**
      * Create a new controller instance.
      *
-     * @param \App\Service\BookKeepingService                $BookKeeping
-     * @param \App\Http\Responder\ShowDashboardViewResponder $responder
-     *
+     * @param  \App\Service\BookKeepingService  $BookKeeping
+     * @param  \App\Http\Responder\ShowDashboardViewResponder  $responder
      * @return void
      */
     public function __construct(BookKeepingService $BookKeeping, ShowDashboardViewResponder $responder)
@@ -33,8 +32,7 @@ class ShowDashboardActionHtml extends AuthenticatedBookKeepingAction
     /**
      * Handle the incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function __invoke(Request $request): Response

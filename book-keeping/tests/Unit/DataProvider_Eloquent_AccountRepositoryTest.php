@@ -82,7 +82,7 @@ class DataProvider_Eloquent_AccountRepositoryTest extends DataProvider_AccountRe
         $accountList = $this->account->searchAccount($bookId);
 
         $this->assertFalse(count($accountList) === 0);
-        if (!(count($accountList) === 0)) {
+        if (! (count($accountList) === 0)) {
             $this->assertSame([
                 'account_type',
                 'account_group_id',

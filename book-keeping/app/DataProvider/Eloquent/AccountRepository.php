@@ -9,12 +9,11 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * Create new account.
      *
-     * @param string $accountGroupId
-     * @param string $title
-     * @param string $description
-     * @param int    $bk_uid
-     * @param int    $bk_code
-     *
+     * @param  string  $accountGroupId
+     * @param  string  $title
+     * @param  string  $description
+     * @param  int  $bk_uid
+     * @param  int  $bk_code
      * @return string $accountId
      */
     public function create(string $accountGroupId, string $title, string $description, $bk_uid, $bk_code): string
@@ -34,8 +33,7 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * Search account.
      *
-     * @param string $bookId
-     *
+     * @param  string  $bookId
      * @return array
      */
     public function searchAccount(string $bookId): array
@@ -68,13 +66,13 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * Update account.
      *
-     * @param string $accountId
-     * @param array  $newData
+     * @param  string  $accountId
+     * @param  array  $newData
      */
     public function update(string $accountId, array $newData)
     {
         $account = Account::find($accountId);
-        if (!is_null($account)) {
+        if (! is_null($account)) {
             if (array_key_exists('group', $newData)) {
                 $account->account_group_id = $newData['group'];
             }

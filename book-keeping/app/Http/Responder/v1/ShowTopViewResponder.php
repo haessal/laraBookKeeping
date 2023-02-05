@@ -9,8 +9,7 @@ class ShowTopViewResponder extends BaseViewResponder
     /**
      * Response the Books list and Form to create new Book.
      *
-     * @param array $context
-     *
+     * @param  array  $context
      * @return Illuminate\Http\Response
      */
     public function response(array $context): Response

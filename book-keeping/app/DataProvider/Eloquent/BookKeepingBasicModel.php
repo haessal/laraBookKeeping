@@ -27,7 +27,7 @@ abstract class BookKeepingBasicModel extends Model
     /**
      * Create a new Eloquent model instance with UUID as primaryKey.
      *
-     * @param array $attributes
+     * @param  array  $attributes
      */
     public function __construct(array $attributes = [])
     {

@@ -52,8 +52,8 @@ class AccountService
     /**
      * Create a new AccountService instance.
      *
-     * @param \App\DataProvider\AccountRepositoryInterface      $account
-     * @param \App\DataProvider\AccountGroupRepositoryInterface $accountGroup
+     * @param  \App\DataProvider\AccountRepositoryInterface  $account
+     * @param  \App\DataProvider\AccountGroupRepositoryInterface  $accountGroup
      */
     public function __construct(AccountRepositoryInterface $account, AccountGroupRepositoryInterface $accountGroup)
     {
@@ -64,12 +64,11 @@ class AccountService
     /**
      * Create new Account.
      *
-     * @param string $accountGroupId
-     * @param string $title
-     * @param string $description
-     * @param int    $bk_uid
-     * @param int    $bk_code
-     *
+     * @param  string  $accountGroupId
+     * @param  string  $title
+     * @param  string  $description
+     * @param  int  $bk_uid
+     * @param  int  $bk_code
      * @return string $accountId
      */
     public function createAccount(string $accountGroupId, string $title, string $description, int $bk_uid = null, int $bk_code = null): string
@@ -82,13 +81,12 @@ class AccountService
     /**
      * Create new Account Group.
      *
-     * @param string $bookId
-     * @param string $accountType
-     * @param string $title
-     * @param bool   $isCurrent
-     * @param int    $bk_uid
-     * @param int    $bk_code
-     *
+     * @param  string  $bookId
+     * @param  string  $accountType
+     * @param  string  $title
+     * @param  bool  $isCurrent
+     * @param  int  $bk_uid
+     * @param  int  $bk_code
      * @return string $accountGroupId
      */
     public function createAccountGroup(string $bookId, string $accountType, string $title, bool $isCurrent = false, int $bk_uid = null, int $bk_code = null): string
@@ -101,8 +99,7 @@ class AccountService
     /**
      * Retrieve list of account.
      *
-     * @param string $bookId
-     *
+     * @param  string  $bookId
      * @return array
      */
     public function retrieveAccounts(string $bookId): array
@@ -120,8 +117,7 @@ class AccountService
     /**
      * Retrieve list of account group.
      *
-     * @param string $bookId
-     *
+     * @param  string  $bookId
      * @return array
      */
     public function retrieveAccountGroups(string $bookId): array
@@ -139,8 +135,8 @@ class AccountService
     /**
      * Update Account.
      *
-     * @param string $accountId
-     * @param array  $newData
+     * @param  string  $accountId
+     * @param  array  $newData
      */
     public function updateAccount(string $accountId, array $newData)
     {
@@ -150,8 +146,8 @@ class AccountService
     /**
      * Update Account Group.
      *
-     * @param string $accountGroupId
-     * @param array  $newData
+     * @param  string  $accountGroupId
+     * @param  array  $newData
      */
     public function updateAccountGroup(string $accountGroupId, array $newData)
     {

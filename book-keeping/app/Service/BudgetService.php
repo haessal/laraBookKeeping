@@ -16,7 +16,7 @@ class BudgetService
     /**
      * Create a new BudgetService instance.
      *
-     * @param \App\DataProvider\BudgetRepositoryInterface $budget
+     * @param  \App\DataProvider\BudgetRepositoryInterface  $budget
      */
     public function __construct(BudgetRepositoryInterface $budget)
     {
@@ -26,11 +26,10 @@ class BudgetService
     /**
      * Create new Budget.
      *
-     * @param string $bookId
-     * @param string $accountId
-     * @param string $date
-     * @param int    $amount
-     *
+     * @param  string  $bookId
+     * @param  string  $accountId
+     * @param  string  $date
+     * @param  int  $amount
      * @return string $budgetId
      */
     public function createBudget(string $bookId, string $accountId, string $date, int $amount): string

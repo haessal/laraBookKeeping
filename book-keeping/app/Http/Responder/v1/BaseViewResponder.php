@@ -27,8 +27,8 @@ class BaseViewResponder
     /**
      * Create a new BaseV1ViewResponder instance.
      *
-     * @param \Illuminate\Http\Response          $response
-     * @param \Illuminate\Contracts\View\Factory $view
+     * @param  \Illuminate\Http\Response  $response
+     * @param  \Illuminate\Contracts\View\Factory  $view
      */
     public function __construct(Response $response, ViewFactory $view)
     {
@@ -55,8 +55,7 @@ class BaseViewResponder
     /**
      * Translate account list format for view.
      *
-     * @param array $accounts
-     *
+     * @param  array  $accounts
      * @return array
      */
     public function translateAccountsListFormat(array $accounts): array
@@ -95,8 +94,7 @@ class BaseViewResponder
     /**
      * Translate balance sheet format for view.
      *
-     * @param array $statements
-     *
+     * @param  array  $statements
      * @return array
      */
     public function translateBalanceSheetFormat(array $statements): array
@@ -113,8 +111,7 @@ class BaseViewResponder
     /**
      * Translate draft slips format for view.
      *
-     * @param array $slips
-     *
+     * @param  array  $slips
      * @return array
      */
     public function translateDraftSlipFormat(array $slip): array
@@ -145,8 +142,7 @@ class BaseViewResponder
     /**
      * Translate income statement format for view.
      *
-     * @param array $statements
-     *
+     * @param  array  $statements
      * @return array
      */
     public function translateIncomeStatementFormat(array $statements): array
@@ -163,8 +159,7 @@ class BaseViewResponder
     /**
      * Translate slips format for view.
      *
-     * @param array $skips
-     *
+     * @param  array  $skips
      * @return array
      */
     public function translateSlipsFormat(array $slips): array
@@ -191,8 +186,7 @@ class BaseViewResponder
     /**
      * Translate statements format for view.
      *
-     * @param array $statements
-     *
+     * @param  array  $statements
      * @return array
      */
     private function translateStatementsFormat(array $statements, array $parameters): array

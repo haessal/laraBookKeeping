@@ -20,9 +20,8 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
     /**
      * Create a new controller instance.
      *
-     * @param \App\Service\BookKeepingService                    $BookKeeping
-     * @param \App\Http\Responder\v2\CreateAccountsViewResponder $responder
-     *
+     * @param  \App\Service\BookKeepingService  $BookKeeping
+     * @param  \App\Http\Responder\v2\CreateAccountsViewResponder  $responder
      * @return void
      */
     public function __construct(BookKeepingService $BookKeeping, CreateAccountsViewResponder $responder)
@@ -34,8 +33,7 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
     /**
      * Handle the incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function __invoke(Request $request, string $bookId): Response
@@ -86,9 +84,8 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
     /**
      * Validate arguments and trim string data for create Account.
      *
-     * @param array  $account_in
-     * @param string $bookId
-     *
+     * @param  array  $account_in
+     * @param  string  $bookId
      * @return array
      */
     private function validateAndTrimForCreateAccount(array $account_in, string $bookId): array
@@ -97,21 +94,21 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
         $trimmed_account = [];
 
         $accountGroupId = trim($account_in['accountgroup']);
-        if (!empty($accountGroupId)) {
+        if (! empty($accountGroupId)) {
             $trimmed_account['accountgroup'] = $accountGroupId;
         } else {
             $success = false;
             $trimmed_account['accountgroup'] = null;
         }
         $title = trim($account_in['title']);
-        if (!empty($title)) {
+        if (! empty($title)) {
             $trimmed_account['title'] = $title;
         } else {
             $success = false;
             $trimmed_account['title'] = null;
         }
         $description = trim($account_in['description']);
-        if (!empty($description)) {
+        if (! empty($description)) {
             $trimmed_account['description'] = $description;
         } else {
             $success = false;
@@ -124,9 +121,8 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
     /**
      * Validate arguments and trim string data for create AccountGroup.
      *
-     * @param array  $accountGroup_in
-     * @param string $bookId
-     *
+     * @param  array  $accountGroup_in
+     * @param  string  $bookId
      * @return array
      */
     private function validateAndTrimForCreateAccountGroup(array $accountGroup_in, string $bookId): array
@@ -153,7 +149,7 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
             $trimmed_accountGroup['accounttype'] = null;
         }
         $title = trim($accountGroup_in['title']);
-        if (!empty($title)) {
+        if (! empty($title)) {
             $trimmed_accountGroup['title'] = $title;
         } else {
             $success = false;

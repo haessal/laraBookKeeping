@@ -9,8 +9,7 @@ class ShowHomeViewResponder extends BaseViewResponder
     /**
      * Respond the ShowHomeView.
      *
-     * @param array $context
-     *
+     * @param  array  $context
      * @return Illuminate\Http\Response
      */
     public function response(array $context): Response

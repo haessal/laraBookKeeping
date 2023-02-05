@@ -20,9 +20,8 @@ class ShowHomeActionHtml extends AuthenticatedBookKeepingAction
     /**
      * Create a new controller instance.
      *
-     * @param \App\Service\BookKeepingService              $BookKeeping
-     * @param \App\Http\Responder\v2\ShowHomeViewResponder $responder
-     *
+     * @param  \App\Service\BookKeepingService  $BookKeeping
+     * @param  \App\Http\Responder\v2\ShowHomeViewResponder  $responder
      * @return void
      */
     public function __construct(BookKeepingService $BookKeeping, ShowHomeViewResponder $responder)
@@ -34,8 +33,7 @@ class ShowHomeActionHtml extends AuthenticatedBookKeepingAction
     /**
      * Handle the incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function __invoke(Request $request, string $bookId): Response

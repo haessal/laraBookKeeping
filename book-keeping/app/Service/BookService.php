@@ -32,9 +32,9 @@ class BookService
     /**
      * Create a new BookService instance.
      *
-     * @param \App\DataProvider\BookRepositoryInterface       $book
-     * @param \App\DataProvider\PermissionRepositoryInterface $app
-     * @param \App\DataProvider\UserRepositoryInterface       $user
+     * @param  \App\DataProvider\BookRepositoryInterface  $book
+     * @param  \App\DataProvider\PermissionRepositoryInterface  $app
+     * @param  \App\DataProvider\UserRepositoryInterface  $user
      */
     public function __construct(BookRepositoryInterface $book, PermissionRepositoryInterface $permission, UserRepositoryInterface $user)
     {
@@ -46,9 +46,8 @@ class BookService
     /**
      * Create new Book.
      *
-     * @param int    $userId
-     * @param string $title
-     *
+     * @param  int  $userId
+     * @param  string  $title
      * @return string $bookId
      */
     public function createBook(int $userId, string $title): string
@@ -62,15 +61,14 @@ class BookService
     /**
      * Owner of the specified Book.
      *
-     * @param int $bookId
-     *
+     * @param  int  $bookId
      * @return string | null
      */
     public function ownerName(string $bookId): ?string
     {
         $ownerName = null;
         $userId = $this->permission->findOwnerOfBook($bookId);
-        if (!empty($userId)) {
+        if (! empty($userId)) {
             $user = $this->user->findById($userId);
             $ownerName = $user['name'];
         }
@@ -81,8 +79,7 @@ class BookService
     /**
      * Retrieve list of accessable Book.
      *
-     * @param int $userId
-     *
+     * @param  int  $userId
      * @return array
      */
     public function retrieveBookList(int $userId): array
@@ -95,8 +92,7 @@ class BookService
     /**
      * Retrieve default Book.
      *
-     * @param int $userId
-     *
+     * @param  int  $userId
      * @return string | null
      */
     public function retrieveDefaultBook(int $userId)
@@ -109,8 +105,7 @@ class BookService
     /**
      * Retrieve information.
      *
-     * @param string $bookId
-     *
+     * @param  string  $bookId
      * @return array | null
      */
     public function retrieveInformation(string $bookId): ?array

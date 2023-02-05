@@ -27,8 +27,7 @@ class UpdateAccessTokenActionHTML extends AuthenticatedAction
     /**
      * Create a new controller instance.
      *
-     * @param \App\Http\Responder\Settings\UpdateAccessTokenViewResponder $responder
-     *
+     * @param  \App\Http\Responder\Settings\UpdateAccessTokenViewResponder  $responder
      * @return void
      */
     public function __construct(AccessTokenService $accessToken, UpdateAccessTokenViewResponder $responder)
@@ -41,8 +40,7 @@ class UpdateAccessTokenActionHTML extends AuthenticatedAction
     /**
      * Handle the incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function __invoke(Request $request): Response

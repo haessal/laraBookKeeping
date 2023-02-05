@@ -82,7 +82,8 @@ class Http_Responder_AccountsListConverterTest extends TestCase
             ],
         ];
 
-        $responder = new class() {
+        $responder = new class()
+        {
             use AccountsListConverter;
         };
         $reordered_actual = $responder->sortAccountInAscendingCodeOrder($groupedList);
@@ -202,7 +203,8 @@ class Http_Responder_AccountsListConverterTest extends TestCase
             $accountId_6 => 'accountTitle_6',
         ];
 
-        $responder = new class() {
+        $responder = new class()
+        {
             use AccountsListConverter;
         };
         $formattedAccountList_actual = $responder->translateAccountListToTitleList($accounts);
@@ -338,7 +340,8 @@ class Http_Responder_AccountsListConverterTest extends TestCase
             ],
         ];
 
-        $responder = new class() {
+        $responder = new class()
+        {
             use AccountsListConverter;
         };
         $formattedAccountGroupsAndItems_actual = $responder->translateAccountListToTitleList($accounts, true);

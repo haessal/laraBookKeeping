@@ -7,8 +7,7 @@ interface UserRepositoryInterface
     /**
      * Find user.
      *
-     * @param int $userId
-     *
+     * @param  int  $userId
      * @return array | null
      */
     public function findById(int $userId): ?array;

@@ -809,7 +809,7 @@ class DataProvider_Eloquent_SlipEntryRepositoryTest extends DataProvider_SlipEnt
         $slipEntries = $this->slipEntry->searchSlipEntries($fromDate, $toDate, [], $bookId);
 
         $this->assertFalse(count($slipEntries) === 0);
-        if (!(count($slipEntries) === 0)) {
+        if (! (count($slipEntries) === 0)) {
             $this->assertSame([
                 'slip_id',
                 'date',

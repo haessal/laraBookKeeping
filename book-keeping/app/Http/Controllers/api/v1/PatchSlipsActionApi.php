@@ -20,9 +20,8 @@ class PatchSlipsActionApi extends AuthenticatedBookKeepingActionApi
     /**
      * Create a new controller instance.
      *
-     * @param \App\Service\BookKeepingService              $BookKeeping
-     * @param \App\Http\Responder\api\v1\SlipJsonResponder $responder
-     *
+     * @param  \App\Service\BookKeepingService  $BookKeeping
+     * @param  \App\Http\Responder\api\v1\SlipJsonResponder  $responder
      * @return void
      */
     public function __construct(BookKeepingService $BookKeeping, SlipJsonResponder $responder)
@@ -34,16 +33,15 @@ class PatchSlipsActionApi extends AuthenticatedBookKeepingActionApi
     /**
      * Handle the incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $slipId
-     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $slipId
      * @return \Illuminate\Http\JsonResponse
      */
     public function __invoke(Request $request, string $slipId): JsonResponse
     {
         $context = [];
 
-        if (!($this->BookKeeping->validateUuid($slipId))) {
+        if (! ($this->BookKeeping->validateUuid($slipId))) {
             $response = new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
         } else {
             $slips = $this->BookKeeping->retrieveSlip($slipId);
@@ -51,7 +49,7 @@ class PatchSlipsActionApi extends AuthenticatedBookKeepingActionApi
                 $response = new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
             } else {
                 $result = $this->validateAndTrimSlipContents($request->all());
-                if (!$result['success']) {
+                if (! $result['success']) {
                     $response = new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
                 } else {
                     $this->BookKeeping->updateSlip($slipId, $result['slipContents']);
@@ -67,8 +65,7 @@ class PatchSlipsActionApi extends AuthenticatedBookKeepingActionApi
     /**
      * Validate slip contents and trim string data.
      *
-     * @param array $slipContents
-     *
+     * @param  array  $slipContents
      * @return array
      */
     private function validateAndTrimSlipContents(array $slipContents): array
@@ -96,7 +93,7 @@ class PatchSlipsActionApi extends AuthenticatedBookKeepingActionApi
             $success = false;
         }
         if (array_key_exists('date', $trimmed_slipContents)) {
-            if (!($this->BookKeeping->validateDateFormat($trimmed_slipContents['date']))) {
+            if (! ($this->BookKeeping->validateDateFormat($trimmed_slipContents['date']))) {
                 $success = false;
             }
         }
@@ -110,7 +107,7 @@ class PatchSlipsActionApi extends AuthenticatedBookKeepingActionApi
                 $trimmed_slipContents['memo'] = null;
             }
         }
-        if (!$success) {
+        if (! $success) {
             $trimmed_slipContents = [];
         }
 

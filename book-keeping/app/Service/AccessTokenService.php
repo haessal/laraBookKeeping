@@ -69,7 +69,7 @@ class AccessTokenService
     /**
      * Create a new AccessTokenService instance.
      *
-     * @param \App\User $user
+     * @param  \App\User  $user
      */
     public function setUser(User $user)
     {

@@ -9,13 +9,12 @@ class SlipRepository implements SlipRepositoryInterface
     /**
      * Create new slip.
      *
-     * @param string $bookId
-     * @param string $outline
-     * @param string $date
-     * @param string $memo
-     * @param int    $displayOrder
-     * @param bool   $isDraft
-     *
+     * @param  string  $bookId
+     * @param  string  $outline
+     * @param  string  $date
+     * @param  string  $memo
+     * @param  int  $displayOrder
+     * @param  bool  $isDraft
      * @return string $slipId
      */
     public function create(string $bookId, string $outline, string $date, $memo, ?int $displayOrder, bool $isDraft): string
@@ -35,14 +34,13 @@ class SlipRepository implements SlipRepositoryInterface
     /**
      * Delete the specified slip.
      *
-     * @param string $slipId
-     *
+     * @param  string  $slipId
      * @return void
      */
     public function delete(string $slipId)
     {
         $slip = Slip::find($slipId);
-        if (!is_null($slip)) {
+        if (! is_null($slip)) {
             $slip->delete();
         }
     }
@@ -50,8 +48,7 @@ class SlipRepository implements SlipRepositoryInterface
     /**
      * Find the draft slips that belongs to the specified book.
      *
-     * @param string $bookId
-     *
+     * @param  string  $bookId
      * @return array
      */
     public function findAllDraftByBookId(string $bookId): array
@@ -67,9 +64,8 @@ class SlipRepository implements SlipRepositoryInterface
     /**
      * Find a slip.
      *
-     * @param string $slipId
-     * @param string $bookId
-     *
+     * @param  string  $slipId
+     * @param  string  $bookId
      * @return array|null
      */
     public function findById(string $slipId, string $bookId): ?array
@@ -86,15 +82,14 @@ class SlipRepository implements SlipRepositoryInterface
     /**
      * Update the specified slip.
      *
-     * @param string $slipId
-     * @param array  $newData
-     *
+     * @param  string  $slipId
+     * @param  array  $newData
      * @return void
      */
     public function update(string $slipId, array $newData)
     {
         $slip = Slip::find($slipId);
-        if (!is_null($slip)) {
+        if (! is_null($slip)) {
             if (array_key_exists('outline', $newData)) {
                 $slip->slip_outline = $newData['outline'];
             }
@@ -111,8 +106,8 @@ class SlipRepository implements SlipRepositoryInterface
     /**
      * Update the flag which indicates that the slip is draft.
      *
-     * @param string $slipId
-     * @param bool   $isDraft
+     * @param  string  $slipId
+     * @param  bool  $isDraft
      */
     public function updateIsDraft(string $slipId, bool $isDraft)
     {

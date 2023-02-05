@@ -7,8 +7,7 @@ trait AccountsListConverter
     /**
      * Sort accounts in ascending order of account code for version 1.
      *
-     * @param array $groupedList
-     *
+     * @param  array  $groupedList
      * @return array
      */
     public function sortAccountInAscendingCodeOrder(array $groupedList): array
@@ -19,9 +18,8 @@ trait AccountsListConverter
     /**
      * Translate account list to title list for view.
      *
-     * @param array $accounts
-     * @param bool  $withGroupList
-     *
+     * @param  array  $accounts
+     * @param  bool  $withGroupList
      * @return array
      */
     public function translateAccountListToTitleList(array $accounts, bool $withGroupList = false): array
@@ -61,8 +59,7 @@ trait AccountsListConverter
     /**
      * Get associative array which has account ID as key sorted in ascending order of value that is specified keyword.
      *
-     * @param array $listWithKeyword
-     *
+     * @param  array  $listWithKeyword
      * @return array
      */
     private function getIdsSortedInAscendingOrder(array $listWithKeyword): array
@@ -73,13 +70,13 @@ trait AccountsListConverter
         $sortedIds_isNotCurrent_withoutCode = [];
         foreach ($listWithKeyword as $Ids => $item) {
             if (array_key_exists('isCurrent', $item) && ($item['isCurrent'] == true)) {
-                if (!is_null($item['bk_code'])) {
+                if (! is_null($item['bk_code'])) {
                     $sortedIds_isCurrent_withCode[$Ids] = $item['bk_code'];
                 } else {
                     $sortedIds_isCurrent_withoutCode[$Ids] = $item['createdAt'];
                 }
             } else {
-                if (!is_null($item['bk_code'])) {
+                if (! is_null($item['bk_code'])) {
                     $sortedIds_isNotCurrent_withCode[$Ids] = $item['bk_code'];
                 } else {
                     $sortedIds_isNotCurrent_withoutCode[$Ids] = $item['createdAt'];
@@ -97,8 +94,7 @@ trait AccountsListConverter
     /**
      * Sort account group list in ascending order of account code for version 1.
      *
-     * @param array $groupedList
-     *
+     * @param  array  $groupedList
      * @return array
      */
     private function sortAccountGrouptListInAscendingCodeOrder(array $groupedList): array
@@ -116,8 +112,7 @@ trait AccountsListConverter
     /**
      * Sort account list in ascending order of account code for version 1.
      *
-     * @param array $groupedList
-     *
+     * @param  array  $groupedList
      * @return array
      */
     private function sortAccountListInAscendingCodeOrder(array $list): array

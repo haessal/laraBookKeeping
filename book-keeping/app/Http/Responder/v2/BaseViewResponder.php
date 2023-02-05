@@ -25,8 +25,8 @@ class BaseViewResponder extends BaseLayoutViewResponder
     /**
      * Create a new BaseViewResponder instance.
      *
-     * @param \Illuminate\Http\Response          $response
-     * @param \Illuminate\Contracts\View\Factory $view
+     * @param  \Illuminate\Http\Response  $response
+     * @param  \Illuminate\Contracts\View\Factory  $view
      */
     public function __construct(Response $response, ViewFactory $view)
     {

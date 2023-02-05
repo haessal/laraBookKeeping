@@ -7,13 +7,12 @@ interface SlipRepositoryInterface
     /**
      * Create new slip.
      *
-     * @param string $bookId
-     * @param string $outline
-     * @param string $date
-     * @param string $memo
-     * @param int    $displayOrder
-     * @param bool   $isDraft
-     *
+     * @param  string  $bookId
+     * @param  string  $outline
+     * @param  string  $date
+     * @param  string  $memo
+     * @param  int  $displayOrder
+     * @param  bool  $isDraft
      * @return string $slipId
      */
     public function create(string $bookId, string $outline, string $date, $memo, ?int $displayOrder, bool $isDraft): string;
@@ -21,8 +20,7 @@ interface SlipRepositoryInterface
     /**
      * Delete the specified slip.
      *
-     * @param string $slipId
-     *
+     * @param  string  $slipId
      * @return void
      */
     public function delete(string $slipId);
@@ -30,8 +28,7 @@ interface SlipRepositoryInterface
     /**
      * Find the draft slips that belongs to the specified book.
      *
-     * @param string $bookId
-     *
+     * @param  string  $bookId
      * @return array
      */
     public function findAllDraftByBookId(string $bookId): array;
@@ -39,9 +36,8 @@ interface SlipRepositoryInterface
     /**
      * Find a slip.
      *
-     * @param string $slipId
-     * @param string $bookId
-     *
+     * @param  string  $slipId
+     * @param  string  $bookId
      * @return array|null
      */
     public function findById(string $slipId, string $bookId): ?array;
@@ -49,9 +45,8 @@ interface SlipRepositoryInterface
     /**
      * Update the specified slip.
      *
-     * @param string $slipId
-     * @param array  $newData
-     *
+     * @param  string  $slipId
+     * @param  array  $newData
      * @return void
      */
     public function update(string $slipId, array $newData);
@@ -59,8 +54,8 @@ interface SlipRepositoryInterface
     /**
      * Update the flag which indicates that the slip is draft.
      *
-     * @param string $slipId
-     * @param bool   $isDraft
+     * @param  string  $slipId
+     * @param  bool  $isDraft
      */
     public function updateIsDraft(string $slipId, bool $isDraft);
 }

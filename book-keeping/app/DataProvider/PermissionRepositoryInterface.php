@@ -7,9 +7,8 @@ interface PermissionRepositoryInterface
     /**
      * Create new permission.
      *
-     * @param int    $userId
-     * @param string $bookId
-     *
+     * @param  int  $userId
+     * @param  string  $bookId
      * @return string $permissionId
      */
     public function create(int $userId, string $bookId): string;
@@ -17,8 +16,7 @@ interface PermissionRepositoryInterface
     /**
      * Find default book of the user.
      *
-     * @param int $userId
-     *
+     * @param  int  $userId
      * @return string | null
      */
     public function findDefaultBook(int $userId);
@@ -26,8 +24,7 @@ interface PermissionRepositoryInterface
     /**
      * Find owner of the book.
      *
-     * @param string $bookId
-     *
+     * @param  string  $bookId
      * @return int | null
      */
     public function findOwnerOfBook(string $bookId): ?int;
@@ -35,8 +32,7 @@ interface PermissionRepositoryInterface
     /**
      * Search book list that the user can access.
      *
-     * @param int $userId
-     *
+     * @param  int  $userId
      * @return array
      */
     public function searchBookList(int $userId): array;

@@ -12,8 +12,7 @@ class DeleteSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
     /**
      * Create a new controller instance.
      *
-     * @param \App\Service\BookKeepingService $BookKeeping
-     *
+     * @param  \App\Service\BookKeepingService  $BookKeeping
      * @return void
      */
     public function __construct(BookKeepingService $BookKeeping)
@@ -24,14 +23,13 @@ class DeleteSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
     /**
      * Handle the incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $slipEntryId
-     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $slipEntryId
      * @return \Illuminate\Http\JsonResponse
      */
     public function __invoke(Request $request, string $slipEntryId): JsonResponse
     {
-        if (!($this->BookKeeping->validateUuid($slipEntryId))) {
+        if (! ($this->BookKeeping->validateUuid($slipEntryId))) {
             $response = new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
         } else {
             $slips = $this->BookKeeping->retrieveSlipEntry($slipEntryId);

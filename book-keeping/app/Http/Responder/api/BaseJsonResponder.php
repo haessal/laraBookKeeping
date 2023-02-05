@@ -16,7 +16,7 @@ class BaseJsonResponder
     /**
      * Create a new BaseJsonResponder instance.
      *
-     * @param \Illuminate\Http\JsonResponse $response
+     * @param  \Illuminate\Http\JsonResponse  $response
      */
     public function __construct(JsonResponse $response)
     {

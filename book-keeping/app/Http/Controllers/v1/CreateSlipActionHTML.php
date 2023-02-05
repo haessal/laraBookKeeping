@@ -21,9 +21,8 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
     /**
      * Create a new controller instance.
      *
-     * @param \App\Service\BookKeepingService                $BookKeeping
-     * @param \App\Http\Responder\v1\CreateSlipViewResponder $responder
-     *
+     * @param  \App\Service\BookKeepingService  $BookKeeping
+     * @param  \App\Http\Responder\v1\CreateSlipViewResponder  $responder
      * @return void
      */
     public function __construct(BookKeepingService $BookKeeping, CreateSlipViewResponder $responder)
@@ -35,8 +34,7 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
     /**
      * Handle the incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function __invoke(Request $request): Response
@@ -68,7 +66,7 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
                     break;
                 case 'delete':
                     $slipEntryId = $request->input('modifyno');
-                    if (!is_null($slipEntryId)) {
+                    if (! is_null($slipEntryId)) {
                         $this->BookKeeping->deleteSlipEntryAsDraft($slipEntryId);
                     }
                     break;
@@ -90,7 +88,7 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
         $context['draftslip'] = $this->BookKeeping->retrieveDraftSlips();
 
         $totalamount = 0;
-        if (!empty($context['draftslip'])) {
+        if (! empty($context['draftslip'])) {
             foreach ($context['draftslip'][key($context['draftslip'])]['items'] as $draftslipItem) {
                 $totalamount += $draftslipItem['amount'];
             }
@@ -103,18 +101,17 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
     /**
      * Validate arguments for create SlipEntry.
      *
-     * @param string $debit
-     * @param string $client
-     * @param string $outline
-     * @param string $credit
-     * @param int    $amount
-     *
+     * @param  string  $debit
+     * @param  string  $client
+     * @param  string  $outline
+     * @param  string  $credit
+     * @param  int  $amount
      * @return bool
      */
     private function validateForCreateSlipEntry(string $debit, string $client, string $outline, string $credit, int $amount): bool
     {
         $success = false;
-        if (!($debit === '0') && !empty($client) && !empty($outline) && !($credit === '0') && ($amount != 0) && ($debit != $credit)) {
+        if (! ($debit === '0') && ! empty($client) && ! empty($outline) && ! ($credit === '0') && ($amount != 0) && ($debit != $credit)) {
             $success = true;
         }
 

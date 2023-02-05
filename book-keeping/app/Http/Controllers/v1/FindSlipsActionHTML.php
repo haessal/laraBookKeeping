@@ -20,9 +20,8 @@ class FindSlipsActionHTML extends AuthenticatedBookKeepingAction
     /**
      * Create a new controller instance.
      *
-     * @param \App\Service\BookKeepingService               $BookKeeping
-     * @param \App\Http\Responder\v1\FindSlipsViewResponder $responder
-     *
+     * @param  \App\Service\BookKeepingService  $BookKeeping
+     * @param  \App\Http\Responder\v1\FindSlipsViewResponder  $responder
      * @return void
      */
     public function __construct(BookKeepingService $BookKeeping, FindSlipsViewResponder $responder)
@@ -34,8 +33,7 @@ class FindSlipsActionHTML extends AuthenticatedBookKeepingAction
     /**
      * Handle the incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function __invoke(Request $request): Response
@@ -54,7 +52,7 @@ class FindSlipsActionHTML extends AuthenticatedBookKeepingAction
         if ($request->isMethod('post')) {
             $button_action = key($request->input('buttons'));
             $modifyno = $request->input('modifyno');
-            if (($button_action == 'delete') && (!empty($modifyno))) {
+            if (($button_action == 'delete') && (! empty($modifyno))) {
                 foreach ($modifyno as $slipEntryId) {
                     $this->BookKeeping->deleteSlipEntryAsDraft($slipEntryId);
                 }
@@ -65,7 +63,7 @@ class FindSlipsActionHTML extends AuthenticatedBookKeepingAction
             $credit = $request->input('credit');
             $and_or = $request->input('ANDOR');
             $keyword = trim($request->input('KEYWORD'));
-            if (!empty($beginning_date) || !empty($end_date) || !empty($debit) || !empty($credit) || !empty($keyword)) {
+            if (! empty($beginning_date) || ! empty($end_date) || ! empty($debit) || ! empty($credit) || ! empty($keyword)) {
                 if ($this->BookKeeping->validatePeriod($beginning_date, $end_date)) {
                     $slips = $this->BookKeeping->retrieveSlips($beginning_date, $end_date, $debit, $credit, $and_or, $keyword);
                     $message = null;

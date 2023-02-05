@@ -16,7 +16,7 @@ class AuthenticatedBookKeepingAction extends AuthenticatedAction
     /**
      * Create a new AuthenticatedBookKeepingAction instance.
      *
-     * @param \App\Service\BookKeepingService $BookKeeping
+     * @param  \App\Service\BookKeepingService  $BookKeeping
      */
     public function __construct(BookKeepingService $BookKeeping)
     {

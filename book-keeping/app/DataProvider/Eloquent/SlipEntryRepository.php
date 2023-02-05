@@ -9,10 +9,9 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     /**
      * Calculate the sum of debit and credit for each account about slip entries between the specified date.
      *
-     * @param string $fromDate
-     * @param string $toDate
-     * @param string $bookId
-     *
+     * @param  string  $fromDate
+     * @param  string  $toDate
+     * @param  string  $bookId
      * @return array
      */
     public function calculateSum(string $fromDate, string $toDate, string $bookId): array
@@ -29,14 +28,14 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
         foreach ($debitSumList as $debit) {
             $accountId = $debit['debit'];
             $list[$accountId]['debit'] = intval($debit['debitsum']);
-            if (!array_key_exists('credit', $list[$accountId])) {
+            if (! array_key_exists('credit', $list[$accountId])) {
                 $list[$accountId]['credit'] = 0;
             }
         }
         foreach ($creditSumList as $credit) {
             $accountId = $credit['credit'];
             $list[$accountId]['credit'] = intval($credit['creditsum']);
-            if (!array_key_exists('debit', $list[$accountId])) {
+            if (! array_key_exists('debit', $list[$accountId])) {
                 $list[$accountId]['debit'] = 0;
             }
         }
@@ -47,14 +46,13 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     /**
      * Create new slip entry.
      *
-     * @param string $slipId
-     * @param string $debit
-     * @param string $credit
-     * @param int    $amount
-     * @param string $client
-     * @param string $outline
-     * @param int    $displayOrder
-     *
+     * @param  string  $slipId
+     * @param  string  $debit
+     * @param  string  $credit
+     * @param  int  $amount
+     * @param  string  $client
+     * @param  string  $outline
+     * @param  int  $displayOrder
      * @return string $slipEntryId
      */
     public function create(string $slipId, string $debit, string $credit, int $amount, string $client, string $outline, ?int $displayOrder): string
@@ -75,14 +73,13 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     /**
      * Delete the specified slip entry.
      *
-     * @param string $slipEntryId
-     *
+     * @param  string  $slipEntryId
      * @return void
      */
     public function delete(string $slipEntryId)
     {
         $slipEntry = SlipEntry::find($slipEntryId);
-        if (!is_null($slipEntry)) {
+        if (! is_null($slipEntry)) {
             $slipEntry->delete();
         }
     }
@@ -90,8 +87,7 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     /**
      * Find the slip entries that belongs to the specified slip.
      *
-     * @param string $slipId
-     *
+     * @param  string  $slipId
      * @return array
      */
     public function findAllBySlipId(string $slipId): array
@@ -108,10 +104,9 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     /**
      * Find slip entry.
      *
-     * @param string $slipEntryId
-     * @param string $bookId
-     * @param bool   $draftInclude
-     *
+     * @param  string  $slipEntryId
+     * @param  string  $bookId
+     * @param  bool  $draftInclude
      * @return array | null
      */
     public function findById(string $slipEntryId, string $bookId, bool $draftInclude): ?array
@@ -133,7 +128,7 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
             ->where('book_id', $bookId)
             ->whereNull('bk2_0_slips.deleted_at')
             ->whereNull('bk2_0_slip_entries.deleted_at');
-        if (!$draftInclude) {
+        if (! $draftInclude) {
             $query = $query->where('is_draft', false);
         }
         $slipEntry = $query->first();
@@ -144,11 +139,10 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     /**
      * Search slip entries between specified date.
      *
-     * @param string $fromDate
-     * @param string $toDate
-     * @param array  $condition
-     * @param string $bookId
-     *
+     * @param  string  $fromDate
+     * @param  string  $toDate
+     * @param  array  $condition
+     * @param  string  $bookId
      * @return array
      */
     public function searchSlipEntries(string $fromDate, string $toDate, array $condition, string $bookId): array
@@ -178,15 +172,14 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     /**
      * Update the specified slip entry.
      *
-     * @param string $slipEntryId
-     * @param array  $newData
-     *
+     * @param  string  $slipEntryId
+     * @param  array  $newData
      * @return void
      */
     public function update(string $slipEntryId, array $newData)
     {
         $slipEntry = SlipEntry::find($slipEntryId);
-        if (!is_null($slipEntry)) {
+        if (! is_null($slipEntry)) {
             if (array_key_exists('debit', $newData)) {
                 $slipEntry->debit = $newData['debit'];
             }
@@ -209,11 +202,10 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     /**
      * Query to get slip entries between specified date.
      *
-     * @param string $fromDate
-     * @param string $toDate
-     * @param array  $condition
-     * @param string $bookId
-     *
+     * @param  string  $fromDate
+     * @param  string  $toDate
+     * @param  array  $condition
+     * @param  string  $bookId
      * @return Illuminate\Database\Query\Builder
      */
     private function getSlipEntriesQuery(string $fromDate, string $toDate, array $condition, string $bookId)
@@ -229,13 +221,13 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
             ->whereNull('bk2_0_slips.deleted_at')
             ->whereNull('bk2_0_slip_entries.deleted_at')
             ->whereBetween('date', [$fromDate, $toDate]);
-        if (!empty($debit) && empty($credit)) {
+        if (! empty($debit) && empty($credit)) {
             $query = $query->where('debit', $debit);
         }
-        if (empty($debit) && !empty($credit)) {
+        if (empty($debit) && ! empty($credit)) {
             $query = $query->where('credit', $credit);
         }
-        if (!empty($debit) && !empty($credit) && !empty($and_or)) {
+        if (! empty($debit) && ! empty($credit) && ! empty($and_or)) {
             $sub_account = ['debit' => $debit, 'credit' => $credit];
             if ($and_or == 'and') {
                 $query = $query
@@ -250,7 +242,7 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
                     });
             }
         }
-        if (!empty($keyword)) {
+        if (! empty($keyword)) {
             $query = $query
                 ->where(function ($subquery) use ($keyword) {
                     $subquery->where('client', 'like binary', "%$keyword%")

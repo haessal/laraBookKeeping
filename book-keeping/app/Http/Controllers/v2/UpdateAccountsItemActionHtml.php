@@ -20,9 +20,8 @@ class UpdateAccountsItemActionHtml extends AuthenticatedBookKeepingAction
     /**
      * Create a new controller instance.
      *
-     * @param \App\Service\BookKeepingService                        $BookKeeping
-     * @param \App\Http\Responder\v2\UpdateAccountsItemViewResponder $responder
-     *
+     * @param  \App\Service\BookKeepingService  $BookKeeping
+     * @param  \App\Http\Responder\v2\UpdateAccountsItemViewResponder  $responder
      * @return void
      */
     public function __construct(BookKeepingService $BookKeeping, UpdateAccountsItemViewResponder $responder)
@@ -34,10 +33,9 @@ class UpdateAccountsItemActionHtml extends AuthenticatedBookKeepingAction
     /**
      * Handle the incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $bookId
-     * @param string                   $accountsItemId
-     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $bookId
+     * @param  string  $accountsItemId
      * @return \Illuminate\Http\Response
      */
     public function __invoke(Request $request, string $bookId, string $accountsItemId): Response

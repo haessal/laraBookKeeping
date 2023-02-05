@@ -120,7 +120,7 @@ class DataProvider_Eloquent_PermissionRepositoryTest extends DataProvider_Permis
         $bookList = $this->permission->searchBookList($userId);
 
         $this->assertFalse(count($bookList) === 0);
-        if (!(count($bookList) === 0)) {
+        if (! (count($bookList) === 0)) {
             $this->assertSame([
                 'book_id',
                 'book_name',

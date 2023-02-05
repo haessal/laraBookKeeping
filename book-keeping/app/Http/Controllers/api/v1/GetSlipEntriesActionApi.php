@@ -20,9 +20,8 @@ class GetSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
     /**
      * Create a new controller instance.
      *
-     * @param \App\Service\BookKeepingService                     $BookKeeping
-     * @param \App\Http\Responder\api\v1\SlipEntriesJsonResponder $responder
-     *
+     * @param  \App\Service\BookKeepingService  $BookKeeping
+     * @param  \App\Http\Responder\api\v1\SlipEntriesJsonResponder  $responder
      * @return void
      */
     public function __construct(BookKeepingService $BookKeeping, SlipEntriesJsonResponder $responder)
@@ -34,8 +33,7 @@ class GetSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
     /**
      * Handle the incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function __invoke(Request $request): JsonResponse
@@ -55,8 +53,7 @@ class GetSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
     /**
      * Validate query.
      *
-     * @param array $queries
-     *
+     * @param  array  $queries
      * @return array
      */
     private function validateAndTrimSlipEntriesQuery($query): array
@@ -97,19 +94,19 @@ class GetSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
         if (empty($from) && empty($to) && empty($debit) && empty($credit) && empty($keyword)) {
             $success = false;
         }
-        if (!($this->BookKeeping->validatePeriod($from, $to))) {
+        if (! ($this->BookKeeping->validatePeriod($from, $to))) {
             $success = false;
         }
-        if (!empty($operand) && ($operand != 'and') && ($operand != 'or')) {
+        if (! empty($operand) && ($operand != 'and') && ($operand != 'or')) {
             $success = false;
         }
-        if (!empty($debit) && !($this->BookKeeping->validateUuid($debit))) {
+        if (! empty($debit) && ! ($this->BookKeeping->validateUuid($debit))) {
             $success = false;
         }
-        if (!empty($credit) && !($this->BookKeeping->validateUuid($credit))) {
+        if (! empty($credit) && ! ($this->BookKeeping->validateUuid($credit))) {
             $success = false;
         }
-        if (!empty($debit) && !empty($credit) && empty($operand)) {
+        if (! empty($debit) && ! empty($credit) && empty($operand)) {
             $success = false;
         }
         $trimmed_query = ['from' => $from, 'to' => $to, 'debit' => $debit, 'credit' => $credit, 'operand' => $operand, 'keyword' => $keyword];
