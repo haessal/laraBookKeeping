@@ -48,4 +48,23 @@ class DataProvider_Eloquent_BookRepositoryTest extends DataProvider_BookReposito
 
         $this->assertSame($book_expected, $book_actual);
     }
+
+    /**
+     * @test
+     */
+    public function updateName_OneRecordIsUpdated()
+    {
+        $name = 'bookName57';
+        $newName = 'bookNewName58';
+        $bookId = Book::factory()->create([
+            'book_name' => $name,
+        ])->book_id;
+
+        $this->book->updateName($bookId, $newName);
+
+        $this->assertDatabaseHas('bk2_0_books', [
+            'book_id'   => $bookId,
+            'book_name' => $newName,
+        ]);
+    }
 }

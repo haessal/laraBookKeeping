@@ -47,7 +47,9 @@ class BookRepository implements BookRepositoryInterface
     public function updateName(string $bookId, string $newName): void
     {
         $book = Book::find($bookId);
-        $book->book_name = $newName;
-        $book->save();
+        if (! is_null($book)) {
+            $book->book_name = $newName;
+            $book->save();
+        }
     }
 }

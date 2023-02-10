@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 abstract class DataProvider_BookRepositoryInterfaceTest extends TestCase
@@ -34,5 +35,18 @@ abstract class DataProvider_BookRepositoryInterfaceTest extends TestCase
         } else {
             $this->assertTrue(is_array($book));
         }
+    }
+
+    /**
+     * @test
+     */
+    public function updateName_CalledWithTowStrings()
+    {
+        $bookId = (string) Str::uuid();
+        $newName = 'string';
+
+        $this->book->updateName($bookId, $newName);
+
+        $this->assertTrue(true);
     }
 }
