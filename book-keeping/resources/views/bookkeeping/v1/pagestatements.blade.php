@@ -1,23 +1,21 @@
-@extends('bookkeeping.v1.base')
-
-@section('pagetitle', 'Statements')
-
-@section('content')
+@extends('bookkeeping.v1.base') @section('pagetitle', 'Statements') @section('content')
 <div id="accountbook">
     <table>
         <tr>
             <td class="top">
                 <table>
-                <form method="POST" action="{{ route('v1_statements') }}">
-                @csrf
-                    <tr>
-                        <td class="intop">
-                            {{ __('From') }} <input value="{{{ $beginning_date }}}" size="14" name="BEGINNING" type="text" /> &nbsp;&nbsp;
-                            {{ __('To') }} <input value="{{{ $end_date }}}" size="14" name="END" type="text" />
-                            <input name="buttons[OK]" value="OK" type="submit" />
-                        </td>
-                    </tr>
-                </form>
+                    <form method="POST" action="{{ route('v1_statements') }}">
+                        @csrf
+                        <tr>
+                            <td class="intop">
+                                {{ __('From') }}
+                                <input value="{{{ $beginning_date }}}" size="14" name="BEGINNING" type="text" />
+                                &nbsp;&nbsp; {{ __('To') }}
+                                <input value="{{{ $end_date }}}" size="14" name="END" type="text" />
+                                <input name="buttons[OK]" value="OK" type="submit" />
+                            </td>
+                        </tr>
+                    </form>
                 </table>
             </td>
         </tr>
@@ -27,7 +25,10 @@
                 <table>
                     <tr>
                         <td colspan="2">
-                            <b>{{ __('Accounting period') }} &nbsp;&nbsp;{{ __('From') }}: {{{ $beginning_date }}} &nbsp;&nbsp;{{ __('To') }}: {{{ $end_date }}}</b>
+                            <b>
+                                {{ __('Accounting period') }} &nbsp;&nbsp;{{ __('From') }}: {{{ $beginning_date }}}
+                                &nbsp;&nbsp;{{ __('To') }}: {{{ $end_date }}}
+                            </b>
                         </td>
                     </tr>
                     <tr>
@@ -52,17 +53,13 @@
                     </tr>
                     <tr>
                         <td colspan="2" valign="top">
-                        @if (count($slips) != 0)
+                            @if (count($slips) != 0)
                             <b>5. {{ __('Journal') }}</b>
-                            @include('bookkeeping.v1.slips')
-                        @endif
+                            @include('bookkeeping.v1.slips') @endif
                         </td>
                     </tr>
                 </table>
-                @endif
-                @isset($message)
-                    {{ $message }}
-                @endisset
+                @endif @isset($message) {{ $message }} @endisset
             </td>
         </tr>
     </table>

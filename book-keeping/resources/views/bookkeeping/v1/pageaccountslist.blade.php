@@ -1,8 +1,4 @@
-@extends('bookkeeping.v1.base')
-
-@section('pagetitle', 'Accounts List')
-
-@section('content')
+@extends('bookkeeping.v1.base') @section('pagetitle', 'Accounts List') @section('content')
 <div id="accounts">
     <table>
         <tr>

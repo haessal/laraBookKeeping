@@ -6,9 +6,7 @@
         <th class="credit">{{ __('Amount') }}</th>
     </tr>
     @foreach ($trial_balance_of_real_flow as $item)
-    <tr>
-        @include('bookkeeping.v1.debitcreditline')
-    </tr>
+    <tr>@include('bookkeeping.v1.debitcreditline')</tr>
     @endforeach
     <tr>
         <td class="footer"></td>

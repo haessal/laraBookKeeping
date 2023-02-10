@@ -1,13 +1,13 @@
-@extends('bookkeeping.v2.baseaccounts')
-
-@section('v2_page_accounts_content')
+@extends('bookkeeping.v2.baseaccounts') @section('v2_page_accounts_content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-12 col-md-3 bg-light">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
-                        <form method="POST" action="{{ route('v2_accounts_settings_redirect', ['bookId' => $book['id']]) }}">
+                        <form
+                            method="POST"
+                            action="{{ route('v2_accounts_settings_redirect', ['bookId' => $book['id']]) }}">
                             @csrf
                             <div class="form-group">
                                 <div class="row py-1">{{{ __('Accounts Group') }}}</div>
@@ -28,7 +28,9 @@
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <form method="POST" action="{{ route('v2_accounts_settings_redirect', ['bookId' => $book['id']]) }}">
+                        <form
+                            method="POST"
+                            action="{{ route('v2_accounts_settings_redirect', ['bookId' => $book['id']]) }}">
                             @csrf
                             <div class="form-group">
                                 <div class="row py-1">{{{ __('Accounts Item') }}}</div>
@@ -50,9 +52,7 @@
             </div>
         </div>
         <div class="col-12 col-md-9 rounded border">
-            <div class="container-fluid">
-                @yield('v2_page_accounts_settings_content')
-            </div>
+            <div class="container-fluid">@yield('v2_page_accounts_settings_content')</div>
         </div>
     </div>
 </div>

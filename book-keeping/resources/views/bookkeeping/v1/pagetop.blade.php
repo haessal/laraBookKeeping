@@ -1,8 +1,4 @@
-@extends('bookkeeping.v1.base')
-
-@section('pagetitle', 'Top')
-
-@section('content')
+@extends('bookkeeping.v1.base') @section('pagetitle', 'Top') @section('content')
 <div id="accountbook">
     <table>
         <tr>
@@ -25,10 +21,9 @@
                     </tr>
                     <tr>
                         <td colspan="2" valign="top">
-                        @if (count($slips) != 0)
+                            @if (count($slips) != 0)
                             <b>3. {{ __('Journal') }}</b>
-                            @include('bookkeeping.v1.slips')
-                        @endif
+                            @include('bookkeeping.v1.slips') @endif
                         </td>
                     </tr>
                 </table>
