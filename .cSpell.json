@@ -3,6 +3,11 @@
     "version": "0.2",
     "language": "en",
     "ignorePaths": [
+        "book-keeping/resources/views/bookkeeping/v1/**",
+        "book-keeping/resources/views/bookkeeping/v2/**",
+        "book-keeping/app/Http/Controllers/v1/**",
+        "book-keeping/app/Http/Controllers/v2/**",
+        "book-keeping/app/Http/Responder/**",
         "book-keeping/cov.xml",
         "book-keeping/bootstrap/cache/**",
         "book-keeping/node_modules/**",
