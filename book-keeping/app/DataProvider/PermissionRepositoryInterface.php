@@ -26,13 +26,13 @@ interface PermissionRepositoryInterface
     public function delete(int $userId, string $bookId): void;
 
     /**
-     * Find the books that the user can access.
+     * Find the book that the user can access.
      *
      * @param  int  $userId
-     * @param  string|null  $bookId
-     * @return array<int, array<string, string>>
+     * @param  string  $bookId
+     * @return array<string, string>|null
      */
-    public function findAccessibleBooks(int $userId, string $bookId = null): array;
+    public function findBook(int $userId, string $bookId): ?array;
 
     /**
      * Find the permission to access the book.
@@ -73,6 +73,14 @@ interface PermissionRepositoryInterface
      * @return array<string, string>|null
      */
     public function findUserByName(string $name): ?array;
+
+    /**
+     * Search for the available books.
+     *
+     * @param  int  $userId
+     * @return array<int, array<string, string>>
+     */
+    public function searchForAccessibleBooks(int $userId): array;
 
     /**
      * Update the mark for indicating that the book is default one for the user.

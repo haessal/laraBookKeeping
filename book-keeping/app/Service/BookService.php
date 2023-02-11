@@ -110,12 +110,7 @@ class BookService
      */
     public function retrieveBook(string $bookId, int $userId): ?array
     {
-        $booklist = $this->permission->findAccessibleBooks($userId, $bookId);
-        if (count($booklist) == 1) {
-            $book = $booklist[0];
-        } else {
-            $book = null;
-        }
+        $book = $this->permission->findBook($userId, $bookId);
 
         return $book;
     }
@@ -128,7 +123,7 @@ class BookService
      */
     public function retrieveBookList(int $userId): array
     {
-        $booklist = $this->permission->findAccessibleBooks($userId);
+        $booklist = $this->permission->searchForAccessibleBooks($userId);
 
         return $booklist;
     }

@@ -49,30 +49,21 @@ class PermissionRepository implements PermissionRepositoryInterface
     }
 
     /**
-     * Find the books that the user can access.
+     * Find the book that the user can access.
      *
      * @param  int  $userId
-     * @param  string|null  $bookId
-     * @return array<int, array<string, string>>
+     * @param  string  $bookId
+     * @return array<string, string>|null
      */
-    public function findAccessibleBooks(int $userId, string $bookId = null): array
+    public function findBook(int $userId, string $bookId): ?array
     {
-        if (! empty($bookId)) {
-            $list = Permission::select('book_id', 'book_name', 'modifiable', 'is_owner', 'is_default', 'bk2_0_books.created_at')
-                ->join('bk2_0_books', 'bk2_0_books.book_id', '=', 'bk2_0_permissions.readable_book')
-                ->where('permitted_user', $userId)
-                ->where('book_id', $bookId)
-                ->orderBy('bk2_0_books.created_at')
-                ->get()->toArray();
-        } else {
-            $list = Permission::select('book_id', 'book_name', 'modifiable', 'is_owner', 'is_default', 'bk2_0_books.created_at')
-                ->join('bk2_0_books', 'bk2_0_books.book_id', '=', 'bk2_0_permissions.readable_book')
-                ->where('permitted_user', $userId)
-                ->orderBy('bk2_0_books.created_at')
-                ->get()->toArray();
-        }
+        $book = Permission::select('book_id', 'book_name', 'modifiable', 'is_owner', 'is_default', 'bk2_0_books.created_at')
+            ->join('bk2_0_books', 'bk2_0_books.book_id', '=', 'bk2_0_permissions.readable_book')
+            ->where('permitted_user', $userId)
+            ->where('book_id', $bookId)
+            ->first();
 
-        return $list;
+        return is_null($book) ? null : $book->toArray();
     }
 
     /**
@@ -152,6 +143,23 @@ class PermissionRepository implements PermissionRepositoryInterface
         $user = User::where('name', $name)->first();
 
         return is_null($user) ? null : $user->toArray();
+    }
+
+    /**
+     * Search for the available books.
+     *
+     * @param  int  $userId
+     * @return array<int, array<string, string>>
+     */
+    public function searchForAccessibleBooks(int $userId): array
+    {
+        $list = Permission::select('book_id', 'book_name', 'modifiable', 'is_owner', 'is_default', 'bk2_0_books.created_at')
+            ->join('bk2_0_books', 'bk2_0_books.book_id', '=', 'bk2_0_permissions.readable_book')
+            ->where('permitted_user', $userId)
+            ->orderBy('bk2_0_books.created_at')
+            ->get()->toArray();
+
+        return $list;
     }
 
     /**
