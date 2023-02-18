@@ -1,4 +1,4 @@
-FROM php:7.3
+FROM php:8.1
 
 LABEL maintainer="haessal@mizutamauki.net"
 
