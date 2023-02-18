@@ -1,10 +1,23 @@
-# A part of name of developers and packages
+# Common words of Laravel Framework
+
+# A part of name of developers, company, services, packages and tools
 arjun
+barryvdh
+beanstalkd
 bmewburn
 bradlc
+Curotec
 eamodio
+Envoyer
 felixfbecker
 humao
 intelephense
-mysqld
+nunomaduro
+Otwell
 ryanluker
+Vehikl
+
+# Misc
+dont
+EHLO
+sasl
