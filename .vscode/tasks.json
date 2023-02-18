@@ -20,6 +20,14 @@
             }
         },
         {
+            "label": "HTML/CSS format checking",
+            "type": "shell",
+            "command": "npx prettier --check **/*.blade.php",
+            "options": {
+                "cwd": "${workspaceFolder}/book-keeping"
+            }    
+        },
+        {
             "label": "unit test",
             "type": "shell",
             "command": "./vendor/bin/phpunit --testdox",
