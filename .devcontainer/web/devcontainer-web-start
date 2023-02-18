@@ -1,0 +1,9 @@
+#!/bin/bash
+set -e
+
+echo "Set www-data's id with UID: $WWW_DATA_UID, GID: $WWW_DATA_GID"
+
+groupmod -g $WWW_DATA_GID -o www-data
+usermod -u $WWW_DATA_UID -g $WWW_DATA_GID -o www-data
+
+exec "apache2-foreground"

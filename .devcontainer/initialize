@@ -1,0 +1,26 @@
+#!/bin/bash
+set -e
+
+ENV_FILE=`dirname $0`/devcontainer_user.env
+
+if [ -e ${ENV_FILE} ]; then
+    echo "${ENV_FILE} already exists."
+else
+    DEVCONTAINER_HOST_OS=`uname`
+    cat << EOS > ${ENV_FILE}
+DEVCONTAINER_HOST_OS=${DEVCONTAINER_HOST_OS}
+DEVCONTAINER_USER_ENV_VERSION=1
+EOS
+    if [ "${DEVCONTAINER_HOST_OS}_OS" = "Linux_OS" ]; then
+        LOCAL_USER_UID=`id -u`
+        LOCAL_USER_GID=`id -g`
+        echo "LOCAL_USER: UID=${LOCAL_USER_UID} GID=${LOCAL_USER_GID}"
+        cat << EOS >> ${ENV_FILE}
+
+USER_UID=${LOCAL_USER_UID}
+USER_GID=${LOCAL_USER_GID}
+WWW_DATA_UID=${LOCAL_USER_UID}
+WWW_DATA_GID=${LOCAL_USER_GID}
+EOS
+    fi
+fi

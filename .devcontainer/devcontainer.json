@@ -1,0 +1,40 @@
+{
+    "name": "laravel-devcontainer",
+    "initializeCommand": ".devcontainer/initialize",
+    "dockerComposeFile": [
+        "docker-compose.yml"
+    ],
+    "service": "workspace",
+    "workspaceFolder": "/workspace",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "cSpell.customDictionaries": {
+                    "project-words": {
+                        "name": "project-words",
+                        "path": "${workspaceRoot}/.cSpell.words.txt",
+                        "description": "Words used in this project",
+                        "addWords": true
+                    }
+                }
+            },
+            "extensions": [
+                "arjun.swagger-viewer",
+                "bmewburn.vscode-intelephense-client",
+                "bradlc.vscode-tailwindcss",
+                "csstools.postcss",
+                "eamodio.gitlens",
+                "felixfbecker.php-intellisense",
+                "humao.rest-client",
+                "mikestead.dotenv",
+                "neilbrayfield.php-docblocker",
+                "ryanluker.vscode-coverage-gutters",
+                "shd101wyy.markdown-preview-enhanced",
+                "streetsidesoftware.code-spell-checker",
+                "xdebug.php-debug"
+            ]
+        }
+    },
+    "remoteUser": "developer"
+}
