@@ -28,6 +28,17 @@
             }    
         },
         {
+            "label": "static analysis",
+            "type": "shell",
+            "command": "./vendor/bin/phpstan analyse",
+            "options": {
+                "cwd": "${workspaceFolder}/book-keeping",
+                "env": {
+                    "XDEBUG_MODE": "off"
+                }
+            }
+        },
+        {
             "label": "unit test",
             "type": "shell",
             "command": "./vendor/bin/phpunit --testdox",
