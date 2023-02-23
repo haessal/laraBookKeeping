@@ -25,7 +25,7 @@
             "command": "npx prettier --check **/*.blade.php",
             "options": {
                 "cwd": "${workspaceFolder}/book-keeping"
-            }    
+            }
         },
         {
             "label": "static analysis",
@@ -57,6 +57,30 @@
                 "cwd": "${workspaceFolder}/book-keeping",
                 "env": {
                     "XDEBUG_MODE": "coverage"
+                }
+            }
+        },
+        {
+            "label": "migrate:fresh",
+            "type": "shell",
+            "command": "php artisan migrate:fresh",
+            "options": {
+                "cwd": "${workspaceFolder}/book-keeping",
+                "env": {
+                    "XDEBUG_MODE": "off",
+                    "DB_DATABASE": "devcontainer"
+                }
+            }
+        },
+        {
+            "label": "migrate:fresh with seed",
+            "type": "shell",
+            "command": "php artisan migrate:fresh --seed",
+            "options": {
+                "cwd": "${workspaceFolder}/book-keeping",
+                "env": {
+                    "XDEBUG_MODE": "off",
+                    "DB_DATABASE": "devcontainer"
                 }
             }
         }
