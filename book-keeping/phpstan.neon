@@ -4,6 +4,16 @@ parameters:
     excludePaths:
         - app/Console/Kernel.php
         - app/Exceptions/Handler.php
+        - app/Http/Controllers/Auth/AuthenticatedSessionController.php
+        - app/Http/Controllers/Auth/ConfirmablePasswordController.php
+        - app/Http/Controllers/Auth/EmailVerificationNotificationController.php
+        - app/Http/Controllers/Auth/EmailVerificationPromptController.php
+        - app/Http/Controllers/Auth/NewPasswordController.php
+        - app/Http/Controllers/Auth/PasswordController.php
+        - app/Http/Controllers/Auth/PasswordResetLinkController.php
+        - app/Http/Controllers/Auth/RegisteredUserController.php
+        - app/Http/Controllers/Auth/VerifyEmailController.php
+        - app/Http/Controllers/ProfileController.php
         - app/Http/Middleware/Authenticate.php
         - app/Http/Middleware/EncryptCookies.php
         - app/Http/Middleware/PreventRequestsDuringMaintenance.php
@@ -14,9 +24,13 @@ parameters:
         - app/Http/Middleware/ValidateSignature.php
         - app/Http/Middleware/VerifyCsrfToken.php
         - app/Http/Kernel.php
+        - app/Http/Requests/Auth/LoginRequest.php
+        - app/Http/Requests/ProfileUpdateRequest.php
         - app/Providers/AppServiceProvider.php
         - app/Providers/AuthServiceProvider.php
         - app/Providers/BroadcastServiceProvider.php
         - app/Providers/EventServiceProvider.php
         - app/Providers/RouteServiceProvider.php
+        - app/View/Components/AppLayout.php
+        - app/View/Components/GuestLayout.php
     level: 9
