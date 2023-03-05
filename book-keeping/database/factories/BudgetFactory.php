@@ -17,7 +17,11 @@ class BudgetFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'budget_id' => fake()->uuid(),
+            'book_id' => fake()->uuid(),
+            'account_code' => fake()->uuid(),
+            'date' => fake()->date(),
+            'amount' => fake()->randomNumber(),
         ];
     }
 }

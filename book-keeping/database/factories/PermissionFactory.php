@@ -17,7 +17,12 @@ class PermissionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'permission_id' => fake()->uuid(),
+            'permitted_user' => fake()->randomNumber(),
+            'readable_book' => fake()->uuid(),
+            'modifiable' => fake()->boolean(),
+            'is_owner' => fake()->boolean(),
+            'is_default' => fake()->boolean(),
         ];
     }
 }
