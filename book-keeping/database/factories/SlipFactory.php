@@ -17,7 +17,12 @@ class SlipFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'slip_id' => fake()->uuid(),
+            'book_id' => fake()->uuid(),
+            'slip_outline' => fake()->sentence(),
+            'slip_memo' => fake()->paragraph(),
+            'date' => fake()->date(),
+            'is_draft' => fake()->boolean(),
         ];
     }
 }

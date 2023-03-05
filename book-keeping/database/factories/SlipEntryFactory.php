@@ -17,7 +17,13 @@ class SlipEntryFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'slip_entry_id' => fake()->uuid(),
+            'slip_id' => fake()->uuid(),
+            'debit' => fake()->uuid(),
+            'credit' => fake()->uuid(),
+            'amount' => fake()->numberBetween(1),
+            'client' => fake()->word(),
+            'outline' => fake()->sentence(),
         ];
     }
 }
