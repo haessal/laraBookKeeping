@@ -14,8 +14,16 @@ return new class extends Migration
     public function up()
     {
         Schema::create('bk2_0_budgets', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('budget_id')->primary();
+            $table->uuid('book_id');
+            $table->foreign('book_id')->references('book_id')->on('bk2_0_books');
+            $table->uuid('account_code');
+            $table->foreign('account_code')->references('account_id')->on('bk2_0_accounts');
+            $table->date('date');
+            $table->bigInteger('amount');
+            $table->bigInteger('display_order')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
