@@ -17,7 +17,11 @@ class AccountGroupFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'account_group_id' => fake()->uuid(),
+            'book_id' => fake()->uuid(),
+            'account_type' => fake()->randomElement(['asset', 'liability', 'expense', 'revenue']),
+            'account_group_title' => fake()->word(),
+            'is_current' => fake()->boolean(),
         ];
     }
 }
