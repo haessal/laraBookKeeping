@@ -14,8 +14,16 @@ return new class extends Migration
     public function up()
     {
         Schema::create('bk2_0_slips', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('slip_id')->primary();
+            $table->uuid('book_id');
+            $table->foreign('book_id')->references('book_id')->on('bk2_0_books');
+            $table->string('slip_outline', 200);
+            $table->string('slip_memo', 500)->nullable();
+            $table->date('date');
+            $table->boolean('is_draft');
+            $table->bigInteger('display_order')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -14,8 +14,19 @@ return new class extends Migration
     public function up()
     {
         Schema::create('bk2_0_slip_entries', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('slip_entry_id')->primary();
+            $table->uuid('slip_id');
+            $table->foreign('slip_id')->references('slip_id')->on('bk2_0_slips');
+            $table->uuid('debit');
+            $table->foreign('debit')->references('account_id')->on('bk2_0_accounts');
+            $table->uuid('credit');
+            $table->foreign('credit')->references('account_id')->on('bk2_0_accounts');
+            $table->bigInteger('amount');
+            $table->string('client', 40);
+            $table->string('outline', 200);
+            $table->bigInteger('display_order')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
