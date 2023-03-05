@@ -14,8 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::create('bk2_0_books', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('book_id')->primary();
+            $table->string('book_name');
+            $table->bigInteger('display_order')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
