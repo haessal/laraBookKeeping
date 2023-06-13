@@ -39,6 +39,7 @@ class GetBooksActionApi extends AuthenticatedBookKeepingActionApi
     public function __invoke(Request $request): JsonResponse
     {
         $context = [];
+
         $context['books'] = $this->BookKeeping->retrieveAvailableBooks();
 
         return $this->responder->response($context);
