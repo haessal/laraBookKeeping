@@ -33,7 +33,7 @@ class BookCreationTest extends TestCase
                 'name'         => $bookName,
                 'default'      => false,
                 'own'          => true,
-                'permitted_to' => "ReadWrite",
+                'permitted_to' => 'ReadWrite',
                 'owner'        => $this->user->name,
             ]);
         $this->assertDatabaseHas('bk2_0_books', [

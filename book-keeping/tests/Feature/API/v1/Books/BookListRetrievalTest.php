@@ -70,7 +70,6 @@ class BookListRetrievalTest extends TestCase
             'is_owner'       => true,
             'is_default'     => true,
         ]);
-
     }
 
     public function test_book_list_can_be_retrieved(): void
@@ -85,9 +84,9 @@ class BookListRetrievalTest extends TestCase
                     'name'         => $this->book->book_name,
                     'default'      => true,
                     'own'          => true,
-                    'permitted_to' => "ReadWrite",
+                    'permitted_to' => 'ReadWrite',
                     'owner'        => $this->user->name,
-                ]
+                ],
             ])
             ->assertJsonFragment([
                 [
@@ -95,9 +94,9 @@ class BookListRetrievalTest extends TestCase
                     'name'         => $this->sharedBook->book_name,
                     'default'      => false,
                     'own'          => false,
-                    'permitted_to' => "ReadOnly",
+                    'permitted_to' => 'ReadOnly',
                     'owner'        => $this->otherUser->name,
-                ]
+                ],
             ])
             ->assertJsonMissing(['id' => $this->unavailableBook->book_id]);
     }
