@@ -40,6 +40,7 @@ class PostBooksActionApi extends AuthenticatedBookKeepingActionApi
     {
         $context = [];
         $response = null;
+
         $result = $this->validateAndTrimPostBooksParameter($request->all());
         if ($result['success']) {
             $bookId = $this->BookKeeping->createBook($result['name']);
@@ -51,6 +52,7 @@ class PostBooksActionApi extends AuthenticatedBookKeepingActionApi
         } else {
             $response = new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
         }
+
         if (is_null($response)) {
             $response = new JsonResponse(null, JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
