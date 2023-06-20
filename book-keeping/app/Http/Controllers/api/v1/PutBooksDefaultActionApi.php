@@ -8,7 +8,7 @@ use App\Service\BookKeepingService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class PostBooksDefaultActionApi extends AuthenticatedBookKeepingActionApi
+class PutBooksDefaultActionApi extends AuthenticatedBookKeepingActionApi
 {
     /**
      * BookJson responder instance.
