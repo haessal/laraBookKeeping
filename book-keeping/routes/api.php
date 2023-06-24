@@ -15,9 +15,9 @@ use App\Http\Controllers\api\v1\PatchBooksActionApi;
 use App\Http\Controllers\api\v1\PatchSlipEntriesActionApi;
 use App\Http\Controllers\api\v1\PatchSlipsActionApi;
 use App\Http\Controllers\api\v1\PostBooksActionApi;
-use App\Http\Controllers\api\v1\PutBooksDefaultActionApi;
-use App\Http\Controllers\api\v1\PostBooksPermissionsActionApi;
 use App\Http\Controllers\api\v1\PostSlipsActionApi;
+use App\Http\Controllers\api\v1\PutBooksDefaultActionApi;
+use App\Http\Controllers\api\v1\PutBooksPermissionsActionApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -45,7 +45,7 @@ Route::prefix('v1')->group(function () {
     Route::put('/books/{bookId}/default', PutBooksDefaultActionApi::class);
     Route::delete('/books/{bookId}/default', DeleteBooksDefaultActionApi::class);
     Route::get('/books/{bookId}/permissions', GetBooksPermissionsActionApi::class);
-    Route::post('/books/{bookId}/permissions', PostBooksPermissionsActionApi::class);
+    Route::put('/books/{bookId}/permissions', PutBooksPermissionsActionApi::class);
     Route::delete('/books/{bookId}/permissions', DeleteBooksPermissionsActionApi::class);
 
     Route::get('/accounts', GetAccountsActionApi::class);
