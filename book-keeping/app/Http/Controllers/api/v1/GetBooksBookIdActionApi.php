@@ -41,16 +41,16 @@ class GetBooksBookIdActionApi extends AuthenticatedBookKeepingActionApi
     {
         $context = [];
 
-        if ($this->BookKeeping->validateUuid($bookId)) {
-            $book = $this->BookKeeping->retrieveBook($bookId);
-            if (isset($book)) {
-                $context['book'] = $book;
-                $response = $this->responder->response($context);
-            } else {
-                $response = new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
-            }
+        if (!$this->BookKeeping->validateUuid($bookId)) {
+            return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        $book = $this->BookKeeping->retrieveBook($bookId);
+        if (isset($book)) {
+            $context['book'] = $book;
+            $response = $this->responder->response($context);
         } else {
-            $response = new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
+            $response = new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
         }
 
         return $response;

@@ -42,17 +42,16 @@ class PostBooksActionApi extends AuthenticatedBookKeepingActionApi
         $response = null;
 
         $result = $this->validateAndTrimPostBooksParameter($request->all());
-        if ($result['success']) {
-            $bookId = $this->BookKeeping->createBook($result['name']);
-            $book = $this->BookKeeping->retrieveBook($bookId);
-            if (isset($book)) {
-                $context['book'] = $book;
-                $response = $this->responder->response($context, JsonResponse::HTTP_CREATED);
-            }
-        } else {
-            $response = new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
+        if (!$result['success']) {
+            return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
         }
 
+        $bookId = $this->BookKeeping->createBook($result['name']);
+        $book = $this->BookKeeping->retrieveBook($bookId);
+        if (isset($book)) {
+            $context['book'] = $book;
+            $response = $this->responder->response($context, JsonResponse::HTTP_CREATED);
+        }
         if (is_null($response)) {
             $response = new JsonResponse(null, JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
