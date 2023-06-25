@@ -96,7 +96,7 @@ class BookRetrievalTest extends TestCase
         $response->assertNotFound();
     }
 
-    public function test_book_is_not_retrieved_with_invalid_parameter(): void
+    public function test_book_is_not_retrieved_with_invalid_path_parameter_for_book_id(): void
     {
         $response = $this->actingAs($this->user)
             ->get('/api/v1/books/0');

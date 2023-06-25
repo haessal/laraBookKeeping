@@ -49,7 +49,7 @@ class BookCreationTest extends TestCase
         ]);
     }
 
-    public function test_book_is_not_created_with_invalid_parameter(): void
+    public function test_book_is_not_created_with_invalid_request_body(): void
     {
         $response = $this->actingAs($this->user)
             ->post('/api/v1/books');

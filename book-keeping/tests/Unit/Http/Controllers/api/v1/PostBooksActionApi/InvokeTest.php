@@ -18,7 +18,7 @@ class InvokeTest extends TestCase
         Mockery::close();
     }
 
-    public function test_it_returns_internal_server_error_with_unexpected_bookkeeping_service_behavior(): void
+    public function test_it_returns_internal_server_error_without_book_from_bookkeeping_service(): void
     {
         $title = 'BookTitle28';
         $bookId = (string) Str::uuid();
