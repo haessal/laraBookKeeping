@@ -42,7 +42,7 @@ class PostBooksActionApi extends AuthenticatedBookKeepingActionApi
         $response = null;
 
         $result = $this->validateAndTrimPostBooksParameter($request->all());
-        if (!$result['success']) {
+        if (! $result['success']) {
             return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
         }
 

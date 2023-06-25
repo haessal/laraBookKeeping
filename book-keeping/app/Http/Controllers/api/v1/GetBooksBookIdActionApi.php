@@ -41,7 +41,7 @@ class GetBooksBookIdActionApi extends AuthenticatedBookKeepingActionApi
     {
         $context = [];
 
-        if (!$this->BookKeeping->validateUuid($bookId)) {
+        if (! $this->BookKeeping->validateUuid($bookId)) {
             return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
         }
 
