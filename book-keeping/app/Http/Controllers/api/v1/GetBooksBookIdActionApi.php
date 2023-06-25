@@ -40,12 +40,17 @@ class GetBooksBookIdActionApi extends AuthenticatedBookKeepingActionApi
     public function __invoke(Request $request, string $bookId): JsonResponse
     {
         $context = [];
-        $book = $this->BookKeeping->retrieveBook($bookId);
-        if (! empty($book)) {
-            $context['book'] = $book;
-            $response = $this->responder->response($context);
+
+        if ($this->BookKeeping->validateUuid($bookId)) {
+            $book = $this->BookKeeping->retrieveBook($bookId);
+            if (isset($book)) {
+                $context['book'] = $book;
+                $response = $this->responder->response($context);
+            } else {
+                $response = new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
+            }
         } else {
-            $response = new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
+            $response = new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
         }
 
         return $response;
