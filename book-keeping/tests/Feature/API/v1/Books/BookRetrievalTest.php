@@ -75,7 +75,7 @@ class BookRetrievalTest extends TestCase
     public function test_book_can_be_retrieved(): void
     {
         $response = $this->actingAs($this->user)
-            ->get('/api/v1/books/' . $this->book->book_id);
+            ->get('/api/v1/books/'.$this->book->book_id);
 
         $response->assertOk()
             ->assertJson([
@@ -91,7 +91,7 @@ class BookRetrievalTest extends TestCase
     public function test_book_is_not_found(): void
     {
         $response = $this->actingAs($this->user)
-            ->get('/api/v1/books/' . $this->unavailableBook->book_id);
+            ->get('/api/v1/books/'.$this->unavailableBook->book_id);
 
         $response->assertNotFound();
     }
@@ -107,7 +107,7 @@ class BookRetrievalTest extends TestCase
     public function test_shared_book_can_be_retrieved(): void
     {
         $response = $this->actingAs($this->user)
-            ->get('/api/v1/books/' . $this->sharedBook->book_id);
+            ->get('/api/v1/books/'.$this->sharedBook->book_id);
 
         $response->assertOk()
             ->assertJson([
@@ -119,5 +119,4 @@ class BookRetrievalTest extends TestCase
                 'owner'        => $this->otherUser->name,
             ]);
     }
-
 }
