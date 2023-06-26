@@ -39,22 +39,24 @@ class GetBooksDefaultActionApi extends AuthenticatedBookKeepingActionApi
     public function __invoke(Request $request): JsonResponse
     {
         $context = [];
+        $response = null;
+
         [$status, $book] = $this->BookKeeping->retrieveDefaultBook();
         switch ($status) {
             case BookKeepingService::STATUS_NORMAL:
                 if (isset($book)) {
                     $context['book'] = $book;
                     $response = $this->responder->response($context);
-                } else {
-                    $response = new JsonResponse(null, JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
                 }
                 break;
             case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
                 $response = new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
                 break;
             default:
-                $response = new JsonResponse(null, JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
                 break;
+        }
+        if (is_null($response)) {
+            $response = new JsonResponse(null, JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return $response;
