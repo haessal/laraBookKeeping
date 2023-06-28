@@ -45,13 +45,13 @@ class PutBooksPermissionsActionApi extends AuthenticatedBookKeepingActionApi
         if (! $this->BookKeeping->validateUuid($bookId)) {
             return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
         } else {
-            $result = $this->validateAndTrimPostBooksPermissionParameter($request->all());
+            $result = $this->validateAndTrimPutBooksPermissionParameter($request->all());
             if (! $result['success']) {
                 return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
             }
         }
 
-        [$status, $_] = $this->BookKeeping->authorizeToAccess($bookId, $result['user'], $result['mode']);
+        [$status, $_] = $this->BookKeeping->authorizeToAccess($bookId, $result['user'], $result['permitted_to']);
         switch ($status) {
             case BookKeepingService::STATUS_NORMAL:
                 [$retrievalStatus, $permissionList] = $this->BookKeeping->retrievePermittedUsers($bookId);
@@ -85,16 +85,16 @@ class PutBooksPermissionsActionApi extends AuthenticatedBookKeepingActionApi
      * @param  array<string, mixed>  $parameter
      * @return array{success: bool, user: string, mode: 'ReadOnly'|'ReadWrite'|''}
      */
-    private function validateAndTrimPostBooksPermissionParameter(array $parameter): array
+    private function validateAndTrimPutBooksPermissionParameter(array $parameter): array
     {
         $success = false;
         $trimmed_user = '';
         $trimmed_mode = '';
-        if (array_key_exists('user', $parameter) && array_key_exists('mode', $parameter)) {
-            if (is_string($parameter['user']) && is_string($parameter['mode'])) {
+        if (array_key_exists('user', $parameter) && array_key_exists('permitted_to', $parameter)) {
+            if (is_string($parameter['user']) && is_string($parameter['permitted_to'])) {
                 $user = trim($parameter['user']);
                 if (! empty($user)) {
-                    $mode = trim($parameter['mode']);
+                    $mode = trim($parameter['permitted_to']);
                     if ((! empty($mode)) && (($mode == 'ReadOnly') || ($mode == 'ReadWrite'))) {
                         $success = true;
                         $trimmed_user = $user;
@@ -104,6 +104,6 @@ class PutBooksPermissionsActionApi extends AuthenticatedBookKeepingActionApi
             }
         }
 
-        return ['success' => $success, 'user' => $trimmed_user,  'mode' => $trimmed_mode];
+        return ['success' => $success, 'user' => $trimmed_user,  'permitted_to' => $trimmed_mode];
     }
 }
