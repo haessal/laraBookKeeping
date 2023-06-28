@@ -51,7 +51,8 @@ class PutBooksPermissionsActionApi extends AuthenticatedBookKeepingActionApi
             }
         }
 
-        [$status, $_] = $this->BookKeeping->authorizeToAccess($bookId, $result['user'], $result['permitted_to']);
+        $mode = $result['permitted_to'] == 'ReadWrite' ? 'ReadWrite' : 'ReadOnly';
+        [$status, $_] = $this->BookKeeping->authorizeToAccess($bookId, $result['user'], $mode);
         switch ($status) {
             case BookKeepingService::STATUS_NORMAL:
                 [$retrievalStatus, $permissionList] = $this->BookKeeping->retrievePermittedUsers($bookId);
@@ -83,7 +84,7 @@ class PutBooksPermissionsActionApi extends AuthenticatedBookKeepingActionApi
      * Validate the parameter and trim string data.
      *
      * @param  array<string, mixed>  $parameter
-     * @return array{success: bool, user: string, mode: 'ReadOnly'|'ReadWrite'|''}
+     * @return array{success: bool, user: string, permitted_to: 'ReadOnly'|'ReadWrite'|''}
      */
     private function validateAndTrimPutBooksPermissionParameter(array $parameter): array
     {
