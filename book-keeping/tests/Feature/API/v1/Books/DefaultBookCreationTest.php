@@ -140,6 +140,13 @@ class DefaultBookCreationTest extends TestCase
             ->put('/api/v1/books/'.$this->unavailableBook->book_id.'/default');
 
         $response->assertUnprocessable();
+        $this->assertDatabaseHas('bk2_0_permissions', [
+            'permitted_user' => $this->otherUser->id,
+            'readable_book'  => $this->unavailableBook->book_id,
+            'modifiable'     => true,
+            'is_owner'       => true,
+            'is_default'     => false,
+        ]);
     }
 
     public function test_book_is_not_updated_without_permission(): void
