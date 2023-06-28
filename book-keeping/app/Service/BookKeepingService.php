@@ -22,6 +22,7 @@ class BookKeepingService
     const STATUS_NORMAL = 0;
     const STATUS_ERROR_AUTH_NOTAVAILABLE = 1;
     const STATUS_ERROR_AUTH_FORBIDDEN = 2;
+    const STATUS_ERROR_BAD_CONDITION = 3;
 
     /**
      * Account service instance.
@@ -880,12 +881,12 @@ class BookKeepingService
             return [$reason, null];
         }
         $previous_default = $this->book->retrieveDefaultBook(intval(Auth::id()));
-        if (is_null($previous_default)) {
+        if (is_null($previous_default) || ($previous_default == $bookId)) {
             $this->book->updateDefaultMarkOf($bookId, intval(Auth::id()), true);
 
             return [self::STATUS_NORMAL, $this->retrieveBook($bookId)];
         } else {
-            return [self::STATUS_NORMAL, null];
+            return [self::STATUS_ERROR_BAD_CONDITION, null];
         }
     }
 
