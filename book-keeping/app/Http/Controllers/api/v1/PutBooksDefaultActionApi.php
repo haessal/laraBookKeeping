@@ -40,35 +40,34 @@ class PutBooksDefaultActionApi extends AuthenticatedBookKeepingActionApi
     public function __invoke(Request $request, string $bookId): JsonResponse
     {
         $context = [];
-        if ($this->BookKeeping->validateUuid($bookId)) {
-            [$status, $book] = $this->BookKeeping->setBookAsDefault($bookId);
-            switch ($status) {
-                case BookKeepingService::STATUS_NORMAL:
-                    if (isset($book)) {
-                        $context['book'] = $book;
-                        $response = $this->responder->response($context, JsonResponse::HTTP_CREATED);
-                    } else {
-                        $book = $this->BookKeeping->retrieveBook($bookId);
-                        if (isset($book)) {
-                            $context['book'] = $book;
-                            $response = $this->responder->response($context);
-                        } else {
-                            $response = new JsonResponse(null, JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-                        }
-                    }
-                    break;
-                case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
-                    $response = new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
-                    break;
-                case BookKeepingService::STATUS_ERROR_AUTH_FORBIDDEN:
-                    $response = new JsonResponse(null, JsonResponse::HTTP_FORBIDDEN);
-                    break;
-                default:
-                    $response = new JsonResponse(null, JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-                    break;
-            }
-        } else {
-            $response = new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
+        $response = null;
+
+        if (! $this->BookKeeping->validateUuid($bookId)) {
+            return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        [$status, $book] = $this->BookKeeping->setBookAsDefault($bookId);
+        switch ($status) {
+            case BookKeepingService::STATUS_NORMAL:
+                if (isset($book)) {
+                    $context['book'] = $book;
+                    $response = $this->responder->response($context);
+                }
+                break;
+            case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
+                $response = new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
+                break;
+            case BookKeepingService::STATUS_ERROR_AUTH_FORBIDDEN:
+                $response = new JsonResponse(null, JsonResponse::HTTP_FORBIDDEN);
+                break;
+            case BookKeepingService::STATUS_ERROR_BAD_CONDITION:
+                $response = new JsonResponse(null, JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+                break;
+            default:
+                break;
+        }
+        if (is_null($response)) {
+            $response = new JsonResponse(null, JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return $response;
