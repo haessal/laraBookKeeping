@@ -150,7 +150,7 @@ class PermissionCreationTest extends TestCase
 
         $response->assertBadRequest();
     }
-    
+
     public function test_permission_is_not_updated_with_invalid_request_body(): void
     {
         $response = $this->actingAs($this->user)
@@ -180,7 +180,7 @@ class PermissionCreationTest extends TestCase
             'modifiable'     => false,
             'is_owner'       => false,
             'is_default'     => false,
-        ]);    
+        ]);
     }
 
     public function test_permission_for_non_owner_can_be_updated_to_read_write(): void
@@ -204,7 +204,7 @@ class PermissionCreationTest extends TestCase
             'modifiable'     => true,
             'is_owner'       => false,
             'is_default'     => false,
-        ]);    
+        ]);
     }
 
     public function test_permission_for_non_owner_is_already_updated_to_read_only(): void
@@ -228,7 +228,7 @@ class PermissionCreationTest extends TestCase
             'modifiable'     => false,
             'is_owner'       => false,
             'is_default'     => false,
-        ]);    
+        ]);
     }
 
     public function test_permission_for_non_owner_is_already_updated_to_read_write(): void
@@ -252,7 +252,7 @@ class PermissionCreationTest extends TestCase
             'modifiable'     => true,
             'is_owner'       => false,
             'is_default'     => false,
-        ]);    
+        ]);
     }
 
     public function test_permission_for_non_owner_is_not_updated_to_read_only_with_bad_condition(): void
@@ -270,7 +270,7 @@ class PermissionCreationTest extends TestCase
             'modifiable'     => true,
             'is_owner'       => false,
             'is_default'     => false,
-        ]);    
+        ]);
     }
 
     public function test_permission_for_non_owner_is_not_updated_to_read_write_with_bad_condition(): void
@@ -288,7 +288,7 @@ class PermissionCreationTest extends TestCase
             'modifiable'     => false,
             'is_owner'       => false,
             'is_default'     => false,
-        ]);    
+        ]);
     }
 
     public function test_permission_for_owner_is_already_updated_to_read_write(): void
@@ -312,7 +312,7 @@ class PermissionCreationTest extends TestCase
             'modifiable'     => true,
             'is_owner'       => true,
             'is_default'     => true,
-        ]);    
+        ]);
     }
 
     public function test_permission_for_owner_is_not_updated_to_read_only_with_bad_condition(): void
@@ -330,6 +330,6 @@ class PermissionCreationTest extends TestCase
             'modifiable'     => true,
             'is_owner'       => true,
             'is_default'     => true,
-        ]);    
+        ]);
     }
 }

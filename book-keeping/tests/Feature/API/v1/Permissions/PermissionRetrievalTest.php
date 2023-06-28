@@ -85,7 +85,6 @@ class PermissionRetrievalTest extends TestCase
                     'permitted_to' => 'ReadOnly',
                 ],
             ]);
-
     }
 
     public function test_permission_is_not_retrieved_for_non_owner(): void

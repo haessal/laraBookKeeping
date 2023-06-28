@@ -145,14 +145,14 @@ class PermissionDeletionTest extends TestCase
             'modifiable'     => true,
             'is_owner'       => false,
             'is_default'     => false,
-        ]);    
+        ]);
         $this->assertDatabaseMissing('bk2_0_permissions', [
             'permitted_user' => $this->otherUser->id,
             'readable_book'  => $this->sharedWritableBook->book_id,
             'modifiable'     => false,
             'is_owner'       => false,
             'is_default'     => false,
-        ]);    
+        ]);
     }
 
     public function test_permission_for_non_owner_is_already_updated(): void
@@ -170,14 +170,14 @@ class PermissionDeletionTest extends TestCase
             'modifiable'     => true,
             'is_owner'       => false,
             'is_default'     => false,
-        ]);    
+        ]);
         $this->assertDatabaseMissing('bk2_0_permissions', [
             'permitted_user' => $this->otherUser->id,
             'readable_book'  => $this->book->book_id,
             'modifiable'     => false,
             'is_owner'       => false,
             'is_default'     => false,
-        ]);    
+        ]);
     }
 
     public function test_permission_for_owner_is_not_updated_with_bad_condition(): void
@@ -194,6 +194,6 @@ class PermissionDeletionTest extends TestCase
             'modifiable'     => true,
             'is_owner'       => true,
             'is_default'     => true,
-        ]);    
+        ]);
     }
 }
