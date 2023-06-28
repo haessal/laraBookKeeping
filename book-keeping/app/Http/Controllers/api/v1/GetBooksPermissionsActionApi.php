@@ -39,26 +39,30 @@ class GetBooksPermissionsActionApi extends AuthenticatedBookKeepingActionApi
      */
     public function __invoke(Request $request, string $bookId): JsonResponse
     {
-        if ($this->BookKeeping->validateUuid($bookId)) {
-            $context = [];
-            [$status, $permissionList] = $this->BookKeeping->retrievePermittedUsers($bookId);
-            switch ($status) {
-                case BookKeepingService::STATUS_NORMAL:
-                    $context['permission_list'] = $permissionList;
-                    $response = $this->responder->response($context);
-                    break;
-                case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
-                    $response = new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
-                    break;
-                case BookKeepingService::STATUS_ERROR_AUTH_FORBIDDEN:
-                    $response = new JsonResponse(null, JsonResponse::HTTP_FORBIDDEN);
-                    break;
-                default:
-                    $response = new JsonResponse(null, JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-                    break;
-            }
-        } else {
-            $response = new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
+        $context = [];
+        $response = null;
+
+        if (! $this->BookKeeping->validateUuid($bookId)) {
+            return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        [$status, $permissionList] = $this->BookKeeping->retrievePermittedUsers($bookId);
+        switch ($status) {
+            case BookKeepingService::STATUS_NORMAL:
+                $context['permission_list'] = $permissionList;
+                $response = $this->responder->response($context);
+                break;
+            case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
+                $response = new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
+                break;
+            case BookKeepingService::STATUS_ERROR_AUTH_FORBIDDEN:
+                $response = new JsonResponse(null, JsonResponse::HTTP_FORBIDDEN);
+                break;
+            default:
+                break;
+        }
+        if (is_null($response)) {
+            $response = new JsonResponse(null, JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return $response;

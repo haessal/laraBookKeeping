@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\api\AuthenticatedBookKeepingActionApi;
+use App\Http\Responder\api\v1\BookAccessPermissionListJsonResponder;
 use App\Service\BookKeepingService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -10,14 +11,23 @@ use Illuminate\Http\Request;
 class DeleteBooksPermissionsActionApi extends AuthenticatedBookKeepingActionApi
 {
     /**
+     * BookAccessPermissionListJson responder instance.
+     *
+     * @var \App\Http\Responder\api\v1\BookAccessPermissionListJsonResponder
+     */
+    private $responder;
+
+    /**
      * Create a new controller instance.
      *
      * @param  \App\Service\BookKeepingService  $BookKeeping
+     * @param  \App\Http\Responder\api\v1\BookAccessPermissionListJsonResponder  $responder
      * @return void
      */
-    public function __construct(BookKeepingService $BookKeeping)
+    public function __construct(BookKeepingService $BookKeeping, BookAccessPermissionListJsonResponder $responder)
     {
         parent::__construct($BookKeeping);
+        $this->responder = $responder;
     }
 
     /**
@@ -29,29 +39,38 @@ class DeleteBooksPermissionsActionApi extends AuthenticatedBookKeepingActionApi
      */
     public function __invoke(Request $request, string $bookId): JsonResponse
     {
-        $result = $this->validateAndTrimDeleteBooksPermissionParameter($request->all());
-        if ($result['success'] && $this->BookKeeping->validateUuid($bookId)) {
-            [$status, $permission] = $this->BookKeeping->forbidToAccess($bookId, $result['user']);
-            switch ($status) {
-                case BookKeepingService::STATUS_NORMAL:
-                    if (isset($permission)) {
-                        $response = new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
-                    } else {
-                        $response = new JsonResponse(null, JsonResponse::HTTP_OK);
-                    }
-                    break;
-                case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
-                    $response = new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
-                    break;
-                case BookKeepingService::STATUS_ERROR_AUTH_FORBIDDEN:
-                    $response = new JsonResponse(null, JsonResponse::HTTP_FORBIDDEN);
-                    break;
-                default:
-                    $response = new JsonResponse(null, JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-                    break;
-            }
+        $context = [];
+        $response = null;
+
+        if (! $this->BookKeeping->validateUuid($bookId)) {
+            return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
         } else {
-            $response = new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
+            $result = $this->validateAndTrimDeleteBooksPermissionParameter($request->all());
+            if (! $result['success']) {
+                return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
+            }
+        }
+
+        [$status, $_] = $this->BookKeeping->forbidToAccess($bookId, $result['user']);
+        switch ($status) {
+            case BookKeepingService::STATUS_NORMAL:
+                [$retrievalStatus, $permissionList] = $this->BookKeeping->retrievePermittedUsers($bookId);
+                if ($retrievalStatus == BookKeepingService::STATUS_NORMAL) {
+                    $context['permission_list'] = $permissionList;
+                    $response = $this->responder->response($context);
+                }
+                break;
+            case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
+                $response = new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
+                break;
+            case BookKeepingService::STATUS_ERROR_AUTH_FORBIDDEN:
+                $response = new JsonResponse(null, JsonResponse::HTTP_FORBIDDEN);
+                break;
+            default:
+                break;
+        }
+        if (is_null($response)) {
+            $response = new JsonResponse(null, JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return $response;
