@@ -89,6 +89,7 @@ class BookKeepingService
                 if ($permissionItem['permitted_to'] != $mode) {
                     $status = self::STATUS_ERROR_BAD_CONDITION;
                 }
+
                 return [$status, null];
             }
         }
