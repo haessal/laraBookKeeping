@@ -86,6 +86,9 @@ class BookKeepingService
         $permissionList = $this->book->retrievePermissions($bookId);
         foreach ($permissionList as $permissionItem) {
             if ($permissionItem['user'] == $userName) {
+                if ($permissionItem['permitted_to'] != $mode) {
+                    $status = self::STATUS_ERROR_BAD_CONDITION;
+                }
                 return [$status, null];
             }
         }
@@ -232,10 +235,9 @@ class BookKeepingService
         if (! $authorized) {
             return [$reason, null];
         }
-        $status = self::STATUS_NORMAL;
         $owner = $this->book->retrieveOwnerNameOf($bookId);
         if (isset($owner) && ($userName == strval($owner))) {
-            return [$status, null];
+            return [self::STATUS_ERROR_BAD_CONDITION, null];
         }
         $bookPermission = null;
         $permissionList = $this->book->retrievePermissions($bookId);
@@ -247,7 +249,7 @@ class BookKeepingService
             }
         }
 
-        return [$status, $bookPermission];
+        return [self::STATUS_NORMAL, $bookPermission];
     }
 
     /**
