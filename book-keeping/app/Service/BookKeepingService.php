@@ -293,10 +293,9 @@ class BookKeepingService
                 return [$reason, null];
             }
         }
-        $status = self::STATUS_NORMAL;
         $accounts = $this->account->retrieveAccounts($bookId);
 
-        return [$status, $accounts];
+        return [self::STATUS_NORMAL, $accounts];
     }
 
     /**
@@ -591,7 +590,7 @@ class BookKeepingService
         $slips = null;
         $slip_head = $this->slip->retrieveSlip($slipId, $bookId);
         if (isset($slip_head)) {
-            $status = BookKeepingService::STATUS_NORMAL;
+            $status = self::STATUS_NORMAL;
             $accounts = $this->account->retrieveAccounts($bookId);
             $slips[$slipId] = [
                 'date'         => $slip_head['date'],
@@ -616,7 +615,7 @@ class BookKeepingService
                 ];
             }
         } else {
-            $status = BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE;
+            $status = self::STATUS_ERROR_AUTH_NOTAVAILABLE;
         }
 
         return [$status, $slips];
@@ -653,11 +652,11 @@ class BookKeepingService
                 return [$reason, null];
             }
         }
+        $slips = null;
         $accounts = $this->account->retrieveAccounts($bookId);
         $slipEntry = $this->slip->retrieveSlipEntry($slipEntryId, $bookId, false);
-        $slips = null;
         if (isset($slipEntry)) {
-            $status = BookKeepingService::STATUS_NORMAL;
+            $status = self::STATUS_NORMAL;
             $slips[$slipEntry['slip_id']] = [
                 'date'         => $slipEntry['date'],
                 'slip_outline' => $slipEntry['slip_outline'],
@@ -679,7 +678,7 @@ class BookKeepingService
                 ],
             ];
         } else {
-            $status = BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE;
+            $status = self::STATUS_ERROR_AUTH_NOTAVAILABLE;
         }
 
         return [$status, $slips];
