@@ -157,18 +157,26 @@ class BookKeepingService
      * }[]  $entries
      * @param  string|null  $memo
      * @param  string|null  $bookId
-     * @return string
+     * @return array{0:int, 1:string|null}
      */
     public function createSlip($outline, $date, array $entries, $memo, $bookId = null)
     {
         if (is_null($bookId)) {
             $bookId = $this->book->retrieveDefaultBook(intval(Auth::id()));
+            if (is_null($bookId)) {
+                return [self::STATUS_ERROR_AUTH_NOTAVAILABLE, null];
+            }
+        } else {
+            [$authorized, $reason] = $this->writable($bookId);
+            if (! $authorized) {
+                return [$reason, null];
+            }
         }
-        $bookId = strval($bookId); // FIXME: in case default book is not setting
+        // FIXME self::STATUS_ERROR_BAD_CONDITION,
         $slipId = $this->slip->createSlipAsDraft($bookId, $outline, $date, $entries, $memo);
         $this->slip->submitSlip($slipId);
 
-        return $slipId;
+        return [self::STATUS_NORMAL, $slipId];
     }
 
     /**
@@ -257,7 +265,7 @@ class BookKeepingService
      * Retrieve a list of accounts.
      *
      * @param  string|null  $bookId
-     * @return array<string, array{
+     * @return array{0:int, 1:array<string, array{
      *   account_type: string,
      *   account_group_id: string,
      *   account_group_title: string,
@@ -270,17 +278,25 @@ class BookKeepingService
      *   created_at: string,
      *   account_group_bk_code: int,
      *   account_group_created_at: string,
-     * }>
+     * }>|null}
      */
     public function retrieveAccounts($bookId = null): array
     {
         if (is_null($bookId)) {
             $bookId = $this->book->retrieveDefaultBook(intval(Auth::id()));
+            if (is_null($bookId)) {
+                return [self::STATUS_ERROR_AUTH_NOTAVAILABLE, null];
+            }
+        } else {
+            [$authorized, $reason] = $this->readable($bookId);
+            if (! $authorized) {
+                return [$reason, null];
+            }
         }
-        $bookId = strval($bookId); // FIXME: in case default book is not setting
+        $status = self::STATUS_NORMAL;
         $accounts = $this->account->retrieveAccounts($bookId);
 
-        return $accounts;
+        return [$status, $accounts];
     }
 
     /**
@@ -546,7 +562,7 @@ class BookKeepingService
      *
      * @param  string  $slipId
      * @param  string|null  $bookId
-     * @return array<string, array{
+     * @return array{0:int, 1:array<string, array{
      *   date: string,
      *   slip_outline: string,
      *   slip_memo: string,
@@ -557,17 +573,25 @@ class BookKeepingService
      *     client: string,
      *     outline: string,
      *   }>
-     * }>|array{}
+     * }>|null}
      */
     public function retrieveSlip($slipId, $bookId = null): array
     {
         if (is_null($bookId)) {
             $bookId = $this->book->retrieveDefaultBook(intval(Auth::id()));
+            if (is_null($bookId)) {
+                return [self::STATUS_ERROR_AUTH_NOTAVAILABLE, null];
+            }
+        } else {
+            [$authorized, $reason] = $this->readable($bookId);
+            if (! $authorized) {
+                return [$reason, null];
+            }
         }
-        $bookId = strval($bookId); // FIXME: in case default book is not setting
-        $slips = [];
+        $slips = null;
         $slip_head = $this->slip->retrieveSlip($slipId, $bookId);
         if (isset($slip_head)) {
+            $status = BookKeepingService::STATUS_NORMAL;
             $accounts = $this->account->retrieveAccounts($bookId);
             $slips[$slipId] = [
                 'date'         => $slip_head['date'],
@@ -591,9 +615,11 @@ class BookKeepingService
                     'outline' => $slipEntryItem['outline'],
                 ];
             }
+        } else {
+            $status = BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE;
         }
 
-        return $slips;
+        return [$status, $slips];
     }
 
     /**
@@ -601,7 +627,7 @@ class BookKeepingService
      *
      * @param  string  $slipEntryId
      * @param  string|null  $bookId
-     * @return array<string, array{
+     * @return array{0:int, 1:array<string, array{
      *   date: string,
      *   slip_outline: string,
      *   slip_memo: string,
@@ -612,18 +638,26 @@ class BookKeepingService
      *     client: string,
      *     outline: string,
      *   }>
-     * }>|array{}
+     * }>|null}
      */
     public function retrieveSlipEntry($slipEntryId, $bookId = null): array
     {
         if (is_null($bookId)) {
             $bookId = $this->book->retrieveDefaultBook(intval(Auth::id()));
+            if (is_null($bookId)) {
+                return [self::STATUS_ERROR_AUTH_NOTAVAILABLE, null];
+            }
+        } else {
+            [$authorized, $reason] = $this->readable($bookId);
+            if (! $authorized) {
+                return [$reason, null];
+            }
         }
-        $bookId = strval($bookId); // FIXME: in case default book is not setting
         $accounts = $this->account->retrieveAccounts($bookId);
         $slipEntry = $this->slip->retrieveSlipEntry($slipEntryId, $bookId, false);
-        $slips = [];
+        $slips = null;
         if (isset($slipEntry)) {
+            $status = BookKeepingService::STATUS_NORMAL;
             $slips[$slipEntry['slip_id']] = [
                 'date'         => $slipEntry['date'],
                 'slip_outline' => $slipEntry['slip_outline'],
@@ -644,9 +678,11 @@ class BookKeepingService
                     ],
                 ],
             ];
+        } else {
+            $status = BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE;
         }
 
-        return $slips;
+        return [$status, $slips];
     }
 
     /**
@@ -1000,11 +1036,28 @@ class BookKeepingService
      *   date?: string,
      * }  $newData
      * @param  string|null  $bookId
-     * @return void
+     * @return array{0:int, 1:null}
      */
     public function updateSlip($slipId, array $newData, $bookId = null)
     {
+        if (is_null($bookId)) {
+            $bookId = $this->book->retrieveDefaultBook(intval(Auth::id()));
+            if (is_null($bookId)) {
+                return [self::STATUS_ERROR_AUTH_NOTAVAILABLE, null];
+            }
+        } else {
+            [$authorized, $reason] = $this->writable($bookId);
+            if (! $authorized) {
+                return [$reason, null];
+            }
+        }
+        $slip_head = $this->slip->retrieveSlip($slipId, $bookId);
+        if (is_null($slip_head)) {
+            return [self::STATUS_ERROR_AUTH_NOTAVAILABLE, null];
+        }
         $this->slip->updateSlip($slipId, $newData);
+
+        return [self::STATUS_NORMAL, null];
     }
 
     /**
@@ -1019,11 +1072,35 @@ class BookKeepingService
      *   outline?: string,
      * }  $newData
      * @param  string|null  $bookId
-     * @return void
+     * @return array{0:int, 1:null}
      */
     public function updateSlipEntry($slipEntryId, array $newData, $bookId = null)
     {
+        if (is_null($bookId)) {
+            $bookId = $this->book->retrieveDefaultBook(intval(Auth::id()));
+            if (is_null($bookId)) {
+                return [self::STATUS_ERROR_AUTH_NOTAVAILABLE, null];
+            }
+        } else {
+            [$authorized, $reason] = $this->writable($bookId);
+            if (! $authorized) {
+                return [$reason, null];
+            }
+        }
+        $slipEntry = $this->slip->retrieveSlipEntry($slipEntryId, $bookId, false);
+        if (is_null($slipEntry)) {
+            return [self::STATUS_ERROR_AUTH_NOTAVAILABLE, null];
+        }
+        $accounts = $this->account->retrieveAccounts($bookId);
+        if (array_key_exists('debit', $newData) && (! array_key_exists($newData['debit'], $accounts))) {
+            return [self::STATUS_ERROR_BAD_CONDITION, null];
+        }
+        if (array_key_exists('credit', $newData) && (! array_key_exists($newData['credit'], $accounts))) {
+            return [self::STATUS_ERROR_BAD_CONDITION, null];
+        }
         $this->slip->updateSlipEntry($slipEntryId, $newData);
+
+        return [self::STATUS_NORMAL, null];
     }
 
     /**
@@ -1110,6 +1187,41 @@ class BookKeepingService
             return [false, self::STATUS_ERROR_AUTH_NOTAVAILABLE];
         }
         if ($bookItem['is_owner'] == false) {
+            return [false, self::STATUS_ERROR_AUTH_FORBIDDEN];
+        }
+
+        return [true, self::STATUS_NORMAL];
+    }
+
+    /**
+     * Check if the authenticated user can read the book.
+     *
+     * @param  string  $bookId
+     * @return array{0:bool, 1:int}
+     */
+    private function readable($bookId): array
+    {
+        $bookItem = $this->book->retrieveBook($bookId, intval(Auth::id()));
+        if (is_null($bookItem)) {
+            return [false, self::STATUS_ERROR_AUTH_NOTAVAILABLE];
+        }
+
+        return [true, self::STATUS_NORMAL];
+    }
+
+    /**
+     * Check if the authenticated user can write the book.
+     *
+     * @param  string  $bookId
+     * @return array{0:bool, 1:int}
+     */
+    private function writable($bookId): array
+    {
+        $bookItem = $this->book->retrieveBook($bookId, intval(Auth::id()));
+        if (is_null($bookItem)) {
+            return [false, self::STATUS_ERROR_AUTH_NOTAVAILABLE];
+        }
+        if ($bookItem['modifiable'] == false) {
             return [false, self::STATUS_ERROR_AUTH_FORBIDDEN];
         }
 
