@@ -40,18 +40,29 @@ class GetSlipsSlipIdActionApi extends AuthenticatedBookKeepingActionApi
     public function __invoke(Request $request, string $slipId): JsonResponse
     {
         $context = [];
+        $response = null;
 
         if (! $this->BookKeeping->validateUuid($slipId)) {
-            $response = new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
-        } else {
-            $slips = $this->BookKeeping->retrieveSlip($slipId);
-            if (empty($slips)) {
+            return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        [$status, $slips] = $this->BookKeeping->retrieveSlip($slipId);
+        switch ($status) {
+            case BookKeepingService::STATUS_NORMAL:
+                if (isset($slips)) {
+                    $context['slip_id'] = $slipId;
+                    $context['slip'] = $slips[$slipId];
+                    $response = $this->responder->response($context);
+                }
+                break;
+            case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
                 $response = new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
-            } else {
-                $context['slip_id'] = $slipId;
-                $context['slip'] = $slips[$slipId];
-                $response = $this->responder->response($context);
-            }
+                break;
+            default:
+                break;
+        }
+        if (is_null($response)) {
+            $response = new JsonResponse(null, JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return $response;

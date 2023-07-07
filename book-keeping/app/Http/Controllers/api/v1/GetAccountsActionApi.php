@@ -39,8 +39,26 @@ class GetAccountsActionApi extends AuthenticatedBookKeepingActionApi
     public function __invoke(Request $request): JsonResponse
     {
         $context = [];
-        $context['accounts'] = $this->BookKeeping->retrieveAccounts();
+        $response = null;
 
-        return $this->responder->response($context);
+        [$status, $accounts] = $this->BookKeeping->retrieveAccounts();
+        switch ($status) {
+            case BookKeepingService::STATUS_NORMAL:
+                if (isset($accounts)) {
+                    $context['accounts'] = $accounts;
+                    $response = $this->responder->response($context);
+                }
+                break;
+            case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
+                $response = new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
+                break;
+            default:
+                break;
+        }
+        if (is_null($response)) {
+            $response = new JsonResponse(null, JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return $response;
     }
 }

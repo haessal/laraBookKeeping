@@ -44,7 +44,7 @@ class GetBooksSlipEntriesSlipEntryIdActionApi extends AuthenticatedBookKeepingAc
         if (! $this->BookKeeping->validateUuid($slipEntryId)) {
             $response = new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
         } else {
-            $slips = $this->BookKeeping->retrieveSlipEntry($slipEntryId);
+            [$_, $slips] = $this->BookKeeping->retrieveSlipEntry($slipEntryId);
             if (empty($slips)) {
                 $response = new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
             } else {

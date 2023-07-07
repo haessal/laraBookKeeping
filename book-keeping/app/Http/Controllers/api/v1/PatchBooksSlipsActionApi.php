@@ -40,25 +40,52 @@ class PatchBooksSlipsActionApi extends AuthenticatedBookKeepingActionApi
     public function __invoke(Request $request, string $bookId, string $slipId): JsonResponse
     {
         $context = [];
+        $response = null;
 
+        if (! $this->BookKeeping->validateUuid($bookId)) {
+            return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
+        }
         if (! $this->BookKeeping->validateUuid($slipId)) {
-            $response = new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
-        } else {
-            $slips = $this->BookKeeping->retrieveSlip($slipId);
-            if (empty($slips)) {
-                $response = new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
-            } else {
-                $result = $this->validateAndTrimSlipContents($request->all());
-                if (! $result['success']) {
-                    $response = new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
-                } else {
-                    $this->BookKeeping->updateSlip($slipId, $result['slipContents']);
-                    $updatedSlips = $this->BookKeeping->retrieveSlip($slipId);
-                    $context['slip_id'] = $slipId;
-                    $context['slip'] = $updatedSlips[$slipId];
-                    $response = $this->responder->response($context);
+            return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
+        }
+        $result = $this->validateAndTrimSlipContents($request->all());
+        if (! $result['success']) {
+            return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        $slipContents = [];
+        if (array_key_exists('date', $request->all())) {
+            $slipContents['date'] = $result['slipContents']['date'];
+        }
+        if (array_key_exists('outline', $request->all())) {
+            $slipContents['outline'] = $result['slipContents']['outline'];
+        }
+        if (array_key_exists('memo', $request->all())) {
+            $slipContents['memo'] = $result['slipContents']['memo'];
+        }
+        [$status, $_] = $this->BookKeeping->updateSlip($slipId, $slipContents, $bookId);
+        switch ($status) {
+            case BookKeepingService::STATUS_NORMAL:
+                [$retrievalStatus, $updatedSlips] = $this->BookKeeping->retrieveSlip($slipId, $bookId);
+                if ($retrievalStatus == BookKeepingService::STATUS_NORMAL) {
+                    if (isset($updatedSlips)) {
+                        $context['slip_id'] = $slipId;
+                        $context['slip'] = $updatedSlips[$slipId];
+                        $response = $this->responder->response($context);
+                    }
                 }
-            }
+                break;
+            case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
+                $response = new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
+                break;
+            case BookKeepingService::STATUS_ERROR_AUTH_FORBIDDEN:
+                $response = new JsonResponse(null, JsonResponse::HTTP_FORBIDDEN);
+                break;
+            default:
+                break;
+        }
+        if (is_null($response)) {
+            $response = new JsonResponse(null, JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return $response;
@@ -77,52 +104,49 @@ class PatchBooksSlipsActionApi extends AuthenticatedBookKeepingActionApi
     private function validateAndTrimSlipContents(array $slipContents): array
     {
         $success = true;
-        $trimmed_slipContents = [];
+        $trimmed = [];
 
         foreach ($slipContents as $contentsKey => $contentsItem) {
             switch ($contentsKey) {
                 case 'date':
-                    $trimmed_slipContents['date'] = trim(strval($contentsItem));
+                    $trimmed['date'] = trim(strval($contentsItem));
                     break;
                 case 'outline':
-                    $trimmed_slipContents['outline'] = trim(strval($contentsItem));
+                    $trimmed['outline'] = trim(strval($contentsItem));
                     break;
                 case 'memo':
-                    $trimmed_slipContents['memo'] = trim(strval($contentsItem));
+                    $trimmed['memo'] = trim(strval($contentsItem));
                     break;
                 default:
                     $success = false;
                     break;
             }
         }
-        if (empty($trimmed_slipContents)) {
+        if (empty($trimmed)) {
             $success = false;
         }
-        if (array_key_exists('date', $trimmed_slipContents)) {
-            if (! $this->BookKeeping->validateDateFormat($trimmed_slipContents['date'])) {
+        if (array_key_exists('date', $trimmed)) {
+            if (! $this->BookKeeping->validateDateFormat($trimmed['date'])) {
                 $success = false;
             }
         }
-        if (array_key_exists('outline', $trimmed_slipContents)) {
-            if (empty($trimmed_slipContents['outline'])) {
+        if (array_key_exists('outline', $trimmed)) {
+            if (empty($trimmed['outline'])) {
                 $success = false;
             }
         }
-        if (array_key_exists('memo', $trimmed_slipContents)) {
-            if (empty($trimmed_slipContents['memo'])) {
-                $trimmed_slipContents['memo'] = null;
+        if (array_key_exists('memo', $trimmed)) {
+            if (empty($trimmed['memo'])) {
+                $trimmed['memo'] = null;
             }
-        }
-        if (! $success) {
-            $trimmed_slipContents = [];
         }
 
         return [
             'success'      => $success,
             'slipContents' => [
-                'date'    => $success ? strval($trimmed_slipContents['date']) : '',
-                'outline' => $success ? strval($trimmed_slipContents['outline']) : '',
-                'memo'    => $success ? strval($trimmed_slipContents['memo']) : '',
+                'date'    => array_key_exists('date', $trimmed) ? strval($trimmed['date']) : '',
+                'outline' => array_key_exists('outline', $trimmed) ? strval($trimmed['outline']) : '',
+                'memo'    => array_key_exists('memo', $trimmed) ? strval($trimmed['memo']) : '',
             ],
         ];
     }

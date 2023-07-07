@@ -40,24 +40,57 @@ class PatchSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
     public function __invoke(Request $request, string $slipEntryId): JsonResponse
     {
         $context = [];
+        $response = null;
 
         if (! $this->BookKeeping->validateUuid($slipEntryId)) {
-            $response = new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
-        } else {
-            $slips = $this->BookKeeping->retrieveSlipEntry($slipEntryId);
-            if (empty($slips)) {
-                $response = new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
-            } else {
-                $accounts = $this->BookKeeping->retrieveAccounts();
-                $result = $this->validateAndTrimSlipEntryContents($request->all(), $accounts);
-                if (! $result['success']) {
-                    $response = new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
-                } else {
-                    $this->BookKeeping->updateSlipEntry($slipEntryId, $result['slipEntryContents']);
-                    $context['slips'] = $this->BookKeeping->retrieveSlipEntry($slipEntryId);
-                    $response = $this->responder->response($context);
+            return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
+        }
+        $result = $this->validateAndTrimSlipEntryContents($request->all());
+        if (! $result['success']) {
+            return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        $slipEntryContents = [];
+        if (array_key_exists('debit', $request->all())) {
+            $slipEntryContents['debit'] = $result['slipEntryContents']['debit'];
+        }
+        if (array_key_exists('credit', $request->all())) {
+            $slipEntryContents['credit'] = $result['slipEntryContents']['credit'];
+        }
+        if (array_key_exists('amount', $request->all())) {
+            $slipEntryContents['amount'] = $result['slipEntryContents']['amount'];
+        }
+        if (array_key_exists('client', $request->all())) {
+            $slipEntryContents['client'] = $result['slipEntryContents']['client'];
+        }
+        if (array_key_exists('outline', $request->all())) {
+            $slipEntryContents['outline'] = $result['slipEntryContents']['outline'];
+        }
+        [$status, $_] = $this->BookKeeping->updateSlipEntry($slipEntryId, $slipEntryContents);
+        switch ($status) {
+            case BookKeepingService::STATUS_NORMAL:
+                [$retrievalStatus, $slips] = $this->BookKeeping->retrieveSlipEntry($slipEntryId);
+                if ($retrievalStatus == BookKeepingService::STATUS_NORMAL) {
+                    if (isset($slips)) {
+                        $context['slips'] = $slips;
+                        $response = $this->responder->response($context);
+                    }
                 }
-            }
+                break;
+            case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
+                $response = new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
+                break;
+            case BookKeepingService::STATUS_ERROR_AUTH_FORBIDDEN:
+                $response = new JsonResponse(null, JsonResponse::HTTP_FORBIDDEN);
+                break;
+            case BookKeepingService::STATUS_ERROR_BAD_CONDITION:
+                $response = new JsonResponse(null, JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+                break;
+            default:
+                break;
+        }
+        if (is_null($response)) {
+            $response = new JsonResponse(null, JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return $response;
@@ -67,7 +100,6 @@ class PatchSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
      * Validate the slip entry contents and trim string data.
      *
      * @param  array<string, mixed>  $slipEntryContents
-     * @param  array<string, mixed>  $accounts
      * @return array{success: bool, slipEntryContents: array{
      *   debit: string,
      *   credit: string,
@@ -76,67 +108,67 @@ class PatchSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
      *   outline: string,
      * }}
      */
-    private function validateAndTrimSlipEntryContents(array $slipEntryContents, array $accounts): array
+    private function validateAndTrimSlipEntryContents(array $slipEntryContents): array
     {
         $success = true;
-        $trimmed_slipEntryContents = [];
+        $trimmed = [];
 
         foreach ($slipEntryContents as $contentsKey => $contentsItem) {
             switch ($contentsKey) {
                 case 'debit':
-                    $trimmed_slipEntryContents['debit'] = trim(strval($contentsItem));
+                    $trimmed['debit'] = trim(strval($contentsItem));
                     break;
                 case 'credit':
-                    $trimmed_slipEntryContents['credit'] = trim(strval($contentsItem));
+                    $trimmed['credit'] = trim(strval($contentsItem));
                     break;
                 case 'amount':
-                    $trimmed_slipEntryContents['amount'] = intval($contentsItem);
+                    $trimmed['amount'] = intval($contentsItem);
                     break;
                 case 'client':
-                    $trimmed_slipEntryContents['client'] = trim(strval($contentsItem));
+                    $trimmed['client'] = trim(strval($contentsItem));
                     break;
                 case 'outline':
-                    $trimmed_slipEntryContents['outline'] = trim(strval($contentsItem));
+                    $trimmed['outline'] = trim(strval($contentsItem));
                     break;
                 default:
                     $success = false;
                     break;
             }
         }
-        if (empty($trimmed_slipEntryContents)) {
+        if (empty($trimmed)) {
             $success = false;
         }
-        if (array_key_exists('debit', $trimmed_slipEntryContents)) {
-            if (empty($trimmed_slipEntryContents['debit']) || (! array_key_exists($trimmed_slipEntryContents['debit'], $accounts))) {
+        if (array_key_exists('debit', $trimmed)) {
+            if (! $this->BookKeeping->validateUuid(strval($trimmed['debit']))) {
                 $success = false;
             }
         }
-        if (array_key_exists('credit', $trimmed_slipEntryContents)) {
-            if (empty($trimmed_slipEntryContents['credit']) || (! array_key_exists($trimmed_slipEntryContents['credit'], $accounts))) {
+        if (array_key_exists('credit', $trimmed)) {
+            if (! $this->BookKeeping->validateUuid(strval($trimmed['credit']))) {
                 $success = false;
             }
         }
-        if (array_key_exists('debit', $trimmed_slipEntryContents) && (! array_key_exists('credit', $trimmed_slipEntryContents))) {
+        if (array_key_exists('debit', $trimmed) && (! array_key_exists('credit', $trimmed))) {
             $success = false;
         }
-        if ((! array_key_exists('debit', $trimmed_slipEntryContents)) && array_key_exists('credit', $trimmed_slipEntryContents)) {
+        if ((! array_key_exists('debit', $trimmed)) && array_key_exists('credit', $trimmed)) {
             $success = false;
         }
-        if (array_key_exists('debit', $trimmed_slipEntryContents) && array_key_exists('credit', $trimmed_slipEntryContents) && ($trimmed_slipEntryContents['debit'] == $trimmed_slipEntryContents['credit'])) {
+        if (array_key_exists('debit', $trimmed) && array_key_exists('credit', $trimmed) && ($trimmed['debit'] == $trimmed['credit'])) {
             $success = false;
         }
-        if (array_key_exists('amount', $trimmed_slipEntryContents)) {
-            if (empty($trimmed_slipEntryContents['amount']) || (! is_int($trimmed_slipEntryContents['amount']))) {
+        if (array_key_exists('amount', $trimmed)) {
+            if (empty($trimmed['amount']) || (! is_int($trimmed['amount']))) {
                 $success = false;
             }
         }
-        if (array_key_exists('client', $trimmed_slipEntryContents)) {
-            if (empty($trimmed_slipEntryContents['client'])) {
+        if (array_key_exists('client', $trimmed)) {
+            if (empty($trimmed['client'])) {
                 $success = false;
             }
         }
-        if (array_key_exists('outline', $trimmed_slipEntryContents)) {
-            if (empty($trimmed_slipEntryContents['outline'])) {
+        if (array_key_exists('outline', $trimmed)) {
+            if (empty($trimmed['outline'])) {
                 $success = false;
             }
         }
@@ -144,11 +176,11 @@ class PatchSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
         return [
             'success'           => $success,
             'slipEntryContents' => [
-                'debit'   => $success ? strval($trimmed_slipEntryContents['debit']) : '',
-                'credit'  => $success ? strval($trimmed_slipEntryContents['credit']) : '',
-                'amount'  => $success ? intval($trimmed_slipEntryContents['amount']) : 0,
-                'client'  => $success ? strval($trimmed_slipEntryContents['client']) : '',
-                'outline' => $success ? strval($trimmed_slipEntryContents['outline']) : '',
+                'debit'   => array_key_exists('debit', $trimmed) ? strval($trimmed['debit']) : '',
+                'credit'  => array_key_exists('credit', $trimmed) ? strval($trimmed['credit']) : '',
+                'amount'  => array_key_exists('amount', $trimmed) ? intval($trimmed['amount']) : 0,
+                'client'  => array_key_exists('client', $trimmed) ? strval($trimmed['client']) : '',
+                'outline' => array_key_exists('outline', $trimmed) ? strval($trimmed['outline']) : '',
             ],
         ];
     }
