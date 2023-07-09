@@ -1163,39 +1163,4 @@ class BookKeepingService
 
         return [true, self::STATUS_NORMAL];
     }
-
-    /**
-     * Check if the authenticated user can read the book.
-     *
-     * @param  string  $bookId
-     * @return array{0:bool, 1:int}
-     */
-    private function readable($bookId): array
-    {
-        $bookItem = $this->book->retrieveBook($bookId, intval(Auth::id()));
-        if (is_null($bookItem)) {
-            return [false, self::STATUS_ERROR_AUTH_NOTAVAILABLE];
-        }
-
-        return [true, self::STATUS_NORMAL];
-    }
-
-    /**
-     * Check if the authenticated user can write the book.
-     *
-     * @param  string  $bookId
-     * @return array{0:bool, 1:int}
-     */
-    private function writable($bookId): array
-    {
-        $bookItem = $this->book->retrieveBook($bookId, intval(Auth::id()));
-        if (is_null($bookItem)) {
-            return [false, self::STATUS_ERROR_AUTH_NOTAVAILABLE];
-        }
-        if ($bookItem['modifiable'] == false) {
-            return [false, self::STATUS_ERROR_AUTH_FORBIDDEN];
-        }
-
-        return [true, self::STATUS_NORMAL];
-    }
 }
