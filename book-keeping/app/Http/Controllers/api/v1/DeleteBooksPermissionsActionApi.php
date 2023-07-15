@@ -44,11 +44,10 @@ class DeleteBooksPermissionsActionApi extends AuthenticatedBookKeepingActionApi
 
         if (! $this->BookKeeping->validateUuid($bookId)) {
             return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
-        } else {
-            $result = $this->validateAndTrimDeleteBooksPermissionParameter($request->all());
-            if (! $result['success']) {
-                return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
-            }
+        }
+        $result = $this->validateAndTrimDeleteBooksPermissionParameter($request->all());
+        if (! $result['success']) {
+            return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
         }
 
         [$status, $_] = $this->BookKeeping->forbidToAccess($bookId, $result['user']);

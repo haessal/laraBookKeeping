@@ -55,7 +55,13 @@ class PostBooksSlipsActionApi extends AuthenticatedBookKeepingActionApi
             $slipEntry['display_order'] = $index;
             $slipEntries[] = $slipEntry;
         }
-        [$status, $slipId] = $this->BookKeeping->createSlip($slip['outline'], $slip['date'], $slipEntries, $slip['memo'], $bookId);
+        [$status, $slipId] = $this->BookKeeping->createSlip(
+            $slip['outline'],
+            $slip['date'],
+            $slipEntries,
+            $slip['memo'],
+            $bookId
+        );
         switch ($status) {
             case BookKeepingService::STATUS_NORMAL:
                 if (isset($slipId)) {

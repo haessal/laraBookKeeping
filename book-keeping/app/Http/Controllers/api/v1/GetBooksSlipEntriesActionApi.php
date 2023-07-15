@@ -51,7 +51,14 @@ class GetBooksSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
 
         $query = $result['query'];
         [$status, $slips] = $this->BookKeeping->retrieveSlips(
-            $query['from'], $query['to'], $query['debit'], $query['credit'], $query['operand'], $query['keyword'], $bookId);
+            $query['from'],
+            $query['to'],
+            $query['debit'],
+            $query['credit'],
+            $query['operand'],
+            $query['keyword'],
+            $bookId
+        );
         switch ($status) {
             case BookKeepingService::STATUS_NORMAL:
                 if (isset($slips)) {

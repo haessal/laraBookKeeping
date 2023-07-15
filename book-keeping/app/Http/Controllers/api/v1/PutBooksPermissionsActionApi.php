@@ -44,11 +44,10 @@ class PutBooksPermissionsActionApi extends AuthenticatedBookKeepingActionApi
 
         if (! $this->BookKeeping->validateUuid($bookId)) {
             return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
-        } else {
-            $result = $this->validateAndTrimPutBooksPermissionParameter($request->all());
-            if (! $result['success']) {
-                return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
-            }
+        }
+        $result = $this->validateAndTrimPutBooksPermissionParameter($request->all());
+        if (! $result['success']) {
+            return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
         }
 
         $mode = $result['permitted_to'] == 'ReadWrite' ? 'ReadWrite' : 'ReadOnly';
