@@ -54,7 +54,7 @@ class SlipService
     public function createSlipAsDraft($bookId, $outline, $date, array $entries, $memo = null, $displayOrder = null)
     {
         $slipId = $this->slip->create($bookId, $outline, $date, $memo, $displayOrder, true);
-        foreach ($entries as &$entry) {
+        foreach ($entries as $entry) {
             $slipEntryDisplayOrder = null;
             if (array_key_exists('display_order', $entry)) {
                 $slipEntryDisplayOrder = intval($entry['display_order']);

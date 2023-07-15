@@ -158,6 +158,56 @@ class BookService
     }
 
     /**
+     * Retrieve the default book when the book isn't specified, or
+     * check if the specified book is readable.
+     *
+     * @param  string|null  $bookId
+     * @param  int  $userId
+     * @return array{0:int, 1:string}
+     */
+    public function retrieveDefaultBookOrCheckReadable($bookId, $userId)
+    {
+        if (is_null($bookId)) {
+            $bookId = $this->permission->findDefaultBook($userId);
+            if (is_null($bookId)) {
+                return [BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE, ''];
+            }
+        } else {
+            [$authorized, $reason] = $this->readable($bookId, $userId);
+            if (! $authorized) {
+                return [$reason, ''];
+            }
+        }
+
+        return [BookKeepingService::STATUS_NORMAL, $bookId];
+    }
+
+    /**
+     * Retrieve the default book when the book isn't specified, or
+     * check if the specified book is writable.
+     *
+     * @param  string|null  $bookId
+     * @param  int  $userId
+     * @return array{0:int, 1:string}
+     */
+    public function retrieveDefaultBookOrCheckWritable($bookId, $userId)
+    {
+        if (is_null($bookId)) {
+            $bookId = $this->permission->findDefaultBook($userId);
+            if (is_null($bookId)) {
+                return [BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE, ''];
+            }
+        } else {
+            [$authorized, $reason] = $this->writable($bookId, $userId);
+            if (! $authorized) {
+                return [$reason, ''];
+            }
+        }
+
+        return [BookKeepingService::STATUS_NORMAL, $bookId];
+    }
+
+    /**
      * Retrieve the information of the book.
      *
      * @param  string  $bookId
@@ -235,5 +285,42 @@ class BookService
     public function updateNameOf($bookId, $newName)
     {
         $this->book->updateName($bookId, $newName);
+    }
+
+    /**
+     * Check if the user can read the book.
+     *
+     * @param  string  $bookId
+     * @param  int  $userId
+     * @return array{0:bool, 1:int}
+     */
+    private function readable($bookId, $userId): array
+    {
+        $book = $this->permission->findBook($userId, $bookId);
+        if (is_null($book)) {
+            return [false, BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE];
+        }
+
+        return [true, BookKeepingService::STATUS_NORMAL];
+    }
+
+    /**
+     * Check if the user can write the book.
+     *
+     * @param  string  $bookId
+     * @param  int  $userId
+     * @return array{0:bool, 1:int}
+     */
+    private function writable($bookId, $userId): array
+    {
+        $book = $this->permission->findBook($userId, $bookId);
+        if (is_null($book)) {
+            return [false, BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE];
+        }
+        if (boolval($book['modifiable']) == false) {
+            return [false, BookKeepingService::STATUS_ERROR_AUTH_FORBIDDEN];
+        }
+
+        return [true, BookKeepingService::STATUS_NORMAL];
     }
 }
