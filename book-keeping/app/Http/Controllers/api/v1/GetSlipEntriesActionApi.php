@@ -38,13 +38,32 @@ class GetSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
      */
     public function __invoke(Request $request): JsonResponse
     {
+        $context = [];
+        $response = null;
+
         $result = $this->validateAndTrimSlipEntriesQuery($request->all());
-        if ($result['success']) {
-            $query = $result['query'];
-            $context['slips'] = $this->BookKeeping->retrieveSlips($query['from'], $query['to'], $query['debit'], $query['credit'], $query['operand'], $query['keyword']);
-            $response = $this->responder->response($context);
-        } else {
-            $response = new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
+        if (! $result['success']) {
+            return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        $query = $result['query'];
+        [$status, $slips] = $this->BookKeeping->retrieveSlips(
+            $query['from'], $query['to'], $query['debit'], $query['credit'], $query['operand'], $query['keyword']);
+        switch ($status) {
+            case BookKeepingService::STATUS_NORMAL:
+                if (isset($slips)) {
+                    $context['slips'] = $slips;
+                    $response = $this->responder->response($context);
+                }
+                break;
+            case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
+                $response = new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
+                break;
+            default:
+                break;
+        }
+        if (is_null($response)) {
+            $response = new JsonResponse(null, JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return $response;
@@ -116,7 +135,14 @@ class GetSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
         if (! empty($debit) && ! empty($credit) && empty($operand)) {
             $success = false;
         }
-        $trimmed_query = ['from' => $from, 'to' => $to, 'debit' => $debit, 'credit' => $credit, 'operand' => $operand, 'keyword' => $keyword];
+        $trimmed_query = [
+            'from'    => $from,
+            'to'      => $to,
+            'debit'   => $debit,
+            'credit'  => $credit,
+            'operand' => $operand,
+            'keyword' => $keyword,
+        ];
 
         return ['success' => $success, 'query' => $trimmed_query];
     }

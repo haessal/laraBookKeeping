@@ -29,16 +29,25 @@ class DeleteSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
      */
     public function __invoke(Request $request, string $slipEntryId): JsonResponse
     {
+        $response = null;
+
         if (! $this->BookKeeping->validateUuid($slipEntryId)) {
-            $response = new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
-        } else {
-            [$_, $slips] = $this->BookKeeping->retrieveSlipEntry($slipEntryId);
-            if (empty($slips)) {
-                $response = new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
-            } else {
-                $this->BookKeeping->deleteSlipEntryAndEmptySlip($slipEntryId);
+            return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        [$status, $_] = $this->BookKeeping->deleteSlipEntryAndEmptySlip($slipEntryId);
+        switch ($status) {
+            case BookKeepingService::STATUS_NORMAL:
                 $response = new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
-            }
+                break;
+            case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
+                $response = new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
+                break;
+            default:
+                break;
+        }
+        if (is_null($response)) {
+            $response = new JsonResponse(null, JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return $response;
