@@ -33,12 +33,13 @@ class DeleteSlipEntryAndEmptySlipTest extends TestCase
         $accountId2 = (string) Str::uuid();
         $accountId3 = (string) Str::uuid();
         $accountId4 = (string) Str::uuid();
+        $result_expected = [BookKeepingService::STATUS_NORMAL, null];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
-        $bookMock->shouldReceive('retrieveDefaultBook')
+        $bookMock->shouldReceive('retrieveDefaultBookOrCheckWritable')
             ->once()
-            ->with($userId)
-            ->andReturn($bookId);
+            ->with(null, $userId)
+            ->andReturn([BookKeepingService::STATUS_NORMAL, $bookId]);
         /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
         $accountMock = Mockery::mock(AccountService::class);
         /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
@@ -80,20 +81,29 @@ class DeleteSlipEntryAndEmptySlipTest extends TestCase
         $slipMock->shouldNotReceive('deleteSlip');
 
         $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
-        $BookKeeping->deleteSlipEntryAndEmptySlip($slipEntryId);
+        $result_actual = $BookKeeping->deleteSlipEntryAndEmptySlip($slipEntryId);
 
-        $this->assertTrue(true);
+        $this->assertSame($result_expected, $result_actual);
     }
 
     public function test_it_deletes_the_slip_entry_and_also_deletes_the_slip_because_the_entry_is_the_last_one(): void
     {
         $bookId = (string) Str::uuid();
+        $userId = 91;
+        $user = new User();
+        $user->id = $userId;
+        $this->be($user);
         $slipId = (string) Str::uuid();
         $slipEntryId = (string) Str::uuid();
         $accountId1 = (string) Str::uuid();
         $accountId2 = (string) Str::uuid();
+        $result_expected = [BookKeepingService::STATUS_NORMAL, null];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
+        $bookMock->shouldReceive('retrieveDefaultBookOrCheckWritable')
+            ->once()
+            ->with($bookId, $userId)
+            ->andReturn([BookKeepingService::STATUS_NORMAL, $bookId]);
         /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
         $accountMock = Mockery::mock(AccountService::class);
         /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
@@ -127,17 +137,26 @@ class DeleteSlipEntryAndEmptySlipTest extends TestCase
             ->with($slipId);
 
         $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
-        $BookKeeping->deleteSlipEntryAndEmptySlip($slipEntryId, $bookId);
+        $result_actual = $BookKeeping->deleteSlipEntryAndEmptySlip($slipEntryId, $bookId);
 
-        $this->assertTrue(true);
+        $this->assertSame($result_expected, $result_actual);
     }
 
     public function test_it_does_nothing_because_the_slip_entry_to_be_deleted_is_not_found(): void
     {
         $bookId = (string) Str::uuid();
+        $userId = 146;
+        $user = new User();
+        $user->id = $userId;
+        $this->be($user);
         $slipEntryId = (string) Str::uuid();
+        $result_expected = [BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE, null];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
+        $bookMock->shouldReceive('retrieveDefaultBookOrCheckWritable')
+            ->once()
+            ->with($bookId, $userId)
+            ->andReturn([BookKeepingService::STATUS_NORMAL, $bookId]);
         /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
         $accountMock = Mockery::mock(AccountService::class);
         /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
@@ -153,8 +172,40 @@ class DeleteSlipEntryAndEmptySlipTest extends TestCase
         $slipMock->shouldNotReceive('deleteSlip');
 
         $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
-        $BookKeeping->deleteSlipEntryAndEmptySlip($slipEntryId, $bookId);
+        $result_actual = $BookKeeping->deleteSlipEntryAndEmptySlip($slipEntryId, $bookId);
 
-        $this->assertTrue(true);
+        $this->assertSame($result_expected, $result_actual);
+    }
+
+    public function test_it_does_nothing_because_the_specified_book_is_not_writable(): void
+    {
+        $bookId = (string) Str::uuid();
+        $userId = 186;
+        $user = new User();
+        $user->id = $userId;
+        $this->be($user);
+        $slipEntryId = (string) Str::uuid();
+        $result_expected = [BookKeepingService::STATUS_ERROR_AUTH_FORBIDDEN, null];
+        /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
+        $bookMock = Mockery::mock(BookService::class);
+        $bookMock->shouldReceive('retrieveDefaultBookOrCheckWritable')
+            ->once()
+            ->with($bookId, $userId)
+            ->andReturn([BookKeepingService::STATUS_ERROR_AUTH_FORBIDDEN, $bookId]);
+        /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
+        $accountMock = Mockery::mock(AccountService::class);
+        /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
+        $budgetMock = Mockery::mock(BudgetService::class);
+        /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
+        $slipMock = Mockery::mock(SlipService::class);
+        $slipMock->shouldNotReceive('retrieveSlipEntry');
+        $slipMock->shouldNotReceive('deleteSlipEntry');
+        $slipMock->shouldNotReceive('retrieveSlipEntriesBoundTo');
+        $slipMock->shouldNotReceive('deleteSlip');
+
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $result_actual = $BookKeeping->deleteSlipEntryAndEmptySlip($slipEntryId, $bookId);
+
+        $this->assertSame($result_expected, $result_actual);
     }
 }

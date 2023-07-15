@@ -96,7 +96,7 @@ class AuthorizeToAccessTest extends TestCase
         $this->assertSame($result_expected, $result_actual);
     }
 
-    public function test_it_does_nothing_because_the_user_is_already_authorized(): void
+    public function test_it_does_nothing_because_the_user_is_already_authorized_with_expected_permission(): void
     {
         $bookId = (string) Str::uuid();
         $userIdOfOwner = 102;
@@ -115,8 +115,53 @@ class AuthorizeToAccessTest extends TestCase
         $existing_permissions = [
             ['user' => $userName, 'permitted_to' => 'ReadOnly'],
         ];
-        $mode = 'ReadWrite';
+        $mode = 'ReadOnly';
         $result_expected = [BookKeepingService::STATUS_NORMAL, null];
+        /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
+        $bookMock = Mockery::mock(BookService::class);
+        $bookMock->shouldReceive('retrieveBook')  // call from isOwner
+            ->once()
+            ->with($bookId, $userIdOfOwner)
+            ->andReturn($bookInformationForOwner);
+        $bookMock->shouldReceive('retrievePermissions')
+            ->once()
+            ->with($bookId)
+            ->andReturn($existing_permissions);
+        $bookMock->shouldNotReceive('createPermission');
+        /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
+        $accountMock = Mockery::mock(AccountService::class);
+        /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
+        $budgetMock = Mockery::mock(BudgetService::class);
+        /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
+        $slipMock = Mockery::mock(SlipService::class);
+
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $result_actual = $BookKeeping->authorizeToAccess($bookId, $userName, $mode);
+
+        $this->assertSame($result_expected, $result_actual);
+    }
+
+    public function test_it_does_nothing_because_the_user_is_already_authorized_with_unexpected_permission(): void
+    {
+        $bookId = (string) Str::uuid();
+        $userIdOfOwner = 147;
+        $owner = new User();
+        $owner->id = $userIdOfOwner;
+        $this->be($owner);
+        $bookInformationForOwner = [
+            'book_id'    => $bookId,
+            'book_name'  => 'BookName153',
+            'modifiable' => true,
+            'is_owner'   => true,
+            'is_default' => true,
+            'created_at' => '2023-06-29 10:57:01',
+        ];
+        $userName = 'user114';
+        $existing_permissions = [
+            ['user' => $userName, 'permitted_to' => 'ReadOnly'],
+        ];
+        $mode = 'ReadWrite';
+        $result_expected = [BookKeepingService::STATUS_ERROR_BAD_CONDITION, null];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
         $bookMock->shouldReceive('retrieveBook')  // call from isOwner

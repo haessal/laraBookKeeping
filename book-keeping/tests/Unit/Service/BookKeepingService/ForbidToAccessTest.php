@@ -124,7 +124,7 @@ class ForbidToAccessTest extends TestCase
             'is_default' => true,
             'created_at' => '2023-05-02 15:10:01',
         ];
-        $result_expected = [BookKeepingService::STATUS_NORMAL, null];
+        $result_expected = [BookKeepingService::STATUS_ERROR_BAD_CONDITION, null];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
         $bookMock->shouldReceive('retrieveBook')  // call from isOwner

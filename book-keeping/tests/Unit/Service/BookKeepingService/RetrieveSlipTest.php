@@ -63,7 +63,7 @@ class RetrieveSlipTest extends TestCase
                 'outline'       => 'outline_2',
             ],
         ];
-        $slips_expected = [
+        $slips = [
             $slipId => [
                 'date'         => $date,
                 'slip_outline' => $slip_outline,
@@ -86,12 +86,13 @@ class RetrieveSlipTest extends TestCase
                 ],
             ],
         ];
+        $result_expected = [BookKeepingService::STATUS_NORMAL, $slips];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
-        $bookMock->shouldReceive('retrieveDefaultBook')
+        $bookMock->shouldReceive('retrieveDefaultBookOrCheckReadable')
             ->once()
-            ->with($userId)
-            ->andReturn($bookId);
+            ->with(null, $userId)
+            ->andReturn([BookKeepingService::STATUS_NORMAL, $bookId]);
         /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
         $accountMock = Mockery::mock(AccountService::class);
         $accountMock->shouldReceive('retrieveAccounts')
@@ -112,18 +113,57 @@ class RetrieveSlipTest extends TestCase
             ->andReturn($slipEntries);
 
         $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
-        $slips_actual = $BookKeeping->retrieveSlip($slipId);
+        $result_actual = $BookKeeping->retrieveSlip($slipId);
 
-        $this->assertSame($slips_expected, $slips_actual);
+        $this->assertSame($result_expected, $result_actual);
+    }
+
+    public function test_it_does_nothing_because_the_specified_book_is_not_readable(): void
+    {
+        $bookId = (string) Str::uuid();
+        $userId = 124;
+        $user = new User();
+        $user->id = $userId;
+        $this->be($user);
+        $slipId = (string) Str::uuid();
+        $result_expected = [BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE, null];
+        /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
+        $bookMock = Mockery::mock(BookService::class);
+        $bookMock->shouldReceive('retrieveDefaultBookOrCheckReadable')
+            ->once()
+            ->with($bookId, $userId)
+            ->andReturn([BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE, '']);
+        /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
+        $accountMock = Mockery::mock(AccountService::class);
+        $accountMock->shouldNotReceive('retrieveAccounts');
+        /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
+        $budgetMock = Mockery::mock(BudgetService::class);
+        /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
+        $slipMock = Mockery::mock(SlipService::class);
+        $slipMock->shouldNotReceive('retrieveSlip');
+        $slipMock->shouldNotReceive('retrieveSlipEntriesBoundTo');
+
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $result_actual = $BookKeeping->retrieveSlip($slipId, $bookId);
+
+        $this->assertSame($result_expected, $result_actual);
     }
 
     public function test_it_retrieves_nothing_because_the_slip_for_the_specified_book_is_not_found(): void
     {
         $bookId = (string) Str::uuid();
+        $userId = 155;
+        $user = new User();
+        $user->id = $userId;
+        $this->be($user);
         $slipId = (string) Str::uuid();
-        $slips_expected = [];
+        $result_expected = [BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE, null];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
+        $bookMock->shouldReceive('retrieveDefaultBookOrCheckReadable')
+            ->once()
+            ->with($bookId, $userId)
+            ->andReturn([BookKeepingService::STATUS_NORMAL, $bookId]);
         /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
         $accountMock = Mockery::mock(AccountService::class);
         $accountMock->shouldNotReceive('retrieveAccounts');
@@ -138,8 +178,8 @@ class RetrieveSlipTest extends TestCase
         $slipMock->shouldNotReceive('retrieveSlipEntriesBoundTo');
 
         $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
-        $slips_actual = $BookKeeping->retrieveSlip($slipId, $bookId);
+        $result_actual = $BookKeeping->retrieveSlip($slipId, $bookId);
 
-        $this->assertSame($slips_expected, $slips_actual);
+        $this->assertSame($result_expected, $result_actual);
     }
 }
