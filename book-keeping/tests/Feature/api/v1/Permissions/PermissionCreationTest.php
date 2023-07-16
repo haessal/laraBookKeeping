@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\API\v1\Permissions;
+namespace Tests\Feature\api\v1\Permissions;
 
 use App\Models\Book;
 use App\Models\Permission;
