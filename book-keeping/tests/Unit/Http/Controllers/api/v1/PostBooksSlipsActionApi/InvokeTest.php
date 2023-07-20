@@ -25,7 +25,7 @@ class InvokeTest extends TestCase
         $slipOutline = 'outline24';
         $debit = (string) Str::uuid();
         $credit = (string) Str::uuid();
-        $slipEntries[] = 
+        $slipEntries[] =
             [
                 'debit'         => $debit,
                 'credit'        => $credit,
@@ -84,7 +84,7 @@ class InvokeTest extends TestCase
         $slipOutline = 'outline78';
         $debit = (string) Str::uuid();
         $credit = (string) Str::uuid();
-        $slipEntries[] = 
+        $slipEntries[] =
             [
                 'debit'         => $debit,
                 'credit'        => $credit,

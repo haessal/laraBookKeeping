@@ -104,12 +104,12 @@ class SlipCreationTest extends TestCase
                         'amount'  => $amount,
                         'client'  => $client,
                         'outline' => $outline,
-                    ]
-                ]
+                    ],
+                ],
             ]);
 
         $response->assertCreated()
-            ->assertJsonStructure(['id', 'date', 'outline', 'memo', 'entries']) 
+            ->assertJsonStructure(['id', 'date', 'outline', 'memo', 'entries'])
             ->assertJson([
                 'date'    => $slipDate,
                 'outline' => $slipOutline,
@@ -119,13 +119,13 @@ class SlipCreationTest extends TestCase
                 'debit' => [
                     'id'    => $this->debit->account_id,
                     'title' => $this->debit->account_title,
-                ]
+                ],
             ])
             ->assertJsonFragment([
                 'credit' => [
                     'id'    => $this->credit->account_id,
                     'title' => $this->credit->account_title,
-                ]
+                ],
             ])
             ->assertJsonFragment([
                 'amount'  => $amount,
@@ -204,8 +204,8 @@ class SlipCreationTest extends TestCase
                         'amount'  => 0,
                         'client'  => '',
                         'outline' => '',
-                    ]
-                ]
+                    ],
+                ],
             ]);
 
         $response->assertBadRequest();
@@ -219,8 +219,8 @@ class SlipCreationTest extends TestCase
                     [
                         'debit'  => $this->debit->account_id,
                         'credit' => $this->debit->account_id,
-                    ]
-                ]
+                    ],
+                ],
             ]);
 
         $response->assertBadRequest();
@@ -246,8 +246,8 @@ class SlipCreationTest extends TestCase
                         'amount'  => $amount,
                         'client'  => $client,
                         'outline' => $outline,
-                    ]
-                ]
+                    ],
+                ],
             ]);
 
         $response->assertNotFound();
@@ -273,8 +273,8 @@ class SlipCreationTest extends TestCase
                         'amount'  => $amount,
                         'client'  => $client,
                         'outline' => $outline,
-                    ]
-                ]
+                    ],
+                ],
             ]);
 
         $response->assertForbidden();
@@ -300,10 +300,10 @@ class SlipCreationTest extends TestCase
                         'amount'  => $amount,
                         'client'  => $client,
                         'outline' => $outline,
-                    ]
-                ]
+                    ],
+                ],
             ]);
 
-        $response->assertUnprocessable();        
+        $response->assertUnprocessable();
     }
 }
