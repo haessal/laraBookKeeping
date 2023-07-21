@@ -91,7 +91,7 @@ class AccountListRetrievalTest extends TestCase
     public function test_account_is_not_retrieved_with_invalid_path_parameter_for_book_id(): void
     {
         $response = $this->actingAs($this->user)
-        ->get('/api/v1/books/0/accounts');
+            ->get('/api/v1/books/0/accounts');
 
         $response->assertBadRequest();
     }
