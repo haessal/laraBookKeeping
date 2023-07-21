@@ -29,6 +29,7 @@ class InvokeTest extends TestCase
             ->andReturn(true);
         $serviceMock->shouldReceive('retrieveAccounts')
             ->once()
+            ->with($bookId)
             ->andReturn([-1, null]);
         /** @var \App\Http\Responder\api\v1\AccountsJsonResponder|\Mockery\MockInterface $responderMock */
         $responderMock = Mockery::mock(AccountsJsonResponder::class);
@@ -53,6 +54,7 @@ class InvokeTest extends TestCase
             ->andReturn(true);
         $serviceMock->shouldReceive('retrieveAccounts')
             ->once()
+            ->with($bookId)
             ->andReturn([BookKeepingService::STATUS_NORMAL, null]);
         /** @var \App\Http\Responder\api\v1\AccountsJsonResponder|\Mockery\MockInterface $responderMock */
         $responderMock = Mockery::mock(AccountsJsonResponder::class);
