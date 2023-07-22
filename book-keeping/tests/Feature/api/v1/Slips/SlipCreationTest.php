@@ -92,6 +92,7 @@ class SlipCreationTest extends TestCase
         $amount = $this->faker->numberBetween(1);
         $client = $this->faker->word();
         $outline = $this->faker->sentence();
+
         $response = $this->actingAs($this->user)
             ->post('/api/v1/books/'.$this->book->book_id.'/slips', [
                 'date'    => $slipDate,
@@ -234,6 +235,7 @@ class SlipCreationTest extends TestCase
         $amount = $this->faker->numberBetween(1);
         $client = $this->faker->word();
         $outline = $this->faker->sentence();
+
         $response = $this->actingAs($this->user)
             ->post('/api/v1/books/'.$this->unavailableBook->book_id.'/slips', [
                 'date'    => $slipDate,
@@ -261,6 +263,7 @@ class SlipCreationTest extends TestCase
         $amount = $this->faker->numberBetween(1);
         $client = $this->faker->word();
         $outline = $this->faker->sentence();
+
         $response = $this->actingAs($this->otherUser)
             ->post('/api/v1/books/'.$this->book->book_id.'/slips', [
                 'date'    => $slipDate,
@@ -288,6 +291,7 @@ class SlipCreationTest extends TestCase
         $amount = $this->faker->numberBetween(1);
         $client = $this->faker->word();
         $outline = $this->faker->sentence();
+
         $response = $this->actingAs($this->user)
             ->post('/api/v1/books/'.$this->book->book_id.'/slips', [
                 'date'    => $slipDate,

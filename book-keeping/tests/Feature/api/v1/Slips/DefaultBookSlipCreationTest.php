@@ -72,6 +72,7 @@ class DefaultBookSlipCreationTest extends TestCase
         $amount = $this->faker->numberBetween(1);
         $client = $this->faker->word();
         $outline = $this->faker->sentence();
+
         $response = $this->actingAs($this->user)
             ->post('/api/v1/slips', [
                 'date'    => $slipDate,
@@ -204,6 +205,7 @@ class DefaultBookSlipCreationTest extends TestCase
         $amount = $this->faker->numberBetween(1);
         $client = $this->faker->word();
         $outline = $this->faker->sentence();
+
         $response = $this->actingAs($this->otherUser)
             ->post('/api/v1/slips', [
                 'date'    => $slipDate,
@@ -231,6 +233,7 @@ class DefaultBookSlipCreationTest extends TestCase
         $amount = $this->faker->numberBetween(1);
         $client = $this->faker->word();
         $outline = $this->faker->sentence();
+
         $response = $this->actingAs($this->user)
             ->post('/api/v1/slips', [
                 'date'    => $slipDate,
