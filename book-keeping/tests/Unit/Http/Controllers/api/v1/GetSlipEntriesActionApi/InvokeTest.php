@@ -3,7 +3,7 @@
 namespace Tests\Unit\Http\Controllers\api\v1\GetSlipEntriesActionApi;
 
 use App\Http\Controllers\api\v1\GetSlipEntriesActionApi;
-use App\Http\Responder\api\v1\SlipEntriesJsonResponder ;
+use App\Http\Responder\api\v1\SlipEntriesJsonResponder;
 use App\Service\BookKeepingService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -32,7 +32,7 @@ class InvokeTest extends TestCase
             ->with($from, null, null, null, null, null)
             ->andReturn([-1, null]);
         /** @var \App\Http\Responder\api\v1\SlipEntriesJsonResponder |\Mockery\MockInterface $responderMock */
-        $responderMock = Mockery::mock(SlipEntriesJsonResponder ::class);
+        $responderMock = Mockery::mock(SlipEntriesJsonResponder::class);
         $responderMock->shouldNotReceive('response');
         /** @var \Illuminate\Http\Request|\Mockery\MockInterface $requestMock */
         $requestMock = Mockery::mock(Request::class);
@@ -60,7 +60,7 @@ class InvokeTest extends TestCase
             ->with($from, null, null, null, null, null)
             ->andReturn([BookKeepingService::STATUS_NORMAL, null]);
         /** @var \App\Http\Responder\api\v1\SlipEntriesJsonResponder |\Mockery\MockInterface $responderMock */
-        $responderMock = Mockery::mock(SlipEntriesJsonResponder ::class);
+        $responderMock = Mockery::mock(SlipEntriesJsonResponder::class);
         $responderMock->shouldNotReceive('response');
         /** @var \Illuminate\Http\Request|\Mockery\MockInterface $requestMock */
         $requestMock = Mockery::mock(Request::class);

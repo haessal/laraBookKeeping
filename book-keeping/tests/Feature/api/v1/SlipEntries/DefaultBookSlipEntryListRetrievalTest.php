@@ -134,8 +134,8 @@ class DefaultBookSlipEntryListRetrievalTest extends TestCase
                         'date'    => $this->slip->date,
                         'outline' => $this->slip->slip_outline,
                         'memo'    => $this->slip->slip_memo,
-                    ]
-                ]
+                    ],
+                ],
             ]);
     }
 
