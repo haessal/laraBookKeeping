@@ -50,7 +50,7 @@ class SlipCreationTest extends TestCase
             'readable_book'  => $this->book->book_id,
             'modifiable'     => true,
             'is_owner'       => true,
-            'is_default'     => true,
+            'is_default'     => false,
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->otherUser->id,
