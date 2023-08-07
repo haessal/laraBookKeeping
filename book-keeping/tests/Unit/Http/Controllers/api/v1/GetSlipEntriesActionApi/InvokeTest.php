@@ -7,7 +7,6 @@ use App\Http\Responder\api\v1\SlipEntriesJsonResponder;
 use App\Service\BookKeepingService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Mockery;
 use Tests\TestCase;
 
