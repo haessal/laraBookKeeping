@@ -46,6 +46,9 @@ class DeleteBooksSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
             case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
                 $response = new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
                 break;
+            case BookKeepingService::STATUS_ERROR_AUTH_FORBIDDEN:
+                $response = new JsonResponse(null, JsonResponse::HTTP_FORBIDDEN);
+                break;
             default:
                 break;
         }
