@@ -53,7 +53,7 @@ class SlipUpdateTest extends TestCase
         $this->user = User::factory()->create();
         $this->otherUser = User::factory()->create();
         $this->book = Book::factory()->create([
-            'book_name' => $this->faker->word,
+            'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
@@ -70,7 +70,7 @@ class SlipUpdateTest extends TestCase
             'is_default'     => false,
         ]);
         $this->unavailableBook = Book::factory()->create([
-            'book_name' => $this->faker->word,
+            'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->otherUser->id,
@@ -109,9 +109,9 @@ class SlipUpdateTest extends TestCase
 
     public function test_specified_slip_of_specified_book_can_be_updated(): void
     {
-        $newDate = $this->faker->date;
-        $newOutline = $this->faker->sentence;
-        $newMemo = $this->faker->paragraph;
+        $newDate = $this->faker->date();
+        $newOutline = $this->faker->sentence();
+        $newMemo = $this->faker->paragraph();
 
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/books/'.$this->book->book_id.'/slips/'.$this->slip->slip_id, [
@@ -164,9 +164,9 @@ class SlipUpdateTest extends TestCase
 
     public function test_slip_is_not_updated_with_invalid_path_parameter_for_book_id(): void
     {
-        $newDate = $this->faker->date;
-        $newOutline = $this->faker->sentence;
-        $newMemo = $this->faker->paragraph;
+        $newDate = $this->faker->date();
+        $newOutline = $this->faker->sentence();
+        $newMemo = $this->faker->paragraph();
 
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/books/0/slips/'.$this->slip->slip_id, [
@@ -180,9 +180,9 @@ class SlipUpdateTest extends TestCase
 
     public function test_slip_is_not_updated_with_invalid_path_parameter_for_slip_id(): void
     {
-        $newDate = $this->faker->date;
-        $newOutline = $this->faker->sentence;
-        $newMemo = $this->faker->paragraph;
+        $newDate = $this->faker->date();
+        $newOutline = $this->faker->sentence();
+        $newMemo = $this->faker->paragraph();
 
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/books/'.$this->book->book_id.'/slips/0', [
@@ -218,9 +218,9 @@ class SlipUpdateTest extends TestCase
 
     public function test_specified_book_is_not_found(): void
     {
-        $newDate = $this->faker->date;
-        $newOutline = $this->faker->sentence;
-        $newMemo = $this->faker->paragraph;
+        $newDate = $this->faker->date();
+        $newOutline = $this->faker->sentence();
+        $newMemo = $this->faker->paragraph();
 
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/books/'.$this->unavailableBook->book_id.'/slips/'.$this->slip->slip_id, [
@@ -234,9 +234,9 @@ class SlipUpdateTest extends TestCase
 
     public function test_specified_slip_is_not_found(): void
     {
-        $newDate = $this->faker->date;
-        $newOutline = $this->faker->sentence;
-        $newMemo = $this->faker->paragraph;
+        $newDate = $this->faker->date();
+        $newOutline = $this->faker->sentence();
+        $newMemo = $this->faker->paragraph();
 
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/books/'.$this->book->book_id.'/slips/'.$this->unavailableSlip->slip_id, [
@@ -250,9 +250,9 @@ class SlipUpdateTest extends TestCase
 
     public function test_slip_is_not_updated_without_permission(): void
     {
-        $newDate = $this->faker->date;
-        $newOutline = $this->faker->sentence;
-        $newMemo = $this->faker->paragraph;
+        $newDate = $this->faker->date();
+        $newOutline = $this->faker->sentence();
+        $newMemo = $this->faker->paragraph();
 
         $response = $this->actingAs($this->otherUser)
             ->patch('/api/v1/books/'.$this->book->book_id.'/slips/'.$this->slip->slip_id, [

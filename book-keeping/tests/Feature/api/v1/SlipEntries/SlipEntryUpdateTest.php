@@ -57,7 +57,7 @@ class SlipEntryUpdateTest extends TestCase
         $this->user = User::factory()->create();
         $this->otherUser = User::factory()->create();
         $this->book = Book::factory()->create([
-            'book_name' => $this->faker->word,
+            'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
@@ -74,7 +74,7 @@ class SlipEntryUpdateTest extends TestCase
             'is_default'     => false,
         ]);
         $this->unavailableBook = Book::factory()->create([
-            'book_name' => $this->faker->word,
+            'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->otherUser->id,
@@ -119,8 +119,8 @@ class SlipEntryUpdateTest extends TestCase
     public function test_specified_slip_entry_of_specified_book_can_be_updated(): void
     {
         $newAmount = $this->faker->numberBetween(1);
-        $newClient = $this->faker->word;
-        $newOutline = $this->faker->sentence;
+        $newClient = $this->faker->word();
+        $newOutline = $this->faker->sentence();
 
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/books/'.$this->book->book_id.'/slipentries/'.$this->slipEntry->slip_entry_id, [
@@ -168,8 +168,8 @@ class SlipEntryUpdateTest extends TestCase
     public function test_slip_entry_is_not_updated_with_invalid_path_parameter_for_book_id(): void
     {
         $newAmount = $this->faker->numberBetween(1);
-        $newClient = $this->faker->word;
-        $newOutline = $this->faker->sentence;
+        $newClient = $this->faker->word();
+        $newOutline = $this->faker->sentence();
 
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/books/0/slipentries/'.$this->slipEntry->slip_entry_id, [
@@ -186,8 +186,8 @@ class SlipEntryUpdateTest extends TestCase
     public function test_slip_entry_is_not_updated_with_invalid_path_parameter_for_slip_entry_id(): void
     {
         $newAmount = $this->faker->numberBetween(1);
-        $newClient = $this->faker->word;
-        $newOutline = $this->faker->sentence;
+        $newClient = $this->faker->word();
+        $newOutline = $this->faker->sentence();
 
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/books/'.$this->book->book_id.'/slipentries/0', [
@@ -248,8 +248,8 @@ class SlipEntryUpdateTest extends TestCase
     public function test_specified_book_is_not_found(): void
     {
         $newAmount = $this->faker->numberBetween(1);
-        $newClient = $this->faker->word;
-        $newOutline = $this->faker->sentence;
+        $newClient = $this->faker->word();
+        $newOutline = $this->faker->sentence();
 
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/books/'.$this->unavailableBook->book_id.'/slipentries/'.$this->slipEntry->slip_entry_id, [
@@ -266,8 +266,8 @@ class SlipEntryUpdateTest extends TestCase
     public function test_specified_slip_entry_is_not_found(): void
     {
         $newAmount = $this->faker->numberBetween(1);
-        $newClient = $this->faker->word;
-        $newOutline = $this->faker->sentence;
+        $newClient = $this->faker->word();
+        $newOutline = $this->faker->sentence();
 
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/books/'.$this->book->book_id.'/slipentries/'.$this->unavailableSlipEntry->slip_entry_id, [
@@ -284,8 +284,8 @@ class SlipEntryUpdateTest extends TestCase
     public function test_slip_entry_is_not_updated_without_permission(): void
     {
         $newAmount = $this->faker->numberBetween(1);
-        $newClient = $this->faker->word;
-        $newOutline = $this->faker->sentence;
+        $newClient = $this->faker->word();
+        $newOutline = $this->faker->sentence();
 
         $response = $this->actingAs($this->otherUser)
             ->patch('/api/v1/books/'.$this->book->book_id.'/slipentries/'.$this->slipEntry->slip_entry_id, [
@@ -302,8 +302,8 @@ class SlipEntryUpdateTest extends TestCase
     public function test_slip_entry_is_not_updated_with_invalid_account(): void
     {
         $newAmount = $this->faker->numberBetween(1);
-        $newClient = $this->faker->word;
-        $newOutline = $this->faker->sentence;
+        $newClient = $this->faker->word();
+        $newOutline = $this->faker->sentence();
 
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/books/'.$this->book->book_id.'/slipentries/'.$this->slipEntry->slip_entry_id, [

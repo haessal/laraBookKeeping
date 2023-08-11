@@ -53,7 +53,7 @@ class SlipRetrievalTest extends TestCase
         $this->user = User::factory()->create();
         $this->otherUser = User::factory()->create();
         $this->book = Book::factory()->create([
-            'book_name' => $this->faker->word,
+            'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
@@ -63,7 +63,7 @@ class SlipRetrievalTest extends TestCase
             'is_default'     => false,
         ]);
         $this->unavailableBook = Book::factory()->create([
-            'book_name' => $this->faker->word,
+            'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->otherUser->id,

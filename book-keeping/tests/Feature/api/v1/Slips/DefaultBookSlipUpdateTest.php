@@ -53,7 +53,7 @@ class DefaultBookSlipUpdateTest extends TestCase
         $this->user = User::factory()->create();
         $this->otherUser = User::factory()->create();
         $this->book = Book::factory()->create([
-            'book_name' => $this->faker->word,
+            'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
@@ -63,7 +63,7 @@ class DefaultBookSlipUpdateTest extends TestCase
             'is_default'     => true,
         ]);
         $this->unavailableBook = Book::factory()->create([
-            'book_name' => $this->faker->word,
+            'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->otherUser->id,
@@ -102,9 +102,9 @@ class DefaultBookSlipUpdateTest extends TestCase
 
     public function test_specified_slip_of_default_book_can_be_updated(): void
     {
-        $newDate = $this->faker->date;
-        $newOutline = $this->faker->sentence;
-        $newMemo = $this->faker->paragraph;
+        $newDate = $this->faker->date();
+        $newOutline = $this->faker->sentence();
+        $newMemo = $this->faker->paragraph();
 
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/slips/'.$this->slip->slip_id, [
@@ -157,9 +157,9 @@ class DefaultBookSlipUpdateTest extends TestCase
 
     public function test_slip_is_not_updated_with_invalid_path_parameter_for_slip_id(): void
     {
-        $newDate = $this->faker->date;
-        $newOutline = $this->faker->sentence;
-        $newMemo = $this->faker->paragraph;
+        $newDate = $this->faker->date();
+        $newOutline = $this->faker->sentence();
+        $newMemo = $this->faker->paragraph();
 
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/slips/0', [
@@ -195,9 +195,9 @@ class DefaultBookSlipUpdateTest extends TestCase
 
     public function test_default_book_is_not_found(): void
     {
-        $newDate = $this->faker->date;
-        $newOutline = $this->faker->sentence;
-        $newMemo = $this->faker->paragraph;
+        $newDate = $this->faker->date();
+        $newOutline = $this->faker->sentence();
+        $newMemo = $this->faker->paragraph();
 
         $response = $this->actingAs($this->otherUser)
             ->patch('/api/v1/slips/'.$this->slip->slip_id, [
@@ -211,9 +211,9 @@ class DefaultBookSlipUpdateTest extends TestCase
 
     public function test_specified_slip_is_not_found(): void
     {
-        $newDate = $this->faker->date;
-        $newOutline = $this->faker->sentence;
-        $newMemo = $this->faker->paragraph;
+        $newDate = $this->faker->date();
+        $newOutline = $this->faker->sentence();
+        $newMemo = $this->faker->paragraph();
 
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/slips/'.$this->unavailableSlip->slip_id, [

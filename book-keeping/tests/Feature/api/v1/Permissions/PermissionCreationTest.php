@@ -43,7 +43,7 @@ class PermissionCreationTest extends TestCase
         $this->user = User::factory()->create();
         $this->otherUser = User::factory()->create();
         $this->book = Book::factory()->create([
-            'book_name' => $this->faker->word,
+            'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
@@ -53,7 +53,7 @@ class PermissionCreationTest extends TestCase
             'is_default'     => true,
         ]);
         $this->sharedBook = Book::factory()->create([
-            'book_name' => $this->faker->word,
+            'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
@@ -70,7 +70,7 @@ class PermissionCreationTest extends TestCase
             'is_default'     => false,
         ]);
         $this->sharedWritableBook = Book::factory()->create([
-            'book_name' => $this->faker->word,
+            'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
@@ -87,7 +87,7 @@ class PermissionCreationTest extends TestCase
             'is_default'     => false,
         ]);
         $this->bookToBeSharedToRead = Book::factory()->create([
-            'book_name' => $this->faker->word,
+            'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
@@ -97,7 +97,7 @@ class PermissionCreationTest extends TestCase
             'is_default'     => true,
         ]);
         $this->bookToBeSharedToReadWrite = Book::factory()->create([
-            'book_name' => $this->faker->word,
+            'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
@@ -107,7 +107,7 @@ class PermissionCreationTest extends TestCase
             'is_default'     => true,
         ]);
         $this->unavailableBook = Book::factory()->create([
-            'book_name' => $this->faker->word,
+            'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->otherUser->id,

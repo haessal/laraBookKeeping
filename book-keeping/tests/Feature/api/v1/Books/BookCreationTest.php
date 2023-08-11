@@ -22,7 +22,7 @@ class BookCreationTest extends TestCase
 
     public function test_book_can_be_created(): void
     {
-        $bookName = $this->faker->word;
+        $bookName = $this->faker->word();
 
         $response = $this->actingAs($this->user)
             ->post('/api/v1/books', ['name' => $bookName]);
