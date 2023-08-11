@@ -21,7 +21,7 @@ class BudgetFactory extends Factory
             'book_id' => fake()->uuid(),
             'account_code' => fake()->uuid(),
             'date' => fake()->date(),
-            'amount' => fake()->randomNumber(),
+            'amount' => fake()->numberBetween(1),
         ];
     }
 }

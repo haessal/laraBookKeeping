@@ -21,7 +21,7 @@ class SlipEntryFactory extends Factory
             'slip_id' => fake()->uuid(),
             'debit' => fake()->uuid(),
             'credit' => fake()->uuid(),
-            'amount' => fake()->randomNumber(),
+            'amount' => fake()->numberBetween(1),
             'client' => fake()->word(),
             'outline' => fake()->sentence(),
         ];
