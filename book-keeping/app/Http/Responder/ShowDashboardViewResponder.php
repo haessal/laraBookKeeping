@@ -10,7 +10,7 @@ class ShowDashboardViewResponder extends BaseLayoutViewResponder
      * Respond the ShowDashboardView.
      *
      * @param  array  $context
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function response(array $context): Response
     {

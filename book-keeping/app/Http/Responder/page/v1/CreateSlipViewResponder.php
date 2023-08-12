@@ -10,7 +10,7 @@ class CreateSlipViewResponder extends BaseViewResponder
      * Response the Form to create new Slip.
      *
      * @param  array  $context
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function response(array $context): Response
     {

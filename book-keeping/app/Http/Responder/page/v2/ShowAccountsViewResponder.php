@@ -10,7 +10,7 @@ class ShowAccountsViewResponder extends BaseAccountsViewResponder
      * Respond the ShowAccountsView.
      *
      * @param  array  $context
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function response(array $context): Response
     {
