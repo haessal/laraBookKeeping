@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\v2;
+namespace App\Http\Controllers\page\v2;
 
 use App\Http\Controllers\AuthenticatedBookKeepingAction;
 use App\Service\BookKeepingService;

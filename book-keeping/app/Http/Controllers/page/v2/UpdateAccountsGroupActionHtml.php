@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\v2;
+namespace App\Http\Controllers\page\v2;
 
 use App\Http\Controllers\AuthenticatedBookKeepingAction;
-use App\Http\Responder\v2\UpdateAccountsGroupViewResponder;
+use App\Http\Responder\page\v2\UpdateAccountsGroupViewResponder;
 use App\Service\BookKeepingService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;

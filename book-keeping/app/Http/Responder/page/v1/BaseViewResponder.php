@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Responder\v1;
+namespace App\Http\Responder\page\v1;
 
 use App\Http\Responder\AccountsListConverter;
 use Illuminate\Contracts\View\Factory as ViewFactory;

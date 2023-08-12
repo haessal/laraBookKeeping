@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Responder\v2;
+namespace App\Http\Responder\page\v2;
 
 use Illuminate\Http\Response;
 

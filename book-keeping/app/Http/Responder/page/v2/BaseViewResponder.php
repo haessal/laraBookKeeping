@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Responder\v2;
+namespace App\Http\Responder\page\v2;
 
 use App\Http\Responder\BaseLayoutViewResponder;
 use Illuminate\Contracts\View\Factory as ViewFactory;

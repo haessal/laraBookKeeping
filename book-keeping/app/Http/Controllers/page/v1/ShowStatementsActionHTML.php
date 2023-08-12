@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\v1;
+namespace App\Http\Controllers\page\v1;
 
 use App\Http\Controllers\AuthenticatedBookKeepingAction;
-use App\Http\Responder\v1\ShowStatementsViewResponder;
+use App\Http\Responder\page\v1\ShowStatementsViewResponder;
 use App\Service\BookKeepingService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
