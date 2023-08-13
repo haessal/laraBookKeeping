@@ -13,7 +13,7 @@ class UpdateAccountsItemActionHtml extends AuthenticatedBookKeepingAction
     /**
      * UpdateAccountsItemView responder instance.
      *
-     * @var \App\Http\Responder\v2\UpdateAccountsItemViewResponder
+     * @var \App\Http\Responder\page\v2\UpdateAccountsItemViewResponder
      */
     private $responder;
 
@@ -21,7 +21,7 @@ class UpdateAccountsItemActionHtml extends AuthenticatedBookKeepingAction
      * Create a new controller instance.
      *
      * @param  \App\Service\BookKeepingService  $BookKeeping
-     * @param  \App\Http\Responder\v2\UpdateAccountsItemViewResponder  $responder
+     * @param  \App\Http\Responder\page\v2\UpdateAccountsItemViewResponder  $responder
      * @return void
      */
     public function __construct(BookKeepingService $BookKeeping, UpdateAccountsItemViewResponder $responder)

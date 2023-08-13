@@ -12,7 +12,7 @@ class ShowDashboardActionHtml extends AuthenticatedBookKeepingAction
     /**
      * ShowTopView responder instance.
      *
-     * @var \App\Http\Responder\v1\ShowTopViewResponder
+     * @var \App\Http\Responder\page\v1\ShowTopViewResponder
      */
     private $responder;
 

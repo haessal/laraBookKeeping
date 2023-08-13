@@ -13,7 +13,7 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
     /**
      * CreateAccountsView responder instance.
      *
-     * @var \App\Http\Responder\v2\CreateAccountsGroupViewResponder
+     * @var \App\Http\Responder\page\v2\CreateAccountsGroupViewResponder
      */
     private $responder;
 
@@ -21,7 +21,7 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
      * Create a new controller instance.
      *
      * @param  \App\Service\BookKeepingService  $BookKeeping
-     * @param  \App\Http\Responder\v2\CreateAccountsViewResponder  $responder
+     * @param  \App\Http\Responder\page\v2\CreateAccountsViewResponder  $responder
      * @return void
      */
     public function __construct(BookKeepingService $BookKeeping, CreateAccountsViewResponder $responder)

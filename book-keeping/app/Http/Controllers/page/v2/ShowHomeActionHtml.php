@@ -13,7 +13,7 @@ class ShowHomeActionHtml extends AuthenticatedBookKeepingAction
     /**
      * ShowHomeView responder instance.
      *
-     * @var \App\Http\Responder\v2\ShowHomeViewResponder
+     * @var \App\Http\Responder\page\v2\ShowHomeViewResponder
      */
     private $responder;
 
@@ -21,7 +21,7 @@ class ShowHomeActionHtml extends AuthenticatedBookKeepingAction
      * Create a new controller instance.
      *
      * @param  \App\Service\BookKeepingService  $BookKeeping
-     * @param  \App\Http\Responder\v2\ShowHomeViewResponder  $responder
+     * @param  \App\Http\Responder\page\v2\ShowHomeViewResponder  $responder
      * @return void
      */
     public function __construct(BookKeepingService $BookKeeping, ShowHomeViewResponder $responder)

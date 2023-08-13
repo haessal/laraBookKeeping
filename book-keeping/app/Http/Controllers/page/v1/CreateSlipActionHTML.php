@@ -14,7 +14,7 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
     /**
      * CreateSlipView responder instance.
      *
-     * @var \App\Http\Responder\v1\CreateSlipViewResponder
+     * @var \App\Http\Responder\page\v1\CreateSlipViewResponder
      */
     private $responder;
 
@@ -22,7 +22,7 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
      * Create a new controller instance.
      *
      * @param  \App\Service\BookKeepingService  $BookKeeping
-     * @param  \App\Http\Responder\v1\CreateSlipViewResponder  $responder
+     * @param  \App\Http\Responder\page\v1\CreateSlipViewResponder  $responder
      * @return void
      */
     public function __construct(BookKeepingService $BookKeeping, CreateSlipViewResponder $responder)

@@ -13,7 +13,7 @@ class FindSlipsActionHTML extends AuthenticatedBookKeepingAction
     /**
      * FindSlipsViewResponder responder instance.
      *
-     * @var \App\Http\Responder\v1\FindSlipsViewResponder
+     * @var \App\Http\Responder\page\v1\FindSlipsViewResponder
      */
     private $responder;
 
@@ -21,7 +21,7 @@ class FindSlipsActionHTML extends AuthenticatedBookKeepingAction
      * Create a new controller instance.
      *
      * @param  \App\Service\BookKeepingService  $BookKeeping
-     * @param  \App\Http\Responder\v1\FindSlipsViewResponder  $responder
+     * @param  \App\Http\Responder\page\v1\FindSlipsViewResponder  $responder
      * @return void
      */
     public function __construct(BookKeepingService $BookKeeping, FindSlipsViewResponder $responder)

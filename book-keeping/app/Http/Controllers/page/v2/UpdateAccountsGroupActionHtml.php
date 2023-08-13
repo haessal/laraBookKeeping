@@ -13,7 +13,7 @@ class UpdateAccountsGroupActionHtml extends AuthenticatedBookKeepingAction
     /**
      * UpdateAccountsGroupView responder instance.
      *
-     * @var \App\Http\Responder\v2\UpdateAccountsGroupViewResponder
+     * @var \App\Http\Responder\page\v2\UpdateAccountsGroupViewResponder
      */
     private $responder;
 
@@ -21,7 +21,7 @@ class UpdateAccountsGroupActionHtml extends AuthenticatedBookKeepingAction
      * Create a new controller instance.
      *
      * @param  \App\Service\BookKeepingService  $BookKeeping
-     * @param  \App\Http\Responder\v2\UpdateAccountsGroupViewResponder  $responder
+     * @param  \App\Http\Responder\page\v2\UpdateAccountsGroupViewResponder  $responder
      * @return void
      */
     public function __construct(BookKeepingService $BookKeeping, UpdateAccountsGroupViewResponder $responder)
