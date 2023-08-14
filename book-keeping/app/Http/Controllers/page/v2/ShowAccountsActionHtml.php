@@ -41,7 +41,7 @@ class ShowAccountsActionHtml extends AuthenticatedBookKeepingAction
         $context = [];
 
         $context['book'] = $this->BookKeeping->retrieveBookInfomation($bookId);
-        $context['accounts'] = $this->BookKeeping->retrieveAccounts(false, $bookId);
+        $context['accounts'] = $this->BookKeeping->retrieveCategorizedAccounts(false, $bookId);
 
         return $this->responder->response($context);
     }

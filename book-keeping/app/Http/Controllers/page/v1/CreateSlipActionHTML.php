@@ -41,7 +41,7 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
     {
         $context = [];
 
-        $context['accounts'] = $this->BookKeeping->retrieveAccounts(true);
+        $context['accounts'] = $this->BookKeeping->retrieveCategorizedAccounts(true);
         $date = trim($request->input('date'));
 
         if ($request->isMethod('post')) {

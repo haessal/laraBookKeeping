@@ -59,7 +59,7 @@ class UpdateAccountsGroupActionHtml extends AuthenticatedBookKeepingAction
             $this->BookKeeping->updateAccountGroup($accountsGroupId, $newData, $bookId);
         }
         $context['book'] = $this->BookKeeping->retrieveBookInfomation($bookId);
-        $context['accounts'] = $this->BookKeeping->retrieveAccounts(false, $bookId);
+        $context['accounts'] = $this->BookKeeping->retrieveCategorizedAccounts(false, $bookId);
         $accounts = $context['accounts'];
         $context['accountsgroup'] = null;
         foreach ($accounts as $accountTypeKey => $accountType) {

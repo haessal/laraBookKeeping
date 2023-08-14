@@ -48,7 +48,7 @@ class FindSlipsActionHTML extends AuthenticatedBookKeepingAction
         $slips = [];
         $message = __('There is no condition for search.');
 
-        $context['accounts'] = $this->BookKeeping->retrieveAccounts(true);
+        $context['accounts'] = $this->BookKeeping->retrieveCategorizedAccounts(true);
         if ($request->isMethod('post')) {
             $button_action = key($request->input('buttons'));
             $modifyno = $request->input('modifyno');
