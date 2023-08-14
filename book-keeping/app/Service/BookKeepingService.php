@@ -716,10 +716,10 @@ class BookKeepingService
         }
 
         $accounts = $this->account->retrieveAccounts($bookId);
-        if (is_null($fromDate)) {
+        if (is_null($fromDate) || ($fromDate == '')) {
             $fromDate = self::ORIGIN_DATE;
         }
-        if (is_null($toDate)) {
+        if (is_null($toDate) || ($toDate == '')) {
             $date = new Carbon();
             $toDate = $date->format('Y-m-d');
         }
