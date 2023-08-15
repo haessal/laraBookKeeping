@@ -70,13 +70,13 @@ trait AccountsListConverter
         $sortedIds_isNotCurrent_withoutCode = [];
         foreach ($listWithKeyword as $Ids => $item) {
             if (array_key_exists('isCurrent', $item) && ($item['isCurrent'] == true)) {
-                if (! is_null($item['bk_code'])) {
+                if (isset($item['bk_code']) && ($item['bk_code'] != 0)) {
                     $sortedIds_isCurrent_withCode[$Ids] = $item['bk_code'];
                 } else {
                     $sortedIds_isCurrent_withoutCode[$Ids] = $item['createdAt'];
                 }
             } else {
-                if (! is_null($item['bk_code'])) {
+                if (isset($item['bk_code']) && ($item['bk_code'] != 0)) {
                     $sortedIds_isNotCurrent_withCode[$Ids] = $item['bk_code'];
                 } else {
                     $sortedIds_isNotCurrent_withoutCode[$Ids] = $item['createdAt'];

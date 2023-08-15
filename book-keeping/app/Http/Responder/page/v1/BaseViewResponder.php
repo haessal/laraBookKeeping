@@ -71,8 +71,13 @@ class BaseViewResponder
         foreach ($accounts as $accountTypeKey => $accountType) {
             foreach ($accountType['groups'] as $accountGroupItem) {
                 foreach ($accountGroupItem['items'] as $accountId => $accountItem) {
+                    if (is_null($accountItem['bk_code']) || ($accountItem['bk_code'] == 0)) {
+                        $code = '-';
+                    } else {
+                        $code = $accountItem['bk_code'];
+                    }
                     $account_list[$accountId] = [
-                        'code'        => is_null($accountItem['bk_code']) ? '-' : $accountItem['bk_code'],
+                        'code'        => $code,
                         'type'        => $accountTypeTitle[$accountTypeKey],
                         'group_title' => $accountGroupItem['title'],
                         'title'       => $accountItem['title'],
