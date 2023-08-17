@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 use Mockery;
 use Tests\TestCase;
 
-class RetrieveStatementTest extends TestCase
+class RetrieveProfitLossBalanceSheetSlipsOfOneDayTest extends TestCase
 {
     public function tearDown(): void
     {
@@ -21,8 +21,7 @@ class RetrieveStatementTest extends TestCase
 
     public function test_it_retrieves_the_statement_of_the_default_book(): void
     {
-        $fromDate = '2019-10-01';
-        $toDate = '2019-10-31';
+        $date = '2019-10-31';
         $bookId = (string) Str::uuid();
         $userId = 11;
         $user = new User();
@@ -142,7 +141,69 @@ class RetrieveStatementTest extends TestCase
             $accountId_7 => ['debit' => 0, 'credit' => 7600],
             $accountId_8 => ['debit' => 8700, 'credit' => 8000],
         ];
-        $statements_expected = [
+        $slipId_1 = (string) Str::uuid();
+        $slipEntryId_1 = (string) Str::uuid();
+        $slipOutline = 'slip_outline150';
+        $slipMemo = 'slip_memo151';
+        $amount = 2590;
+        $client = 'client156';
+        $outline = 'outline157';
+        $slipEntries = [[
+            'slip_id'       => $slipId_1,
+            'date'          => $date,
+            'slip_outline'  => $slipOutline,
+            'slip_memo'     => $slipMemo,
+            'slip_entry_id' => $slipEntryId_1,
+            'debit'         => $accountId_1,
+            'credit'        => $accountId_2,
+            'amount'        => $amount,
+            'client'        => $client,
+            'outline'       => $outline,
+        ]];
+        $profitLoss = [
+            AccountService::ACCOUNT_TYPE_EXPENSE   => ['amount' => 400, 'groups' => [
+                $accountGroupId_3 => [
+                    'title'     => 'accountGroupTitle_3',
+                    'isCurrent' => 0,
+                    'amount'    => 400,
+                    'bk_code'   => 4100,
+                    'createdAt' => '2019-12-01 12:41:00',
+                    'items'     => [
+                        $accountId_4 => [
+                            'title'     => 'accountTitle_4',
+                            'amount'    => -300,
+                            'bk_code'   => 4104,
+                            'createdAt' => '2019-12-01 12:41:04',
+                        ],
+                        $accountId_8 => [
+                            'title'     => 'accountTitle_8',
+                            'amount'    => 700,
+                            'bk_code'   => 4108,
+                            'createdAt' => '2019-12-01 12:41:08',
+                        ],
+                    ],
+                ],
+            ]],
+            AccountService::ACCOUNT_TYPE_REVENUE   => ['amount' => -400, 'groups' => [
+                $accountGroupId_4 => [
+                    'title'     => 'accountGroupTitle_4',
+                    'isCurrent' => 0,
+                    'amount'    => -400,
+                    'bk_code'   => 5100,
+                    'createdAt' => '2019-12-01 12:51:00',
+                    'items'     => [
+                        $accountId_5 => [
+                            'title'     => 'accountTitle_5',
+                            'amount'    => -400,
+                            'bk_code'   => 5105,
+                            'createdAt' => '2019-12-01 12:51:05',
+                        ],
+                    ],
+                ],
+            ]],
+            'net_income'                           => ['amount' => -800],
+        ];
+        $balanceSheet = [
             AccountService::ACCOUNT_TYPE_ASSET     => ['amount' => 6600, 'groups' => [
                 $accountGroupId_1 => [
                     'title'     => 'accountGroupTitle_1',
@@ -207,56 +268,32 @@ class RetrieveStatementTest extends TestCase
                     ],
                 ],
             ]],
-            AccountService::ACCOUNT_TYPE_EXPENSE   => ['amount' => 400, 'groups' => [
-                $accountGroupId_3 => [
-                    'title'     => 'accountGroupTitle_3',
-                    'isCurrent' => 0,
-                    'amount'    => 400,
-                    'bk_code'   => 4100,
-                    'createdAt' => '2019-12-01 12:41:00',
-                    'items'     => [
-                        $accountId_4 => [
-                            'title'     => 'accountTitle_4',
-                            'amount'    => -300,
-                            'bk_code'   => 4104,
-                            'createdAt' => '2019-12-01 12:41:04',
-                        ],
-                        $accountId_8 => [
-                            'title'     => 'accountTitle_8',
-                            'amount'    => 700,
-                            'bk_code'   => 4108,
-                            'createdAt' => '2019-12-01 12:41:08',
-                        ],
-                    ],
-                ],
-            ]],
-            AccountService::ACCOUNT_TYPE_REVENUE   => ['amount' => -400, 'groups' => [
-                $accountGroupId_4 => [
-                    'title'     => 'accountGroupTitle_4',
-                    'isCurrent' => 0,
-                    'amount'    => -400,
-                    'bk_code'   => 5100,
-                    'createdAt' => '2019-12-01 12:51:00',
-                    'items'     => [
-                        $accountId_5 => [
-                            'title'     => 'accountTitle_5',
-                            'amount'    => -400,
-                            'bk_code'   => 5105,
-                            'createdAt' => '2019-12-01 12:51:05',
-                        ],
-                    ],
-                ],
-            ]],
             'current_net_asset'                    => ['amount' => -1100],
-            'net_income'                           => ['amount' => -800],
             'net_asset'                            => ['amount' => -1200],
         ];
+        $slips = [$slipId_1 => [
+            'date'         => $date,
+            'slip_outline' => $slipOutline,
+            'slip_memo'    => $slipMemo,
+            'items'        => [$slipEntryId_1 => [
+                'debit'   => ['account_id' => $accountId_1, 'account_title' => 'accountTitle_1'],
+                'credit'  => ['account_id' => $accountId_2, 'account_title' => 'accountTitle_2'],
+                'amount'  => $amount,
+                'client'  => $client,
+                'outline' => $outline,
+            ]],
+        ]];
+        $result_expected = [BookKeepingService::STATUS_NORMAL, [
+            'profit_loss'   => $profitLoss,
+            'balance_sheet' => $balanceSheet,
+            'slips'         => $slips,
+        ]];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
-        $bookMock->shouldReceive('retrieveDefaultBook')
+        $bookMock->shouldReceive('retrieveDefaultBookOrCheckReadable')
             ->once()
-            ->with($userId)
-            ->andReturn($bookId);
+            ->with(null, $userId)
+            ->andReturn([BookKeepingService::STATUS_NORMAL, $bookId]);
         /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
         $accountMock = Mockery::mock(AccountService::class);
         $accountMock->shouldReceive('retrieveAccounts')
@@ -269,50 +306,51 @@ class RetrieveStatementTest extends TestCase
         $slipMock = Mockery::mock(SlipService::class);
         $slipMock->shouldReceive('retrieveAmountFlows')
             ->once()
-            ->with($fromDate, $toDate, $bookId)
+            ->with($date, $date, $bookId)
             ->andReturn($amountFlows);
+        $slipMock->shouldReceive('retrieveAmountFlows')
+            ->once()
+            ->with('1970-01-01', $date, $bookId)
+            ->andReturn($amountFlows);
+        $slipMock->shouldReceive('retrieveSlipEntries')
+            ->once()
+            ->with($date, $date, ['debit' => null, 'credit' => null, 'and_or' => null, 'keyword' => null], $bookId)
+            ->andReturn($slipEntries);
 
         $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
-        $statements_actual = $BookKeeping->retrieveStatement($fromDate, $toDate);
+        $result_actual = $BookKeeping->retrieveProfitLossBalanceSheetSlipsOfOneDay($date);
 
-        $this->assertSame($statements_expected, $statements_actual);
+        $this->assertSame($result_expected, $result_actual);
     }
 
-    public function test_it_retrieves_the_statement_of_the_specified_book(): void
+    public function test_it_does_nothing_because_the_specified_book_is_not_readable(): void
     {
-        $fromDate = '2019-10-01';
-        $toDate = '2019-10-31';
+        $date = '2019-10-31';
         $bookId = (string) Str::uuid();
-        $statements_expected = [
-            AccountService::ACCOUNT_TYPE_ASSET     => ['amount' => 0, 'groups' => []],
-            AccountService::ACCOUNT_TYPE_LIABILITY => ['amount' => 0, 'groups' => []],
-            AccountService::ACCOUNT_TYPE_EXPENSE   => ['amount' => 0, 'groups' => []],
-            AccountService::ACCOUNT_TYPE_REVENUE   => ['amount' => 0, 'groups' => []],
-            'current_net_asset'                    => ['amount' => 0],
-            'net_income'                           => ['amount' => 0],
-            'net_asset'                            => ['amount' => 0],
-        ];
+        $userId = 286;
+        $user = new User();
+        $user->id = $userId;
+        $this->be($user);
+        $result_expected = [BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE, null];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
-        $bookMock->shouldNotReceive('retrieveDefaultBook');
+        $bookMock->shouldReceive('retrieveDefaultBookOrCheckReadable')
+            ->once()
+            ->with($bookId, $userId)
+            ->andReturn([BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE, '']);
         /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
         $accountMock = Mockery::mock(AccountService::class);
-        $accountMock->shouldReceive('retrieveAccounts')
-            ->once()
-            ->with($bookId)
-            ->andReturn([]);
+        $accountMock->shouldNotReceive('retrieveAccounts');
         /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
         $budgetMock = Mockery::mock(BudgetService::class);
         /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipService::class);
-        $slipMock->shouldReceive('retrieveAmountFlows')
-            ->once()
-            ->with($fromDate, $toDate, $bookId)
-            ->andReturn([]);
+        $slipMock->shouldNotReceive('retrieveAmountFlows');
+        $slipMock->shouldNotReceive('retrieveSlipEntries');
 
         $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
-        $statements_actual = $BookKeeping->retrieveStatement($fromDate, $toDate, $bookId);
+        $result_actual = $BookKeeping->retrieveProfitLossBalanceSheetSlipsOfOneDay($date, $bookId);
 
-        $this->assertSame($statements_expected, $statements_actual);
+        $this->assertSame($result_expected, $result_actual);
     }
 }
