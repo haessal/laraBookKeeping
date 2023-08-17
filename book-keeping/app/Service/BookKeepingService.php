@@ -194,23 +194,33 @@ class BookKeepingService
      * @param  string  $credit
      * @param  int  $amount
      * @param  string|null  $bookId
-     * @return void
+     * @return array{0:int, 1:null}
      */
-    public function createSlipEntryAsDraft($debit, $client, $outline, $credit, $amount, $bookId = null)
+    public function createSlipEntryAsDraft($debit, $client, $outline, $credit, $amount, $bookId = null): array
     {
-        if (is_null($bookId)) {
-            $bookId = $this->book->retrieveDefaultBook(intval(Auth::id()));
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckWritable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
         }
-        $bookId = strval($bookId); // FIXME: in case default book is not setting
+
         $draftSlips = $this->slip->retrieveDraftSlips($bookId);
         if (empty($draftSlips)) {
             $date = new Carbon();
             $this->slip->createSlipAsDraft($bookId, $outline, $date->format('Y-m-d'), [
-                ['debit' => $debit, 'client' => $client, 'outline' => $outline, 'credit' => $credit, 'amount' => $amount],
+                [
+                    'debit' => $debit,
+                    'client' => $client,
+                    'outline' => $outline,
+                    'credit' => $credit,
+                    'amount' => $amount,
+                ],
             ]);
         } else {
             $this->slip->createSlipEntry($draftSlips[0]['slip_id'], $debit, $credit, $amount, $client, $outline);
         }
+
+        return [self::STATUS_NORMAL, null];
     }
 
     /**
@@ -401,7 +411,7 @@ class BookKeepingService
      *
      * @param  bool  $selectableOnly
      * @param  string|null  $bookId
-     * @return array<string, array{
+     * @return array{0:int, 1:array<string, array{
      *   groups:array<string, array{
      *     title: string,
      *     isCurrent: bool,
@@ -415,24 +425,24 @@ class BookKeepingService
      *       createdAt: string,
      *     }>
      *   }>|array{}
-     * }>
+     * }>|null}
      */
-    public function retrieveCategorizedAccounts($selectableOnly = false, $bookId = null): array
+    public function retrieveCategorizedAccounts($selectableOnly, $bookId = null): array
     {
-        if (is_null($bookId)) {
-            $bookId = $this->book->retrieveDefaultBook(intval(Auth::id()));
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckReadable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
         }
-        $bookId = strval($bookId); // FIXME: in case default book is not setting
+
         $accounts = $this->account->retrieveAccounts($bookId);
         $accountGroups = $this->account->retrieveAccountGroups($bookId);
-
         $accounts_menu = [
             AccountService::ACCOUNT_TYPE_ASSET     => ['groups' => []],
             AccountService::ACCOUNT_TYPE_LIABILITY => ['groups' => []],
             AccountService::ACCOUNT_TYPE_EXPENSE   => ['groups' => []],
             AccountService::ACCOUNT_TYPE_REVENUE   => ['groups' => []],
         ];
-
         foreach ($accounts as $accountsKey => $accountsItem) {
             if ((! $selectableOnly) || ($accountsItem['selectable'] == true)) {
                 if (! array_key_exists($accountsItem['account_group_id'], $accounts_menu[$accountsItem['account_type']]['groups'])) {
@@ -465,7 +475,7 @@ class BookKeepingService
             }
         }
 
-        return $accounts_menu;
+        return [self::STATUS_NORMAL, $accounts_menu];
     }
 
     /**
@@ -496,7 +506,7 @@ class BookKeepingService
      * Retrieve a list of draft slips with their entries.
      *
      * @param  string|null  $bookId
-     * @return array<string, array{
+     * @return array{0:int, 1:array<string, array{
      *   date: string,
      *   slip_outline: string,
      *   slip_memo: string,
@@ -507,18 +517,19 @@ class BookKeepingService
      *     client: string,
      *     outline: string,
      *   }>
-     * }>|array{}
+     * }>|null}
      */
     public function retrieveDraftSlips($bookId = null): array
     {
-        if (is_null($bookId)) {
-            $bookId = $this->book->retrieveDefaultBook(intval(Auth::id()));
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckReadable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
         }
-        $bookId = strval($bookId); // FIXME: in case default book is not setting
+
         $accounts = $this->account->retrieveAccounts($bookId);
         $slipsList = $this->slip->retrieveDraftSlips($bookId);
         $slips = [];
-
         foreach ($slipsList as $slipItem) {
             $slips[$slipItem['slip_id']] = [
                 'date'         => $slipItem['date'],
@@ -544,7 +555,7 @@ class BookKeepingService
             }
         }
 
-        return $slips;
+        return [self::STATUS_NORMAL, $slips];
     }
 
     /**
@@ -564,6 +575,351 @@ class BookKeepingService
         $permissionList = $this->book->retrievePermissions($bookId);
 
         return [$status, $permissionList];
+    }
+
+    /**
+     * Retrieve the profit and loss, the barlance sheet and the slips of the specified one day.
+     *
+     * @param  string  $date
+     * @param  string|null  $bookId
+     * @return array{0:int, 1:array{
+     *   profit_loss: array{
+     *     expense: array{
+     *       amount: int,
+     *       groups: array<string, array{
+     *         title: string,
+     *         isCurrent: bool,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *         items: array<string, array{
+     *           title: string,
+     *           amount: int,
+     *           bk_code: int,
+     *           createdAt: string,
+     *         }>
+     *       }>|array{}
+     *     },
+     *     revenue: array{
+     *       amount: int,
+     *       groups: array<string, array{
+     *         title: string,
+     *         isCurrent: bool,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *         items: array<string, array{
+     *           title: string,
+     *           amount: int,
+     *           bk_code: int,
+     *           createdAt: string,
+     *         }>
+     *       }>|array{}
+     *     },
+     *     net_income: array{amount: int},
+     *   },
+     *   balance_sheet: array{
+     *     asset: array{
+     *       amount: int,
+     *       groups: array<string, array{
+     *         title: string,
+     *         isCurrent: bool,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *         items: array<string, array{
+     *           title: string,
+     *           amount: int,
+     *           bk_code: int,
+     *           createdAt: string,
+     *         }>
+     *       }>|array{}
+     *     },
+     *     liability: array{
+     *       amount: int,
+     *       groups: array<string, array{
+     *         title: string,
+     *         isCurrent: bool,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *         items: array<string, array{
+     *           title: string,
+     *           amount: int,
+     *           bk_code: int,
+     *           createdAt: string,
+     *         }>
+     *       }>|array{}
+     *     },
+     *     current_net_asset: array{amount: int},
+     *     net_asset: array{amount: int},
+     *   },
+     *   slips: array<string, array{
+     *     date: string,
+     *     slip_outline: string,
+     *     slip_memo: string,
+     *     items: array<string, array{
+     *       debit: array{account_id: string, account_title: string},
+     *       credit: array{account_id: string, account_title: string},
+     *       amount: int,
+     *       client: string,
+     *       outline: string,
+     *     }>
+     *   }>|array{}
+     * }|null}
+     */
+    public function retrieveProfitLossBalanceSheetSlipsOfOneDay($date, $bookId = null): array
+    {
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckReadable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
+        }
+
+        $accounts = $this->account->retrieveAccounts($bookId);
+        $amountFlowsInOneDay = $this->slip->retrieveAmountFlows($date, $date, $bookId);
+        $statementsForProfitLoss = $this->translateAmountFlowsToStatements($accounts, $amountFlowsInOneDay);
+        $profitLoss = [
+            AccountService::ACCOUNT_TYPE_EXPENSE => $statementsForProfitLoss[AccountService::ACCOUNT_TYPE_EXPENSE],
+            AccountService::ACCOUNT_TYPE_REVENUE => $statementsForProfitLoss[AccountService::ACCOUNT_TYPE_REVENUE],
+            'net_income'                         => $statementsForProfitLoss['net_income'],
+        ];
+        $amountFlowsInAllPeriod = $this->slip->retrieveAmountFlows('1970-01-01', $date, $bookId);
+        $statementsForBalanceSheet = $this->translateAmountFlowsToStatements($accounts, $amountFlowsInAllPeriod);
+        $balanceSheet = [
+            AccountService::ACCOUNT_TYPE_ASSET     => $statementsForBalanceSheet[AccountService::ACCOUNT_TYPE_ASSET],
+            AccountService::ACCOUNT_TYPE_LIABILITY => $statementsForBalanceSheet[AccountService::ACCOUNT_TYPE_LIABILITY],
+            'current_net_asset'                    => $statementsForBalanceSheet['current_net_asset'],
+            'net_asset'                            => $statementsForBalanceSheet['net_asset'],
+        ];
+        $slipEntries = $this->slip->retrieveSlipEntries(
+            $date, $date, ['debit' => null, 'credit' => null, 'and_or' => null, 'keyword' => null], $bookId
+        );
+        $slips = $this->translateSlipEntriesToSlips($accounts, $slipEntries);
+        $statements = ['profit_loss' => $profitLoss, 'balance_sheet' => $balanceSheet, 'slips' => $slips];
+
+        return [self::STATUS_NORMAL, $statements];
+    }
+
+    /**
+     * Retrieve the profit and loss, the trial balance and the slips of the period. And retrieve
+     * the balance sheet on the day before the period start and on the last day of the period.
+     *
+     * @param  string  $fromDate
+     * @param  string  $toDate
+     * @param  string|null  $bookId
+     * @return array{0:int, 1:array{
+     *   profit_loss: array{
+     *     expense: array{
+     *       amount: int,
+     *       groups: array<string, array{
+     *         title: string,
+     *         isCurrent: bool,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *         items: array<string, array{
+     *           title: string,
+     *           amount: int,
+     *           bk_code: int,
+     *           createdAt: string,
+     *         }>
+     *       }>|array{}
+     *     },
+     *     revenue: array{
+     *       amount: int,
+     *       groups: array<string, array{
+     *         title: string,
+     *         isCurrent: bool,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *         items: array<string, array{
+     *           title: string,
+     *           amount: int,
+     *           bk_code: int,
+     *           createdAt: string,
+     *         }>
+     *       }>|array{}
+     *     },
+     *     net_income: array{amount: int},
+     *   },
+     *   trial_balance: array{
+     *     asset: array{
+     *       amount: int,
+     *       groups: array<string, array{
+     *         title: string,
+     *         isCurrent: bool,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *         items: array<string, array{
+     *           title: string,
+     *           amount: int,
+     *           bk_code: int,
+     *           createdAt: string,
+     *         }>
+     *       }>|array{}
+     *     },
+     *     liability: array{
+     *       amount: int,
+     *       groups: array<string, array{
+     *         title: string,
+     *         isCurrent: bool,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *         items: array<string, array{
+     *           title: string,
+     *           amount: int,
+     *           bk_code: int,
+     *           createdAt: string,
+     *         }>
+     *       }>|array{}
+     *     },
+     *     current_net_asset: array{amount: int},
+     *     net_asset: array{amount: int},
+     *   },
+     *   previous_balance_sheet: array{
+     *     asset: array{
+     *       amount: int,
+     *       groups: array<string, array{
+     *         title: string,
+     *         isCurrent: bool,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *         items: array<string, array{
+     *           title: string,
+     *           amount: int,
+     *           bk_code: int,
+     *           createdAt: string,
+     *         }>
+     *       }>|array{}
+     *     },
+     *     liability: array{
+     *       amount: int,
+     *       groups: array<string, array{
+     *         title: string,
+     *         isCurrent: bool,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *         items: array<string, array{
+     *           title: string,
+     *           amount: int,
+     *           bk_code: int,
+     *           createdAt: string,
+     *         }>
+     *       }>|array{}
+     *     },
+     *     current_net_asset: array{amount: int},
+     *     net_asset: array{amount: int},
+     *   },
+     *   balance_sheet: array{
+     *     asset: array{
+     *       amount: int,
+     *       groups: array<string, array{
+     *         title: string,
+     *         isCurrent: bool,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *         items: array<string, array{
+     *           title: string,
+     *           amount: int,
+     *           bk_code: int,
+     *           createdAt: string,
+     *         }>
+     *       }>|array{}
+     *     },
+     *     liability: array{
+     *       amount: int,
+     *       groups: array<string, array{
+     *         title: string,
+     *         isCurrent: bool,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *         items: array<string, array{
+     *           title: string,
+     *           amount: int,
+     *           bk_code: int,
+     *           createdAt: string,
+     *         }>
+     *       }>|array{}
+     *     },
+     *     current_net_asset: array{amount: int},
+     *     net_asset: array{amount: int},
+     *   },
+     *   slips: array<string, array{
+     *     date: string,
+     *     slip_outline: string,
+     *     slip_memo: string,
+     *     items: array<string, array{
+     *       debit: array{account_id: string, account_title: string},
+     *       credit: array{account_id: string, account_title: string},
+     *       amount: int,
+     *       client: string,
+     *       outline: string,
+     *     }>
+     *   }>|array{}
+     * }|null}
+     */
+    public function retrieveProfitLossTrialBalanceBalanceSheetsSlips($fromDate, $toDate, $bookId = null): array
+    {
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckReadable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
+        }
+
+        $accounts = $this->account->retrieveAccounts($bookId);
+        $amountFlows = $this->slip->retrieveAmountFlows($fromDate, $toDate, $bookId);
+        $statements = $this->translateAmountFlowsToStatements($accounts, $amountFlows);
+        $profitLoss = [
+            AccountService::ACCOUNT_TYPE_EXPENSE => $statements[AccountService::ACCOUNT_TYPE_EXPENSE],
+            AccountService::ACCOUNT_TYPE_REVENUE => $statements[AccountService::ACCOUNT_TYPE_REVENUE],
+            'net_income'                         => $statements['net_income'],
+        ];
+        $trialBalance = [
+            AccountService::ACCOUNT_TYPE_ASSET     => $statements[AccountService::ACCOUNT_TYPE_ASSET],
+            AccountService::ACCOUNT_TYPE_LIABILITY => $statements[AccountService::ACCOUNT_TYPE_LIABILITY],
+            'current_net_asset'                    => $statements['current_net_asset'],
+            'net_asset'                            => $statements['net_asset'],
+        ];
+        $endDateOfPreviousPeriod = date('Y-m-d', strtotime($fromDate) - (24 * 60 * 60));
+        $statementsForPreviousBalanceSheet = $this->translateAmountFlowsToStatements(
+            $accounts, $this->slip->retrieveAmountFlows('1970-01-01', $endDateOfPreviousPeriod, $bookId)
+        );
+        $previousBalanceSheet = [
+            AccountService::ACCOUNT_TYPE_ASSET     => $statementsForPreviousBalanceSheet[AccountService::ACCOUNT_TYPE_ASSET],
+            AccountService::ACCOUNT_TYPE_LIABILITY => $statementsForPreviousBalanceSheet[AccountService::ACCOUNT_TYPE_LIABILITY],
+            'current_net_asset'                    => $statementsForPreviousBalanceSheet['current_net_asset'],
+            'net_asset'                            => $statementsForPreviousBalanceSheet['net_asset'],
+        ];
+        $statementsForBalanceSheet = $this->translateAmountFlowsToStatements(
+            $accounts, $this->slip->retrieveAmountFlows('1970-01-01', $toDate, $bookId)
+        );
+        $balanceSheet = [
+            AccountService::ACCOUNT_TYPE_ASSET     => $statementsForBalanceSheet[AccountService::ACCOUNT_TYPE_ASSET],
+            AccountService::ACCOUNT_TYPE_LIABILITY => $statementsForBalanceSheet[AccountService::ACCOUNT_TYPE_LIABILITY],
+            'current_net_asset'                    => $statementsForBalanceSheet['current_net_asset'],
+            'net_asset'                            => $statementsForBalanceSheet['net_asset'],
+        ];
+        $slipEntries = $this->slip->retrieveSlipEntries(
+            $fromDate, $toDate, ['debit' => null, 'credit' => null, 'and_or' => null, 'keyword' => null], $bookId
+        );
+        $slips = $this->translateSlipEntriesToSlips($accounts, $slipEntries);
+        $statements = [
+            'profit_loss'            => $profitLoss,
+            'trial_balance'          => $trialBalance,
+            'previous_balance_sheet' => $previousBalanceSheet,
+            'balance_sheet'          => $balanceSheet,
+            'slips'                  => $slips,
+        ];
+
+        return [self::STATUS_NORMAL, $statements];
     }
 
     /**
@@ -734,30 +1090,7 @@ class BookKeepingService
             ],
             $bookId
         );
-        $slips = [];
-        foreach ($slipEntries as $entry) {
-            if (! array_key_exists($entry['slip_id'], $slips)) {  /* This is the first time that the entry which belongs to the slip appears. */
-                $slips[$entry['slip_id']] = [
-                    'date'         => $entry['date'],
-                    'slip_outline' => $entry['slip_outline'],
-                    'slip_memo'    => $entry['slip_memo'],
-                    'items'        => [],
-                ];
-            }
-            $slips[$entry['slip_id']]['items'][$entry['slip_entry_id']] = [
-                'debit'   => [
-                    'account_id'    => $entry['debit'],
-                    'account_title' => $accounts[$entry['debit']]['account_title'],
-                ],
-                'credit'  => [
-                    'account_id'    => $entry['credit'],
-                    'account_title' => $accounts[$entry['credit']]['account_title'],
-                ],
-                'amount'  => $entry['amount'],
-                'client'  => $entry['client'],
-                'outline' => $entry['outline'],
-            ];
-        }
+        $slips = $this->translateSlipEntriesToSlips($accounts, $slipEntries);
 
         return [self::STATUS_NORMAL, $slips];
     }
@@ -840,64 +1173,17 @@ class BookKeepingService
      */
     public function retrieveStatement($fromDate, $toDate, $bookId = null): array
     {
-        if (is_null($bookId)) {
-            $bookId = $this->book->retrieveDefaultBook(intval(Auth::id()));
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckReadable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
         }
-        $bookId = strval($bookId); // FIXME: in case default book is not setting
+
         $accounts = $this->account->retrieveAccounts($bookId);
         $amountFlows = $this->slip->retrieveAmountFlows($fromDate, $toDate, $bookId);
-        $statements = [
-            AccountService::ACCOUNT_TYPE_ASSET     => ['amount' => 0, 'groups' => []],
-            AccountService::ACCOUNT_TYPE_LIABILITY => ['amount' => 0, 'groups' => []],
-            AccountService::ACCOUNT_TYPE_EXPENSE   => ['amount' => 0, 'groups' => []],
-            AccountService::ACCOUNT_TYPE_REVENUE   => ['amount' => 0, 'groups' => []],
-            'current_net_asset'                    => ['amount' => 0],
-            'net_income'                           => ['amount' => 0],
-            'net_asset'                            => ['amount' => 0],
-        ];
+        $statements = $this->translateAmountFlowsToStatements($accounts, $amountFlows);
 
-        foreach ($amountFlows as $accountId => $sumValue) {
-            if (($sumValue['debit'] - $sumValue['credit']) != 0) {
-                /** @var 'asset'|'liability'|'expense'|'revenue' $accountType */
-                $accountType = $accounts[$accountId]['account_type'];
-                if (($accountType == AccountService::ACCOUNT_TYPE_ASSET) || ($accountType == AccountService::ACCOUNT_TYPE_EXPENSE)) {
-                    $amount = $sumValue['debit'] - $sumValue['credit'];
-                } else {
-                    $amount = $sumValue['credit'] - $sumValue['debit'];
-                }
-                $accountGroupId = $accounts[$accountId]['account_group_id'];
-                $statements[$accountType]['amount'] += $amount;
-                if (! array_key_exists($accountGroupId, $statements[$accountType]['groups'])) {  /* This is the first time that the account which belongs to the group appears. */
-                    $statements[$accountType]['groups'][$accountGroupId] = [
-                        'title'     => $accounts[$accountId]['account_group_title'],
-                        'isCurrent' => $accounts[$accountId]['is_current'],
-                        'amount'    => 0,
-                        'bk_code'   => $accounts[$accountId]['account_group_bk_code'],
-                        'createdAt' => $accounts[$accountId]['account_group_created_at'],
-                        'items'     => [],
-                    ];
-                }
-                $statements[$accountType]['groups'][$accountGroupId]['amount'] += $amount;
-                if ($accounts[$accountId]['is_current']) {
-                    if ($accountType == AccountService::ACCOUNT_TYPE_ASSET) {
-                        $statements['current_net_asset']['amount'] += $amount;
-                    } elseif ($accountType == AccountService::ACCOUNT_TYPE_LIABILITY) {
-                        $statements['current_net_asset']['amount'] -= $amount;
-                    } else {
-                    }
-                }
-                $statements[$accountType]['groups'][$accountGroupId]['items'][$accountId] = [
-                    'title'     => $accounts[$accountId]['account_title'],
-                    'amount'    => $amount,
-                    'bk_code'   => $accounts[$accountId]['account_bk_code'],
-                    'createdAt' => $accounts[$accountId]['created_at'],
-                ];
-            }
-        }
-        $statements['net_income']['amount'] = $statements[AccountService::ACCOUNT_TYPE_REVENUE]['amount'] - $statements[AccountService::ACCOUNT_TYPE_EXPENSE]['amount'];
-        $statements['net_asset']['amount'] = $statements[AccountService::ACCOUNT_TYPE_ASSET]['amount'] - $statements[AccountService::ACCOUNT_TYPE_LIABILITY]['amount'];
-
-        return $statements;
+        return [self::STATUS_NORMAL, $statements];
     }
 
     /**
@@ -935,19 +1221,23 @@ class BookKeepingService
      *
      * @param  string  $date
      * @param  string|null  $bookId
-     * @return void
+     * @return array{0:int, 1:null}
      */
     public function submitDraftSlip($date, $bookId = null)
     {
-        if (is_null($bookId)) {
-            $bookId = $this->book->retrieveDefaultBook(intval(Auth::id()));
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckWritable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
         }
-        $bookId = strval($bookId); // FIXME: in case default book is not setting
+
         $draftSlips = $this->slip->retrieveDraftSlips($bookId);
         if (! empty($draftSlips)) {
             $this->slip->updateDateOf($draftSlips[0]['slip_id'], $date);
             $this->slip->submitSlip($draftSlips[0]['slip_id']);
         }
+
+        return [self::STATUS_NORMAL, null];
     }
 
     /**
@@ -1187,5 +1477,229 @@ class BookKeepingService
         }
 
         return [true, self::STATUS_NORMAL];
+    }
+
+    /**
+     * Translate the amount flows to the statements.
+     *
+     * @param  array<string, array{
+     *   account_type: string,
+     *   account_group_id: string,
+     *   account_group_title: string,
+     *   is_current: bool,
+     *   account_id: string,
+     *   account_title: string,
+     *   description: string,
+     *   selectable: bool,
+     *   account_bk_code: int,
+     *   created_at: string,
+     *   account_group_bk_code: int,
+     *   account_group_created_at: string,
+     * }>  $accounts
+     * @param  array<string, array{debit: int, credit: int}>  $amountFlows
+     * @return array{
+     *   asset: array{
+     *     amount: int,
+     *     groups: array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       amount: int,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>|array{}
+     *   },
+     *   liability: array{
+     *     amount: int,
+     *     groups: array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       amount: int,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>|array{}
+     *   },
+     *   expense: array{
+     *     amount: int,
+     *     groups: array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       amount: int,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>|array{}
+     *   },
+     *   revenue: array{
+     *     amount: int,
+     *     groups: array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       amount: int,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>|array{}
+     *   },
+     *   current_net_asset: array{amount: int},
+     *   net_income: array{amount: int},
+     *   net_asset: array{amount: int},
+     * }
+     */
+    private function translateAmountFlowsToStatements(array $accounts, array $amountFlows): array
+    {
+        $statements = [
+            AccountService::ACCOUNT_TYPE_ASSET     => ['amount' => 0, 'groups' => []],
+            AccountService::ACCOUNT_TYPE_LIABILITY => ['amount' => 0, 'groups' => []],
+            AccountService::ACCOUNT_TYPE_EXPENSE   => ['amount' => 0, 'groups' => []],
+            AccountService::ACCOUNT_TYPE_REVENUE   => ['amount' => 0, 'groups' => []],
+            'current_net_asset'                    => ['amount' => 0],
+            'net_income'                           => ['amount' => 0],
+            'net_asset'                            => ['amount' => 0],
+        ];
+
+        foreach ($amountFlows as $accountId => $sumValue) {
+            if (($sumValue['debit'] - $sumValue['credit']) != 0) {
+                /** @var 'asset'|'liability'|'expense'|'revenue' $accountType */
+                $accountType = $accounts[$accountId]['account_type'];
+                if (($accountType == AccountService::ACCOUNT_TYPE_ASSET)
+                    || ($accountType == AccountService::ACCOUNT_TYPE_EXPENSE)) {
+                    $amount = $sumValue['debit'] - $sumValue['credit'];
+                } else {
+                    $amount = $sumValue['credit'] - $sumValue['debit'];
+                }
+                $accountGroupId = $accounts[$accountId]['account_group_id'];
+                $statements[$accountType]['amount'] += $amount;
+                if (! array_key_exists($accountGroupId, $statements[$accountType]['groups'])) {
+                    /* This is the first time that the account which belongs to the group appears. */
+                    $statements[$accountType]['groups'][$accountGroupId] = [
+                        'title'     => $accounts[$accountId]['account_group_title'],
+                        'isCurrent' => $accounts[$accountId]['is_current'],
+                        'amount'    => 0,
+                        'bk_code'   => $accounts[$accountId]['account_group_bk_code'],
+                        'createdAt' => $accounts[$accountId]['account_group_created_at'],
+                        'items'     => [],
+                    ];
+                }
+                $statements[$accountType]['groups'][$accountGroupId]['amount'] += $amount;
+                if ($accounts[$accountId]['is_current']) {
+                    if ($accountType == AccountService::ACCOUNT_TYPE_ASSET) {
+                        $statements['current_net_asset']['amount'] += $amount;
+                    } elseif ($accountType == AccountService::ACCOUNT_TYPE_LIABILITY) {
+                        $statements['current_net_asset']['amount'] -= $amount;
+                    } else {
+                    }
+                }
+                $statements[$accountType]['groups'][$accountGroupId]['items'][$accountId] = [
+                    'title'     => $accounts[$accountId]['account_title'],
+                    'amount'    => $amount,
+                    'bk_code'   => $accounts[$accountId]['account_bk_code'],
+                    'createdAt' => $accounts[$accountId]['created_at'],
+                ];
+            }
+        }
+        $statements['net_income']['amount']
+            = $statements[AccountService::ACCOUNT_TYPE_REVENUE]['amount']
+                - $statements[AccountService::ACCOUNT_TYPE_EXPENSE]['amount'];
+        $statements['net_asset']['amount']
+            = $statements[AccountService::ACCOUNT_TYPE_ASSET]['amount']
+                - $statements[AccountService::ACCOUNT_TYPE_LIABILITY]['amount'];
+
+        return $statements;
+    }
+
+    /**
+     * Translate the slip entries to the slip format.
+     *
+     * @param  array<string, array{
+     *   account_type: string,
+     *   account_group_id: string,
+     *   account_group_title: string,
+     *   is_current: bool,
+     *   account_id: string,
+     *   account_title: string,
+     *   description: string,
+     *   selectable: bool,
+     *   account_bk_code: int,
+     *   created_at: string,
+     *   account_group_bk_code: int,
+     *   account_group_created_at: string,
+     * }>  $accounts
+     * @param  array{
+     *   slip_id: string,
+     *   date: string,
+     *   slip_outline: string,
+     *   slip_memo: string,
+     *   slip_entry_id: string,
+     *   debit: string,
+     *   credit: string,
+     *   amount: int,
+     *   client: string,
+     *   outline: string,
+     * }[]  $slipEntries
+     * @return array<string, array{
+     *   date: string,
+     *   slip_outline: string,
+     *   slip_memo: string,
+     *   items: array<string, array{
+     *     debit: array{account_id: string, account_title: string},
+     *     credit: array{account_id: string, account_title: string},
+     *     amount: int,
+     *     client: string,
+     *     outline: string,
+     *   }>
+     * }>
+     */
+    private function translateSlipEntriesToSlips(array $accounts, array $slipEntries): array
+    {
+        $slips = [];
+
+        foreach ($slipEntries as $entry) {
+            if (! array_key_exists($entry['slip_id'], $slips)) {
+                /* This is the first time that the entry which belongs to the slip appears. */
+                $slips[$entry['slip_id']] = [
+                    'date'         => $entry['date'],
+                    'slip_outline' => $entry['slip_outline'],
+                    'slip_memo'    => $entry['slip_memo'],
+                    'items'        => [],
+                ];
+            }
+            $slips[$entry['slip_id']]['items'][$entry['slip_entry_id']] = [
+                'debit'   => [
+                    'account_id'    => $entry['debit'],
+                    'account_title' => $accounts[$entry['debit']]['account_title'],
+                ],
+                'credit'  => [
+                    'account_id'    => $entry['credit'],
+                    'account_title' => $accounts[$entry['credit']]['account_title'],
+                ],
+                'amount'  => $entry['amount'],
+                'client'  => $entry['client'],
+                'outline' => $entry['outline'],
+            ];
+        }
+
+        return $slips;
     }
 }
