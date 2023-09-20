@@ -107,13 +107,24 @@ class BookKeepingService
      * @param  string  $title
      * @param  string  $description
      * @param  string  $bookId
-     * @return string
+     * @return array{0:int, 1:string|null}
      */
     public function createAccount($accountGroupId, $title, $description, $bookId)
     {
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckWritable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
+        }
+
+        $accountGroups = $this->account->retrieveAccountGroups($bookId);
+        if (! key_exists($accountGroupId, $accountGroups)) {
+            return [self::STATUS_ERROR_BAD_CONDITION, null];
+        }
+
         $accountId = $this->account->createAccount($accountGroupId, $title, $description);
 
-        return $accountId;
+        return [self::STATUS_NORMAL, $accountId];
     }
 
     /**
@@ -122,13 +133,19 @@ class BookKeepingService
      * @param  string  $accountType
      * @param  string  $title
      * @param  string  $bookId
-     * @return string
+     * @return array{0:int, 1:string|null}
      */
     public function createAccountGroup($accountType, $title, $bookId)
     {
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckWritable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
+        }
+
         $accountGroupId = $this->account->createAccountGroup($bookId, $accountType, $title);
 
-        return $accountGroupId;
+        return [self::STATUS_NORMAL, $accountGroupId];
     }
 
     /**
@@ -387,23 +404,24 @@ class BookKeepingService
      * Retrieve the information of the book.
      *
      * @param  string  $bookId
-     * @return array{
-     *   id: string,
-     *   owner: string,
-     *   name: string,
-     * }|null
+     * @return array{0:int, 1:array{id: string, owner: string, name: string}|null}
      */
     public function retrieveBookInformation($bookId): ?array
     {
-        $information = null;
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckReadable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
+        }
 
+        $information = null;
         $owner = $this->book->retrieveOwnerNameOf($bookId);
         $book = $this->book->retrieveInformationOf($bookId);
         if (isset($owner) && isset($book)) {
             $information = ['id' => $bookId, 'owner' => $owner, 'name' => $book['book_name']];
         }
 
-        return $information;
+        return [self::STATUS_NORMAL, $information];
     }
 
     /**
@@ -1186,11 +1204,31 @@ class BookKeepingService
      *   selectable?: bool,
      * }  $newData
      * @param  string  $bookId
-     * @return void
+     * @return array{0:int, 1:null}
      */
     public function updateAccount($accountId, array $newData, $bookId)
     {
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckWritable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
+        }
+
+        $accounts = $this->account->retrieveAccounts($bookId);
+        if (! key_exists($accountId, $accounts)) {
+            return [self::STATUS_ERROR_BAD_CONDITION, null];
+        }
+        if (key_exists('group', $newData)) {
+            $accountGroupId = $newData['group'];
+            $accountGroups = $this->account->retrieveAccountGroups($bookId);
+            if (! key_exists($accountGroupId, $accountGroups)) {
+                return [self::STATUS_ERROR_BAD_CONDITION, null];
+            }
+        }
+
         $this->account->updateAccount($accountId, $newData);
+
+        return [self::STATUS_NORMAL, null];
     }
 
     /**
@@ -1202,11 +1240,24 @@ class BookKeepingService
      *   is_current?: bool,
      * }  $newData
      * @param  string  $bookId
-     * @return void
+     * @return array{0:int, 1:null}
      */
     public function updateAccountGroup($accountGroupId, array $newData, $bookId)
     {
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckWritable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
+        }
+
+        $accountGroups = $this->account->retrieveAccountGroups($bookId);
+        if (! key_exists($accountGroupId, $accountGroups)) {
+            return [self::STATUS_ERROR_BAD_CONDITION, null];
+        }
+
         $this->account->updateAccountGroup($accountGroupId, $newData);
+
+        return [self::STATUS_NORMAL, null];
     }
 
     /**
