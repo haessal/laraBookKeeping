@@ -27,13 +27,13 @@
                                     @endif @endforeach
                                 </select>
                                 &nbsp;&nbsp; [ @if ($and_or == 'and')
-                                <input name="ANDOR" value="and" type="radio" checked />
+                                <input name="and_or" value="and" type="radio" checked />
                                 @else
-                                <input name="ANDOR" value="and" type="radio" />
+                                <input name="and_or" value="and" type="radio" />
                                 @endif and / @if ($and_or == 'or')
-                                <input name="ANDOR" value="or" type="radio" checked />
+                                <input name="and_or" value="or" type="radio" checked />
                                 @else
-                                <input name="ANDOR" value="or" type="radio" />
+                                <input name="and_or" value="or" type="radio" />
                                 @endif or ]&nbsp;&nbsp; {{ __('Credit') }}
                                 <select name="credit">
                                     <option value="0"></option>

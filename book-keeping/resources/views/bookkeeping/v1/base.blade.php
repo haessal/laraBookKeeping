@@ -15,7 +15,7 @@
         <div id="logout">
             <b>{{ __('login as') }} {{ Auth::user()->name }}</b>
             [
-            <a href="{{ route('home') }}">{{ __('home') }}</a>
+            <a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a>
             ]
         </div>
         <div id="titlelogo">

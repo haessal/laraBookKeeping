@@ -15,7 +15,7 @@
     @foreach ($slips as $key => $item)
     <tr>
         @isset($modify)
-        <td><input type="checkbox" name="modifyno[]" value="{{{ $key }}}" /></td>
+        <td><input type="checkbox" name="modify_no_list[]" value="{{{ $key }}}" /></td>
         @endisset
         <td class="txc">{{{ $item['no'] }}}</td>
         <td class="txc">{{{ $item['slipno'] }}}</td>

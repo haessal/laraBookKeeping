@@ -92,7 +92,7 @@
                             <td class="inmain">{{ $draftslipItem['credit'] }}</td>
                             <td class="inmain" align="right">{{ $draftslipItem['amount'] }}</td>
                             <td class="inmain">
-                                <input type="radio" name="modifyno" value="{{ $draftslipKey }}" />
+                                <input type="radio" name="modify_no" value="{{ $draftslipKey }}" />
                             </td>
                         </tr>
                         @endforeach
