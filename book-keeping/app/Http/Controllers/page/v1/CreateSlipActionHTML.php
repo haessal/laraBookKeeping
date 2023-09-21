@@ -41,33 +41,51 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
     {
         $context = [];
 
-        $context['accounts'] = $this->BookKeeping->retrieveCategorizedAccounts(true);
+        [$status, $categorizedAccounts] = $this->BookKeeping->retrieveCategorizedAccounts(true);
+        switch ($status) {
+            case BookKeepingService::STATUS_NORMAL:
+                if (isset($categorizedAccounts)) {
+                    $context['accounts'] = $categorizedAccounts;
+                } else {
+                    abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+                break;
+            case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
+                abort(Response::HTTP_NOT_FOUND);
+                break;
+            default:
+                abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                break;
+        }
         $date = trim($request->input('date'));
-
         if ($request->isMethod('post')) {
-            $button_action = key($request->input('buttons'));
-            switch ($button_action) {
+            $buttonAction = key($request->input('buttons'));
+            switch ($buttonAction) {
                 case 'add':
-                    $add_debit = $request->input('debit');
-                    $add_client = trim($request->input('client'));
-                    $add_outline = trim($request->input('outline'));
-                    $add_credit = $request->input('credit');
-                    $add_amount = intval(trim($request->input('amount')));
-                    if ($this->validateForCreateSlipEntry($add_debit, $add_client, $add_outline, $add_credit, $add_amount)) {
-                        $this->BookKeeping->createSlipEntryAsDraft($add_debit, $add_client, $add_outline, $add_credit, $add_amount);
+                    $addDebit = $request->input('debit');
+                    $addClient = trim($request->input('client'));
+                    $addOutline = trim($request->input('outline'));
+                    $addCredit = $request->input('credit');
+                    $addAmount = intval(trim($request->input('amount')));
+                    if ($this->validateForCreateSlipEntry(
+                            $addDebit, $addClient, $addOutline, $addCredit, $addAmount
+                        )) {
+                        $this->BookKeeping->createSlipEntryAsDraft(
+                            $addDebit, $addClient, $addOutline, $addCredit, $addAmount
+                        );
                     }
                     $context['add'] = [
-                        'debit'   => $add_debit,
-                        'client'  => $add_client,
-                        'outline' => $add_outline,
-                        'credit'  => $add_credit,
-                        'amount'  => $add_amount,
+                        'debit'   => $addDebit,
+                        'client'  => $addClient,
+                        'outline' => $addOutline,
+                        'credit'  => $addCredit,
+                        'amount'  => $addAmount,
                     ];
                     break;
                 case 'delete':
-                    $slipEntryId = $request->input('modifyno');
-                    if (! is_null($slipEntryId)) {
-                        $this->BookKeeping->deleteSlipEntryAsDraft($slipEntryId);
+                    $slipEntryId = $request->input('modify_no');
+                    if (isset($slipEntryId)) {
+                        $this->BookKeeping->deleteSlipEntryAndEmptySlip($slipEntryId);
                     }
                     break;
                 case 'submit':
@@ -79,21 +97,25 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
                     break;
             }
         }
-
         if (empty($date)) {
             $today = new Carbon();
             $date = $today->format('Y-m-d');
         }
         $context['slipdate'] = $date;
-        $context['draftslip'] = $this->BookKeeping->retrieveDraftSlips();
-
-        $totalamount = 0;
-        if (! empty($context['draftslip'])) {
-            foreach ($context['draftslip'][key($context['draftslip'])]['items'] as $draftslipItem) {
-                $totalamount += $draftslipItem['amount'];
+        [$status, $draftSlips] = $this->BookKeeping->retrieveDraftSlips();
+        if (($status == BookKeepingService::STATUS_NORMAL) && (isset($draftSlips))) {
+            $totalamount = 0;
+            if (! empty($draftSlips)) {
+                $firstDraftSlip = reset($draftSlips);
+                foreach ($firstDraftSlip['items'] as $draftslipItem) {
+                    $totalamount += $draftslipItem['amount'];
+                }
             }
+            $context['totalamount'] = $totalamount;
+            $context['draftslip'] = $draftSlips;
+        } else {
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-        $context['totalamount'] = $totalamount;
 
         return $this->responder->response($context);
     }
@@ -108,10 +130,12 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
      * @param  int  $amount
      * @return bool
      */
-    private function validateForCreateSlipEntry(string $debit, string $client, string $outline, string $credit, int $amount): bool
+    private function validateForCreateSlipEntry
+        (string $debit, string $client, string $outline, string $credit, int $amount): bool
     {
         $success = false;
-        if (! ($debit === '0') && ! empty($client) && ! empty($outline) && ! ($credit === '0') && ($amount != 0) && ($debit != $credit)) {
+        if (! ($debit === '0') && ! ($credit === '0') && ($debit != $credit)
+            && ! empty($client) && ! empty($outline) && ($amount != 0)) {
             $success = true;
         }
 

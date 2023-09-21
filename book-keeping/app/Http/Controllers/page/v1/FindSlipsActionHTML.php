@@ -39,47 +39,68 @@ class FindSlipsActionHTML extends AuthenticatedBookKeepingAction
     public function __invoke(Request $request): Response
     {
         $context = [];
-        $beginning_date = null;
-        $end_date = null;
+        $beginningDate = null;
+        $endDate = null;
         $debit = null;
         $credit = null;
-        $and_or = null;
+        $andOr = null;
         $keyword = null;
         $slips = [];
         $message = __('There is no condition for search.');
 
-        $context['accounts'] = $this->BookKeeping->retrieveCategorizedAccounts(true);
+        [$status, $categorizedAccounts] = $this->BookKeeping->retrieveCategorizedAccounts(true);
+        switch ($status) {
+            case BookKeepingService::STATUS_NORMAL:
+                if (isset($categorizedAccounts)) {
+                    $context['accounts'] = $categorizedAccounts;
+                } else {
+                    abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+                break;
+            case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
+                abort(Response::HTTP_NOT_FOUND);
+                break;
+            default:
+                abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                break;
+        }
         if ($request->isMethod('post')) {
-            $button_action = key($request->input('buttons'));
-            $modifyno = $request->input('modifyno');
-            if (($button_action == 'delete') && (! empty($modifyno))) {
-                foreach ($modifyno as $slipEntryId) {
-                    $this->BookKeeping->deleteSlipEntryAsDraft($slipEntryId);
+            $buttonAction = key($request->input('buttons'));
+            $selectedSlipEntries = $request->input('modify_no_list');
+            if (($buttonAction == 'delete') && (! empty($selectedSlipEntries))) {
+                foreach ($selectedSlipEntries as $slipEntryId) {
+                    $this->BookKeeping->deleteSlipEntryAndEmptySlip($slipEntryId);
                 }
             }
-            $beginning_date = trim($request->input('BEGINNING'));
-            $end_date = trim($request->input('END'));
+            $beginningDate = trim($request->input('BEGINNING'));
+            $endDate = trim($request->input('END'));
             $debit = $request->input('debit');
             $credit = $request->input('credit');
-            $and_or = $request->input('ANDOR');
+            $andOr = $request->input('and_or');
             $keyword = trim($request->input('KEYWORD'));
-            if (! empty($beginning_date) || ! empty($end_date) || ! empty($debit) || ! empty($credit) || ! empty($keyword)) {
-                if ($this->BookKeeping->validatePeriod($beginning_date, $end_date)) {
-                    $slips = $this->BookKeeping->retrieveSlips($beginning_date, $end_date, $debit, $credit, $and_or, $keyword);
-                    $message = null;
-                    if (empty($slips)) {
-                        $message = __('No items that match the condition.');
+            if (! empty($beginningDate) || ! empty($endDate) || ! empty($debit) || ! empty($credit) || ! empty($keyword)) {
+                if ($this->BookKeeping->validatePeriod($beginningDate, $endDate)) {
+                    [$status, $slips] = $this->BookKeeping->retrieveSlips(
+                        $beginningDate, $endDate, $debit, $credit, $andOr, $keyword
+                    );
+                    if (($status == BookKeepingService::STATUS_NORMAL) && (isset($slips))) {
+                        $message = null;
+                        if (empty($slips)) {
+                            $message = __('No items that match the condition.');
+                        }
+                    } else {
+                        abort(Response::HTTP_INTERNAL_SERVER_ERROR);
                     }
                 } else {
                     $message = __('Invalid date format.');
                 }
             }
         }
-        $context['beginning_date'] = $beginning_date;
-        $context['end_date'] = $end_date;
+        $context['beginning_date'] = $beginningDate;
+        $context['end_date'] = $endDate;
         $context['debit'] = $debit;
         $context['credit'] = $credit;
-        $context['and_or'] = $and_or;
+        $context['and_or'] = $andOr;
         $context['keyword'] = $keyword;
         $context['slips'] = $slips;
         $context['message'] = $message;

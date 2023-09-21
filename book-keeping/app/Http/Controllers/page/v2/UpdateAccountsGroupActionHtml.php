@@ -42,12 +42,32 @@ class UpdateAccountsGroupActionHtml extends AuthenticatedBookKeepingAction
     {
         $context = [];
 
-        $accountTypeCaption = [
-            'asset'     => __('Assets'),
-            'liability' => __('Liabilities'),
-            'expense'   => __('Expense'),
-            'revenue'   => __('Revenue'),
-        ];
+        if (! $this->BookKeeping->validateUuid($bookId)) {
+            abort(Response::HTTP_NOT_FOUND);
+        }
+        if (! $this->BookKeeping->validateUuid($accountsGroupId)) {
+            abort(Response::HTTP_NOT_FOUND);
+        }
+
+        [$status, $information] = $this->BookKeeping->retrieveBookInformation($bookId);
+        switch ($status) {
+            case BookKeepingService::STATUS_NORMAL:
+                if (isset($information)) {
+                    $context['bookId'] = $bookId;
+                    $context['book'] = $information;
+                } else {
+                    abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+                break;
+            case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
+                abort(Response::HTTP_NOT_FOUND);
+                break;
+            default:
+                abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                break;
+        }
+
+        $context['message'] = null;
         if ($request->isMethod('post')) {
             $title = trim($request->input('title'));
             if (array_key_exists('attribute_current', $request->all())) {
@@ -55,14 +75,48 @@ class UpdateAccountsGroupActionHtml extends AuthenticatedBookKeepingAction
             } else {
                 $is_current = false;
             }
-            $newData = ['title' => $title, 'is_current' => $is_current];
-            $this->BookKeeping->updateAccountGroup($accountsGroupId, $newData, $bookId);
+            if ($title != '') {
+                $newData = ['title' => $title, 'is_current' => $is_current];
+                [$status, $_] = $this->BookKeeping->updateAccountGroup($accountsGroupId, $newData, $bookId);
+                switch ($status) {
+                    case BookKeepingService::STATUS_NORMAL:
+                        break;
+                    case BookKeepingService::STATUS_ERROR_AUTH_FORBIDDEN:
+                        $context['message'] = __('You are not permitted to write in this book.');
+                        break;
+                    case BookKeepingService::STATUS_ERROR_BAD_CONDITION:
+                        abort(Response::HTTP_NOT_FOUND);
+                        break;
+                    default:
+                        abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                        break;
+                }
+            } else {
+                $context['message'] = __('Please enter a valid name.');
+            }
         }
-        $context['book'] = $this->BookKeeping->retrieveBookInfomation($bookId);
-        $context['accounts'] = $this->BookKeeping->retrieveCategorizedAccounts(false, $bookId);
-        $accounts = $context['accounts'];
+
+        [$status, $categorizedAccounts] = $this->BookKeeping->retrieveCategorizedAccounts(false, $bookId);
+        switch ($status) {
+            case BookKeepingService::STATUS_NORMAL:
+                if (isset($categorizedAccounts)) {
+                    $context['accounts'] = $categorizedAccounts;
+                } else {
+                    abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+                break;
+            default:
+                abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                break;
+        }
+        $accountTypeCaption = [
+            'asset'     => __('Assets'),
+            'liability' => __('Liabilities'),
+            'expense'   => __('Expense'),
+            'revenue'   => __('Revenue'),
+        ];
         $context['accountsgroup'] = null;
-        foreach ($accounts as $accountTypeKey => $accountType) {
+        foreach ($categorizedAccounts as $accountTypeKey => $accountType) {
             if (array_key_exists($accountsGroupId, $accountType['groups'])) {
                 $context['accountsgroup']['id'] = $accountsGroupId;
                 $context['accountsgroup']['type'] = $accountTypeCaption[$accountTypeKey];

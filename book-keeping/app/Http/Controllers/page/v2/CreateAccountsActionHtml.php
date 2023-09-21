@@ -40,8 +40,28 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
     {
         $context = [];
 
-        $context['book'] = $this->BookKeeping->retrieveBookInfomation($bookId);
-        $context['accounts'] = $this->BookKeeping->retrieveCategorizedAccounts(false, $bookId);
+        if (! $this->BookKeeping->validateUuid($bookId)) {
+            abort(Response::HTTP_NOT_FOUND);
+        }
+
+        [$status, $information] = $this->BookKeeping->retrieveBookInformation($bookId);
+        switch ($status) {
+            case BookKeepingService::STATUS_NORMAL:
+                if (isset($information)) {
+                    $context['bookId'] = $bookId;
+                    $context['book'] = $information;
+                } else {
+                    abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+                break;
+            case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
+                abort(Response::HTTP_NOT_FOUND);
+                break;
+            default:
+                abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                break;
+        }
+
         $context['accounttype'] = null;
         $context['accountcreate'] = [
             'grouptitle'  => null,
@@ -49,33 +69,90 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
             'itemtitle'   => null,
             'description' => null,
         ];
+        $context['messages'] = [
+            'group' => null,
+            'item'  => null,
+        ];
         if ($request->isMethod('post')) {
             $button_action = $request->input('create');
             switch ($button_action) {
                 case 'group':
                     $result = $this->validateAndTrimForCreateAccountGroup($request->all(), $bookId);
                     $accountGroup = $result['accountGroup'];
+                    $context['accounttype'] = $accountGroup['accounttype'];
+                    $context['accountcreate']['grouptitle'] = $accountGroup['title'];
                     if ($result['success']) {
-                        $this->BookKeeping->createAccountGroup($accountGroup['accounttype'], $accountGroup['title'], $bookId);
+                        [$status, $_] = $this->BookKeeping->createAccountGroup(
+                            $accountGroup['accounttype'], $accountGroup['title'], $bookId
+                        );
+                        switch ($status) {
+                            case BookKeepingService::STATUS_NORMAL:
+                                $context['accounttype'] = null;
+                                $context['accountcreate']['grouptitle'] = null;
+                                break;
+                            case BookKeepingService::STATUS_ERROR_AUTH_FORBIDDEN:
+                                $context['messages']['group']
+                                    = __('You are not permitted to write in this book.');
+                                break;
+                            default:
+                                abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                                break;
+                        }
                     } else {
-                        $context['accounttype'] = $accountGroup['accounttype'];
-                        $context['accountcreate']['grouptitle'] = $accountGroup['title'];
+                        $context['messages']['group']
+                            = __('Please select the type and enter a valid name.');
                     }
                     break;
                 case 'item':
                     $result = $this->validateAndTrimForCreateAccount($request->all(), $bookId);
                     $account = $result['account'];
+                    $context['accountcreate']['groupid'] = $account['accountgroup'];
+                    $context['accountcreate']['itemtitle'] = $account['title'];
+                    $context['accountcreate']['description'] = $account['description'];
                     if ($result['success']) {
-                        $this->BookKeeping->createAccount($account['accountgroup'], $account['title'], $account['description'], $bookId);
+                        [$status, $_] = $this->BookKeeping->createAccount(
+                            $account['accountgroup'], $account['title'], $account['description'], $bookId
+                        );
+                        switch ($status) {
+                            case BookKeepingService::STATUS_NORMAL:
+                                $context['accountcreate']['groupid'] = null;
+                                $context['accountcreate']['itemtitle'] =  null;
+                                $context['accountcreate']['description'] = null;
+                                break;
+                            case BookKeepingService::STATUS_ERROR_AUTH_FORBIDDEN:
+                                $context['messages']['item']
+                                     = __('You are not permitted to write in this book.');
+                                break;
+                            case BookKeepingService::STATUS_ERROR_BAD_CONDITION:
+                                abort(Response::HTTP_NOT_FOUND);
+                                break;
+                            default:
+                                abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                                break;
+                        }
                     } else {
-                        $context['accountcreate']['groupid'] = $account['accountgroup'];
-                        $context['accountcreate']['itemtitle'] = $account['title'];
-                        $context['accountcreate']['description'] = $account['description'];
+                        $context['messages']['item']
+                            = __('Please select the group and enter a valid name and description.');
                     }
                     break;
                 default:
+                    abort(Response::HTTP_NOT_FOUND);
                     break;
             }
+        }
+
+        [$status, $categorizedAccounts] = $this->BookKeeping->retrieveCategorizedAccounts(false, $bookId);
+        switch ($status) {
+            case BookKeepingService::STATUS_NORMAL:
+                if (isset($categorizedAccounts)) {
+                    $context['accounts'] = $categorizedAccounts;
+                } else {
+                    abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+                break;
+            default:
+                abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                break;
         }
 
         return $this->responder->response($context);
@@ -88,7 +165,7 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
      * @param  string  $bookId
      * @return array
      */
-    private function validateAndTrimForCreateAccount(array $account_in, string $bookId): array
+    private function validateAndTrimForCreateAccount(array $account_in): array
     {
         $success = true;
         $trimmed_account = [];
@@ -125,7 +202,7 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
      * @param  string  $bookId
      * @return array
      */
-    private function validateAndTrimForCreateAccountGroup(array $accountGroup_in, string $bookId): array
+    private function validateAndTrimForCreateAccountGroup(array $accountGroup_in): array
     {
         $success = true;
         $trimmed_accountGroup = [];

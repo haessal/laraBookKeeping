@@ -22,12 +22,11 @@ class ShowAccountsViewResponder extends BaseAccountsViewResponder
             'revenue'   => $this->sortAccountInAscendingCodeOrder($accounts['revenue']['groups']),
         ];
         $this->response->setContent($this->view->make('bookkeeping.v2.pageaccountslist', [
-            'dropdownmenuLinks' => $this->dropdownMenuLinks(),
-            'book'              => $context['book'],
-            'selflinkname'      => 'v2_accounts',
-            'navilinks'         => $this->navilinks(),
-            'accountsnavilinks' => ['list' => $this->accountsnavilinks(), 'selected' => 'list'],
-            'accounts'          => $account_list,
+            'bookId'           => $context['bookId'],
+            'book'             => $context['book'],
+            'selflinkname'     => 'v2_accounts',
+            'selfaccountsmenu' => 'accounts_list',
+            'accounts'         => $account_list,
         ]));
         $this->response->setStatusCode(Response::HTTP_OK);
 

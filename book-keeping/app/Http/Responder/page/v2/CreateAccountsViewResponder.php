@@ -29,14 +29,14 @@ class CreateAccountsViewResponder extends BaseAccountsViewResponder
             $accounttype[$context['accounttype']] = 'checked';
         }
         $this->response->setContent($this->view->make('bookkeeping.v2.pageaccountscreate', [
-            'dropdownmenuLinks' => $this->dropdownMenuLinks(),
-            'book'              => $context['book'],
-            'selflinkname'      => 'v2_accounts',
-            'navilinks'         => $this->navilinks(),
-            'accountsnavilinks' => ['list' => $this->accountsnavilinks(), 'selected' => 'create'],
-            'accounttype'       => $accounttype,
-            'accountstitle'     => $accounts_title['groupsWithType'],
-            'accountcreate'     => $context['accountcreate'],
+            'bookId'           => $context['bookId'],
+            'book'             => $context['book'],
+            'selflinkname'     => 'v2_accounts',
+            'selfaccountsmenu' => 'accounts_add',
+            'accounttype'      => $accounttype,
+            'accountstitle'    => $accounts_title['groupsWithType'],
+            'accountcreate'    => $context['accountcreate'],
+            'messages'         => $context['messages'],
         ]));
         $this->response->setStatusCode(Response::HTTP_OK);
 

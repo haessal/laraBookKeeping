@@ -20,31 +20,32 @@ class ShowStatementsViewResponder extends BaseViewResponder
         $balance_sheet = [];
         $formatted_slips = [];
         if ($context['display_statements']) {
-            $statements = $context['statements'];
+            $profitLoss = $context['profit_loss'];
+            $trialBalance = $context['trial_balance'];
             $PreviousBalanceSheet = $context['previous_balance_sheet'];
             $balanceSheet = $context['balance_sheet'];
             $slips = $context['slips'];
             $income_statement = $this->translateIncomeStatementFormat([
                 'expense' => [
-                    'amount' => $statements['expense']['amount'],
-                    'groups' => $this->sortAccountInAscendingCodeOrder($statements['expense']['groups']),
+                    'amount' => $profitLoss['expense']['amount'],
+                    'groups' => $this->sortAccountInAscendingCodeOrder($profitLoss['expense']['groups']),
                 ],
                 'revenue' => [
-                    'amount' => $statements['revenue']['amount'],
-                    'groups' => $this->sortAccountInAscendingCodeOrder($statements['revenue']['groups']),
+                    'amount' => $profitLoss['revenue']['amount'],
+                    'groups' => $this->sortAccountInAscendingCodeOrder($profitLoss['revenue']['groups']),
                 ],
-                'net_income' => $statements['net_income'],
+                'net_income' => $profitLoss['net_income'],
             ]);
             $trial_balance_of_real_flow = $this->translateBalanceSheetFormat([
                 'asset' => [
-                    'amount' => $statements['asset']['amount'],
-                    'groups' => $this->sortAccountInAscendingCodeOrder($statements['asset']['groups']),
+                    'amount' => $trialBalance['asset']['amount'],
+                    'groups' => $this->sortAccountInAscendingCodeOrder($trialBalance['asset']['groups']),
                 ],
                 'liability' => [
-                    'amount' => $statements['liability']['amount'],
-                    'groups' => $this->sortAccountInAscendingCodeOrder($statements['liability']['groups']),
+                    'amount' => $trialBalance['liability']['amount'],
+                    'groups' => $this->sortAccountInAscendingCodeOrder($trialBalance['liability']['groups']),
                 ],
-                'net_asset' => $statements['net_asset'],
+                'net_asset' => $trialBalance['net_asset'],
             ]);
             $previous_balance_sheet = $this->translateBalanceSheetFormat([
                 'asset' => [

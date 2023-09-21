@@ -25,12 +25,11 @@ class ShowAccountsSettingsViewResponder extends BaseAccountsViewResponder
             true
         );
         $this->response->setContent($this->view->make('bookkeeping.v2.pageaccountssettings', [
-            'dropdownmenuLinks' => $this->dropdownMenuLinks(),
-            'book'              => $context['book'],
-            'selflinkname'      => 'v2_accounts',
-            'navilinks'         => $this->navilinks(),
-            'accountsnavilinks' => ['list' => $this->accountsnavilinks(), 'selected' => 'settings'],
-            'accountstitle'     => $accounts_title,
+            'bookId'           => $context['bookId'],
+            'book'             => $context['book'],
+            'selflinkname'     => 'v2_accounts',
+            'selfaccountsmenu' => 'accounts_settings',
+            'accountstitle'    => $accounts_title,
         ]));
         $this->response->setStatusCode(Response::HTTP_OK);
 

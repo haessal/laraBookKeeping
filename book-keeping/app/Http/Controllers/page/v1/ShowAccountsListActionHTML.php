@@ -39,8 +39,25 @@ class ShowAccountsListActionHTML extends AuthenticatedBookKeepingAction
     public function __invoke(Request $request): Response
     {
         $context = [];
-        $context['accounts'] = $this->BookKeeping->retrieveCategorizedAccounts(false);
 
-        return $this->responder->response($context);
+        [$status, $categorizedAccounts] = $this->BookKeeping->retrieveCategorizedAccounts(false);
+        switch ($status) {
+            case BookKeepingService::STATUS_NORMAL:
+                if (isset($categorizedAccounts)) {
+                    $context['accounts'] = $categorizedAccounts;
+                    $response = $this->responder->response($context);
+                }
+                break;
+            case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
+                abort(Response::HTTP_NOT_FOUND);
+                break;
+            default:
+                break;
+        }
+        if (is_null($response)) {
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return $response;
     }
 }

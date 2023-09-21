@@ -39,24 +39,40 @@ class ShowStatementsActionHTML extends AuthenticatedBookKeepingAction
     public function __invoke(Request $request): Response
     {
         $context = [];
+
         $today = date('Y-m-d');
-
         if ($request->isMethod('post')) {
-            $beginning_date = trim($request->input('BEGINNING'));
-            $end_date = trim($request->input('END'));
+            $beginningDate = trim($request->input('BEGINNING'));
+            $endDate = trim($request->input('END'));
         } else {
-            $beginning_date = $today;
-            $end_date = $today;
+            $beginningDate = $today;
+            $endDate = $today;
         }
-
-        $context['beginning_date'] = $beginning_date;
-        $context['end_date'] = $end_date;
-        if (! empty($beginning_date) && ! empty($end_date) && $this->BookKeeping->validatePeriod($beginning_date, $end_date)) {
-            $context['statements'] = $this->BookKeeping->retrieveStatements($beginning_date, $end_date);
-            $end_date_of_previous_period = date('Y-m-d', strtotime($beginning_date) - 86400);
-            $context['previous_balance_sheet'] = $this->BookKeeping->retrieveStatements('1970-01-01', $end_date_of_previous_period);
-            $context['balance_sheet'] = $this->BookKeeping->retrieveStatements('1970-01-01', $end_date);
-            $context['slips'] = $this->BookKeeping->retrieveSlips($beginning_date, $end_date, null, null, null, null);
+        $context['beginning_date'] = $beginningDate;
+        $context['end_date'] = $endDate;
+        if (! empty($beginningDate) && ! empty($endDate)
+            && $this->BookKeeping->validatePeriod($beginningDate, $endDate)) {
+            [$status, $statements]
+                = $this->BookKeeping->retrieveProfitLossTrialBalanceBalanceSheetsSlips($beginningDate, $endDate);
+            switch ($status) {
+                case BookKeepingService::STATUS_NORMAL:
+                    if (isset($statements)) {
+                        $context['profit_loss'] = $statements['profit_loss'];
+                        $context['trial_balance'] = $statements['trial_balance'];
+                        $context['previous_balance_sheet'] = $statements['previous_balance_sheet'];
+                        $context['balance_sheet'] = $statements['balance_sheet'];
+                        $context['slips'] = $statements['slips'];
+                    } else {
+                        abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                    }
+                    break;
+                case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
+                    abort(Response::HTTP_NOT_FOUND);
+                    break;
+                default:
+                    abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                    break;
+            }
             $context['message'] = null;
             $context['display_statements'] = true;
         } else {

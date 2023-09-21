@@ -24,14 +24,14 @@ class UpdateAccountsGroupViewResponder extends BaseAccountsViewResponder
             ],
             true
         );
-        $this->response->setContent($this->view->make('bookkeeping.v2.pageaccountssettingsgroup', [
-            'dropdownmenuLinks' => $this->dropdownMenuLinks(),
-            'book'              => $context['book'],
-            'selflinkname'      => 'v2_accounts',
-            'navilinks'         => $this->navilinks(),
-            'accountsnavilinks' => ['list' => $this->accountsnavilinks(), 'selected' => 'settings'],
-            'accountstitle'     => $accounts_title,
-            'accountsgroup'     => $context['accountsgroup'],
+        $this->response->setContent($this->view->make('bookkeeping.v2.pageaccountssettings', [
+            'bookId'           => $context['bookId'],
+            'book'             => $context['book'],
+            'selflinkname'     => 'v2_accounts',
+            'selfaccountsmenu' => 'accounts_settings',
+            'accountstitle'    => $accounts_title,
+            'accountsgroup'    => $context['accountsgroup'],
+            'message'          => $context['message'],
         ]));
         $this->response->setStatusCode(Response::HTTP_OK);
 

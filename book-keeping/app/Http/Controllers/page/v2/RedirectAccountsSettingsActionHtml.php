@@ -29,18 +29,17 @@ class RedirectAccountsSettingsActionHtml extends AuthenticatedBookKeepingAction
      */
     public function __invoke(Request $request, string $bookId): RedirectResponse
     {
-        $book = $this->BookKeeping->retrieveBookInfomation($bookId);
-        $redirect = redirect()->route('v2_accounts_settings', ['bookId' => $book['id']], Response::HTTP_SEE_OTHER);
+        $redirect = redirect()->route('v2_accounts_settings', ['bookId' => $bookId], Response::HTTP_SEE_OTHER);
         $accountsgroup = $request->input('accountsgroup');
-        if (! is_null($accountsgroup)) {
+        if (isset($accountsgroup)) {
             if (strcmp($accountsgroup, '0') != 0) {
-                $redirect = redirect()->route('v2_accounts_groups', ['bookId' => $book['id'], 'accountsGroupId' => $accountsgroup], Response::HTTP_SEE_OTHER);
+                $redirect = redirect()->route('v2_accounts_groups', ['bookId' => $bookId, 'accountsGroupId' => $accountsgroup], Response::HTTP_SEE_OTHER);
             }
         }
         $accountsitem = $request->input('accountsitem');
-        if (! is_null($accountsitem)) {
+        if (isset($accountsitem)) {
             if (strcmp($accountsitem, '0') != 0) {
-                $redirect = redirect()->route('v2_accounts_items', ['bookId' => $book['id'], 'accountsItemId' => $accountsitem], Response::HTTP_SEE_OTHER);
+                $redirect = redirect()->route('v2_accounts_items', ['bookId' => $bookId, 'accountsItemId' => $accountsitem], Response::HTTP_SEE_OTHER);
             }
         }
 

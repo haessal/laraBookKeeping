@@ -25,15 +25,15 @@ class UpdateAccountsItemViewResponder extends BaseAccountsViewResponder
         $accounts_groups = $this->translateAccountListToTitleList([
             $context['accounttypekey'] => ['groups' => $accounts_sorted[$context['accounttypekey']]['groups']],
         ], true);
-        $this->response->setContent($this->view->make('bookkeeping.v2.pageaccountssettingsitem', [
-            'dropdownmenuLinks' => $this->dropdownMenuLinks(),
-            'book'              => $context['book'],
-            'selflinkname'      => 'v2_accounts',
-            'navilinks'         => $this->navilinks(),
-            'accountsnavilinks' => ['list' => $this->accountsnavilinks(), 'selected' => 'settings'],
-            'accountstitle'     => $accounts_title,
-            'accountsitem'      => $context['accountsitem'],
-            'accountsgroups'    => $accounts_groups['groups'],
+        $this->response->setContent($this->view->make('bookkeeping.v2.pageaccountssettings', [
+            'bookId'           => $context['bookId'],
+            'book'             => $context['book'],
+            'selflinkname'     => 'v2_accounts',
+            'selfaccountsmenu' => 'accounts_settings',
+            'accountstitle'    => $accounts_title,
+            'accountsitem'     => $context['accountsitem'],
+            'accountsgroups'   => $accounts_groups['groups'],
+            'message'          => $context['message'],
         ]));
         $this->response->setStatusCode(Response::HTTP_OK);
 

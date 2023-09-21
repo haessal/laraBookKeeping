@@ -39,12 +39,30 @@ class ShowTopActionHTML extends AuthenticatedBookKeepingAction
     public function __invoke(Request $request): Response
     {
         $context = [];
-        $today = date('Y-m-d');
-        $context['date'] = $today;
-        $context['income_statement'] = $this->BookKeeping->retrieveStatements($today, $today);
-        $context['balance_sheet'] = $this->BookKeeping->retrieveStatements('1970-01-01', $today);
-        $context['slips'] = $this->BookKeeping->retrieveSlips($today, $today, null, null, null, null);
+        $response = null;
 
-        return $this->responder->response($context);
+        $today = date('Y-m-d');
+        [$status, $statements] = $this->BookKeeping->retrieveProfitLossBalanceSheetSlipsOfOneDay($today);
+        switch ($status) {
+            case BookKeepingService::STATUS_NORMAL:
+                if (isset($statements)) {
+                    $context['date'] = $today;
+                    $context['income_statement'] = $statements['profit_loss'];
+                    $context['balance_sheet'] = $statements['balance_sheet'];
+                    $context['slips'] = $statements['slips'];
+                    $response = $this->responder->response($context);
+                }
+                break;
+            case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
+                abort(Response::HTTP_NOT_FOUND);
+                break;
+            default:
+                break;
+        }
+        if (is_null($response)) {
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return $response;
     }
 }

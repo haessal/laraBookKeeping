@@ -40,8 +40,41 @@ class ShowAccountsActionHtml extends AuthenticatedBookKeepingAction
     {
         $context = [];
 
-        $context['book'] = $this->BookKeeping->retrieveBookInfomation($bookId);
-        $context['accounts'] = $this->BookKeeping->retrieveCategorizedAccounts(false, $bookId);
+        if (! $this->BookKeeping->validateUuid($bookId)) {
+            abort(Response::HTTP_NOT_FOUND);
+        }
+
+        [$status, $information] = $this->BookKeeping->retrieveBookInformation($bookId);
+        switch ($status) {
+            case BookKeepingService::STATUS_NORMAL:
+                if (isset($information)) {
+                    $context['bookId'] = $bookId;
+                    $context['book'] = $information;
+                } else {
+                    abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+                break;
+            case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
+                abort(Response::HTTP_NOT_FOUND);
+                break;
+            default:
+                abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                break;
+        }
+
+        [$status, $categorizedAccounts] = $this->BookKeeping->retrieveCategorizedAccounts(false, $bookId);
+        switch ($status) {
+            case BookKeepingService::STATUS_NORMAL:
+                if (isset($categorizedAccounts)) {
+                    $context['accounts'] = $categorizedAccounts;
+                } else {
+                    abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+                break;
+            default:
+                abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                break;
+        }
 
         return $this->responder->response($context);
     }

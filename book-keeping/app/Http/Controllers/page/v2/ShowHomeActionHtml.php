@@ -39,7 +39,27 @@ class ShowHomeActionHtml extends AuthenticatedBookKeepingAction
     public function __invoke(Request $request, string $bookId): Response
     {
         $context = [];
-        $context['book'] = $this->BookKeeping->retrieveBookInfomation($bookId);
+        
+        if (! $this->BookKeeping->validateUuid($bookId)) {
+            abort(Response::HTTP_NOT_FOUND);
+        }
+
+        [$status, $information] = $this->BookKeeping->retrieveBookInformation($bookId);
+        switch ($status) {
+            case BookKeepingService::STATUS_NORMAL:
+                if (isset($information)) {
+                    $context['bookId'] = $bookId;
+                    $context['book'] = $information;
+                } else {
+                    abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+                break;
+            case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
+                abort(Response::HTTP_NOT_FOUND);
+            default:
+                abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                break;
+        }
 
         return $this->responder->response($context);
     }

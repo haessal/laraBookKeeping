@@ -42,12 +42,32 @@ class UpdateAccountsItemActionHtml extends AuthenticatedBookKeepingAction
     {
         $context = [];
 
-        $accountTypeCaption = [
-            'asset'     => __('Assets'),
-            'liability' => __('Liabilities'),
-            'expense'   => __('Expense'),
-            'revenue'   => __('Revenue'),
-        ];
+        if (! $this->BookKeeping->validateUuid($bookId)) {
+            abort(Response::HTTP_NOT_FOUND);
+        }
+        if (! $this->BookKeeping->validateUuid($accountsItemId)) {
+            abort(Response::HTTP_NOT_FOUND);
+        }
+
+        [$status, $information] = $this->BookKeeping->retrieveBookInformation($bookId);
+        switch ($status) {
+            case BookKeepingService::STATUS_NORMAL:
+                if (isset($information)) {
+                    $context['bookId'] = $bookId;
+                    $context['book'] = $information;
+                } else {
+                    abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+                break;
+            case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
+                abort(Response::HTTP_NOT_FOUND);
+                break;
+            default:
+                abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                break;
+        }
+
+        $context['message'] = null;
         if ($request->isMethod('post')) {
             $group = trim($request->input('accountgroup'));
             $title = trim($request->input('title'));
@@ -57,14 +77,50 @@ class UpdateAccountsItemActionHtml extends AuthenticatedBookKeepingAction
             } else {
                 $selectable = false;
             }
-            $newData = ['group' => $group, 'title' => $title, 'description' => $description, 'selectable' => $selectable];
-            $this->BookKeeping->updateAccount($accountsItemId, $newData, $bookId);
+            if (($group != '') && $this->BookKeeping->validateUuid($group)
+                    && ($title != '') && ($description != '')) {
+                $newData = ['group' => $group, 'title' => $title, 'description' => $description, 'selectable' => $selectable];
+                [$status, $_] = $this->BookKeeping->updateAccount($accountsItemId, $newData, $bookId);
+                switch ($status) {
+                    case BookKeepingService::STATUS_NORMAL:
+                        break;
+                    case BookKeepingService::STATUS_ERROR_AUTH_FORBIDDEN:
+                        $context['message'] = __('You are not permitted to write in this book.');
+                        break;
+                    case BookKeepingService::STATUS_ERROR_BAD_CONDITION:
+                        abort(Response::HTTP_NOT_FOUND);
+                        break;
+                    default:
+                        abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                        break;
+                }
+            } else {
+                $context['message']
+                    = __('Please select the group and enter a valid name and description.');
+            }
         }
-        $context['book'] = $this->BookKeeping->retrieveBookInfomation($bookId);
-        $context['accounts'] = $this->BookKeeping->retrieveCategorizedAccounts(false, $bookId);
-        $accounts = $context['accounts'];
+
+        [$status, $categorizedAccounts] = $this->BookKeeping->retrieveCategorizedAccounts(false, $bookId);
+        switch ($status) {
+            case BookKeepingService::STATUS_NORMAL:
+                if (isset($categorizedAccounts)) {
+                    $context['accounts'] = $categorizedAccounts;
+                } else {
+                    abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+                break;
+            default:
+                abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                break;
+        }
+        $accountTypeCaption = [
+            'asset'     => __('Assets'),
+            'liability' => __('Liabilities'),
+            'expense'   => __('Expense'),
+            'revenue'   => __('Revenue'),
+        ];
         $context['accountsitem'] = null;
-        foreach ($accounts as $accountTypeKey => $accountType) {
+        foreach ($categorizedAccounts as $accountTypeKey => $accountType) {
             foreach ($accountType['groups'] as $accountGroupKey => $accountGroup) {
                 if (array_key_exists($accountsItemId, $accountGroup['items'])) {
                     $context['accounttypekey'] = $accountTypeKey;
