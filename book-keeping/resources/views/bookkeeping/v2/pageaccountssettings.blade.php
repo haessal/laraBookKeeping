@@ -14,22 +14,18 @@
                             action="{{ route('v2_accounts_settings_redirect', ['bookId' => $bookId]) }}">
                             @csrf
                             <div class="flex flex-col sm:flex-row sm:items-center">
-                                <label class="p-1 text-black dark:text-gray-200">{{ __('Accounts Group') }}</label>
-                                <select
+                                <x-bookkeeping.accountssettings-menu-select
+                                    id="id-accounts-settings-menu-select-accountsgroup"
                                     name="accountsgroup"
-                                    class="w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-gray-900 focus:ring-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400 sm:w-1/2">
+                                    title="{{ __('Accounts Group') }}">
                                     <option value="0" selected></option>
-                                    @foreach ($accountstitle['groups'] as $accountsGroupId => $accountsGroup)
+                                    @foreach($accountstitle['groups'] as $accountsGroupId => $accountsGroup)
                                     <option value="{{ $accountsGroupId }}">{{{ $accountsGroup }}}</option>
                                     @endforeach
-                                </select>
-                                <div class="flex flex-row-reverse py-1 sm:p-1">
-                                    <button
-                                        type="submit"
-                                        class="rounded-lg bg-gray-800 px-5 py-2.5 text-center text-sm font-medium uppercase tracking-widest text-white duration-200 hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-900 dark:bg-gray-200 dark:text-gray-800 dark:hover:bg-white dark:focus:bg-white dark:focus:ring-gray-200">
-                                        {{ __('Select') }}
-                                    </button>
-                                </div>
+                                </x-bookkeeping.accountssettings-menu-select>
+                                <x-bookkeeping.accountssettings-menu-submit>
+                                    {{ __('Select') }}
+                                </x-bookkeeping.accountssettings-menu-submit>
                             </div>
                         </form>
                     </div>
@@ -39,22 +35,18 @@
                             action="{{ route('v2_accounts_settings_redirect', ['bookId' => $bookId]) }}">
                             @csrf
                             <div class="flex flex-col sm:flex-row sm:items-center">
-                                <label class="p-1 text-black dark:text-gray-200">{{ __('Accounts Item') }}</label>
-                                <select
+                                <x-bookkeeping.accountssettings-menu-select
+                                    id="id-accounts-settings-menu-select-accountsitem"
                                     name="accountsitem"
-                                    class="w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-gray-900 focus:ring-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400 sm:w-1/2">
+                                    title="{{ __('Accounts Item') }}">
                                     <option value="0" selected></option>
-                                    @foreach ($accountstitle['items'] as $accountsItemId => $accountsItem)
+                                    @foreach($accountstitle['items'] as $accountsItemId => $accountsItem)
                                     <option value="{{ $accountsItemId }}">{{{ $accountsItem }}}</option>
                                     @endforeach
-                                </select>
-                                <div class="flex flex-row-reverse py-1 sm:p-1">
-                                    <button
-                                        type="submit"
-                                        class="rounded-lg bg-gray-800 px-5 py-2.5 text-center text-sm font-medium uppercase tracking-widest text-white duration-200 hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-900 dark:bg-gray-200 dark:text-gray-800 dark:hover:bg-white dark:focus:bg-white dark:focus:ring-gray-200">
-                                        {{{ __('Select') }}}
-                                    </button>
-                                </div>
+                                </x-bookkeeping.accountssettings-menu-select>
+                                <x-bookkeeping.accountssettings-menu-submit>
+                                    {{ __('Select') }}
+                                </x-bookkeeping.accountssettings-menu-submit>
                             </div>
                         </form>
                     </div>
@@ -64,150 +56,100 @@
 
         <div class="container mx-auto">
             @isset($accountsgroup)
-            <div class="border border-red-600 px-3 py-1">
-                <div class="py-3">
-                    <h2 class="pb-1 text-xl text-black dark:text-gray-200">{{ __('Edit Account Group') }}</h2>
-                    <div
-                        class="border border-gray-200 bg-white p-2 shadow-sm dark:border-gray-900 dark:bg-gray-800 sm:rounded-lg">
-                        <form
-                            method="POST"
-                            action="{{ route('v2_accounts_groups', ['bookId' => $bookId, 'accountsGroupId' => $accountsgroup['id']]) }}">
-                            @csrf
-                            <div class="mx-3 mt-3 mb-6">
-                                <p class="mb-2 block text-black dark:text-gray-200">{{ __('Type') }}</p>
-                                <p class="ml-2 block text-sm font-medium text-black dark:text-gray-200">
-                                    {{{ $accountsgroup['type'] }}}
-                                </p>
-                            </div>
-                            <div class="mx-3 mt-3 mb-6">
-                                <p class="mb-2 block text-black dark:text-gray-200">{{ __('Name') }}</p>
-                                <input
-                                    type="text"
-                                    name="title"
-                                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-gray-900 focus:ring-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400"
-                                    value="{{ $accountsgroup['title'] }}" />
-                            </div>
-                            <div class="mx-3 mt-3 mb-6">
-                                <p class="mb-2 block text-black dark:text-gray-200">{{ __('Attributes') }}</p>
-                                <div class="flex items-center">
-                                    <input id="current" type="checkbox" name="attribute_current" value="1" class="ml-2
-                                    h-4 w-4 border-gray-300 bg-gray-100 focus:ring-0 dark:border-gray-600
-                                    dark:bg-gray-700" {{ $accountsgroup['attribute_current'] }} />
-                                    <label
-                                        for="current"
-                                        class="ml-1 block text-sm font-medium text-black dark:text-gray-200">
-                                        {{ __('Has Liquidity') }}
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="mx-3 mt-3 mb-6">
-                                <p class="mb-2 block text-black dark:text-gray-200">
-                                    {{ __('Code for Previous version') }}
-                                </p>
-                                <p class="ml-2 block text-sm font-medium text-black dark:text-gray-200">
-                                    {{{ $accountsgroup['bk_code'] }}}
-                                </p>
-                            </div>
-                            <div class="mx-3 flex flex-row-reverse">
-                                <x-bookkeeping.accountscreate-submit name="update" value="update">
-                                    {{ __('Update') }}
-                                </x-bookkeeping.accountscreate-submit>
-                            </div>
-
-                        </form>
-                        @isset($message)
-                        <x-bookkeeping.accountscreate-message>
-                            {{{ $message }}}
-                        </x-bookkeeping.accountscreate-message>
-                        @endisset
-                    </div>
-                </div>
+            <div class="px-3 py-1">
+                <x-bookkeeping.accounts-form caption="{{ __('Edit Account Group') }}">
+                    <form
+                        method="POST"
+                        action="{{ route('v2_accounts_groups', ['bookId' => $bookId, 'accountsGroupId' => $accountsgroup['id']]) }}">
+                        @csrf
+                        <x-bookkeeping.accounts-form-display title="{{ __('Type') }}">
+                            {{{ $accountsgroup['type'] }}}
+                        </x-bookkeeping.accounts-form-display>
+                        <x-bookkeeping.accounts-form-textbox
+                            id="id-accounts-settings-textbox-accountsgroup-title"
+                            name="title"
+                            title="{{ __('Name') }}">
+                            {{{ $accountsgroup['title'] }}}
+                        </x-bookkeeping.accounts-form-textbox>
+                        <x-bookkeeping.accounts-form-checkboxes title="{{ __('Attributes') }}">
+                            <x-bookkeeping.accounts-form-checkbox
+                                id="id-accounts-settings-checkbox-current"
+                                name="attribute_current"
+                                checked="{{ $accountsgroup['attribute_current'] }}">
+                                {{ __('Has Liquidity') }}
+                            </x-bookkeeping.accounts-form-checkbox>
+                        </x-bookkeeping.accounts-form-checkboxes>
+                        <x-bookkeeping.accounts-form-display title="{{ __('Code for Previous version') }}">
+                            {{{ $accountsgroup['bk_code'] }}}
+                        </x-bookkeeping.accounts-form-display>
+                        <x-bookkeeping.accounts-form-submit name="update" value="update">
+                            {{ __('Update') }}
+                        </x-bookkeeping.accounts-form-submit>
+                    </form>
+                    @isset($message)
+                    <x-bookkeeping.accounts-form-message>{{{ $message }}}</x-bookkeeping.accounts-form-message>
+                    @endisset
+                </x-bookkeeping.accounts-form>
             </div>
             @endisset @isset($accountsitem)
-            <div class="border border-red-600 px-3 py-1">
-                <div class="py-3">
-                    <h2 class="pb-1 text-xl text-black dark:text-gray-200">{{ __('Edit Account Item') }}</h2>
-                    <div
-                        class="border border-gray-200 bg-white p-2 shadow-sm dark:border-gray-900 dark:bg-gray-800 sm:rounded-lg">
-                        <form
-                            method="POST"
-                            action="{{ route('v2_accounts_items', ['bookId' => $bookId, 'accountsItemId' => $accountsitem['id']]) }}">
-                            @csrf
-                            <div class="mx-3 mt-3 mb-6">
-                                <p class="mb-2 block text-black dark:text-gray-200">{{ __('Type') }}</p>
-                                <p class="ml-2 block text-sm font-medium text-black dark:text-gray-200">
-                                    {{{ $accountsitem['type'] }}}
-                                </p>
-                            </div>
-                            <div class="mx-3 mt-3 mb-6">
-                                <p class="mb-2 block text-black dark:text-gray-200">{{ __('Accounts Group') }}</p>
-                                <select name="accountgroup" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-gray-900 focus:ring-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400">
-                                    @foreach ($accountsgroups as $accountGroupKey => $accountGroup) 
-                                    @if ($accountsitem['groupid'] == $accountGroupKey)
-                                    <option value="{{ $accountGroupKey }}" selected>{{{ $accountGroup }}}</option>
-                                    @else
-                                    <option value="{{ $accountGroupKey }}">{{{ $accountGroup }}}</option>
-                                    @endif
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="mx-3 mt-3 mb-6">
-                                <p class="mb-2 block text-black dark:text-gray-200">{{ __('Name') }}</p>
-                                <input
-                                    type="text"
-                                    name="title"
-                                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-gray-900 focus:ring-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400"
-                                    value="{{ $accountsitem['title'] }}" />
-                            </div>
-                            <div class="mx-3 mt-3 mb-6">
-                                <p class="mb-2 block text-black dark:text-gray-200">{{ __('Description') }}</p>
-                                <textarea rows="2" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-gray-900 focus:ring-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400" name="description">
-{{{ $accountsitem['description'] }}}</textarea>
-                            </div>
-                            <div class="mx-3 mt-3 mb-6">
-                                <p class="mb-2 block text-black dark:text-gray-200">{{ __('Attributes') }}</p>
-                                <div class="flex items-center">
-                                    <input id="md_selectable" type="checkbox" name="attribute_selectable" value="1" class="ml-2
-                                    h-4 w-4 border-gray-300 bg-gray-100 focus:ring-0 dark:border-gray-600
-                                    dark:bg-gray-700" {{ $accountsitem['attribute_selectable'] }} />
-                                    <label
-                                        for="md_selectable"
-                                        class="ml-1 block text-sm font-medium text-black dark:text-gray-200">
-                                        {{ __('Selectable') }}
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="mx-3 mt-3 mb-6">
-                                <p class="mb-2 block text-black dark:text-gray-200">
-                                    {{ __('Code for Previous version') }}
-                                </p>
-                                <p class="ml-2 block text-sm font-medium text-black dark:text-gray-200">
-                                    {{{ $accountsitem['bk_code'] }}}
-                                </p>
-                            </div>
-                            <div class="mx-3 flex flex-row-reverse">
-                                <x-bookkeeping.accountscreate-submit name="update" value="update">
-                                    {{ __('Update') }}
-                                </x-bookkeeping.accountscreate-submit>
-                            </div>
-
-                        </form>
-                        @isset($message)
-                        <x-bookkeeping.accountscreate-message>
-                            {{{ $message }}}
-                        </x-bookkeeping.accountscreate-message>
-                        @endisset
-                    </div>
-                </div>
+            <div class="px-3 py-1">
+                <x-bookkeeping.accounts-form caption="{{ __('Edit Account Item') }}">
+                    <form
+                        method="POST"
+                        action="{{ route('v2_accounts_items', ['bookId' => $bookId, 'accountsItemId' => $accountsitem['id']]) }}">
+                        @csrf
+                        <x-bookkeeping.accounts-form-display title="{{ __('Type') }}">
+                            {{{ $accountsitem['type'] }}}
+                        </x-bookkeeping.accounts-form-display>
+                        <x-bookkeeping.accounts-form-select
+                            id="id-accounts-settings-select-accountsgroup"
+                            name="accountgroup"
+                            title="{{ __('Accounts Group') }}">
+                            @foreach($accountsgroups as $accountGroupKey => $accountGroup) @if($accountsitem['groupid']
+                            == $accountGroupKey)
+                            <option value="{{ $accountGroupKey }}" selected>{{{ $accountGroup }}}</option>
+                            @else
+                            <option value="{{ $accountGroupKey }}">{{{ $accountGroup }}}</option>
+                            @endif @endforeach
+                        </x-bookkeeping.accounts-form-select>
+                        <x-bookkeeping.accounts-form-textbox
+                            id="id-accounts-settings-textbox-accountsitem-title"
+                            name="title"
+                            title="{{ __('Name') }}">
+                            {{{ $accountsitem['title'] }}}
+                        </x-bookkeeping.accounts-form-textbox>
+                        <x-bookkeeping.accounts-form-textarea
+                            id="id-accounts-settings-textarea-accountsitem-description"
+                            name="description"
+                            rows="3"
+                            title="{{ __('Description') }}">
+                            {{{ $accountsitem['description'] }}}
+                        </x-bookkeeping.accounts-form-textarea>
+                        <x-bookkeeping.accounts-form-checkboxes title="{{ __('Attributes') }}">
+                            <x-bookkeeping.accounts-form-checkbox
+                                id="id-accounts-settings-checkbox-selectable"
+                                name="attribute_selectable"
+                                checked="{{ $accountsitem['attribute_selectable'] }}">
+                                {{ __('Selectable') }}
+                            </x-bookkeeping.accounts-form-checkbox>
+                        </x-bookkeeping.accounts-form-checkboxes>
+                        <x-bookkeeping.accounts-form-display title="{{ __('Code for Previous version') }}">
+                            {{{ $accountsitem['bk_code'] }}}
+                        </x-bookkeeping.accounts-form-display>
+                        <x-bookkeeping.accounts-form-submit name="update" value="update">
+                            {{ __('Update') }}
+                        </x-bookkeeping.accounts-form-submit>
+                    </form>
+                    @isset($message)
+                    <x-bookkeeping.accounts-form-message>{{{ $message }}}</x-bookkeeping.accounts-form-message>
+                    @endisset
+                </x-bookkeeping.accounts-form>
             </div>
             @endisset @if (!(isset($accountsgroup) || isset($accountsitem)))
-            <div class="border border-red-600 px-3 py-1">
-                <div class="py-3">
-                    <div
-                        class="flex justify-center border border-gray-200 bg-white p-2 shadow-sm dark:border-gray-900 dark:bg-gray-800 sm:rounded-lg">
-                        <div class="italic text-black dark:text-gray-200">{{ __('Select Accounts Group or Item.') }} title</div>
-                    </div>
-                </div>
+            <div class="px-3 py-1">
+                <x-bookkeeping.accounts-form-empty>
+                    {{ __('Select Accounts Group or Item.') }}
+                </x-bookkeeping.accounts-form-empty>
             </div>
             @endif
         </div>
