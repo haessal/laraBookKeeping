@@ -105,7 +105,7 @@
                             id="id-accounts-settings-select-accountsgroup"
                             name="accountgroup"
                             title="{{ __('Accounts Group') }}">
-                            @foreach($accountsgroups as $accountGroupKey => $accountGroup) @if($accountsitem['groupid']
+                            @foreach($accountsgroups as $accountGroupKey => $accountGroup) @if($accountsitem['groupId']
                             == $accountGroupKey)
                             <option value="{{ $accountGroupKey }}" selected>{{{ $accountGroup }}}</option>
                             @else

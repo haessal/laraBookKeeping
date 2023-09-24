@@ -126,7 +126,7 @@ class UpdateAccountsItemActionHtml extends AuthenticatedBookKeepingAction
                     $context['accounttypekey'] = $accountTypeKey;
                     $context['accountsitem']['id'] = $accountsItemId;
                     $context['accountsitem']['type'] = $accountTypeCaption[$accountTypeKey];
-                    $context['accountsitem']['groupid'] = $accountGroupKey;
+                    $context['accountsitem']['groupId'] = $accountGroupKey;
                     $accountItem = $accountGroup['items'][$accountsItemId];
                     $context['accountsitem']['title'] = $accountItem['title'];
                     $context['accountsitem']['description'] = $accountItem['description'];

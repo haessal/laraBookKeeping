@@ -65,7 +65,7 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
         $context['accounttype'] = null;
         $context['accountcreate'] = [
             'grouptitle'  => null,
-            'groupid'     => null,
+            'groupId'     => null,
             'itemtitle'   => null,
             'description' => null,
         ];
@@ -106,7 +106,7 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
                 case 'item':
                     $result = $this->validateAndTrimForCreateAccount($request->all(), $bookId);
                     $account = $result['account'];
-                    $context['accountcreate']['groupid'] = $account['accountgroup'];
+                    $context['accountcreate']['groupId'] = $account['accountgroup'];
                     $context['accountcreate']['itemtitle'] = $account['title'];
                     $context['accountcreate']['description'] = $account['description'];
                     if ($result['success']) {
@@ -115,7 +115,7 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
                         );
                         switch ($status) {
                             case BookKeepingService::STATUS_NORMAL:
-                                $context['accountcreate']['groupid'] = null;
+                                $context['accountcreate']['groupId'] = null;
                                 $context['accountcreate']['itemtitle'] =  null;
                                 $context['accountcreate']['description'] = null;
                                 break;

@@ -16,7 +16,7 @@
                             title="{{ __('Accounts Group') }}">
                             <option value="0"></option>
                             @empty($accountstitle) @else @foreach($accountstitle as $accountGroupKey => $accountGroup)
-                            @if($accountcreate['groupid'] == $accountGroupKey)
+                            @if($accountcreate['groupId'] == $accountGroupKey)
                             <option value="{{ $accountGroupKey }}" selected>{{{ $accountGroup }}}</option>
                             @else
                             <option value="{{ $accountGroupKey }}">{{{ $accountGroup }}}</option>
