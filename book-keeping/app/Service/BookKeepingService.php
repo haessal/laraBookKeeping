@@ -406,7 +406,7 @@ class BookKeepingService
      * @param  string  $bookId
      * @return array{0:int, 1:array{id: string, owner: string, name: string}|null}
      */
-    public function retrieveBookInformation($bookId): ?array
+    public function retrieveBookInformation($bookId): array
     {
         [$authorizedStatus, $bookId]
             = $this->book->retrieveDefaultBookOrCheckReadable($bookId, intval(Auth::id()));
