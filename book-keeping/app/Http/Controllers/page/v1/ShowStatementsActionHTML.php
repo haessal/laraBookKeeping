@@ -42,8 +42,8 @@ class ShowStatementsActionHTML extends AuthenticatedBookKeepingAction
 
         $today = date('Y-m-d');
         if ($request->isMethod('post')) {
-            $beginningDate = trim($request->input('BEGINNING'));
-            $endDate = trim($request->input('END'));
+            $beginningDate = trim(strval($request->input('BEGINNING')));
+            $endDate = trim(strval($request->input('END')));
         } else {
             $beginningDate = $today;
             $endDate = $today;

@@ -67,9 +67,9 @@ class UpdateAccountsItemActionHtml extends AuthenticatedBookKeepingAction
 
         $context['message'] = null;
         if ($request->isMethod('post')) {
-            $group = trim($request->input('accountgroup'));
-            $title = trim($request->input('title'));
-            $description = trim($request->input('description'));
+            $group = trim(strval($request->input('accountgroup')));
+            $title = trim(strval($request->input('title')));
+            $description = trim(strval($request->input('description')));
             if (array_key_exists('attribute_selectable', $request->all())) {
                 $selectable = true;
             } else {

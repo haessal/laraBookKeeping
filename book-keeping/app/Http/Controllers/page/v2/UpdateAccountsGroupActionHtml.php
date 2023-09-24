@@ -67,7 +67,7 @@ class UpdateAccountsGroupActionHtml extends AuthenticatedBookKeepingAction
 
         $context['message'] = null;
         if ($request->isMethod('post')) {
-            $title = trim($request->input('title'));
+            $title = trim(strval($request->input('title')));
             if (array_key_exists('attribute_current', $request->all())) {
                 $is_current = true;
             } else {

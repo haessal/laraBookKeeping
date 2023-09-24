@@ -55,16 +55,20 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
             default:
                 abort(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-        $date = trim($request->input('date'));
+        $date = trim(strval($request->input('date')));
         if ($request->isMethod('post')) {
-            $buttonAction = key($request->input('buttons'));
+            if (is_array($request->input('buttons'))) {
+                $buttonAction = strval(key($request->input('buttons')));
+            } else {
+                $buttonAction = '';
+            }
             switch ($buttonAction) {
                 case 'add':
-                    $addDebit = $request->input('debit');
-                    $addClient = trim($request->input('client'));
-                    $addOutline = trim($request->input('outline'));
-                    $addCredit = $request->input('credit');
-                    $addAmount = intval(trim($request->input('amount')));
+                    $addDebit = trim(strval($request->input('debit')));
+                    $addClient = trim(strval($request->input('client')));
+                    $addOutline = trim(strval($request->input('outline')));
+                    $addCredit = trim(strval($request->input('credit')));
+                    $addAmount = intval($request->input('amount'));
                     if ($this->validateForCreateSlipEntry(
                             $addDebit, $addClient, $addOutline, $addCredit, $addAmount
                         )) {
@@ -83,7 +87,7 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
                 case 'delete':
                     $slipEntryId = $request->input('modify_no');
                     if (isset($slipEntryId)) {
-                        $this->BookKeeping->deleteSlipEntryAndEmptySlip($slipEntryId);
+                        $this->BookKeeping->deleteSlipEntryAndEmptySlip(trim(strval($slipEntryId)));
                     }
                     break;
                 case 'submit':

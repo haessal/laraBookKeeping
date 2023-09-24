@@ -63,19 +63,24 @@ class FindSlipsActionHTML extends AuthenticatedBookKeepingAction
                 abort(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         if ($request->isMethod('post')) {
-            $buttonAction = key($request->input('buttons'));
+            if (is_array($request->input('buttons'))) {
+                $buttonAction = strval(key($request->input('buttons')));
+            } else {
+                $buttonAction = '';
+            }
             $selectedSlipEntries = $request->input('modify_no_list');
-            if (($buttonAction == 'delete') && (! empty($selectedSlipEntries))) {
+            if (($buttonAction == 'delete')
+                    && (! empty($selectedSlipEntries)) && is_array($selectedSlipEntries)) {
                 foreach ($selectedSlipEntries as $slipEntryId) {
                     $this->BookKeeping->deleteSlipEntryAndEmptySlip($slipEntryId);
                 }
             }
-            $beginningDate = trim($request->input('BEGINNING'));
-            $endDate = trim($request->input('END'));
-            $debit = $request->input('debit');
-            $credit = $request->input('credit');
-            $andOr = $request->input('and_or');
-            $keyword = trim($request->input('KEYWORD'));
+            $beginningDate = trim(strval($request->input('BEGINNING')));
+            $endDate = trim(strval($request->input('END')));
+            $debit = trim(strval($$request->input('debit')));
+            $credit = trim(strval($$request->input('credit')));
+            $andOr = trim(strval($request->input('and_or')));
+            $keyword = trim(strval($request->input('KEYWORD')));
             if (! empty($beginningDate) || ! empty($endDate) || ! empty($debit) || ! empty($credit) || ! empty($keyword)) {
                 if ($this->BookKeeping->validatePeriod($beginningDate, $endDate)) {
                     [$status, $slips] = $this->BookKeeping->retrieveSlips(
