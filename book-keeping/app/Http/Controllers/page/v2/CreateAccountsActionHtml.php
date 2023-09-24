@@ -13,7 +13,7 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
     /**
      * CreateAccountsView responder instance.
      *
-     * @var \App\Http\Responder\page\v2\CreateAccountsGroupViewResponder
+     * @var \App\Http\Responder\page\v2\CreateAccountsViewResponder
      */
     private $responder;
 

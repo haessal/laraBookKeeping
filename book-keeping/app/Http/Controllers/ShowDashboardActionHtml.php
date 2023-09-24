@@ -10,9 +10,9 @@ use Illuminate\Http\Response;
 class ShowDashboardActionHtml extends AuthenticatedBookKeepingAction
 {
     /**
-     * ShowTopView responder instance.
+     * ShowDashboardView responder instance.
      *
-     * @var \App\Http\Responder\page\v1\ShowTopViewResponder
+     * @var \App\Http\Responder\ShowDashboardViewResponder
      */
     private $responder;
 
