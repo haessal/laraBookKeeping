@@ -33,7 +33,7 @@ class CreateSlipViewResponder extends BaseViewResponder
             $draftslip = $this->translateDraftSlipFormat($context['draftslip']);
         }
         $this->response->setContent($this->view->make('bookkeeping.v1.pageslip', [
-            'navilinks'          => $this->navilinks(),
+            'navigation'         => $this->navigationList(),
             'add'                => $addparameter,
             'account_title_list' => $account_title_list,
             'slipdate'           => $context['slipdate'],

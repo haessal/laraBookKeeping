@@ -24,7 +24,7 @@ class ShowAccountsListViewResponder extends BaseViewResponder
             ]
         );
         $this->response->setContent($this->view->make('bookkeeping.v1.pageaccountslist', [
-            'navilinks'      => $this->navilinks(),
+            'navigation'     => $this->navigationList(),
             'accounts_list'  => $account_list,
         ]));
         $this->response->setStatusCode(Response::HTTP_OK);

@@ -18,7 +18,7 @@ class ShowTopViewResponder extends BaseViewResponder
         $balanceSheet = $context['balance_sheet'];
         $slips = $context['slips'];
         $this->response->setContent($this->view->make('bookkeeping.v1.pagetop', [
-            'navilinks'        => $this->navilinks(),
+            'navigation'       => $this->navigationList(),
             'date'             => $context['date'],
             'income_statement' => $this->translateIncomeStatementFormat([
                 'expense' => [

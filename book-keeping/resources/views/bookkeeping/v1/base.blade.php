@@ -21,9 +21,9 @@
         <div id="titlelogo">
             <h1>{{ __('phpBookKeeping') }}</h1>
         </div>
-        <div id="navibar">
-            @foreach ($navilinks as $navi) [
-            <a href="{{ route( $navi['link'] ) }}">{{{ $navi['caption'] }}}</a>
+        <div id="navigation-bar">
+            @foreach ($navigation as $navigationItem) [
+            <a href="{{ route( $navigationItem['link'] ) }}">{{{ $navigationItem['caption'] }}}</a>
             ]&nbsp @endforeach
         </div>
         <hr />

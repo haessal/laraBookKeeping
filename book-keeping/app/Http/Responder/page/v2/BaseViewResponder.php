@@ -33,21 +33,4 @@ class BaseViewResponder extends BaseLayoutViewResponder
         $this->response = $response;
         $this->view = $view;
     }
-
-    /**
-     * List of Navigation links for version 2 pages.
-     *
-     * @return array
-     */
-    public function navilinks(): array
-    {
-        return [
-            ['link' => 'v2_home', 'caption' => __('Home'), 'icon' => 'fa fa-home'],
-            ['link' => 'v2_accounts', 'caption' => __('Accounts'), 'icon' => 'fa fa-shopping-cart'],
-            ['link' => null],
-            ['link' => null],
-            ['link' => null],
-            ['link' => null],
-        ];
-    }
 }

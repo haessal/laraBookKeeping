@@ -41,7 +41,7 @@ class BaseViewResponder
      *
      * @return array
      */
-    public function navilinks(): array
+    public function navigationList(): array
     {
         return [
             ['link' => 'v1_top', 'caption' => __('Top')],

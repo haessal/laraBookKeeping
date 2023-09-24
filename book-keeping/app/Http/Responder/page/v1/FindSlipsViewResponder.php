@@ -29,7 +29,7 @@ class FindSlipsViewResponder extends BaseViewResponder
             $and_or = $context['and_or'];
         }
         $this->response->setContent($this->view->make('bookkeeping.v1.pagefindslips', [
-            'navilinks'          => $this->navilinks(),
+            'navigation'         => $this->navigationList(),
             'account_title_list' => $account_title_list,
             'beginning_date'     => $context['beginning_date'],
             'end_date'           => $context['end_date'],

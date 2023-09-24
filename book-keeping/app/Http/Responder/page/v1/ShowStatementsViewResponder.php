@@ -72,7 +72,7 @@ class ShowStatementsViewResponder extends BaseViewResponder
             $formatted_slips = $this->translateSlipsFormat($slips);
         }
         $this->response->setContent($this->view->make('bookkeeping.v1.pagestatements', [
-            'navilinks'                  => $this->navilinks(),
+            'navigation'                 => $this->navigationList(),
             'beginning_date'             => $context['beginning_date'],
             'end_date'                   => $context['end_date'],
             'display_statements'         => $context['display_statements'],
