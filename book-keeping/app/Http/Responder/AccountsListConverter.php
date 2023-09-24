@@ -12,7 +12,7 @@ trait AccountsListConverter
      */
     public function sortAccountInAscendingCodeOrder(array $groupedList): array
     {
-        return $this->sortAccountGrouptListInAscendingCodeOrder($groupedList);
+        return $this->sortAccountGroupListInAscendingCodeOrder($groupedList);
     }
 
     /**
@@ -97,7 +97,7 @@ trait AccountsListConverter
      * @param  array  $groupedList
      * @return array
      */
-    private function sortAccountGrouptListInAscendingCodeOrder(array $groupedList): array
+    private function sortAccountGroupListInAscendingCodeOrder(array $groupedList): array
     {
         $reordered = [];
         $sortedKeys = $this->getIdsSortedInAscendingOrder($groupedList);
