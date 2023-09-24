@@ -7,7 +7,7 @@
                     <form method="POST" action="{{ route('v1_statements') }}">
                         @csrf
                         <tr>
-                            <td class="intop">
+                            <td class="in-top">
                                 {{ __('From') }}
                                 <input value="{{{ $beginning_date }}}" size="14" name="BEGINNING" type="text" />
                                 &nbsp;&nbsp; {{ __('To') }}

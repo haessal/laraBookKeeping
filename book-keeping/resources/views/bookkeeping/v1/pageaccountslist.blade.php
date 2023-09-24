@@ -5,19 +5,19 @@
             <td class="main">
                 <table>
                     <tr>
-                        <th class="inmain">{{ __('Code') }}</th>
-                        <th class="inmain">{{ __('Type') }}</th>
-                        <th class="inmain">{{ __('Account Group Title') }}</th>
-                        <th class="inmain">{{ __('Account Title') }}</th>
-                        <th class="inmain">{{ __('Description') }}</th>
+                        <th class="in-main">{{ __('Code') }}</th>
+                        <th class="in-main">{{ __('Type') }}</th>
+                        <th class="in-main">{{ __('Account Group Title') }}</th>
+                        <th class="in-main">{{ __('Account Title') }}</th>
+                        <th class="in-main">{{ __('Description') }}</th>
                     </tr>
                     @foreach ($accounts_list as $accountKey => $account)
                     <tr class="{{ $account['evenOdd'] }}">
-                        <td class="inmain">{{ $account['code'] }}</td>
-                        <td class="inmain">{{ $account['type'] }}</td>
-                        <td class="inmain">{{ $account['group_title'] }}</td>
-                        <td class="inmain">{{ $account['title'] }}</td>
-                        <td class="inmain">{{ $account['description'] }}</td>
+                        <td class="in-main">{{ $account['code'] }}</td>
+                        <td class="in-main">{{ $account['type'] }}</td>
+                        <td class="in-main">{{ $account['group_title'] }}</td>
+                        <td class="in-main">{{ $account['title'] }}</td>
+                        <td class="in-main">{{ $account['description'] }}</td>
                     </tr>
                     @endforeach
                 </table>

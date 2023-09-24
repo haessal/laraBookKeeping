@@ -52,20 +52,15 @@
 	width:1100px;
 	background-color:#EEEEEE;
 }
-#accounts td.intop {
+#accounts td.in-top {
 	padding: 3px;
 }
-#accounts th.inmain {
+#accounts th.in-main {
 	background-color:#999999;
 	border:1px solid #000000;
 	padding:3px;
 }
-#accounts td.inmain {
-	border: 1px solid #000000;
-	padding: 3px;
-}
-#accounts td.bud_inmain {
-	text-align: right;
+#accounts td.in-main {
 	border: 1px solid #000000;
 	padding: 3px;
 }

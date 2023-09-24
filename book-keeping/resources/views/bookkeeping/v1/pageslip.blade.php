@@ -7,15 +7,15 @@
                     <form method="POST" action="{{ route('v1_slip') }}">
                         @csrf
                         <tr>
-                            <td class="intop">{{ __('Debit') }}</td>
-                            <td class="intop">{{ __('Client') }}</td>
-                            <td class="intop">{{ __('Outline') }}</td>
-                            <td class="intop">{{ __('Credit') }}</td>
-                            <td class="intop">{{ __('Amount') }}</td>
+                            <td class="in-top">{{ __('Debit') }}</td>
+                            <td class="in-top">{{ __('Client') }}</td>
+                            <td class="in-top">{{ __('Outline') }}</td>
+                            <td class="in-top">{{ __('Credit') }}</td>
+                            <td class="in-top">{{ __('Amount') }}</td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td class="intop">
+                            <td class="in-top">
                                 <select name="debit">
                                     <option value="0"></option>
                                     @foreach ($account_title_list as $account_key => $account_title) @if ($add['debit']
@@ -26,13 +26,13 @@
                                     @endif @endforeach
                                 </select>
                             </td>
-                            <td class="intop">
+                            <td class="in-top">
                                 <input value="{{ $add['client'] }}" size="15" name="client" type="text" />
                             </td>
-                            <td class="intop">
+                            <td class="in-top">
                                 <input value="{{ $add['outline'] }}" size="40" name="outline" type="text" />
                             </td>
-                            <td class="intop">
+                            <td class="in-top">
                                 <select name="credit">
                                     <option value="0"></option>
                                     @foreach ($account_title_list as $account_key => $account_title) @if ($add['credit']
@@ -43,7 +43,7 @@
                                     @endif @endforeach
                                 </select>
                             </td>
-                            <td class="intop">
+                            <td class="in-top">
                                 <input value="{{ $add['amount'] }}" size="15" name="amount" type="text" />
                             </td>
                             <td><input name="buttons[add]" value="{{ __('Add') }}" type="submit" /></td>
@@ -73,32 +73,32 @@
                             </td>
                         </tr>
                         <tr>
-                            <th class="inmain">{{ __('No.') }}</th>
-                            <th class="inmain">{{ __('Debit') }}</th>
-                            <th class="inmain">{{ __('Client') }}</th>
-                            <th class="inmain">{{ __('Outline') }}</th>
-                            <th class="inmain">{{ __('Credit') }}</th>
-                            <th class="inmain">{{ __('Amount') }}</th>
-                            <th class="inmain"></th>
+                            <th class="in-main">{{ __('No.') }}</th>
+                            <th class="in-main">{{ __('Debit') }}</th>
+                            <th class="in-main">{{ __('Client') }}</th>
+                            <th class="in-main">{{ __('Outline') }}</th>
+                            <th class="in-main">{{ __('Credit') }}</th>
+                            <th class="in-main">{{ __('Amount') }}</th>
+                            <th class="in-main"></th>
                         </tr>
                         @foreach ($draftslip as $draftslipKey => $draftslipItem)
                         <tr class="{{ $draftslipItem['evenOdd'] }}">
-                            <td class="inmain" style="font-family: Consolas, 'Courier New', Courier, Monaco, monospace">
+                            <td class="in-main" style="font-family: Consolas, 'Courier New', Courier, Monaco, monospace">
                                 {{ $draftslipItem['no'] }}
                             </td>
-                            <td class="inmain">{{ $draftslipItem['debit'] }}</td>
-                            <td class="inmain">{{ $draftslipItem['client'] }}</td>
-                            <td class="inmain">{{ $draftslipItem['outline'] }}</td>
-                            <td class="inmain">{{ $draftslipItem['credit'] }}</td>
-                            <td class="inmain" align="right">{{ $draftslipItem['amount'] }}</td>
-                            <td class="inmain">
+                            <td class="in-main">{{ $draftslipItem['debit'] }}</td>
+                            <td class="in-main">{{ $draftslipItem['client'] }}</td>
+                            <td class="in-main">{{ $draftslipItem['outline'] }}</td>
+                            <td class="in-main">{{ $draftslipItem['credit'] }}</td>
+                            <td class="in-main" align="right">{{ $draftslipItem['amount'] }}</td>
+                            <td class="in-main">
                                 <input type="radio" name="modify_no" value="{{ $draftslipKey }}" />
                             </td>
                         </tr>
                         @endforeach
                         <tr>
-                            <td class="inmain" colspan="5" align="right">{{ __('Total') }}</td>
-                            <td class="inmain" align="right">{{ $totalamount }}</td>
+                            <td class="in-main" colspan="5" align="right">{{ __('Total') }}</td>
+                            <td class="in-main" align="right">{{ $totalamount }}</td>
                             <td><input name="buttons[delete]" value="{{ __('Delete') }}" type="submit" /></td>
                         </tr>
                     </table>

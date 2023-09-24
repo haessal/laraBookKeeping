@@ -7,7 +7,7 @@
                 <td class="top">
                     <table>
                         <tr>
-                            <td class="intop">
+                            <td class="in-top">
                                 {{ __('From') }}
                                 <input value="{{ $beginning_date }}" size="14" name="BEGINNING" type="text" />
                                 &nbsp;&nbsp; {{ __('To') }}
@@ -15,7 +15,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="intop">
+                            <td class="in-top">
                                 {{ __('Debit') }}
                                 <select name="debit">
                                     <option value="0"></option>
@@ -47,13 +47,13 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="intop">
+                            <td class="in-top">
                                 {{ __('Keyword') }}
                                 <input value="{{ $keyword }}" size="24" name="KEYWORD" type="text" />
                             </td>
                         </tr>
                         <tr>
-                            <td class="intop">
+                            <td class="in-top">
                                 <input name="buttons[search]" value="{{ __('Search') }}" type="submit" />
                             </td>
                         </tr>
