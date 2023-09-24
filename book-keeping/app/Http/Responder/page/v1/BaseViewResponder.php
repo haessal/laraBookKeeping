@@ -67,7 +67,7 @@ class BaseViewResponder
             'expense'   => __('Expense'),
             'revenue'   => __('Revenue'),
         ];
-        $trclass = 'evn';
+        $tableRowEvenOrOdd = 'evn';
         foreach ($accounts as $accountTypeKey => $accountType) {
             foreach ($accountType['groups'] as $accountGroupItem) {
                 foreach ($accountGroupItem['items'] as $accountId => $accountItem) {
@@ -82,12 +82,12 @@ class BaseViewResponder
                         'group_title' => $accountGroupItem['title'],
                         'title'       => $accountItem['title'],
                         'description' => $accountItem['description'],
-                        'trclass'     => $trclass,
+                        'evenOdd'     => $tableRowEvenOrOdd,
                     ];
-                    if ($trclass == 'evn') {
-                        $trclass = 'odd';
+                    if ($tableRowEvenOrOdd == 'evn') {
+                        $tableRowEvenOrOdd = 'odd';
                     } else {
-                        $trclass = 'evn';
+                        $tableRowEvenOrOdd = 'evn';
                     }
                 }
             }
@@ -123,7 +123,7 @@ class BaseViewResponder
     {
         $formatted = [];
         $slipId = key($slip);
-        $trclass = 'evn';
+        $tableRowEvenOrOdd = 'evn';
         foreach ($slip[$slipId]['items'] as $slipEntryId => $slipEntryItem) {
             $formatted[$slipEntryId] = [
                 'no'      => substr($slipEntryId, 0, 6).'..',
@@ -132,12 +132,12 @@ class BaseViewResponder
                 'outline' => $slipEntryItem['outline'],
                 'credit'  => $slipEntryItem['credit']['account_title'],
                 'amount'  => $slipEntryItem['amount'],
-                'trclass' => $trclass,
+                'evenOdd' => $tableRowEvenOrOdd,
             ];
-            if ($trclass == 'evn') {
-                $trclass = 'odd';
+            if ($tableRowEvenOrOdd == 'evn') {
+                $tableRowEvenOrOdd = 'odd';
             } else {
-                $trclass = 'evn';
+                $tableRowEvenOrOdd = 'evn';
             }
         }
 

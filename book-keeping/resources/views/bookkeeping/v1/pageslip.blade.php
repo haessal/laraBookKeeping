@@ -82,7 +82,7 @@
                             <th class="inmain"></th>
                         </tr>
                         @foreach ($draftslip as $draftslipKey => $draftslipItem)
-                        <tr class="{{ $draftslipItem['trclass'] }}">
+                        <tr class="{{ $draftslipItem['evenOdd'] }}">
                             <td class="inmain" style="font-family: Consolas, 'Courier New', Courier, Monaco, monospace">
                                 {{ $draftslipItem['no'] }}
                             </td>

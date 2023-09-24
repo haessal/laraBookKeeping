@@ -12,7 +12,7 @@
                         <th class="inmain">{{ __('Description') }}</th>
                     </tr>
                     @foreach ($accounts_list as $accountKey => $account)
-                    <tr class="{{ $account['trclass'] }}">
+                    <tr class="{{ $account['evenOdd'] }}">
                         <td class="inmain">{{ $account['code'] }}</td>
                         <td class="inmain">{{ $account['type'] }}</td>
                         <td class="inmain">{{ $account['group_title'] }}</td>
