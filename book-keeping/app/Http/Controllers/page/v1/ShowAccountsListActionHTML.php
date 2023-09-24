@@ -39,6 +39,7 @@ class ShowAccountsListActionHTML extends AuthenticatedBookKeepingAction
     public function __invoke(Request $request): Response
     {
         $context = [];
+        $response = null;
 
         [$status, $categorizedAccounts] = $this->BookKeeping->retrieveCategorizedAccounts(false);
         switch ($status) {
