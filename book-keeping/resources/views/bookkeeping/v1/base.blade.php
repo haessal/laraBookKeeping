@@ -8,7 +8,7 @@
         <title>@yield('pagetitle') - {{ config('app.name', 'Laravel') }}</title>
 
         <!-- Styles -->
-        <link href="{{ asset('css/v1_base.css') . '?' . md5_file('css/v1_base.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('css/v1_base.css') . '?ver=1.0.0' }}" rel="stylesheet" type="text/css" />
     </head>
     <body>
         @guest {{ __('You need login') }} @else
