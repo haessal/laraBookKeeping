@@ -18,7 +18,7 @@
         <td><input type="checkbox" name="modify_no_list[]" value="{{{ $key }}}" /></td>
         @endisset
         <td class="txc">{{{ $item['no'] }}}</td>
-        <td class="txc">{{{ $item['slipno'] }}}</td>
+        <td class="txc">{{{ $item['slipNo'] }}}</td>
         <td class="tx">{{{ $item['date'] }}}</td>
         <td class="tx">{{{ $item['debit'] }}}</td>
         <td class="txn">{{{ $item['amount'] }}}</td>
