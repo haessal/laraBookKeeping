@@ -55,7 +55,6 @@ class ShowTopActionHTML extends AuthenticatedBookKeepingAction
                 break;
             case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
                 abort(Response::HTTP_NOT_FOUND);
-                break;
             default:
                 break;
         }

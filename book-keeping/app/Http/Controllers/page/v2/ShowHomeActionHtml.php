@@ -58,7 +58,6 @@ class ShowHomeActionHtml extends AuthenticatedBookKeepingAction
                 abort(Response::HTTP_NOT_FOUND);
             default:
                 abort(Response::HTTP_INTERNAL_SERVER_ERROR);
-                break;
         }
 
         return $this->responder->response($context);

@@ -56,10 +56,8 @@ class ShowAccountsActionHtml extends AuthenticatedBookKeepingAction
                 break;
             case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
                 abort(Response::HTTP_NOT_FOUND);
-                break;
             default:
                 abort(Response::HTTP_INTERNAL_SERVER_ERROR);
-                break;
         }
 
         [$status, $categorizedAccounts] = $this->BookKeeping->retrieveCategorizedAccounts(false, $bookId);
@@ -73,7 +71,6 @@ class ShowAccountsActionHtml extends AuthenticatedBookKeepingAction
                 break;
             default:
                 abort(Response::HTTP_INTERNAL_SERVER_ERROR);
-                break;
         }
 
         return $this->responder->response($context);

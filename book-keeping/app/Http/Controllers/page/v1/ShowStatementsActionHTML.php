@@ -68,10 +68,8 @@ class ShowStatementsActionHTML extends AuthenticatedBookKeepingAction
                     break;
                 case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
                     abort(Response::HTTP_NOT_FOUND);
-                    break;
                 default:
                     abort(Response::HTTP_INTERNAL_SERVER_ERROR);
-                    break;
             }
             $context['message'] = null;
             $context['display_statements'] = true;

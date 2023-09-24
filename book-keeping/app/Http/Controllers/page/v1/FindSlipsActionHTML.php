@@ -59,10 +59,8 @@ class FindSlipsActionHTML extends AuthenticatedBookKeepingAction
                 break;
             case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
                 abort(Response::HTTP_NOT_FOUND);
-                break;
             default:
                 abort(Response::HTTP_INTERNAL_SERVER_ERROR);
-                break;
         }
         if ($request->isMethod('post')) {
             $buttonAction = key($request->input('buttons'));

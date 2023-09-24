@@ -61,10 +61,8 @@ class UpdateAccountsGroupActionHtml extends AuthenticatedBookKeepingAction
                 break;
             case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
                 abort(Response::HTTP_NOT_FOUND);
-                break;
             default:
                 abort(Response::HTTP_INTERNAL_SERVER_ERROR);
-                break;
         }
 
         $context['message'] = null;
@@ -86,10 +84,8 @@ class UpdateAccountsGroupActionHtml extends AuthenticatedBookKeepingAction
                         break;
                     case BookKeepingService::STATUS_ERROR_BAD_CONDITION:
                         abort(Response::HTTP_NOT_FOUND);
-                        break;
                     default:
                         abort(Response::HTTP_INTERNAL_SERVER_ERROR);
-                        break;
                 }
             } else {
                 $context['message'] = __('Please enter a valid name.');
@@ -107,7 +103,6 @@ class UpdateAccountsGroupActionHtml extends AuthenticatedBookKeepingAction
                 break;
             default:
                 abort(Response::HTTP_INTERNAL_SERVER_ERROR);
-                break;
         }
         $accountTypeCaption = [
             'asset'     => __('Assets'),

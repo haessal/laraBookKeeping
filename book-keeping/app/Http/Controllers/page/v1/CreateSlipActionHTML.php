@@ -52,10 +52,8 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
                 break;
             case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
                 abort(Response::HTTP_NOT_FOUND);
-                break;
             default:
                 abort(Response::HTTP_INTERNAL_SERVER_ERROR);
-                break;
         }
         $date = trim($request->input('date'));
         if ($request->isMethod('post')) {
