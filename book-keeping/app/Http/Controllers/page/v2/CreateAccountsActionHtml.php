@@ -155,7 +155,6 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
      * Validate arguments and trim string data for create Account.
      *
      * @param  array  $account_in
-     * @param  string  $bookId
      * @return array
      */
     private function validateAndTrimForCreateAccount(array $account_in): array
@@ -192,7 +191,6 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
      * Validate arguments and trim string data for create AccountGroup.
      *
      * @param  array  $accountGroup_in
-     * @param  string  $bookId
      * @return array
      */
     private function validateAndTrimForCreateAccountGroup(array $accountGroup_in): array

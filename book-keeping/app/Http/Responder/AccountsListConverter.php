@@ -113,7 +113,7 @@ trait AccountsListConverter
     /**
      * Sort account list in ascending order of account code for version 1.
      *
-     * @param  array  $groupedList
+     * @param  array  $list
      * @return array
      */
     private function sortAccountListInAscendingCodeOrder(array $list): array

@@ -116,7 +116,7 @@ class BaseViewResponder
     /**
      * Translate draft slips format for view.
      *
-     * @param  array  $slips
+     * @param  array  $slip
      * @return array
      */
     public function translateDraftSlipFormat(array $slip): array
@@ -164,7 +164,7 @@ class BaseViewResponder
     /**
      * Translate slips format for view.
      *
-     * @param  array  $skips
+     * @param  array  $slips
      * @return array
      */
     public function translateSlipsFormat(array $slips): array
