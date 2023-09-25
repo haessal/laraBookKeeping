@@ -1,5 +1,6 @@
 # Common words of Laravel Framework
 Authenticatable
+Redirector
 encrypter
 
 # A part of name of developers, company, services, packages and tools
