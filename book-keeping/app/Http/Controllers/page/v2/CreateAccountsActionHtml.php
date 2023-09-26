@@ -75,7 +75,7 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
             $button_action = $request->input('create');
             switch ($button_action) {
                 case 'group':
-                    $result = $this->validateAndTrimForCreateAccountGroup($request->all(), $bookId);
+                    $result = $this->validateAndTrimForCreateAccountGroup($request->all());
                     $accountGroup = $result['accountGroup'];
                     $context['accounttype'] = $accountGroup['accounttype'];
                     $context['accountcreate']['grouptitle'] = $accountGroup['title'];
@@ -101,7 +101,7 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
                     }
                     break;
                 case 'item':
-                    $result = $this->validateAndTrimForCreateAccount($request->all(), $bookId);
+                    $result = $this->validateAndTrimForCreateAccount($request->all());
                     $account = $result['account'];
                     $context['accountcreate']['groupId'] = $account['accountgroup'];
                     $context['accountcreate']['itemtitle'] = $account['title'];
