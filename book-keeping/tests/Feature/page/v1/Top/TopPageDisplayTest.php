@@ -80,5 +80,4 @@ class TopPageDisplayTest extends TestCase
         $response->assertOk();
 //        $this->assertTrue(true);
     }
-
 }
