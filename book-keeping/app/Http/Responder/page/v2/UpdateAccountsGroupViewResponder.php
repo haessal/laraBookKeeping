@@ -14,7 +14,7 @@ class UpdateAccountsGroupViewResponder extends BaseAccountsViewResponder
      *   book: array{
      *     id: string,
      *     owner: string,
-     *     name: string
+     *     name: string,
      *   },
      *   message: string|null,
      *   accounts: array<string, array{
@@ -29,8 +29,8 @@ class UpdateAccountsGroupViewResponder extends BaseAccountsViewResponder
      *         selectable: bool,
      *         bk_code: int,
      *         createdAt: string,
-     *       }>
-     *     }>|array{}
+     *       }>,
+     *     }>|array{},
      *   }>,
      *   accountsgroup: array{
      *     id: string,

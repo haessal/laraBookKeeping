@@ -25,8 +25,8 @@ class ShowTopViewResponder extends BaseViewResponder
      *           amount: int,
      *           bk_code: int,
      *           createdAt: string,
-     *         }>
-     *       }>|array{}
+     *         }>,
+     *       }>|array{},
      *     },
      *     revenue: array{
      *       amount: int,
@@ -41,10 +41,12 @@ class ShowTopViewResponder extends BaseViewResponder
      *           amount: int,
      *           bk_code: int,
      *           createdAt: string,
-     *         }>
-     *       }>|array{}
+     *         }>,
+     *       }>|array{},
      *     },
-     *     net_income: array{amount: int},
+     *     net_income: array{
+     *       amount: int,
+     *     },
      *   },
      *   balance_sheet: array{
      *     asset: array{
@@ -60,8 +62,8 @@ class ShowTopViewResponder extends BaseViewResponder
      *           amount: int,
      *           bk_code: int,
      *           createdAt: string,
-     *         }>
-     *       }>|array{}
+     *         }>,
+     *       }>|array{},
      *     },
      *     liability: array{
      *       amount: int,
@@ -76,23 +78,33 @@ class ShowTopViewResponder extends BaseViewResponder
      *           amount: int,
      *           bk_code: int,
      *           createdAt: string,
-     *         }>
-     *       }>|array{}
+     *         }>,
+     *       }>|array{},
      *     },
-     *     current_net_asset: array{amount: int},
-     *     net_asset: array{amount: int},
+     *     current_net_asset: array{
+     *       amount: int,
+     *     },
+     *     net_asset: array{
+     *       amount: int,
+     *     },
      *   },
      *   slips: array<string, array{
      *     date: string,
      *     slip_outline: string,
      *     slip_memo: string,
      *     items: array<string, array{
-     *       debit: array{account_id: string, account_title: string},
-     *       credit: array{account_id: string, account_title: string},
+     *       debit: array{
+     *         account_id: string,
+     *         account_title: string,
+     *       },
+     *       credit: array{
+     *         account_id: string,
+     *         account_title: string,
+     *       },
      *       amount: int,
      *       client: string,
      *       outline: string,
-     *     }>
+     *     }>,
      *   }>|array{},
      * }  $context
      * @return \Illuminate\Http\Response

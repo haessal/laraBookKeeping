@@ -22,8 +22,8 @@ class ShowAccountsListViewResponder extends BaseViewResponder
      *         selectable: bool,
      *         bk_code: int,
      *         createdAt: string,
-     *       }>
-     *     }>|array{}
+     *       }>,
+     *     }>|array{},
      *   }>,
      * }  $context
      * @return \Illuminate\Http\Response

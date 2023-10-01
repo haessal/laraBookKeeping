@@ -34,6 +34,7 @@ class ShowAccountsSettingsActionHtml extends AuthenticatedBookKeepingAction
      * Handle the incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  string  $bookId
      * @return \Illuminate\Http\Response
      */
     public function __invoke(Request $request, string $bookId): Response

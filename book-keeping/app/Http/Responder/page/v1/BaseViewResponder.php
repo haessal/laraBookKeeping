@@ -29,6 +29,7 @@ class BaseViewResponder
      *
      * @param  \Illuminate\Http\Response  $response
      * @param  \Illuminate\Contracts\View\Factory  $view
+     * @return void
      */
     public function __construct(Response $response, ViewFactory $view)
     {
@@ -71,7 +72,7 @@ class BaseViewResponder
      *         selectable: bool,
      *         bk_code: int,
      *         createdAt: string,
-     *       }>
+     *       }>,
      *     }>,
      *   },
      *   liability: array{
@@ -86,7 +87,7 @@ class BaseViewResponder
      *         selectable: bool,
      *         bk_code: int,
      *         createdAt: string,
-     *       }>
+     *       }>,
      *     }>,
      *   },
      *   expense: array{
@@ -101,7 +102,7 @@ class BaseViewResponder
      *         selectable: bool,
      *         bk_code: int,
      *         createdAt: string,
-     *       }>
+     *       }>,
      *     }>,
      *   },
      *   revenue: array{
@@ -116,7 +117,7 @@ class BaseViewResponder
      *         selectable: bool,
      *         bk_code: int,
      *         createdAt: string,
-     *       }>
+     *       }>,
      *     }>,
      *   },
      * }  $accounts
@@ -186,7 +187,7 @@ class BaseViewResponder
      *         selectable: bool,
      *         bk_code: int,
      *         createdAt: string,
-     *       }>
+     *       }>,
      *     }>,
      *   },
      *   liability: array{
@@ -204,11 +205,15 @@ class BaseViewResponder
      *         selectable: bool,
      *         bk_code: int,
      *         createdAt: string,
-     *       }>
+     *       }>,
      *     }>,
      *   },
-     *   current_net_asset?: array{amount: int},
-     *   net_asset: array{amount: int},
+     *   current_net_asset?: array{
+     *     amount: int,
+     *   },
+     *   net_asset: array{
+     *     amount: int,
+     *   },
      * }  $statements
      * @return array{
      *   debit: array{
@@ -244,8 +249,14 @@ class BaseViewResponder
      *   slip_outline: string,
      *   slip_memo: string,
      *   items: array<string, array{
-     *     debit: array{account_id: string, account_title: string},
-     *     credit: array{account_id: string, account_title: string},
+     *     debit: array{
+     *       account_id: string,
+     *       account_title: string,
+     *     },
+     *     credit: array{
+     *       account_id: string,
+     *       account_title: string,
+     *     },
      *     amount: int,
      *     client: string,
      *     outline: string,
@@ -305,7 +316,7 @@ class BaseViewResponder
      *         selectable: bool,
      *         bk_code: int,
      *         createdAt: string,
-     *       }>
+     *       }>,
      *     }>,
      *   },
      *   revenue: array{
@@ -323,10 +334,12 @@ class BaseViewResponder
      *         selectable: bool,
      *         bk_code: int,
      *         createdAt: string,
-     *       }>
+     *       }>,
      *     }>,
      *   },
-     *   net_income: array{amount: int},
+     *   net_income: array{
+     *     amount: int,
+     *   },
      * }  $statements
      * @return array{
      *   debit: array{
@@ -362,12 +375,18 @@ class BaseViewResponder
      *   slip_outline: string,
      *   slip_memo: string,
      *   items: array<string, array{
-     *     debit: array{account_id: string, account_title: string},
-     *     credit: array{account_id: string, account_title: string},
+     *     debit: array{
+     *       account_id: string,
+     *       account_title: string,
+     *     },
+     *     credit: array{
+     *       account_id: string,
+     *       account_title: string,
+     *     },
      *     amount: int,
      *     client: string,
      *     outline: string,
-     *   }>
+     *   }>,
      * }>  $slips
      * @return array<string, array{
      *   no: non-falsy-string,
@@ -420,7 +439,7 @@ class BaseViewResponder
      *         selectable: bool,
      *         bk_code: int,
      *         createdAt: string,
-     *       }>
+     *       }>,
      *     }>,
      *   },
      *   liability?: array{
@@ -438,7 +457,7 @@ class BaseViewResponder
      *         selectable: bool,
      *         bk_code: int,
      *         createdAt: string,
-     *       }>
+     *       }>,
      *     }>,
      *   },
      *   expense?: array{
@@ -456,7 +475,7 @@ class BaseViewResponder
      *         selectable: bool,
      *         bk_code: int,
      *         createdAt: string,
-     *       }>
+     *       }>,
      *     }>,
      *   },
      *   revenue?: array{
@@ -474,12 +493,18 @@ class BaseViewResponder
      *         selectable: bool,
      *         bk_code: int,
      *         createdAt: string,
-     *       }>
+     *       }>,
      *     }>,
      *   },
-     *   current_net_asset?: array{amount: int},
-     *   net_asset?: array{amount: int},
-     *   net_income?: array{amount: int},
+     *   current_net_asset?: array{
+     *     amount: int,
+     *   },
+     *   net_asset?: array{
+     *     amount: int,
+     *   },
+     *   net_income?: array{
+     *     amount: int,
+     *   },
      * }  $statements
      * @param  array{
      *   debitTitle: 'Assets'|'Expense',

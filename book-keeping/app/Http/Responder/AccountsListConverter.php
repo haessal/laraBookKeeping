@@ -20,7 +20,7 @@ trait AccountsListConverter
      *     selectable?: bool,
      *     bk_code: int,
      *     createdAt: string,
-     *   }>
+     *   }>,
      * }>  $groupedList
      * @return array<string, array{
      *   title: string,
@@ -35,7 +35,7 @@ trait AccountsListConverter
      *     selectable: bool,
      *     bk_code: int,
      *     createdAt: string,
-     *   }>
+     *   }>,
      * }>
      */
     public function sortAccountInAscendingCodeOrder(array $groupedList): array
@@ -51,14 +51,14 @@ trait AccountsListConverter
      *     title: string,
      *     items: array<string, array{
      *       title: string,
-     *     }>
-     *   }>
+     *     }>,
+     *   }>,
      * }>  $accounts
      * @param  bool  $withGroupList
      * @return array{
      *   groups: array<string, string>,
      *   groupsWithType: array<string, string>,
-     *   items: array<string, string>
+     *   items: array<string, string>,
      * }|array<string, string>
      */
     public function translateAccountListToTitleList(array $accounts, bool $withGroupList = false): array
@@ -152,7 +152,7 @@ trait AccountsListConverter
      *     selectable?: bool,
      *     bk_code: int,
      *     createdAt: string,
-     *   }>
+     *   }>,
      * }>  $groupedList
      * @return array<string, array{
      *   title: string,
@@ -167,7 +167,7 @@ trait AccountsListConverter
      *     selectable: bool,
      *     bk_code: int,
      *     createdAt: string,
-     *   }>
+     *   }>,
      * }>
      */
     private function sortAccountGroupListInAscendingCodeOrder(array $groupedList): array

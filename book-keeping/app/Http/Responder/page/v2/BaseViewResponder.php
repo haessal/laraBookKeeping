@@ -2,11 +2,10 @@
 
 namespace App\Http\Responder\page\v2;
 
-use App\Http\Responder\BaseLayoutViewResponder;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Http\Response;
 
-class BaseViewResponder extends BaseLayoutViewResponder
+class BaseViewResponder
 {
     /**
      * Response instance.
@@ -27,6 +26,7 @@ class BaseViewResponder extends BaseLayoutViewResponder
      *
      * @param  \Illuminate\Http\Response  $response
      * @param  \Illuminate\Contracts\View\Factory  $view
+     * @return void
      */
     public function __construct(Response $response, ViewFactory $view)
     {

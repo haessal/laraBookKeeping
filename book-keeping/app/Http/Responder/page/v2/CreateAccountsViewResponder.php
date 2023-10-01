@@ -14,7 +14,7 @@ class CreateAccountsViewResponder extends BaseAccountsViewResponder
      *   book: array{
      *     id: string,
      *     owner: string,
-     *     name: string
+     *     name: string,
      *   },
      *   accounttype: string|null,
      *   accountcreate: array{
@@ -39,8 +39,8 @@ class CreateAccountsViewResponder extends BaseAccountsViewResponder
      *         selectable: bool,
      *         bk_code: int,
      *         createdAt: string,
-     *       }>
-     *     }>|array{}
+     *       }>,
+     *     }>|array{},
      *   }>,
      * }  $context
      * @return \Illuminate\Http\Response

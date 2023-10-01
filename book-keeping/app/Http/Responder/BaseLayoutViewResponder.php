@@ -26,26 +26,11 @@ class BaseLayoutViewResponder
      *
      * @param  \Illuminate\Http\Response  $response
      * @param  \Illuminate\Contracts\View\Factory  $view
+     * @return void
      */
     public function __construct(Response $response, ViewFactory $view)
     {
         $this->response = $response;
         $this->view = $view;
-    }
-
-    /**
-     * List of links for dropdown menu in page header.
-     *
-     * @return array{
-     *   link: string,
-     *   caption: string,
-     * }[]
-     */
-    public function dropdownMenuLinks(): array
-    {
-        return [
-            ['link' => 'v1_top', 'caption' => strval(__('Switch to Previous version'))],
-            ['link' => 'settings', 'caption' => strval(__('Settings'))],
-        ];
     }
 }

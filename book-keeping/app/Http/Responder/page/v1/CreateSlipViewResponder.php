@@ -22,8 +22,8 @@ class CreateSlipViewResponder extends BaseViewResponder
      *         selectable: bool,
      *         bk_code: int,
      *         createdAt: string,
-     *       }>
-     *     }>|array{}
+     *       }>,
+     *     }>|array{},
      *   }>,
      *   add: array{
      *     debit: string,
@@ -39,12 +39,18 @@ class CreateSlipViewResponder extends BaseViewResponder
      *     slip_outline: string,
      *     slip_memo: string,
      *     items: array<string, array{
-     *       debit: array{account_id: string, account_title: string},
-     *       credit: array{account_id: string, account_title: string},
+     *       debit: array{
+     *         account_id: string,
+     *         account_title: string,
+     *       },
+     *       credit: array{
+     *         account_id: string,
+     *         account_title: string,
+     *       },
      *       amount: int,
      *       client: string,
      *       outline: string,
-     *     }>
+     *     }>,
      *   }>,
      * }  $context
      * @return \Illuminate\Http\Response

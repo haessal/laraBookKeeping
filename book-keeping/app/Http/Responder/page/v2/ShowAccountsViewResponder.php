@@ -14,7 +14,7 @@ class ShowAccountsViewResponder extends BaseAccountsViewResponder
      *   book: array{
      *     id: string,
      *     owner: string,
-     *     name: string
+     *     name: string,
      *   },
      *   accounts: array<string, array{
      *     groups:array<string, array{
@@ -28,8 +28,8 @@ class ShowAccountsViewResponder extends BaseAccountsViewResponder
      *         selectable: bool,
      *         bk_code: int,
      *         createdAt: string,
-     *       }>
-     *     }>|array{}
+     *       }>,
+     *     }>|array{},
      *   }>,
      * }  $context
      * @return \Illuminate\Http\Response

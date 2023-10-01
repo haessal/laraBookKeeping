@@ -14,7 +14,7 @@ class ShowHomeViewResponder extends BaseViewResponder
      *   book: array{
      *     id: string,
      *     owner: string,
-     *     name: string
+     *     name: string,
      *   },
      * }  $context
      * @return \Illuminate\Http\Response
