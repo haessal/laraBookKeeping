@@ -106,7 +106,7 @@ class FindSlipsActionHTML extends AuthenticatedBookKeepingAction
         $context['and_or'] = $andOr;
         $context['keyword'] = $keyword;
         $context['slips'] = $slips;
-        $context['message'] = $message;
+        $context['message'] = strval($message);
 
         return $this->responder->response($context);
     }

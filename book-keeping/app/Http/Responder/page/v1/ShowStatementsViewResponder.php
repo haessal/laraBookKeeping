@@ -9,7 +9,177 @@ class ShowStatementsViewResponder extends BaseViewResponder
     /**
      * Respond the ShowStatementsView.
      *
-     * @param  array  $context
+     * @param array{
+     *   beginning_date: string,
+     *   end_date: string,
+     *   profit_loss: array{
+     *     expense: array{
+     *       amount: int,
+     *       groups: array<string, array{
+     *         title: string,
+     *         isCurrent: bool,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *         items: array<string, array{
+     *           title: string,
+     *           amount: int,
+     *           bk_code: int,
+     *           createdAt: string,
+     *         }>
+     *       }>|array{}
+     *     },
+     *     revenue: array{
+     *       amount: int,
+     *       groups: array<string, array{
+     *         title: string,
+     *         isCurrent: bool,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *         items: array<string, array{
+     *           title: string,
+     *           amount: int,
+     *           bk_code: int,
+     *           createdAt: string,
+     *         }>
+     *       }>|array{}
+     *     },
+     *     net_income: array{amount: int},
+     *   },
+     *   trial_balance: array{
+     *     asset: array{
+     *       amount: int,
+     *       groups: array<string, array{
+     *         title: string,
+     *         isCurrent: bool,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *         items: array<string, array{
+     *           title: string,
+     *           amount: int,
+     *           bk_code: int,
+     *           createdAt: string,
+     *         }>
+     *       }>|array{}
+     *     },
+     *     liability: array{
+     *       amount: int,
+     *       groups: array<string, array{
+     *         title: string,
+     *         isCurrent: bool,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *         items: array<string, array{
+     *           title: string,
+     *           amount: int,
+     *           bk_code: int,
+     *           createdAt: string,
+     *         }>
+     *       }>|array{}
+     *     },
+     *     current_net_asset: array{amount: int},
+     *     net_asset: array{amount: int},
+     *   },
+     *   previous_balance_sheet: array{
+     *     asset: array{
+     *       amount: int,
+     *       groups: array<string, array{
+     *         title: string,
+     *         isCurrent: bool,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *         items: array<string, array{
+     *           title: string,
+     *           amount: int,
+     *           bk_code: int,
+     *           createdAt: string,
+     *         }>
+     *       }>|array{}
+     *     },
+     *     liability: array{
+     *       amount: int,
+     *       groups: array<string, array{
+     *         title: string,
+     *         isCurrent: bool,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *         items: array<string, array{
+     *           title: string,
+     *           amount: int,
+     *           bk_code: int,
+     *           createdAt: string,
+     *         }>
+     *       }>|array{}
+     *     },
+     *     current_net_asset: array{amount: int},
+     *     net_asset: array{amount: int},
+     *   },
+     *   balance_sheet: array{
+     *     asset: array{
+     *       amount: int,
+     *       groups: array<string, array{
+     *         title: string,
+     *         isCurrent: bool,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *         items: array<string, array{
+     *           title: string,
+     *           amount: int,
+     *           bk_code: int,
+     *           createdAt: string,
+     *         }>
+     *       }>|array{}
+     *     },
+     *     liability: array{
+     *       amount: int,
+     *       groups: array<string, array{
+     *         title: string,
+     *         isCurrent: bool,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *         items: array<string, array{
+     *           title: string,
+     *           amount: int,
+     *           bk_code: int,
+     *           createdAt: string,
+     *         }>
+     *       }>|array{}
+     *     },
+     *     current_net_asset: array{amount: int},
+     *     net_asset: array{amount: int},
+     *   },
+     *   slips: array<string, array{
+     *     date: string,
+     *     slip_outline: string,
+     *     slip_memo: string,
+     *     items: array<string, array{
+     *       debit: array{account_id: string, account_title: string},
+     *       credit: array{account_id: string, account_title: string},
+     *       amount: int,
+     *       client: string,
+     *       outline: string,
+     *     }>
+     *   }>|array{},
+     *   message: null,
+     *   display_statements: true,
+     * }|array{
+     *   beginning_date: string,
+     *   end_date: string,
+     *   profit_loss: null,
+     *   trial_balance: null,
+     *   previous_balance_sheet: null,
+     *   balance_sheet: null,
+     *   slips: null,
+     *   message: string,
+     *   display_statements: false,
+     * }  $context
      * @return \Illuminate\Http\Response
      */
     public function response(array $context): Response

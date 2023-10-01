@@ -9,7 +9,40 @@ class UpdateAccountsItemViewResponder extends BaseAccountsViewResponder
     /**
      * Respond the UpdateAccountsItemView.
      *
-     * @param  array  $context
+     * @param  array{
+     *   bookId: string,
+     *   book: array{
+     *     id: string,
+     *     owner: string,
+     *     name: string
+     *   },
+     *   message: string|null,
+     *   accounts: array<string, array{
+     *     groups:array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         description: string,
+     *         selectable: bool,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>|array{}
+     *   }>,
+     *   accountsitem: array{
+     *     id: string,
+     *     type: string,
+     *     groupId: string,
+     *     title: string,
+     *     description: string,
+     *     attribute_selectable: 'checked'|null,
+     *     bk_code: int,
+     *   }|null,
+     *   accounttypekey: string,
+     * }  $context
      * @return \Illuminate\Http\Response
      */
     public function response(array $context): Response

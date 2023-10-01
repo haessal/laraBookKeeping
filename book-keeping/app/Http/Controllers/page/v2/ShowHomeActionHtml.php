@@ -39,7 +39,7 @@ class ShowHomeActionHtml extends AuthenticatedBookKeepingAction
     public function __invoke(Request $request, string $bookId): Response
     {
         $context = [];
-        
+
         if (! $this->BookKeeping->validateUuid($bookId)) {
             abort(Response::HTTP_NOT_FOUND);
         }

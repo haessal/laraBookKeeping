@@ -9,13 +9,50 @@ class CreateSlipViewResponder extends BaseViewResponder
     /**
      * Response the Form to create new Slip.
      *
-     * @param  array  $context
+     * @param  array{
+     *   accounts: array<string, array{
+     *     groups:array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         description: string,
+     *         selectable: bool,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>|array{}
+     *   }>,
+     *   add: array{
+     *     debit: string,
+     *     client: string,
+     *     outline: string,
+     *     credit: string,
+     *     amount: int,
+     *   }|null,
+     *   slipdate: string,
+     *   totalamount: int,
+     *   draftslip: array<string, array{
+     *     date: string,
+     *     slip_outline: string,
+     *     slip_memo: string,
+     *     items: array<string, array{
+     *       debit: array{account_id: string, account_title: string},
+     *       credit: array{account_id: string, account_title: string},
+     *       amount: int,
+     *       client: string,
+     *       outline: string,
+     *     }>
+     *   }>,
+     * }  $context
      * @return \Illuminate\Http\Response
      */
     public function response(array $context): Response
     {
         $addparameter = ['debit' => '', 'client' => '', 'outline' => '', 'credit' => '', 'amount' => ''];
-        if (array_key_exists('add', $context)) {
+        if (isset($context['add'])) {
             $addparameter = $context['add'];
         }
 

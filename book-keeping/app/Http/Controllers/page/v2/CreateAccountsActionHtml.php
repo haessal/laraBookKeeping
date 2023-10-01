@@ -77,8 +77,8 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
                 case 'group':
                     $result = $this->validateAndTrimForCreateAccountGroup($request->all());
                     $accountGroup = $result['accountGroup'];
-                    $context['accounttype'] = $accountGroup['accounttype'];
-                    $context['accountcreate']['grouptitle'] = $accountGroup['title'];
+                    $context['accounttype'] = strval($accountGroup['accounttype']);
+                    $context['accountcreate']['grouptitle'] = strval($accountGroup['title']);
                     if ($result['success']) {
                         [$status, $_] = $this->BookKeeping->createAccountGroup(
                             $accountGroup['accounttype'], $accountGroup['title'], $bookId
@@ -89,23 +89,23 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
                                 $context['accountcreate']['grouptitle'] = null;
                                 break;
                             case BookKeepingService::STATUS_ERROR_AUTH_FORBIDDEN:
-                                $context['messages']['group']
-                                    = __('You are not permitted to write in this book.');
+                                $message = __('You are not permitted to write in this book.');
+                                $context['messages']['group'] = strval($message);
                                 break;
                             default:
                                 abort(Response::HTTP_INTERNAL_SERVER_ERROR);
                         }
                     } else {
-                        $context['messages']['group']
-                            = __('Please select the type and enter a valid name.');
+                        $message = __('Please select the type and enter a valid name.');
+                        $context['messages']['group'] = strval($message);
                     }
                     break;
                 case 'item':
                     $result = $this->validateAndTrimForCreateAccount($request->all());
                     $account = $result['account'];
-                    $context['accountcreate']['groupId'] = $account['accountgroup'];
-                    $context['accountcreate']['itemtitle'] = $account['title'];
-                    $context['accountcreate']['description'] = $account['description'];
+                    $context['accountcreate']['groupId'] = strval($account['accountgroup']);
+                    $context['accountcreate']['itemtitle'] = strval($account['title']);
+                    $context['accountcreate']['description'] = strval($account['description']);
                     if ($result['success']) {
                         [$status, $_] = $this->BookKeeping->createAccount(
                             $account['accountgroup'], $account['title'], $account['description'], $bookId
@@ -113,7 +113,7 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
                         switch ($status) {
                             case BookKeepingService::STATUS_NORMAL:
                                 $context['accountcreate']['groupId'] = null;
-                                $context['accountcreate']['itemtitle'] =  null;
+                                $context['accountcreate']['itemtitle'] = null;
                                 $context['accountcreate']['description'] = null;
                                 break;
                             case BookKeepingService::STATUS_ERROR_AUTH_FORBIDDEN:
@@ -126,8 +126,8 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
                                 abort(Response::HTTP_INTERNAL_SERVER_ERROR);
                         }
                     } else {
-                        $context['messages']['item']
-                            = __('Please select the group and enter a valid name and description.');
+                        $message = __('Please select the group and enter a valid name and description.');
+                        $context['messages']['item'] = strval($message);
                     }
                     break;
                 default:
@@ -154,34 +154,38 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
     /**
      * Validate arguments and trim string data for create Account.
      *
-     * @param  array  $account_in
-     * @return array
+     * @param  array<string, mixed>  $account_in
+     * @return array{success: bool, account: array{
+     *   accountgroup: string,
+     *   title:  string,
+     *   description: string,
+     * }}
      */
     private function validateAndTrimForCreateAccount(array $account_in): array
     {
         $success = true;
         $trimmed_account = [];
 
-        $accountGroupId = trim($account_in['accountgroup']);
+        $accountGroupId = trim(strval($account_in['accountgroup']));
         if (! empty($accountGroupId)) {
             $trimmed_account['accountgroup'] = $accountGroupId;
         } else {
             $success = false;
-            $trimmed_account['accountgroup'] = null;
+            $trimmed_account['accountgroup'] = '';
         }
-        $title = trim($account_in['title']);
+        $title = trim(strval($account_in['title']));
         if (! empty($title)) {
             $trimmed_account['title'] = $title;
         } else {
             $success = false;
-            $trimmed_account['title'] = null;
+            $trimmed_account['title'] = '';
         }
-        $description = trim($account_in['description']);
+        $description = trim(strval($account_in['description']));
         if (! empty($description)) {
             $trimmed_account['description'] = $description;
         } else {
             $success = false;
-            $trimmed_account['description'] = null;
+            $trimmed_account['description'] = '';
         }
 
         return ['success' => $success, 'account' => $trimmed_account];
@@ -190,8 +194,11 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
     /**
      * Validate arguments and trim string data for create AccountGroup.
      *
-     * @param  array  $accountGroup_in
-     * @return array
+     * @param  array<string, mixed>  $accountGroup_in
+     * @return array{success: bool, accountGroup: array{
+     *   accounttype: string,
+     *   title:  string,
+     * }}
      */
     private function validateAndTrimForCreateAccountGroup(array $accountGroup_in): array
     {
@@ -199,7 +206,7 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
         $trimmed_accountGroup = [];
 
         if (array_key_exists('accounttype', $accountGroup_in)) {
-            $accountType = trim($accountGroup_in['accounttype']);
+            $accountType = trim(strval($accountGroup_in['accounttype']));
             switch ($accountType) {
                 case 'asset':
                 case 'liability':
@@ -209,19 +216,19 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
                     break;
                 default:
                     $success = false;
-                    $trimmed_accountGroup['accounttype'] = null;
+                    $trimmed_accountGroup['accounttype'] = '';
                     break;
             }
         } else {
             $success = false;
-            $trimmed_accountGroup['accounttype'] = null;
+            $trimmed_accountGroup['accounttype'] = '';
         }
-        $title = trim($accountGroup_in['title']);
+        $title = trim(strval($accountGroup_in['title']));
         if (! empty($title)) {
             $trimmed_accountGroup['title'] = $title;
         } else {
             $success = false;
-            $trimmed_accountGroup['title'] = null;
+            $trimmed_accountGroup['title'] = '';
         }
 
         return ['success' => $success, 'accountGroup' => $trimmed_accountGroup];

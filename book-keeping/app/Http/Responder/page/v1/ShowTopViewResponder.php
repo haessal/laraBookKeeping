@@ -9,7 +9,92 @@ class ShowTopViewResponder extends BaseViewResponder
     /**
      * Response the Books list and Form to create new Book.
      *
-     * @param  array  $context
+     * @param  array{
+     *   date: string,
+     *   income_statement: array{
+     *     expense: array{
+     *       amount: int,
+     *       groups: array<string, array{
+     *         title: string,
+     *         isCurrent: bool,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *         items: array<string, array{
+     *           title: string,
+     *           amount: int,
+     *           bk_code: int,
+     *           createdAt: string,
+     *         }>
+     *       }>|array{}
+     *     },
+     *     revenue: array{
+     *       amount: int,
+     *       groups: array<string, array{
+     *         title: string,
+     *         isCurrent: bool,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *         items: array<string, array{
+     *           title: string,
+     *           amount: int,
+     *           bk_code: int,
+     *           createdAt: string,
+     *         }>
+     *       }>|array{}
+     *     },
+     *     net_income: array{amount: int},
+     *   },
+     *   balance_sheet: array{
+     *     asset: array{
+     *       amount: int,
+     *       groups: array<string, array{
+     *         title: string,
+     *         isCurrent: bool,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *         items: array<string, array{
+     *           title: string,
+     *           amount: int,
+     *           bk_code: int,
+     *           createdAt: string,
+     *         }>
+     *       }>|array{}
+     *     },
+     *     liability: array{
+     *       amount: int,
+     *       groups: array<string, array{
+     *         title: string,
+     *         isCurrent: bool,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *         items: array<string, array{
+     *           title: string,
+     *           amount: int,
+     *           bk_code: int,
+     *           createdAt: string,
+     *         }>
+     *       }>|array{}
+     *     },
+     *     current_net_asset: array{amount: int},
+     *     net_asset: array{amount: int},
+     *   },
+     *   slips: array<string, array{
+     *     date: string,
+     *     slip_outline: string,
+     *     slip_memo: string,
+     *     items: array<string, array{
+     *       debit: array{account_id: string, account_title: string},
+     *       credit: array{account_id: string, account_title: string},
+     *       amount: int,
+     *       client: string,
+     *       outline: string,
+     *     }>
+     *   }>|array{},
+     * }  $context
      * @return \Illuminate\Http\Response
      */
     public function response(array $context): Response

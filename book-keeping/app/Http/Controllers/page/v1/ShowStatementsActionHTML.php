@@ -50,6 +50,11 @@ class ShowStatementsActionHTML extends AuthenticatedBookKeepingAction
         }
         $context['beginning_date'] = $beginningDate;
         $context['end_date'] = $endDate;
+        $context['profit_loss'] = null;
+        $context['trial_balance'] = null;
+        $context['previous_balance_sheet'] = null;
+        $context['balance_sheet'] = null;
+        $context['slips'] = null;
         if (! empty($beginningDate) && ! empty($endDate)
             && $this->BookKeeping->validatePeriod($beginningDate, $endDate)) {
             [$status, $statements]
@@ -74,7 +79,8 @@ class ShowStatementsActionHTML extends AuthenticatedBookKeepingAction
             $context['message'] = null;
             $context['display_statements'] = true;
         } else {
-            $context['message'] = __('There is no item to be shown.');
+            $message = __('There is no item to be shown.');
+            $context['message'] = strval($message);
             $context['display_statements'] = false;
         }
 

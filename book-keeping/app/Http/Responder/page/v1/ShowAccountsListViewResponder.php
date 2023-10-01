@@ -9,7 +9,23 @@ class ShowAccountsListViewResponder extends BaseViewResponder
     /**
      * Respond with the ShowAccountsListView.
      *
-     * @param  array  $context
+     * @param  array{
+     *   accounts: array<string, array{
+     *     groups:array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         description: string,
+     *         selectable: bool,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>|array{}
+     *   }>,
+     * }  $context
      * @return \Illuminate\Http\Response
      */
     public function response(array $context): Response

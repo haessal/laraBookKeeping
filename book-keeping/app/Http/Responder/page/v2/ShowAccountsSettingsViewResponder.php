@@ -9,7 +9,29 @@ class ShowAccountsSettingsViewResponder extends BaseAccountsViewResponder
     /**
      * Respond the ShowAccountsView.
      *
-     * @param  array  $context
+     * @param  array{
+     *   bookId: string,
+     *   book: array{
+     *     id: string,
+     *     owner: string,
+     *     name: string
+     *   },
+     *   accounts: array<string, array{
+     *     groups:array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         description: string,
+     *         selectable: bool,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>|array{}
+     *   }>,
+     * }  $context
      * @return \Illuminate\Http\Response
      */
     public function response(array $context): Response

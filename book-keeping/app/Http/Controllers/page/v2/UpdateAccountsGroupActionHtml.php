@@ -80,7 +80,8 @@ class UpdateAccountsGroupActionHtml extends AuthenticatedBookKeepingAction
                     case BookKeepingService::STATUS_NORMAL:
                         break;
                     case BookKeepingService::STATUS_ERROR_AUTH_FORBIDDEN:
-                        $context['message'] = __('You are not permitted to write in this book.');
+                        $message = __('You are not permitted to write in this book.');
+                        $context['message'] = strval($message);
                         break;
                     case BookKeepingService::STATUS_ERROR_BAD_CONDITION:
                         abort(Response::HTTP_NOT_FOUND);
@@ -88,7 +89,8 @@ class UpdateAccountsGroupActionHtml extends AuthenticatedBookKeepingAction
                         abort(Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
             } else {
-                $context['message'] = __('Please enter a valid name.');
+                $message = __('Please enter a valid name.');
+                $context['message'] = strval($message);
             }
         }
 
@@ -114,7 +116,7 @@ class UpdateAccountsGroupActionHtml extends AuthenticatedBookKeepingAction
         foreach ($categorizedAccounts as $accountTypeKey => $accountType) {
             if (array_key_exists($accountsGroupId, $accountType['groups'])) {
                 $context['accountsgroup']['id'] = $accountsGroupId;
-                $context['accountsgroup']['type'] = $accountTypeCaption[$accountTypeKey];
+                $context['accountsgroup']['type'] = strval($accountTypeCaption[$accountTypeKey]);
                 $context['accountsgroup']['title'] = $accountType['groups'][$accountsGroupId]['title'];
                 $context['accountsgroup']['attribute_current'] = $accountType['groups'][$accountsGroupId]['isCurrent'] ? 'checked' : null;
                 $context['accountsgroup']['bk_code'] = $accountType['groups'][$accountsGroupId]['bk_code'];

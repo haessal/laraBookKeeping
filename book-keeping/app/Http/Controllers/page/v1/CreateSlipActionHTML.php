@@ -56,6 +56,7 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
                 abort(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         $date = trim(strval($request->input('date')));
+        $context['add'] = null;
         if ($request->isMethod('post')) {
             if (is_array($request->input('buttons'))) {
                 $buttonAction = strval(key($request->input('buttons')));
@@ -70,8 +71,8 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
                     $addCredit = trim(strval($request->input('credit')));
                     $addAmount = intval($request->input('amount'));
                     if ($this->validateForCreateSlipEntry(
-                            $addDebit, $addClient, $addOutline, $addCredit, $addAmount
-                        )) {
+                        $addDebit, $addClient, $addOutline, $addCredit, $addAmount
+                    )) {
                         $this->BookKeeping->createSlipEntryAsDraft(
                             $addDebit, $addClient, $addOutline, $addCredit, $addAmount
                         );
@@ -110,7 +111,7 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
             if (! empty($draftSlips)) {
                 $firstDraftSlip = reset($draftSlips);
                 foreach ($firstDraftSlip['items'] as $draftslipItem) {
-                    $totalamount += $draftslipItem['amount'];
+                    $totalamount += intval($draftslipItem['amount']);
                 }
             }
             $context['totalamount'] = $totalamount;
@@ -132,8 +133,7 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
      * @param  int  $amount
      * @return bool
      */
-    private function validateForCreateSlipEntry
-        (string $debit, string $client, string $outline, string $credit, int $amount): bool
+    private function validateForCreateSlipEntry(string $debit, string $client, string $outline, string $credit, int $amount): bool
     {
         $success = false;
         if (! ($debit === '0') && ! ($credit === '0') && ($debit != $credit)

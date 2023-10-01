@@ -9,7 +9,14 @@ class ShowHomeViewResponder extends BaseViewResponder
     /**
      * Respond the ShowHomeView.
      *
-     * @param  array  $context
+     * @param  array{
+     *   bookId: string,
+     *   book: array{
+     *     id: string,
+     *     owner: string,
+     *     name: string
+     *   },
+     * }  $context
      * @return \Illuminate\Http\Response
      */
     public function response(array $context): Response

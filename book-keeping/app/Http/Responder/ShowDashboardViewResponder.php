@@ -9,7 +9,16 @@ class ShowDashboardViewResponder extends BaseLayoutViewResponder
     /**
      * Respond the ShowDashboardView.
      *
-     * @param  array  $context
+     * @param  array{
+     *   books: array{
+     *     id: string,
+     *     name: string,
+     *     is_default: bool,
+     *     is_owner: bool,
+     *     modifiable: bool,
+     *     owner: string,
+     *   }[],
+     * }  $context
      * @return \Illuminate\Http\Response
      */
     public function response(array $context): Response

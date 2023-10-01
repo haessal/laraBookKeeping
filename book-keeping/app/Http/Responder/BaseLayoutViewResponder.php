@@ -36,13 +36,16 @@ class BaseLayoutViewResponder
     /**
      * List of links for dropdown menu in page header.
      *
-     * @return array
+     * @return array{
+     *   link: string,
+     *   caption: string,
+     * }[]
      */
     public function dropdownMenuLinks(): array
     {
         return [
-            ['link' => 'v1_top', 'caption' => __('Switch to Previous version')],
-            ['link' => 'settings', 'caption' => __('Settings')],
+            ['link' => 'v1_top', 'caption' => strval(__('Switch to Previous version'))],
+            ['link' => 'settings', 'caption' => strval(__('Settings'))],
         ];
     }
 }

@@ -9,7 +9,42 @@ class FindSlipsViewResponder extends BaseViewResponder
     /**
      * Respond with the FindSlipsView.
      *
-     * @param  array  $context
+     * @param  array{
+     *   accounts: array<string, array{
+     *     groups:array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         description: string,
+     *         selectable: bool,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>|array{}
+     *   }>,
+     *   beginning_date: string|null,
+     *   end_date: string|null,
+     *   debit: string|null,
+     *   credit: string|null,
+     *   and_or: string|null,
+     *   keyword: string|null,
+     *   slips: array<string, array{
+     *     date: string,
+     *     slip_outline: string,
+     *     slip_memo: string,
+     *     items: array<string, array{
+     *       debit: array{account_id: string, account_title: string},
+     *       credit: array{account_id: string, account_title: string},
+     *       amount: int,
+     *       client: string,
+     *       outline: string,
+     *     }>
+     *   }>,
+     *   message: string,
+     * }  $context
      * @return \Illuminate\Http\Response
      */
     public function response(array $context): Response

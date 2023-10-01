@@ -39,24 +39,95 @@ class BaseViewResponder
     /**
      * List of Navigation links for version 1.
      *
-     * @return array
+     * @return array{
+     *   link: string,
+     *   caption: string,
+     * }[]
      */
     public function navigationList(): array
     {
         return [
-            ['link' => 'v1_top', 'caption' => __('Top')],
-            ['link' => 'v1_findslips', 'caption' => __('Find Slips')],
-            ['link' => 'v1_slip', 'caption' => __('Slip')],
-            ['link' => 'v1_statements', 'caption' => __('Statements')],
-            ['link' => 'v1_accountslist', 'caption' => __('Accounts List')],
+            ['link' => 'v1_top', 'caption' => strval(__('Top'))],
+            ['link' => 'v1_findslips', 'caption' => strval(__('Find Slips'))],
+            ['link' => 'v1_slip', 'caption' => strval(__('Slip'))],
+            ['link' => 'v1_statements', 'caption' => strval(__('Statements'))],
+            ['link' => 'v1_accountslist', 'caption' => strval(__('Accounts List'))],
         ];
     }
 
     /**
      * Translate account list format for view.
      *
-     * @param  array  $accounts
-     * @return array
+     * @param  array{
+     *   asset: array{
+     *     groups: array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         description: string,
+     *         selectable: bool,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>,
+     *   },
+     *   liability: array{
+     *     groups: array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         description: string,
+     *         selectable: bool,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>,
+     *   },
+     *   expense: array{
+     *     groups: array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         description: string,
+     *         selectable: bool,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>,
+     *   },
+     *   revenue: array{
+     *     groups: array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         description: string,
+     *         selectable: bool,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>,
+     *   },
+     * }  $accounts
+     * @return array<string, array{
+     *   code: string|int,
+     *   type: string,
+     *   group_title: string,
+     *   title: string,
+     *   description: string,
+     *   evenOdd: string,
+     * }>
      */
     public function translateAccountsListFormat(array $accounts): array
     {
@@ -71,17 +142,17 @@ class BaseViewResponder
         foreach ($accounts as $accountTypeKey => $accountType) {
             foreach ($accountType['groups'] as $accountGroupItem) {
                 foreach ($accountGroupItem['items'] as $accountId => $accountItem) {
-                    if (is_null($accountItem['bk_code']) || ($accountItem['bk_code'] == 0)) {
+                    if ($accountItem['bk_code'] == 0) {
                         $code = '-';
                     } else {
-                        $code = $accountItem['bk_code'];
+                        $code = intval($accountItem['bk_code']);
                     }
                     $account_list[$accountId] = [
                         'code'        => $code,
-                        'type'        => $accountTypeTitle[$accountTypeKey],
-                        'group_title' => $accountGroupItem['title'],
-                        'title'       => $accountItem['title'],
-                        'description' => $accountItem['description'],
+                        'type'        => strval($accountTypeTitle[$accountTypeKey]),
+                        'group_title' => strval($accountGroupItem['title']),
+                        'title'       => strval($accountItem['title']),
+                        'description' => strval($accountItem['description']),
                         'evenOdd'     => $tableRowEvenOrOdd,
                     ];
                     if ($tableRowEvenOrOdd == 'evn') {
@@ -99,8 +170,60 @@ class BaseViewResponder
     /**
      * Translate balance sheet format for view.
      *
-     * @param  array  $statements
-     * @return array
+     * @param  array{
+     *   asset: array{
+     *     amount: int,
+     *     groups: array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       amount: int,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         amount: int,
+     *         description: string,
+     *         selectable: bool,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>,
+     *   },
+     *   liability: array{
+     *     amount: int,
+     *     groups: array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       amount: int,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         amount: int,
+     *         description: string,
+     *         selectable: bool,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>,
+     *   },
+     *   current_net_asset?: array{amount: int},
+     *   net_asset: array{amount: int},
+     * }  $statements
+     * @return array{
+     *   debit: array{
+     *     title: string,
+     *     amount: string,
+     *     bold: bool,
+     *     italic: bool,
+     *   },
+     *   credit: array{
+     *     title: string,
+     *     amount: string,
+     *     bold: bool,
+     *     italic: bool,
+     *   },
+     * }[]
      */
     public function translateBalanceSheetFormat(array $statements): array
     {
@@ -116,8 +239,27 @@ class BaseViewResponder
     /**
      * Translate draft slips format for view.
      *
-     * @param  array  $slip
-     * @return array
+     * @param  array<string, array{
+     *   date: string,
+     *   slip_outline: string,
+     *   slip_memo: string,
+     *   items: array<string, array{
+     *     debit: array{account_id: string, account_title: string},
+     *     credit: array{account_id: string, account_title: string},
+     *     amount: int,
+     *     client: string,
+     *     outline: string,
+     *   }>,
+     * }>  $slip
+     * @return array<string, array{
+     *   no: non-falsy-string,
+     *   debit: string,
+     *   client: string,
+     *   outline: string,
+     *   credit: string,
+     *   amount: int,
+     *   evenOdd: string,
+     * }>|array{}
      */
     public function translateDraftSlipFormat(array $slip): array
     {
@@ -147,8 +289,59 @@ class BaseViewResponder
     /**
      * Translate income statement format for view.
      *
-     * @param  array  $statements
-     * @return array
+     * @param  array{
+     *   expense: array{
+     *     amount: int,
+     *     groups: array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       amount: int,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         amount: int,
+     *         description: string,
+     *         selectable: bool,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>,
+     *   },
+     *   revenue: array{
+     *     amount: int,
+     *     groups: array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       amount: int,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         amount: int,
+     *         description: string,
+     *         selectable: bool,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>,
+     *   },
+     *   net_income: array{amount: int},
+     * }  $statements
+     * @return array{
+     *   debit: array{
+     *     title: string,
+     *     amount: string,
+     *     bold: bool,
+     *     italic: bool,
+     *   },
+     *   credit: array{
+     *     title: string,
+     *     amount: string,
+     *     bold: bool,
+     *     italic: bool,
+     *   },
+     * }[]
      */
     public function translateIncomeStatementFormat(array $statements): array
     {
@@ -164,8 +357,28 @@ class BaseViewResponder
     /**
      * Translate slips format for view.
      *
-     * @param  array  $slips
-     * @return array
+     * @param  array<string, array{
+     *   date: string,
+     *   slip_outline: string,
+     *   slip_memo: string,
+     *   items: array<string, array{
+     *     debit: array{account_id: string, account_title: string},
+     *     credit: array{account_id: string, account_title: string},
+     *     amount: int,
+     *     client: string,
+     *     outline: string,
+     *   }>
+     * }>  $slips
+     * @return array<string, array{
+     *   no: non-falsy-string,
+     *   slipNo: non-falsy-string,
+     *   date: string,
+     *   debit: string,
+     *   credit: string,
+     *   amount: string,
+     *   client: string,
+     *   outline: string,
+     * }>
      */
     public function translateSlipsFormat(array $slips): array
     {
@@ -191,8 +404,104 @@ class BaseViewResponder
     /**
      * Translate statements format for view.
      *
-     * @param  array  $statements
-     * @return array
+     * @param  array{
+     *   asset?: array{
+     *     amount: int,
+     *     groups: array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       amount: int,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         amount: int,
+     *         description: string,
+     *         selectable: bool,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>,
+     *   },
+     *   liability?: array{
+     *     amount: int,
+     *     groups: array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       amount: int,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         amount: int,
+     *         description: string,
+     *         selectable: bool,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>,
+     *   },
+     *   expense?: array{
+     *     amount: int,
+     *     groups: array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       amount: int,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         amount: int,
+     *         description: string,
+     *         selectable: bool,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>,
+     *   },
+     *   revenue?: array{
+     *     amount: int,
+     *     groups: array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       amount: int,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         amount: int,
+     *         description: string,
+     *         selectable: bool,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>,
+     *   },
+     *   current_net_asset?: array{amount: int},
+     *   net_asset?: array{amount: int},
+     *   net_income?: array{amount: int},
+     * }  $statements
+     * @param  array{
+     *   debitTitle: 'Assets'|'Expense',
+     *   debitGroup: 'asset'|'expense',
+     *   creditTitle: 'Liabilities'|'Revenue',
+     *   creditGroup:'liability'|'revenue',
+     *   displayCurrentNetAsset: bool,
+     * }  $parameters
+     * @return array{
+     *   debit: array{
+     *     title: string,
+     *     amount: string,
+     *     bold: bool,
+     *     italic: bool,
+     *   },
+     *   credit: array{
+     *     title: string,
+     *     amount: string,
+     *     bold: bool,
+     *     italic: bool,
+     *   },
+     * }[]
      */
     private function translateStatementsFormat(array $statements, array $parameters): array
     {
@@ -206,86 +515,103 @@ class BaseViewResponder
         $debit_count = 0;
         $credit_count = 0;
 
-        $debitcreditline[$debit_count++]['debit'] = [
-            'title'  => __($debitTitle),
-            'amount' => number_format($statements[$debitGroup]['amount']),
-            'bold'   => true,
-            'italic' => true,
-        ];
-        foreach ($statements[$debitGroup]['groups'] as $key => $group) {
+        if (array_key_exists($debitGroup, $statements)) {
             $debitcreditline[$debit_count++]['debit'] = [
-                'title'  => $group['title'],
-                'amount' => number_format($group['amount']),
-                'bold'   => false,
-                'italic' => true,
-            ];
-            foreach ($group['items'] as $key => $item) {
-                $debitcreditline[$debit_count++]['debit'] = [
-                    'title'  => $item['title'],
-                    'amount' => number_format($item['amount']),
-                    'bold'   => false,
-                    'italic' => false,
-                ];
-            }
-        }
-        if ($debitTitle == 'Expense') {
-            $debitcreditline[$debit_count++]['debit'] = ['title' => '', 'amount' => '', 'bold' => false, 'italic' => false];
-            $debitcreditline[$debit_count++]['debit'] = [
-                'title'  => __('Net Income'),
-                'amount' => number_format($statements['net_income']['amount']),
+                'title'  => strval(__($debitTitle)),
+                'amount' => number_format($statements[$debitGroup]['amount']),
                 'bold'   => true,
                 'italic' => true,
             ];
+            foreach ($statements[$debitGroup]['groups'] as $key => $group) {
+                $debitcreditline[$debit_count++]['debit'] = [
+                    'title'  => strval($group['title']),
+                    'amount' => number_format($group['amount']),
+                    'bold'   => false,
+                    'italic' => true,
+                ];
+                foreach ($group['items'] as $key => $item) {
+                    $debitcreditline[$debit_count++]['debit'] = [
+                        'title'  => strval($item['title']),
+                        'amount' => number_format($item['amount']),
+                        'bold'   => false,
+                        'italic' => false,
+                    ];
+                }
+            }
         }
 
-        $debitcreditline[$credit_count++]['credit'] = [
-            'title'  => __($creditTitle),
-            'amount' => number_format($statements[$creditGroup]['amount']),
-            'bold'   => true,
-            'italic' => true,
-        ];
-        foreach ($statements[$creditGroup]['groups'] as $key => $group) {
-            $debitcreditline[$credit_count++]['credit'] = [
-                'title'  => $group['title'],
-                'amount' => number_format($group['amount']),
-                'bold'   => false,
-                'italic' => true,
-            ];
-            foreach ($group['items'] as $key => $item) {
-                $debitcreditline[$credit_count++]['credit'] = [
-                    'title'  => $item['title'],
-                    'amount' => number_format($item['amount']),
-                    'bold'   => false,
-                    'italic' => false,
+        if ($debitTitle == 'Expense') {
+            $debitcreditline[$debit_count++]['debit']
+                = ['title' => '', 'amount' => '', 'bold' => false, 'italic' => false];
+            if (array_key_exists('net_income', $statements)) {
+                $debitcreditline[$debit_count++]['debit'] = [
+                    'title'  => strval(__('Net Income')),
+                    'amount' => number_format($statements['net_income']['amount']),
+                    'bold'   => true,
+                    'italic' => true,
                 ];
             }
         }
+
+        if (array_key_exists($creditGroup, $statements)) {
+            $debitcreditline[$credit_count++]['credit'] = [
+                'title'  => strval(__($creditTitle)),
+                'amount' => number_format($statements[$creditGroup]['amount']),
+                'bold'   => true,
+                'italic' => true,
+            ];
+            foreach ($statements[$creditGroup]['groups'] as $key => $group) {
+                $debitcreditline[$credit_count++]['credit'] = [
+                    'title'  => strval($group['title']),
+                    'amount' => number_format($group['amount']),
+                    'bold'   => false,
+                    'italic' => true,
+                ];
+                foreach ($group['items'] as $key => $item) {
+                    $debitcreditline[$credit_count++]['credit'] = [
+                        'title'  => strval($item['title']),
+                        'amount' => number_format($item['amount']),
+                        'bold'   => false,
+                        'italic' => false,
+                    ];
+                }
+            }
+        }
+
         if ($creditTitle == 'Liabilities') {
-            $debitcreditline[$credit_count++]['credit'] = ['title' => '', 'amount' => '', 'bold' => false, 'italic' => false];
+            $debitcreditline[$credit_count++]['credit']
+                = ['title' => '', 'amount' => '', 'bold' => false, 'italic' => false];
             if ($displayCurrentNetAsset && array_key_exists('current_net_asset', $statements)) {
                 $debitcreditline[$credit_count++]['credit'] = [
-                    'title'  => __('Current Net Asset'),
+                    'title'  => strval(__('Current Net Asset')),
                     'amount' => number_format($statements['current_net_asset']['amount']),
                     'bold'   => true,
                     'italic' => true,
                 ];
             }
-            $debitcreditline[$credit_count++]['credit'] = [
-                'title'  => __('Net Asset'),
-                'amount' => number_format($statements['net_asset']['amount']),
-                'bold'   => true,
-                'italic' => true,
-            ];
-        }
-
-        while ($debit_count != $credit_count) {
-            if ($debit_count < $credit_count) {
-                $debitcreditline[$debit_count++]['debit'] = ['title' => '', 'amount' => '', 'bold' => false, 'italic' => false];
-            } else {
-                $debitcreditline[$credit_count++]['credit'] = ['title' => '', 'amount' => '', 'bold' => false, 'italic' => false];
+            if (array_key_exists('net_asset', $statements)) {
+                $debitcreditline[$credit_count++]['credit'] = [
+                    'title'  => strval(__('Net Asset')),
+                    'amount' => number_format($statements['net_asset']['amount']),
+                    'bold'   => true,
+                    'italic' => true,
+                ];
             }
         }
 
-        return $debitcreditline;
+        $returnDebitCreditLine = [];
+        foreach ($debitcreditline as $line) {
+            $debit = ['title' => '', 'amount' => '', 'bold' => false, 'italic' => false];
+            if (array_key_exists('debit', $line)) {
+                $debit = $line['debit'];
+            }
+            $credit = ['title' => '', 'amount' => '', 'bold' => false, 'italic' => false];
+            if (array_key_exists('credit', $line)) {
+                $credit = $line['credit'];
+            }
+            $returnDebitCreditLine[] = ['debit' => $debit, 'credit' => $credit];
+        }
+
+        return $returnDebitCreditLine;
     }
 }

@@ -83,7 +83,8 @@ class UpdateAccountsItemActionHtml extends AuthenticatedBookKeepingAction
                     case BookKeepingService::STATUS_NORMAL:
                         break;
                     case BookKeepingService::STATUS_ERROR_AUTH_FORBIDDEN:
-                        $context['message'] = __('You are not permitted to write in this book.');
+                        $message = __('You are not permitted to write in this book.');
+                        $context['message'] = strval($message);
                         break;
                     case BookKeepingService::STATUS_ERROR_BAD_CONDITION:
                         abort(Response::HTTP_NOT_FOUND);
@@ -91,8 +92,8 @@ class UpdateAccountsItemActionHtml extends AuthenticatedBookKeepingAction
                         abort(Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
             } else {
-                $context['message']
-                    = __('Please select the group and enter a valid name and description.');
+                $message = __('Please select the group and enter a valid name and description.');
+                $context['message'] = strval($message);
             }
         }
 
@@ -115,12 +116,13 @@ class UpdateAccountsItemActionHtml extends AuthenticatedBookKeepingAction
             'revenue'   => __('Revenue'),
         ];
         $context['accountsitem'] = null;
+        $context['accounttypekey'] = '';
         foreach ($categorizedAccounts as $accountTypeKey => $accountType) {
             foreach ($accountType['groups'] as $accountGroupKey => $accountGroup) {
                 if (array_key_exists($accountsItemId, $accountGroup['items'])) {
                     $context['accounttypekey'] = $accountTypeKey;
                     $context['accountsitem']['id'] = $accountsItemId;
-                    $context['accountsitem']['type'] = $accountTypeCaption[$accountTypeKey];
+                    $context['accountsitem']['type'] = strval($accountTypeCaption[$accountTypeKey]);
                     $context['accountsitem']['groupId'] = $accountGroupKey;
                     $accountItem = $accountGroup['items'][$accountsItemId];
                     $context['accountsitem']['title'] = $accountItem['title'];

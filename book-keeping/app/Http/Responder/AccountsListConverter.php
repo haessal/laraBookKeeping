@@ -7,8 +7,36 @@ trait AccountsListConverter
     /**
      * Sort accounts in ascending order of account code for version 1.
      *
-     * @param  array  $groupedList
-     * @return array
+     * @param  array<string, array{
+     *   title: string,
+     *   isCurrent: bool,
+     *   amount?: int,
+     *   bk_code: int,
+     *   createdAt: string,
+     *   items: array<string, array{
+     *     title: string,
+     *     amount?: int,
+     *     description?: string,
+     *     selectable?: bool,
+     *     bk_code: int,
+     *     createdAt: string,
+     *   }>
+     * }>  $groupedList
+     * @return array<string, array{
+     *   title: string,
+     *   isCurrent: bool,
+     *   amount: int,
+     *   bk_code: int,
+     *   createdAt: string,
+     *   items: array<string, array{
+     *     title: string,
+     *     amount: int,
+     *     description: string,
+     *     selectable: bool,
+     *     bk_code: int,
+     *     createdAt: string,
+     *   }>
+     * }>
      */
     public function sortAccountInAscendingCodeOrder(array $groupedList): array
     {
@@ -18,9 +46,20 @@ trait AccountsListConverter
     /**
      * Translate account list to title list for view.
      *
-     * @param  array  $accounts
+     * @param  array<string, array{
+     *   groups: array<string, array{
+     *     title: string,
+     *     items: array<string, array{
+     *       title: string,
+     *     }>
+     *   }>
+     * }>  $accounts
      * @param  bool  $withGroupList
-     * @return array
+     * @return array{
+     *   groups: array<string, string>,
+     *   groupsWithType: array<string, string>,
+     *   items: array<string, string>
+     * }|array<string, string>
      */
     public function translateAccountListToTitleList(array $accounts, bool $withGroupList = false): array
     {
@@ -58,10 +97,15 @@ trait AccountsListConverter
     }
 
     /**
-     * Get associative array which has account ID as key sorted in ascending order of value that is specified keyword.
+     * Get associative array which has account ID as key sorted in ascending
+     * order of value that is specified keyword.
      *
-     * @param  array  $listWithKeyword
-     * @return array
+     * @param  array<string, array{
+     *   isCurrent?: bool,
+     *   bk_code: int|null,
+     *   createdAt: string,
+     * }>  $listWithKeyword
+     * @return array<string, int|string|null>
      */
     private function getIdsSortedInAscendingOrder(array $listWithKeyword): array
     {
@@ -95,16 +139,55 @@ trait AccountsListConverter
     /**
      * Sort account group list in ascending order of account code for version 1.
      *
-     * @param  array  $groupedList
-     * @return array
+     * @param  array<string, array{
+     *   title: string,
+     *   isCurrent: bool,
+     *   amount?: int,
+     *   bk_code: int,
+     *   createdAt: string,
+     *   items: array<string, array{
+     *     title: string,
+     *     amount?: int,
+     *     description?: string,
+     *     selectable?: bool,
+     *     bk_code: int,
+     *     createdAt: string,
+     *   }>
+     * }>  $groupedList
+     * @return array<string, array{
+     *   title: string,
+     *   isCurrent: bool,
+     *   amount: int,
+     *   bk_code: int,
+     *   createdAt: string,
+     *   items: array<string, array{
+     *     title: string,
+     *     amount: int,
+     *     description: string,
+     *     selectable: bool,
+     *     bk_code: int,
+     *     createdAt: string,
+     *   }>
+     * }>
      */
     private function sortAccountGroupListInAscendingCodeOrder(array $groupedList): array
     {
         $reordered = [];
         $sortedKeys = $this->getIdsSortedInAscendingOrder($groupedList);
         foreach ($sortedKeys as $groupId => $keyword) {
-            $reordered[$groupId] = $groupedList[$groupId];
-            $reordered[$groupId]['items'] = $this->sortAccountListInAscendingCodeOrder($groupedList[$groupId]['items']);
+            if (array_key_exists('amount', $groupedList[$groupId])) {
+                $amount = $groupedList[$groupId]['amount'];
+            } else {
+                $amount = 0;
+            }
+            $reordered[$groupId] = [
+                'title'     => $groupedList[$groupId]['title'],
+                'isCurrent' => $groupedList[$groupId]['isCurrent'],
+                'amount'    => $amount,
+                'bk_code'   => $groupedList[$groupId]['bk_code'],
+                'createdAt' => $groupedList[$groupId]['createdAt'],
+                'items' => $this->sortAccountListInAscendingCodeOrder($groupedList[$groupId]['items']),
+            ];
         }
 
         return $reordered;
@@ -113,15 +196,51 @@ trait AccountsListConverter
     /**
      * Sort account list in ascending order of account code for version 1.
      *
-     * @param  array  $list
-     * @return array
+     * @param  array<string, array{
+     *   title: string,
+     *   amount?: int,
+     *   description?: string,
+     *   selectable?: bool,
+     *   bk_code: int,
+     *   createdAt: string,
+     * }>  $list
+     * @return array<string, array{
+     *   title: string,
+     *   amount: int,
+     *   description: string,
+     *   selectable: bool,
+     *   bk_code: int,
+     *   createdAt: string,
+     * }>
      */
     private function sortAccountListInAscendingCodeOrder(array $list): array
     {
         $reordered = [];
         $sortedKeys = $this->getIdsSortedInAscendingOrder($list);
         foreach ($sortedKeys as $id => $keyword) {
-            $reordered[$id] = $list[$id];
+            if (array_key_exists('amount', $list[$id])) {
+                $amount = $list[$id]['amount'];
+            } else {
+                $amount = 0;
+            }
+            if (array_key_exists('description', $list[$id])) {
+                $description = $list[$id]['description'];
+            } else {
+                $description = '';
+            }
+            if (array_key_exists('selectable', $list[$id])) {
+                $selectable = $list[$id]['selectable'];
+            } else {
+                $selectable = true;
+            }
+            $reordered[$id] = [
+                'title'       => $list[$id]['title'],
+                'amount'      => $amount,
+                'description' => $description,
+                'selectable'  => $selectable,
+                'bk_code'     => $list[$id]['bk_code'],
+                'createdAt'   => $list[$id]['createdAt'],
+            ];
         }
 
         return $reordered;
