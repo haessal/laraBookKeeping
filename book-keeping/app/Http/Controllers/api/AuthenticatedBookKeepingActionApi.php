@@ -17,6 +17,7 @@ class AuthenticatedBookKeepingActionApi extends AuthenticatedActionApi
      * Create a new AuthenticatedBookKeepingActionApi instance.
      *
      * @param  \App\Service\BookKeepingService  $BookKeeping
+     * @return void
      */
     public function __construct(BookKeepingService $BookKeeping)
     {
