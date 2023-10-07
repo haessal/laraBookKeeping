@@ -172,7 +172,7 @@ class RetrieveCategorizedAccountsTest extends TestCase
                 'created_at' => '2020-06-26 12:00:12',
             ],
         ];
-        $accounts_expected = [
+        $accounts_menu = [
             'asset' => [
                 'groups' => [
                     $accountGroupId_1 => [
@@ -270,12 +270,13 @@ class RetrieveCategorizedAccountsTest extends TestCase
                 ],
             ],
         ];
+        $result_expected = [BookKeepingService::STATUS_NORMAL, $accounts_menu];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
-        $bookMock->shouldReceive('retrieveDefaultBook')
+        $bookMock->shouldReceive('retrieveDefaultBookOrCheckReadable')
             ->once()
-            ->with($userId)
-            ->andReturn($bookId);
+            ->with(null, $userId)
+            ->andReturn([BookKeepingService::STATUS_NORMAL, $bookId]);
         /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
         $accountMock = Mockery::mock(AccountService::class);
         $accountMock->shouldReceive('retrieveAccounts')
@@ -292,115 +293,37 @@ class RetrieveCategorizedAccountsTest extends TestCase
         $slipMock = Mockery::mock(SlipService::class);
 
         $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
-        $accounts_actual = $BookKeeping->retrieveCategorizedAccounts(true);
+        $result_actual = $BookKeeping->retrieveCategorizedAccounts(true);
 
-        $this->assertSame($accounts_expected, $accounts_actual);
+        $this->assertSame($result_expected, $result_actual);
     }
 
-    public function test_it_retrieves_a_list_of_accounts_for_the_specified_book_categorized_into_groups(): void
+    public function test_it_does_nothing_because_the_specified_book_is_not_readable(): void
     {
         $bookId = (string) Str::uuid();
-        $accountId_1 = (string) Str::uuid();
-        $accountId_2 = (string) Str::uuid();
-        $accountGroupId_1 = (string) Str::uuid();
-        $accountGroupId_2 = (string) Str::uuid();
-        $accounts = [
-            $accountId_1 => [
-                'account_type' => AccountService::ACCOUNT_TYPE_ASSET,
-                'account_group_id' => $accountGroupId_1,
-                'account_group_title' => 'accountGroupTitle_1',
-                'is_current' => 0,
-                'account_id' => $accountId_1,
-                'account_title' => 'accountTitle_1',
-                'description' => 'description_1',
-                'selectable' => 1,
-                'account_bk_code' => 1201,
-                'created_at' => '2019-12-02 12:00:01',
-                'account_group_bk_code' => 1200,
-                'account_group_created_at' => '2019-12-01 12:00:12',
-            ],
-            $accountId_2 => [
-                'account_type' => AccountService::ACCOUNT_TYPE_LIABILITY,
-                'account_group_id' => $accountGroupId_2,
-                'account_group_title' => 'accountGroupTitle_2',
-                'is_current' => 0,
-                'account_id' => $accountId_2,
-                'account_title' => 'accountTitle_2',
-                'description' => 'description_2',
-                'selectable' => 0,
-                'account_bk_code' => 2302,
-                'created_at' => '2019-12-02 12:00:02',
-                'account_group_bk_code' => 2300,
-                'account_group_created_at' => '2019-12-01 12:00:23',
-            ],
-        ];
-        $accountGroups = [];
-        $accounts_expected = [
-            'asset' => [
-                'groups' => [
-                    $accountGroupId_1 => [
-                        'title' => 'accountGroupTitle_1',
-                        'isCurrent' => 0,
-                        'bk_code' => 1200,
-                        'createdAt' => '2019-12-01 12:00:12',
-                        'items' => [
-                            $accountId_1 => [
-                                'title' => 'accountTitle_1',
-                                'description' => 'description_1',
-                                'selectable' => 1,
-                                'bk_code' => 1201,
-                                'createdAt' => '2019-12-02 12:00:01',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-            'liability' => [
-                'groups' => [
-                    $accountGroupId_2 => [
-                        'title' => 'accountGroupTitle_2',
-                        'isCurrent' => 0,
-                        'bk_code' => 2300,
-                        'createdAt' => '2019-12-01 12:00:23',
-                        'items' => [
-                            $accountId_2 => [
-                                'title' => 'accountTitle_2',
-                                'description' => 'description_2',
-                                'selectable' => 0,
-                                'bk_code' => 2302,
-                                'createdAt' => '2019-12-02 12:00:02',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-            'expense' => [
-                'groups' => [],
-            ],
-            'revenue' => [
-                'groups' => [],
-            ],
-        ];
+        $userId = 304;
+        $user = new User();
+        $user->id = $userId;
+        $this->be($user);
+        $result_expected = [BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE, null];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
+        $bookMock->shouldReceive('retrieveDefaultBookOrCheckReadable')
+            ->once()
+            ->with($bookId, $userId)
+            ->andReturn([BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE, '']);
         /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
         $accountMock = Mockery::mock(AccountService::class);
-        $accountMock->shouldReceive('retrieveAccounts')
-            ->once()
-            ->with($bookId)
-            ->andReturn($accounts);
-        $accountMock->shouldReceive('retrieveAccountGroups')
-            ->once()
-            ->with($bookId)
-            ->andReturn($accountGroups);
+        $accountMock->shouldNotReceive('retrieveAccounts');
+        $accountMock->shouldNotReceive('retrieveAccountGroups');
         /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
         $budgetMock = Mockery::mock(BudgetService::class);
         /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipService::class);
 
         $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
-        $accounts_actual = $BookKeeping->retrieveCategorizedAccounts(false, $bookId);
+        $result_actual = $BookKeeping->retrieveCategorizedAccounts(false, $bookId);
 
-        $this->assertSame($accounts_expected, $accounts_actual);
+        $this->assertSame($result_expected, $result_actual);
     }
 }

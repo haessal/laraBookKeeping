@@ -243,7 +243,7 @@ class RetrieveSlipsTest extends TestCase
         $bookMock->shouldReceive('retrieveDefaultBookOrCheckReadable')
             ->once()
             ->with($bookId, $userId)
-            ->andReturn([BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE, $bookId]);
+            ->andReturn([BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE, '']);
         /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
         $accountMock = Mockery::mock(AccountService::class);
         $accountMock->shouldNotReceive('retrieveAccounts');
