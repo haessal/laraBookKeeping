@@ -226,11 +226,11 @@ class BookKeepingService
             $date = new Carbon();
             $this->slip->createSlipAsDraft($bookId, $outline, $date->format('Y-m-d'), [
                 [
-                    'debit' => $debit,
-                    'client' => $client,
+                    'debit'   => $debit,
+                    'client'  => $client,
                     'outline' => $outline,
-                    'credit' => $credit,
-                    'amount' => $amount,
+                    'credit'  => $credit,
+                    'amount'  => $amount,
                 ],
             ]);
         } else {
