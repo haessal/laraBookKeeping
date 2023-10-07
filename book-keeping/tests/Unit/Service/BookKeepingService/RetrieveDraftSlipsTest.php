@@ -80,7 +80,7 @@ class RetrieveDraftSlipsTest extends TestCase
                 'outline' => 'outline_489',
             ],
         ];
-        $slips_expected = [
+        $draftSlips = [
             $slipId_1 => [
                 'date' => '2019-10-03',
                 'slip_outline' => 'slipOutline_3',
@@ -117,12 +117,13 @@ class RetrieveDraftSlipsTest extends TestCase
                 ],
             ],
         ];
+        $result_expected = [BookKeepingService::STATUS_NORMAL, $draftSlips];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
-        $bookMock->shouldReceive('retrieveDefaultBook')
+        $bookMock->shouldReceive('retrieveDefaultBookOrCheckReadable')
             ->once()
-            ->with($userId)
-            ->andReturn($bookId);
+            ->with(null, $userId)
+            ->andReturn([BookKeepingService::STATUS_NORMAL, $bookId]);
         /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
         $accountMock = Mockery::mock(AccountService::class);
         $accountMock->shouldReceive('retrieveAccounts')
@@ -147,35 +148,37 @@ class RetrieveDraftSlipsTest extends TestCase
             ->andReturn($slipEntries_2);
 
         $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
-        $slips_actual = $BookKeeping->retrieveDraftSlips();
+        $result_actual = $BookKeeping->retrieveDraftSlips();
 
-        $this->assertSame($slips_expected, $slips_actual);
+        $this->assertSame($result_expected, $result_actual);
     }
 
-    public function test_it_retrieves_a_list_of_draft_slips_for_the_specified_book(): void
+    public function test_it_does_nothing_because_the_specified_book_is_not_readable(): void
     {
         $bookId = (string) Str::uuid();
-        $slips_expected = [];
+        $userId = 159;
+        $user = new User();
+        $user->id = $userId;
+        $this->be($user);
+        $result_expected = [BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE, null];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
+        $bookMock->shouldReceive('retrieveDefaultBookOrCheckReadable')
+            ->once()
+            ->with($bookId, $userId)
+            ->andReturn([BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE, '']);
         /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
         $accountMock = Mockery::mock(AccountService::class);
-        $accountMock->shouldReceive('retrieveAccounts')
-            ->once()
-            ->with($bookId)
-            ->andReturn([]);
+        $accountMock->shouldNotReceive('retrieveAccounts');
         /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
         $budgetMock = Mockery::mock(BudgetService::class);
         /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipService::class);
-        $slipMock->shouldReceive('retrieveDraftSlips')
-            ->once()
-            ->with($bookId)
-            ->andReturn([]);
+        $slipMock->shouldNotReceive('retrieveDraftSlips');
 
         $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
-        $slips_actual = $BookKeeping->retrieveDraftSlips($bookId);
+        $result_actual = $BookKeeping->retrieveDraftSlips($bookId);
 
-        $this->assertSame($slips_expected, $slips_actual);
+        $this->assertSame($result_expected, $result_actual);
     }
 }

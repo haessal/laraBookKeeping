@@ -28,12 +28,13 @@ class SubmitDraftSlipTest extends TestCase
         $this->be($user);
         $slipId = (string) Str::uuid();
         $date = '2020-04-03';
+        $result_expected = [BookKeepingService::STATUS_NORMAL, null];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
-        $bookMock->shouldReceive('retrieveDefaultBook')
+        $bookMock->shouldReceive('retrieveDefaultBookOrCheckWritable')
             ->once()
-            ->with($userId)
-            ->andReturn($bookId);
+            ->with(null, $userId)
+            ->andReturn([BookKeepingService::STATUS_NORMAL, $bookId]);
         /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
         $accountMock = Mockery::mock(AccountService::class);
         /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
@@ -52,17 +53,57 @@ class SubmitDraftSlipTest extends TestCase
             ->with($slipId);
 
         $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
-        $BookKeeping->submitDraftSlip($date);
+        $result_actual = $BookKeeping->submitDraftSlip($date);
 
-        $this->assertTrue(true);
+        $this->assertSame($result_expected, $result_actual);
+    }
+
+    public function test_it_does_nothing_because_the_specified_book_is_not_readable(): void
+    {
+        $bookId = (string) Str::uuid();
+        $userId = 64;
+        $user = new User();
+        $user->id = $userId;
+        $this->be($user);
+        $date = '2020-04-04';
+        $result_expected = [BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE, null];
+        /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
+        $bookMock = Mockery::mock(BookService::class);
+        $bookMock->shouldReceive('retrieveDefaultBookOrCheckWritable')
+            ->once()
+            ->with($bookId, $userId)
+            ->andReturn([BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE, '']);
+        /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
+        $accountMock = Mockery::mock(AccountService::class);
+        /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
+        $budgetMock = Mockery::mock(BudgetService::class);
+        /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
+        $slipMock = Mockery::mock(SlipService::class);
+        $slipMock->shouldNotReceive('retrieveDraftSlips');
+        $slipMock->shouldNotReceive('updateDateOf');
+        $slipMock->shouldNotReceive('submitSlip');
+
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $result_actual = $BookKeeping->submitDraftSlip($date, $bookId);
+
+        $this->assertSame($result_expected, $result_actual);
     }
 
     public function test_it_does_nothing_because_there_is_not_the_draft_slip_to_be_submitted_for_the_specified_book(): void
     {
         $bookId = (string) Str::uuid();
+        $userId = 64;
+        $user = new User();
+        $user->id = $userId;
+        $this->be($user);
         $date = '2020-04-04';
+        $result_expected = [BookKeepingService::STATUS_NORMAL, null];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
+        $bookMock->shouldReceive('retrieveDefaultBookOrCheckWritable')
+            ->once()
+            ->with($bookId, $userId)
+            ->andReturn([BookKeepingService::STATUS_NORMAL, $bookId]);
         /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
         $accountMock = Mockery::mock(AccountService::class);
         /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
@@ -77,8 +118,8 @@ class SubmitDraftSlipTest extends TestCase
         $slipMock->shouldNotReceive('submitSlip');
 
         $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
-        $BookKeeping->submitDraftSlip($date, $bookId);
+        $result_actual = $BookKeeping->submitDraftSlip($date, $bookId);
 
-        $this->assertTrue(true);
+        $this->assertSame($result_expected, $result_actual);
     }
 }

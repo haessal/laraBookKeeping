@@ -33,12 +33,13 @@ class CreateSlipEntryAsDraftTest extends TestCase
         $amount = 3600;
         $client = 'client37';
         $outline = 'outline38';
+        $result_expected = [BookKeepingService::STATUS_NORMAL, null];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
-        $bookMock->shouldReceive('retrieveDefaultBook')
+        $bookMock->shouldReceive('retrieveDefaultBookOrCheckWritable')
             ->once()
-            ->with($userId)
-            ->andReturn($bookId);
+            ->with(null, $userId)
+            ->andReturn([BookKeepingService::STATUS_NORMAL, $bookId]);
         /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
         $accountMock = Mockery::mock(AccountService::class);
         /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
@@ -58,22 +59,31 @@ class CreateSlipEntryAsDraftTest extends TestCase
         Carbon::setTestNow(new Carbon('2019-12-02 09:59:59'));
 
         $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
-        $BookKeeping->createSlipEntryAsDraft($debit, $client, $outline, $credit, $amount);
+        $result_actual = $BookKeeping->createSlipEntryAsDraft($debit, $client, $outline, $credit, $amount);
 
-        $this->assertTrue(true);
+        $this->assertSame($result_expected, $result_actual);
     }
 
     public function test_it_creates_a_new_slip_entry_for_the_specified_book_and_bind_the_entry_to_the_existing_slip(): void
     {
         $bookId = (string) Str::uuid();
+        $userId = 70;
+        $user = new User();
+        $user->id = $userId;
+        $this->be($user);
         $slipId = (string) Str::uuid();
         $debit = (string) Str::uuid();
         $credit = (string) Str::uuid();
         $amount = 7900;
         $client = 'client80';
         $outline = 'outline81';
+        $result_expected = [BookKeepingService::STATUS_NORMAL, null];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
+        $bookMock->shouldReceive('retrieveDefaultBookOrCheckWritable')
+            ->once()
+            ->with($bookId, $userId)
+            ->andReturn([BookKeepingService::STATUS_NORMAL, $bookId]);
         /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
         $accountMock = Mockery::mock(AccountService::class);
         /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
@@ -90,8 +100,43 @@ class CreateSlipEntryAsDraftTest extends TestCase
             ->with($slipId, $debit, $credit, $amount, $client, $outline);
 
         $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
-        $BookKeeping->createSlipEntryAsDraft($debit, $client, $outline, $credit, $amount, $bookId);
+        $result_actual = $BookKeeping->createSlipEntryAsDraft($debit, $client, $outline, $credit, $amount, $bookId);
 
-        $this->assertTrue(true);
+        $this->assertSame($result_expected, $result_actual);
+    }
+
+    public function test_it_does_nothing_because_the_specified_book_is_not_readable(): void
+    {
+        $bookId = (string) Str::uuid();
+        $userId = 111;
+        $user = new User();
+        $user->id = $userId;
+        $this->be($user);
+        $debit = (string) Str::uuid();
+        $credit = (string) Str::uuid();
+        $amount = 1170;
+        $client = 'client118';
+        $outline = 'outline119';
+        $result_expected = [BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE, null];
+        /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
+        $bookMock = Mockery::mock(BookService::class);
+        $bookMock->shouldReceive('retrieveDefaultBookOrCheckWritable')
+            ->once()
+            ->with($bookId, $userId)
+            ->andReturn([BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE, '']);
+        /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
+        $accountMock = Mockery::mock(AccountService::class);
+        /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
+        $budgetMock = Mockery::mock(BudgetService::class);
+        /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
+        $slipMock = Mockery::mock(SlipService::class);
+        $slipMock->shouldNotReceive('retrieveDraftSlips');
+        $slipMock->shouldNotReceive('createSlipAsDraft');
+        $slipMock->shouldNotReceive('createSlipEntry');
+
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $result_actual = $BookKeeping->createSlipEntryAsDraft($debit, $client, $outline, $credit, $amount, $bookId);
+
+        $this->assertSame($result_expected, $result_actual);
     }
 }
