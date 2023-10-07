@@ -119,5 +119,4 @@ class UpdateAccountGroupTest extends TestCase
 
         $this->assertSame($result_expected, $result_actual);
     }
-
 }
