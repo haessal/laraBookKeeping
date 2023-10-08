@@ -3,12 +3,6 @@
 
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
-                <div
-                    class="border-b border-gray-200 bg-white p-6 text-black dark:border-gray-900 dark:bg-gray-800 dark:text-gray-200">
-                    {{ __("You're logged in!") }}
-                </div>
-            </div>
             <h2 class="py-3 pl-2 text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200 sm:pl-0">
                 {{ __('Book List') }}
             </h2>
