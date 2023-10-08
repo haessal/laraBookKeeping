@@ -10,6 +10,7 @@ use App\Http\Controllers\page\v2\RedirectAccountsSettingsActionHtml;
 use App\Http\Controllers\page\v2\ShowAccountsActionHtml;
 use App\Http\Controllers\page\v2\ShowAccountsSettingsActionHtml;
 use App\Http\Controllers\page\v2\ShowHomeActionHtml;
+use App\Http\Controllers\page\v2\ShowSettingsActionHtml;
 use App\Http\Controllers\page\v2\UpdateAccountsGroupActionHtml;
 use App\Http\Controllers\page\v2\UpdateAccountsItemActionHtml;
 use App\Http\Controllers\ProfileController;
@@ -61,9 +62,7 @@ Route::prefix('/page/v2/books/{bookId}')->group(function () {
     Route::post('/accounts/settings', RedirectAccountsSettingsActionHtml::class)->name('v2_accounts_settings_redirect');
     Route::match(['get', 'post'], '/accounts/settings/groups/{accountsGroupId}', UpdateAccountsGroupActionHtml::class)->name('v2_accounts_groups');
     Route::match(['get', 'post'], '/accounts/settings/items/{accountsItemId}', UpdateAccountsItemActionHtml::class)->name('v2_accounts_items');
-    Route::get('/settings', function () {
-        return view('welcome');
-    })->name('v2_settings');
+    Route::get('/settings', ShowSettingsActionHtml::class)->name('v2_settings');
 });
 
 require __DIR__.'/auth.php';
