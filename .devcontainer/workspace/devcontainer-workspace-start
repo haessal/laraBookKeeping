@@ -1,0 +1,9 @@
+#!/bin/bash
+set -e
+
+echo "Set $USERNAME's id with UID: $USER_UID, GID: $USER_GID"
+
+groupmod -g $USER_GID -o $USERNAME
+usermod -u $USER_UID -g $USER_GID -o $USERNAME
+
+while sleep 1000; do :; done

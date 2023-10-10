@@ -1,0 +1,25 @@
+{
+    "name": "laravel-devcontainer",
+    "initializeCommand": ".devcontainer/initialize",
+    "dockerComposeFile": [
+        "docker-compose.yml"
+    ],
+    "service": "workspace",
+    "workspaceFolder": "/workspace",
+    "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+    },
+    "extensions": [
+        "arjun.swagger-viewer",
+        "bmewburn.vscode-intelephense-client",
+        "eamodio.gitlens",
+        "felixfbecker.php-intellisense",
+        "humao.rest-client",
+        "mikestead.dotenv",
+        "neilbrayfield.php-docblocker",
+        "ryanluker.vscode-coverage-gutters",
+        "shd101wyy.markdown-preview-enhanced",
+        "streetsidesoftware.code-spell-checker"
+    ],
+    "remoteUser": "developer"
+}
