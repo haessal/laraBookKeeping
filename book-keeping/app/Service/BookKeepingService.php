@@ -182,7 +182,7 @@ class BookKeepingService
                     'book'     => $this->book->exportInformation($bookId),
                     'accounts' => $this->account->exportAccounts($bookId),
                     'slips'    => $this->slip->exportSlips($bookId),
-                ]
+                ],
             ];
         }
 
