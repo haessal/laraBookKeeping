@@ -102,34 +102,6 @@ class SlipService
     }
 
     /**
-     * Export slip list.
-     *
-     * @param string $bookId
-     *
-     * @return array
-     */
-    public function exportSlips(string $bookId): array
-    {
-        $slips = [];
-        $slipList = $this->slip->searchForExport($bookId);
-
-        foreach ($slipList as $slip) {
-            $slipId = $slip['slip_id'];
-            $slips[$slipId] = $slip;
-
-            $entries = [];
-            $slipEntryList = $this->slipEntry->searchSlipEntriesForExport($slipId);
-            foreach ($slipEntryList as $slipEntry) {
-                $entries[$slipEntry['slip_entry_id']] = $slipEntry;
-            }
-
-            $slips[$slipId]['entries'] = $entries;
-        }
-
-        return $slips;
-    }
-
-    /**
      * Delete the slip entry.
      *
      * @param  string  $slipEntryId
@@ -138,6 +110,86 @@ class SlipService
     public function deleteSlipEntry($slipEntryId)
     {
         $this->slipEntry->delete($slipEntryId);
+    }
+
+    /**
+     * Export slip list.
+     *
+     * @param  string  $bookId
+     * @return array<string, array{
+     *   slip_id: string,
+     *   book_id: string,
+     *   slip_outline: string,
+     *   slip_memo: string|null,
+     *   date: string,
+     *   is_draft: bool,
+     *   display_order: int|null,
+     *   created_at: string|null,
+     *   updated_at: string|null,
+     *   deleted_at: string|null,
+     *   entries: array<string, array{
+     *     slip_entry_id: string,
+     *     slip_id: string,
+     *     debit: string,
+     *     credit: string,
+     *     amount: int,
+     *     client: string,
+     *     outline: string,
+     *     display_order: int|null,
+     *     created_at: string|null,
+     *     updated_at: string|null,
+     *     deleted_at: string|null,
+     *   }>,
+     * }>
+     */
+    public function exportSlips(string $bookId): array
+    {
+        $slips = [];
+
+        /** @var array{
+         *   slip_id: string,
+         *   book_id: string,
+         *   slip_outline: string,
+         *   slip_memo: string|null,
+         *   date: string,
+         *   is_draft: bool,
+         *   display_order: int|null,
+         *   created_at: string|null,
+         *   updated_at: string|null,
+         *   deleted_at: string|null,
+         * }[] $slipList
+         */
+        $slipList = $this->slip->searchBookForExporting($bookId);
+
+        foreach ($slipList as $slip) {
+            $slipId = $slip['slip_id'];
+            $slips[$slipId] = $slip;
+
+            $entries = [];
+
+            /** @var array{
+             *   slip_entry_id: string,
+             *   slip_id: string,
+             *   debit: string,
+             *   credit: string,
+             *   amount: int,
+             *   client: string,
+             *   outline: string,
+             *   display_order: int|null,
+             *   created_at: string|null,
+             *   updated_at: string|null,
+             *   deleted_at: string|null,
+             * }[] $slipEntryList
+             */
+            $slipEntryList = $this->slipEntry->searchSlipForExporting($slipId);
+            foreach ($slipEntryList as $slipEntry) {
+                $entries[$slipEntry['slip_entry_id']] = $slipEntry;
+            }
+
+            $slips[$slipId]['entries'] = $entries;
+        }
+
+        return $slips;
     }
 
     /**

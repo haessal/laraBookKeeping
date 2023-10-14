@@ -86,15 +86,16 @@ class SlipRepository implements SlipRepositoryInterface
     }
 
     /**
-     * Search slip for export.
+     * Search the book for slips to export.
      *
-     * @param string $bookId
-     *
-     * @return array
+     * @param  string  $bookId
+     * @return array<int, array<string, mixed>>
      */
-    public function searchForExport(string $bookId): array
+    public function searchBookForExporting($bookId): array
     {
-        $list = Slip::select('*')
+        /** @var array<int, array<string, string>> $list */
+        $list = Slip::query()
+            ->select('*')
             ->where('book_id', $bookId)
             ->get()->toArray();
 

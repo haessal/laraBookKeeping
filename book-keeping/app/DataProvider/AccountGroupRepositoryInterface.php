@@ -26,13 +26,12 @@ interface AccountGroupRepositoryInterface
     public function searchBook($bookId): array;
 
     /**
-     * Search account group for export.
+     * Search the book for account groups to export.
      *
-     * @param string $bookId
-     *
-     * @return array
+     * @param  string  $bookId
+     * @return array<int, array<string, mixed>>
      */
-    public function searchForExport(string $bookId): array;
+    public function searchBookForExporting($bookId): array;
 
     /**
      * Update the account group.

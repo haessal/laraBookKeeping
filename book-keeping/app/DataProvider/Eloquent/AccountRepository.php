@@ -32,6 +32,23 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * Search the account group for account items to export.
+     *
+     * @param  string  $accountGroupId
+     * @return array<int, array<string, mixed>>
+     */
+    public function searchAccountGropupForExporting($accountGroupId): array
+    {
+        /** @var array<int, array<string, mixed>> $list */
+        $list = Account::query()
+            ->select('*')
+            ->where('account_group_id', $accountGroupId)
+            ->get()->toArray();
+
+        return $list;
+    }
+
+    /**
      * Search the book for accounts.
      *
      * @param  string  $bookId
@@ -60,22 +77,6 @@ class AccountRepository implements AccountRepositoryInterface
             ->whereNull('bk2_0_accounts.deleted_at')
             ->orderBy('account_type')
             ->orderBy('account_group_id')
-            ->get()->toArray();
-
-        return $list;
-    }
-
-    /**
-     * Search account for export with accout group id.
-     *
-     * @param string $accountGroupId
-     *
-     * @return array
-     */
-    public function searchAccountForExport(string $accountGroupId): array
-    {
-        $list = Account::select('*')
-            ->where('account_group_id', $accountGroupId)
             ->get()->toArray();
 
         return $list;

@@ -97,23 +97,77 @@ class AccountService
     }
 
     /**
-     * Export grouped account list.
+     * Export grouped account list of the book.
      *
-     * @param string $bookId
-     *
-     * @return array
+     * @param  string  $bookId
+     * @return array<string, array{
+     *   account_group_id: string,
+     *   book_id: string,
+     *   account_type: string,
+     *   account_group_title: string,
+     *   bk_uid: int|null,
+     *   account_group_bk_code: int|null,
+     *   is_current: bool,
+     *   display_order: int|null,
+     *   created_at: string|null,
+     *   updated_at: string|null,
+     *   deleted_at: string|null,
+     *   items: array<string, array{
+     *     account_id: string,
+     *     account_group_id: string,
+     *     account_title: string,
+     *     description: string,
+     *     selectable: bool,
+     *     bk_uid: int|null,
+     *     account_bk_code: int|null,
+     *     display_order: int|null,
+     *     created_at: string|null,
+     *     updated_at: string|null,
+     *     deleted_at: string|null,
+     *   }>,
+     * }>
      */
     public function exportAccounts(string $bookId): array
     {
         $accountGroups = [];
-        $accountGroupList = $this->accountGroup->searchForExport($bookId);
+
+        /** @var array{
+         *   account_group_id: string,
+         *   book_id: string,
+         *   account_type: string,
+         *   account_group_title: string,
+         *   bk_uid: int|null,
+         *   account_group_bk_code: int|null,
+         *   is_current: bool,
+         *   display_order: int|null,
+         *   created_at: string|null,
+         *   updated_at: string|null,
+         *   deleted_at: string|null,
+         * }[] $accountGroupList
+         */
+        $accountGroupList = $this->accountGroup->searchBookForExporting($bookId);
 
         foreach ($accountGroupList as $accountGroup) {
             $accountGroupId = $accountGroup['account_group_id'];
             $accountGroups[$accountGroupId] = $accountGroup;
 
             $accountItems = [];
-            $accountItemList = $this->account->searchAccountForExport($accountGroupId);
+
+            /** @var array{
+             *   account_id: string,
+             *   account_group_id: string,
+             *   account_title: string,
+             *   description: string,
+             *   selectable: bool,
+             *   bk_uid: int|null,
+             *   account_bk_code: int|null,
+             *   display_order: int|null,
+             *   created_at: string|null,
+             *   updated_at: string|null,
+             *   deleted_at: string|null,
+             * }[] $accountItemList
+             */
+            $accountItemList = $this->account->searchAccountGropupForExporting($accountGroupId);
             foreach ($accountItemList as $accountItem) {
                 $accountItems[$accountItem['account_id']] = $accountItem;
             }

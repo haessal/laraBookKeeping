@@ -17,21 +17,20 @@ interface AccountRepositoryInterface
     public function create($accountGroupId, $title, $description, $bk_uid, $bk_code);
 
     /**
+     * Search the account group for account items to export.
+     *
+     * @param  string  $accountGroupId
+     * @return array<int, array<string, mixed>>
+     */
+    public function searchAccountGropupForExporting($accountGroupId): array;
+
+    /**
      * Search the book for accounts.
      *
      * @param  string  $bookId
      * @return array<int, array<string, mixed>>
      */
     public function searchBook($bookId): array;
-
-    /**
-     * Search account for export with accout group id.
-     *
-     * @param string $accountGroupId
-     *
-     * @return array
-     */
-    public function searchAccountForExport(string $accountGroupId): array;
 
     /**
      * Update the account.

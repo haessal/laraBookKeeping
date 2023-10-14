@@ -39,6 +39,23 @@ class BookRepository implements BookRepositoryInterface
     }
 
     /**
+     * Find the book to export.
+     *
+     * @param  string  $bookId
+     * @return array<string, mixed>|null
+     */
+    public function findByIdForExporting($bookId): ?array
+    {
+        /** @var \Illuminate\Database\Eloquent\Model|null $book */
+        $book = Book::query()
+            ->select('*')
+            ->where('book_id', $bookId)
+            ->first();
+
+        return is_null($book) ? null : $book->toArray();
+    }
+
+    /**
      * Update the name of the book.
      *
      * @param  string  $bookId
@@ -53,21 +70,5 @@ class BookRepository implements BookRepositoryInterface
             $book->book_name = $newName;
             $book->save();
         }
-    }
-
-    /**
-     * Find book for export.
-     *
-     * @param string $bookId
-     *
-     * @return array | null
-     */
-    public function findByIdForExport(string $bookId): ?array
-    {
-        $book = Book::select('*')
-            ->where('book_id', $bookId)
-            ->first();
-
-        return is_null($book) ? null : $book->toArray();
     }
 }

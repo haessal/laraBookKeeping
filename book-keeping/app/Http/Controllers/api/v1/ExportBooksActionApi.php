@@ -20,9 +20,8 @@ class ExportBooksActionApi extends AuthenticatedBookKeepingActionApi
     /**
      * Create a new controller instance.
      *
-     * @param \App\Service\BookKeepingService                       $BookKeeping
-     * @param \App\Http\Responder\api\v1\ExportedBooksJsonResponder $responder
-     *
+     * @param  \App\Service\BookKeepingService  $BookKeeping
+     * @param  \App\Http\Responder\api\v1\ExportedBooksJsonResponder  $responder
      * @return void
      */
     public function __construct(BookKeepingService $BookKeeping, ExportedBooksJsonResponder $responder)
@@ -34,8 +33,7 @@ class ExportBooksActionApi extends AuthenticatedBookKeepingActionApi
     /**
      * Handle the incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function __invoke(Request $request): JsonResponse

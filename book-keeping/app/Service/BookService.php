@@ -72,13 +72,28 @@ class BookService
     /**
      * Export information.
      *
-     * @param string $bookId
-     *
-     * @return array | null
+     * @param  string  $bookId
+     * @return array{
+     *   book_id: string,
+     *   book_name: string,
+     *   display_order: int|null,
+     *   created_at: string|null,
+     *   updated_at: string|null,
+     *   deleted_at: string|null,
+     * }|null
      */
     public function exportInformation(string $bookId): ?array
     {
-        $book = $this->book->findByIdForExport($bookId);
+        /** @var array{
+         *   book_id: string,
+         *   book_name: string,
+         *   display_order: int|null,
+         *   created_at: string|null,
+         *   updated_at: string|null,
+         *   deleted_at: string|null,
+         * }|null $book
+         */
+        $book = $this->book->findByIdForExporting($bookId);
 
         return $book;
     }
