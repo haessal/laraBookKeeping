@@ -40,7 +40,7 @@ class ExportBooksActionApi extends AuthenticatedBookKeepingActionApi
      */
     public function __invoke(Request $request): JsonResponse
     {
-        $context['version'] = "2.0";
+        $context['version'] = '2.0';
         $context['books'] = $this->BookKeeping->exportBooks();
 
         return $this->responder->response($context);
