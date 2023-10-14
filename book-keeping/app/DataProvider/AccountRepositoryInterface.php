@@ -25,6 +25,15 @@ interface AccountRepositoryInterface
     public function searchBook($bookId): array;
 
     /**
+     * Search account for export with accout group id.
+     *
+     * @param string $accountGroupId
+     *
+     * @return array
+     */
+    public function searchAccountForExport(string $accountGroupId): array;
+
+    /**
      * Update the account.
      *
      * @param  string  $accountId

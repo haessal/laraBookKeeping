@@ -97,6 +97,34 @@ class AccountService
     }
 
     /**
+     * Export grouped account list.
+     *
+     * @param string $bookId
+     *
+     * @return array
+     */
+    public function exportAccounts(string $bookId): array
+    {
+        $accountGroups = [];
+        $accountGroupList = $this->accountGroup->searchForExport($bookId);
+
+        foreach ($accountGroupList as $accountGroup) {
+            $accountGroupId = $accountGroup['account_group_id'];
+            $accountGroups[$accountGroupId] = $accountGroup;
+
+            $accountItems = [];
+            $accountItemList = $this->account->searchAccountForExport($accountGroupId);
+            foreach ($accountItemList as $accountItem) {
+                $accountItems[$accountItem['account_id']] = $accountItem;
+            }
+
+            $accountGroups[$accountGroupId]['items'] = $accountItems;
+        }
+
+        return $accountGroups;
+    }
+
+    /**
      * Retrieve a list of accounts of the book.
      *
      * @param  string  $bookId

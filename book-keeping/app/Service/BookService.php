@@ -70,6 +70,20 @@ class BookService
     }
 
     /**
+     * Export information.
+     *
+     * @param string $bookId
+     *
+     * @return array | null
+     */
+    public function exportInformation(string $bookId): ?array
+    {
+        $book = $this->book->findByIdForExport($bookId);
+
+        return $book;
+    }
+
+    /**
      * Delete the permission that the user access to the book.
      *
      * @param  string  $bookId

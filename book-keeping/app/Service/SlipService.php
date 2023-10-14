@@ -102,6 +102,34 @@ class SlipService
     }
 
     /**
+     * Export slip list.
+     *
+     * @param string $bookId
+     *
+     * @return array
+     */
+    public function exportSlips(string $bookId): array
+    {
+        $slips = [];
+        $slipList = $this->slip->searchForExport($bookId);
+
+        foreach ($slipList as $slip) {
+            $slipId = $slip['slip_id'];
+            $slips[$slipId] = $slip;
+
+            $entries = [];
+            $slipEntryList = $this->slipEntry->searchSlipEntriesForExport($slipId);
+            foreach ($slipEntryList as $slipEntry) {
+                $entries[$slipEntry['slip_entry_id']] = $slipEntry;
+            }
+
+            $slips[$slipId]['entries'] = $entries;
+        }
+
+        return $slips;
+    }
+
+    /**
      * Delete the slip entry.
      *
      * @param  string  $slipEntryId

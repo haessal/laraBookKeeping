@@ -60,6 +60,22 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
     }
 
     /**
+     * Search account group for export.
+     *
+     * @param string $bookId
+     *
+     * @return array
+     */
+    public function searchForExport(string $bookId): array
+    {
+        $list = AccountGroup::select('*')
+            ->where('book_id', $bookId)
+            ->get()->toArray();
+
+        return $list;
+    }
+
+    /**
      * Update the account group.
      *
      * @param  string  $accountGroupId

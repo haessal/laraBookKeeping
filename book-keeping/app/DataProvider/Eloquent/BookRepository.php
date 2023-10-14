@@ -54,4 +54,20 @@ class BookRepository implements BookRepositoryInterface
             $book->save();
         }
     }
+
+    /**
+     * Find book for export.
+     *
+     * @param string $bookId
+     *
+     * @return array | null
+     */
+    public function findByIdForExport(string $bookId): ?array
+    {
+        $book = Book::select('*')
+            ->where('book_id', $bookId)
+            ->first();
+
+        return is_null($book) ? null : $book->toArray();
+    }
 }
