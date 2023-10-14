@@ -173,12 +173,10 @@ class BookKeepingService
         $bookList = $this->book->retrieveBooks(Auth::id());
         foreach ($bookList as $book) {
             $bookId = $book['book_id'];
-            $books[] = [
-                $bookId => [
-                    'book'     => $this->book->exportInformation($bookId),
-                    'accounts' => $this->account->exportAccounts($bookId),
-                    'slips'    => $this->slip->exportSlips($bookId),
-                ],
+            $books[$bookId] = [
+                'book'     => $this->book->exportInformation($bookId),
+                'accounts' => $this->account->exportAccounts($bookId),
+                'slips'    => $this->slip->exportSlips($bookId),
             ];
         }
 
