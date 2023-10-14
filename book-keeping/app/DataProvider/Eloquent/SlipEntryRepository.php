@@ -144,22 +144,6 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     /**
      * Search slip entries between specified date.
      *
-     * @param string $slipId
-     *
-     * @return array
-     */
-    public function searchSlipEntriesForExport(string $slipId): array
-    {
-        $list = SlipEntry::select('*')
-        ->where('slip_id', $slipId)
-        ->get()->toArray();
-
-        return $list;
-    }
-
-    /**
-     * Search slip entries between specified date.
-     *
      * @param string $fromDate
      * @param string $toDate
      * @param array  $condition
@@ -186,6 +170,22 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
             ->orderBy('bk2_0_slip_entries.created_at')
             ->orderBy('bk2_0_slips.display_order')
             ->orderBy('bk2_0_slip_entries.display_order')
+            ->get()->toArray();
+
+        return $list;
+    }
+
+    /**
+     * Search slip entries for export with slip id.
+     *
+     * @param string $slipId
+     *
+     * @return array
+     */
+    public function searchSlipEntriesForExport(string $slipId): array
+    {
+        $list = SlipEntry::select('*')
+            ->where('slip_id', $slipId)
             ->get()->toArray();
 
         return $list;

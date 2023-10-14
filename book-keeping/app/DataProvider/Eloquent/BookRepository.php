@@ -39,7 +39,7 @@ class BookRepository implements BookRepositoryInterface
     }
 
     /**
-     * Find book.
+     * Find book for export.
      *
      * @param string $bookId
      *
@@ -47,7 +47,8 @@ class BookRepository implements BookRepositoryInterface
      */
     public function findByIdForExport(string $bookId): ?array
     {
-        $book = Book::where('book_id', $bookId)
+        $book = Book::select('*')
+            ->where('book_id', $bookId)
             ->first();
 
         return is_null($book) ? null : $book->toArray();

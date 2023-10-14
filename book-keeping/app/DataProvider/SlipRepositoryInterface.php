@@ -47,7 +47,7 @@ interface SlipRepositoryInterface
     public function findById(string $slipId, string $bookId): ?array;
 
     /**
-     * Search account group.
+     * Search slip for export.
      *
      * @param string $bookId
      *

@@ -28,7 +28,7 @@ interface AccountGroupRepositoryInterface
     public function search(string $bookId): array;
 
     /**
-     * Search account group.
+     * Search account group for export.
      *
      * @param string $bookId
      *

@@ -59,7 +59,7 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
     }
 
     /**
-     * Search account group.
+     * Search account group for export.
      *
      * @param string $bookId
      *
@@ -67,7 +67,8 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
      */
     public function searchForExport(string $bookId): array
     {
-        $list = AccountGroup::where('book_id', $bookId)
+        $list = AccountGroup::select('*')
+            ->where('book_id', $bookId)
             ->get()->toArray();
 
         return $list;

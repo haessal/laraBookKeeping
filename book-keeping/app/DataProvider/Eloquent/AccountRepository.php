@@ -66,7 +66,7 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * Search account.
+     * Search account for export with accout group id.
      *
      * @param string $accountGroupId
      *
