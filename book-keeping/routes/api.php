@@ -27,3 +27,5 @@ Route::get('/v1/slipentries', api\v1\GetSlipEntriesActionApi::class);
 Route::get('/v1/slipentries/{slipEntryId}', api\v1\GetSlipEntriesSlipEntryIdActionApi::class);
 Route::patch('/v1/slipentries/{slipEntryId}', api\v1\PatchSlipEntriesActionApi::class);
 Route::delete('/v1/slipentries/{slipEntryId}', api\v1\DeleteSlipEntriesActionApi::class);
+
+Route::get('/v1/export/books', api\v1\ExportBooksActionApi::class);

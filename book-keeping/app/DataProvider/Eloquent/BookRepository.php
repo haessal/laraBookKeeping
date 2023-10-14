@@ -37,4 +37,19 @@ class BookRepository implements BookRepositoryInterface
 
         return is_null($book) ? null : $book->toArray();
     }
+
+    /**
+     * Find book.
+     *
+     * @param string $bookId
+     *
+     * @return array | null
+     */
+    public function findByIdForExport(string $bookId): ?array
+    {
+        $book = Book::where('book_id', $bookId)
+            ->first();
+
+        return is_null($book) ? null : $book->toArray();
+    }
 }

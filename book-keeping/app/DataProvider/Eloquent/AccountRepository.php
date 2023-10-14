@@ -66,6 +66,22 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * Search account.
+     *
+     * @param string $accountGroupId
+     *
+     * @return array
+     */
+    public function searchAccountForExport(string $accountGroupId): array
+    {
+        $list = Account::select('*')
+            ->where('account_group_id', $accountGroupId)
+            ->get()->toArray();
+
+        return $list;
+    }
+
+    /**
      * Update account.
      *
      * @param string $accountId

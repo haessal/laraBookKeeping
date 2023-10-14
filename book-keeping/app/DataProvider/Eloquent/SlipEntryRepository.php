@@ -144,6 +144,22 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     /**
      * Search slip entries between specified date.
      *
+     * @param string $slipId
+     *
+     * @return array
+     */
+    public function searchSlipEntriesForExport(string $slipId): array
+    {
+        $list = SlipEntry::select('*')
+        ->where('slip_id', $slipId)
+        ->get()->toArray();
+
+        return $list;
+    }
+
+    /**
+     * Search slip entries between specified date.
+     *
      * @param string $fromDate
      * @param string $toDate
      * @param array  $condition
