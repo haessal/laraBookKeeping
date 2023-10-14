@@ -102,6 +102,34 @@ class SlipService
     }
 
     /**
+     * Export slip list.
+     *
+     * @param string $bookId
+     *
+     * @return array
+     */
+    public function exportSlips(string $bookId): array
+    {
+        $slips = [];
+        $slipList = $this->slip->searchForExport($bookId);
+
+        foreach ($slipList as $slip) {
+            $slipId = $slip['slip_id'];
+            $slips[$slipId] = $slip;
+
+            $entries = [];
+            $slipEntryList = $this->slipEntry->searchSlipEntriesForExport($slipId);
+            foreach ($slipEntryList as $slipEntry) {
+                $entries[$slipEntry['slip_entry_id']] = $slipEntry;
+            }
+
+            $slips[$slipId]['entries'] = $entries;
+        }
+
+        return $slips;
+    }
+
+    /**
      * Retrieve the amount flow of each account between specified data.
      *
      * @param string $fromDate
@@ -138,35 +166,6 @@ class SlipService
     public function retrieveSlip(string $slipId, string $bookId): ?array
     {
         return $this->slip->findById($slipId, $bookId);
-    }
-
-    /**
-     * Retrieve a slip.
-     *
-     * @param string $slipId
-     * @param string $bookId
-     *
-     * @return array|null
-     */
-    public function exportSlips(string $bookId): ?array
-    {
-        $slips = [];
-        $slipList = $this->slip->searchForExport($bookId);
-
-        foreach ($slipList as $slip) {
-            $slipId = $slip['slip_id'];
-            $slips[$slipId] = $slip;
-
-            $entries = [];
-            $slipEntryList = $this->slipEntry->searchSlipEntriesForExport($slipId);
-            foreach ($slipEntryList as $slipEntry) {
-                $entries[$slipEntry['slip_entry_id']] = $slipEntry;
-            }
-
-            $slips[$slipId]['entries'] = $entries;
-
-        }
-        return $slips;
     }
 
     /**

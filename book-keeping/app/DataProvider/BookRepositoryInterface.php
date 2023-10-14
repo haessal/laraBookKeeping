@@ -23,7 +23,7 @@ interface BookRepositoryInterface
     public function findById(string $bookId): ?array;
 
     /**
-     * Find book.
+     * Find book for export.
      *
      * @param string $bookId
      *
