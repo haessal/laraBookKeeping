@@ -119,4 +119,20 @@ class BookService
 
         return $book;
     }
+
+    /**
+     * Retrieve information.
+     *
+     * @param string $bookId
+     *
+     * @return array | null
+     */
+    public function exportInformation(string $bookId): ?array
+    {
+        $book = $this->book->findByIdForExport($bookId);
+
+        return $book;
+    }
+
+
 }

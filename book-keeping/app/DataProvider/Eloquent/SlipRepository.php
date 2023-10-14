@@ -109,6 +109,21 @@ class SlipRepository implements SlipRepositoryInterface
     }
 
     /**
+     * Search account group.
+     *
+     * @param string $bookId
+     *
+     * @return array
+     */
+    public function searchForExport(string $bookId): array
+    {
+        $list = Slip::where('book_id', $bookId)
+            ->get()->toArray();
+
+        return $list;
+    }
+
+    /**
      * Update the flag which indicates that the slip is draft.
      *
      * @param string $slipId

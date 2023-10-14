@@ -28,6 +28,15 @@ interface AccountGroupRepositoryInterface
     public function search(string $bookId): array;
 
     /**
+     * Search account group.
+     *
+     * @param string $bookId
+     *
+     * @return array
+     */
+    public function searchForExport(string $bookId): array;
+
+    /**
      * Update account group.
      *
      * @param string $accountGroupId

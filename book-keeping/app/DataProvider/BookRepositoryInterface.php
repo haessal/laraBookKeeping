@@ -21,4 +21,13 @@ interface BookRepositoryInterface
      * @return array | null
      */
     public function findById(string $bookId): ?array;
+
+    /**
+     * Find book.
+     *
+     * @param string $bookId
+     *
+     * @return array | null
+     */
+    public function findByIdForExport(string $bookId): ?array;
 }

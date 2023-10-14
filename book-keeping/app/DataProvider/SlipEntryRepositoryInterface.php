@@ -72,6 +72,15 @@ interface SlipEntryRepositoryInterface
     public function searchSlipEntries(string $fromDate, string $toDate, array $condition, string $bookId): array;
 
     /**
+     * Search slip entries between specified date.
+     *
+     * @param string $slipId
+     *
+     * @return array
+     */
+    public function searchSlipEntriesForExport(string $slipId): array;
+
+    /**
      * Update the specified slip entry.
      *
      * @param string $slipEntryId

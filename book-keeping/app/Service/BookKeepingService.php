@@ -166,6 +166,30 @@ class BookKeepingService
     }
 
     /**
+     * Export Books.
+     *
+     * @return array
+     */
+    public function exportBooks(): array
+    {
+        $books = [];
+
+        $bookList = $this->book->retrieveBookList(Auth::id());
+        foreach ($bookList as $book) {
+            $bookId = $book['book_id'];
+            $books[] = [
+                $bookId => [
+                    'book'     => $this->book->exportInformation($bookId),
+                    'accounts' => $this->account->exportAccounts($bookId),
+                    'slips'    => $this->slip->exportSlips($bookId),
+                ]
+            ];
+        }
+
+        return $books;
+    }
+
+    /**
      * Retrieve account list.
      *
      * @param bool   $selectableOnly
@@ -651,7 +675,7 @@ class BookKeepingService
     /**
      * Check if UUID is in valid format.
      *
-     * @param array $uuid
+     * @param string $uuid
      *
      * @return bool
      */
