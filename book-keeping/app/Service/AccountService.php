@@ -100,6 +100,78 @@ class AccountService
      * Export grouped account list of the book.
      *
      * @param  string  $bookId
+     * @param  string  $accountGroupId
+     * @return array
+     */
+    public function exportAccountGroup($bookId, $accountGroupId): array
+    {
+        $accountGroups = [];
+
+        $accountGroupList = $this->accountGroup->searchBookForExporting($bookId, $accountGroupId);
+        foreach ($accountGroupList as $accountGroup) {
+            $accountGroups[$accountGroup['account_group_id']] = $accountGroup;
+        }
+
+        return $accountGroups;
+    }
+
+    /**
+     * Export the account item.
+     *
+     * @param  string  $bookId
+     * @param  string  $accountGroupId
+     * @param  string  $accountId
+     * @return array
+     */
+    public function exportAccountItem($bookId, $accountGroupId, $accountId): array
+    {
+        $accountGroups = [];
+
+        $accountGroupList = $this->accountGroup->searchBookForExporting($bookId, $accountGroupId);
+        foreach ($accountGroupList as $accountGroup) {
+            $accountItems = [];
+            $accountItemList = $this->account->searchAccountGropupForExporting($accountGroupId, $accountId);
+            foreach ($accountItemList as $accountItem) {
+                $accountItems[$accountItem['account_id']] = $accountItem;
+            }
+            $accountGroups[$accountGroup['account_group_id']] = ['items' => $accountItems];
+        }
+
+        return $accountGroups;
+    }
+
+    /**
+     * Export a list of account items belonging to the account group.
+     *
+     * @param  string  $bookId
+     * @param  string  $accountGroupId
+     * @return array
+     */
+    public function exportAccountItems($bookId, $accountGroupId): array
+    {
+        $accountGroups = [];
+
+        $accountGroupList = $this->accountGroup->searchBookForExporting($bookId, $accountGroupId);
+        foreach ($accountGroupList as $accountGroup) {
+            $accountItems = [];
+            $accountItemList = $this->account->searchAccountGropupForExporting(strval($accountGroup['account_group_id']));
+            foreach ($accountItemList as $accountItem) {
+                $accountItems[$accountItem['account_id']] = [
+                    'account_id' => $accountItem['account_id'],
+                    'updated_at' => $accountItem['updated_at'],
+                ];
+            }
+            $accountGroups[$accountGroup['account_group_id']] = ['items' => $accountItems];
+        }
+
+        return $accountGroups;
+    }
+
+    /**
+     * Export accounts of the book.
+     *
+     * @param  string  $bookId
+     * @param  bool  $dumpRequired
      * @return array<string, array{
      *   account_group_id: string,
      *   book_id: string,
@@ -127,7 +199,7 @@ class AccountService
      *   }>,
      * }>
      */
-    public function exportAccounts(string $bookId): array
+    public function exportAccounts($bookId, $dumpRequired): array
     {
         $accountGroups = [];
 
@@ -146,33 +218,36 @@ class AccountService
          * }[] $accountGroupList
          */
         $accountGroupList = $this->accountGroup->searchBookForExporting($bookId);
-
         foreach ($accountGroupList as $accountGroup) {
             $accountGroupId = $accountGroup['account_group_id'];
-            $accountGroups[$accountGroupId] = $accountGroup;
-
-            $accountItems = [];
-
-            /** @var array{
-             *   account_id: string,
-             *   account_group_id: string,
-             *   account_title: string,
-             *   description: string,
-             *   selectable: bool,
-             *   bk_uid: int|null,
-             *   account_bk_code: int|null,
-             *   display_order: int|null,
-             *   created_at: string|null,
-             *   updated_at: string|null,
-             *   deleted_at: string|null,
-             * }[] $accountItemList
-             */
-            $accountItemList = $this->account->searchAccountGropupForExporting($accountGroupId);
-            foreach ($accountItemList as $accountItem) {
-                $accountItems[$accountItem['account_id']] = $accountItem;
+            if ($dumpRequired) {
+                $accountGroups[$accountGroupId] = $accountGroup;
+                $accountItems = [];
+                /** @var array{
+                 *   account_id: string,
+                 *   account_group_id: string,
+                 *   account_title: string,
+                 *   description: string,
+                 *   selectable: bool,
+                 *   bk_uid: int|null,
+                 *   account_bk_code: int|null,
+                 *   display_order: int|null,
+                 *   created_at: string|null,
+                 *   updated_at: string|null,
+                 *   deleted_at: string|null,
+                 * }[] $accountItemList
+                 */
+                $accountItemList = $this->account->searchAccountGropupForExporting($accountGroupId);
+                foreach ($accountItemList as $accountItem) {
+                    $accountItems[$accountItem['account_id']] = $accountItem;
+                }
+                $accountGroups[$accountGroupId]['items'] = $accountItems;
+            } else {
+                $accountGroups[$accountGroupId] = [
+                    'account_group_id' => $accountGroup['account_group_id'],
+                    'updated_at'       => $accountGroup['updated_at'],
+                ];
             }
-
-            $accountGroups[$accountGroupId]['items'] = $accountItems;
         }
 
         return $accountGroups;

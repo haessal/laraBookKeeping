@@ -70,9 +70,10 @@ interface SlipEntryRepositoryInterface
      * Search the slip for its entries to export.
      *
      * @param  string  $slipId
+     * @param  string|null  $slipEntryId
      * @return array<int, array<string, mixed>>
      */
-    public function searchSlipForExporting($slipId): array;
+    public function searchSlipForExporting($slipId, $slipEntryId = null): array;
 
     /**
      * Update the slip entry.

@@ -29,9 +29,10 @@ interface AccountGroupRepositoryInterface
      * Search the book for account groups to export.
      *
      * @param  string  $bookId
+     * @param  string|null  $accountGroupId
      * @return array<int, array<string, mixed>>
      */
-    public function searchBookForExporting($bookId): array;
+    public function searchBookForExporting($bookId, $accountGroupId = null): array;
 
     /**
      * Update the account group.

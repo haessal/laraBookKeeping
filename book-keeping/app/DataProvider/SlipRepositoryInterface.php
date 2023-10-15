@@ -46,9 +46,10 @@ interface SlipRepositoryInterface
      * Search the book for slips to export.
      *
      * @param  string  $bookId
+     * @param  string|null  $slipId
      * @return array<int, array<string, mixed>>
      */
-    public function searchBookForExporting($bookId): array;
+    public function searchBookForExporting($bookId, $slipId = null): array;
 
     /**
      * Update the slip.

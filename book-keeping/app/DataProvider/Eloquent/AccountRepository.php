@@ -35,15 +35,20 @@ class AccountRepository implements AccountRepositoryInterface
      * Search the account group for account items to export.
      *
      * @param  string  $accountGroupId
+     * @param  string|null  $accountId
      * @return array<int, array<string, mixed>>
      */
-    public function searchAccountGropupForExporting($accountGroupId): array
+    public function searchAccountGropupForExporting($accountGroupId, $accountId = null): array
     {
-        /** @var array<int, array<string, mixed>> $list */
-        $list = Account::query()
+        /** @var \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder $query */
+        $query = Account::withTrashed()
             ->select('*')
-            ->where('account_group_id', $accountGroupId)
-            ->get()->toArray();
+            ->where('account_group_id', $accountGroupId);
+        if (isset($accountId)) {
+            $query = $query->where('account_id', $accountId);
+        }
+        /** @var array<int, array<string, mixed>> $list */
+        $list = $query->get()->toArray();
 
         return $list;
     }

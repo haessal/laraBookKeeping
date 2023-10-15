@@ -162,88 +162,6 @@ class BookKeepingService
     }
 
     /**
-     * Export Books.
-     *
-     * @return array<string, array{
-     *   book: array{
-     *     book_id: string,
-     *     book_name: string,
-     *     display_order: int|null,
-     *     created_at: string|null,
-     *     updated_at: string|null,
-     *     deleted_at: string|null,
-     *   }|null,
-     *   accounts: array<string, array{
-     *     account_group_id: string,
-     *     book_id: string,
-     *     account_type: string,
-     *     account_group_title: string,
-     *     bk_uid: int|null,
-     *     account_group_bk_code: int|null,
-     *     is_current: bool,
-     *     display_order: int|null,
-     *     created_at: string|null,
-     *     updated_at: string|null,
-     *     deleted_at: string|null,
-     *     items: array<string, array{
-     *       account_id: string,
-     *       account_group_id: string,
-     *       account_title: string,
-     *       description: string,
-     *       selectable: bool,
-     *       bk_uid: int|null,
-     *       account_bk_code: int|null,
-     *       display_order: int|null,
-     *       created_at: string|null,
-     *       updated_at: string|null,
-     *       deleted_at: string|null,
-     *     }>,
-     *   }>,
-     *   slips: array<string, array{
-     *     slip_id: string,
-     *     book_id: string,
-     *     slip_outline: string,
-     *     slip_memo: string|null,
-     *     date: string,
-     *     is_draft: bool,
-     *     display_order: int|null,
-     *     created_at: string|null,
-     *     updated_at: string|null,
-     *     deleted_at: string|null,
-     *     entries: array<string, array{
-     *       slip_entry_id: string,
-     *       slip_id: string,
-     *       debit: string,
-     *       credit: string,
-     *       amount: int,
-     *       client: string,
-     *       outline: string,
-     *       display_order: int|null,
-     *       created_at: string|null,
-     *       updated_at: string|null,
-     *       deleted_at: string|null,
-     *     }>,
-     *   }>,
-     * }>
-     */
-    public function exportBooks(): array
-    {
-        $books = [];
-
-        $bookList = $this->book->retrieveBooks(intval(Auth::id()));
-        foreach ($bookList as $book) {
-            $bookId = $book['book_id'];
-            $books[$bookId] = [
-                'book'     => $this->book->exportInformation($bookId),
-                'accounts' => $this->account->exportAccounts($bookId),
-                'slips'    => $this->slip->exportSlips($bookId),
-            ];
-        }
-
-        return $books;
-    }
-
-    /**
      * Create a new slip.
      *
      * @param  string  $outline
@@ -350,6 +268,242 @@ class BookKeepingService
         } else {
             return [self::STATUS_ERROR_AUTH_NOTAVAILABLE, null];
         }
+    }
+
+    /**
+     * Export the account group.
+     *
+     * @param  string  $bookId
+     * @param  string  $accountGroupId
+     * @return array
+     */
+    public function exportAccountGroup($bookId, $accountGroupId): array
+    {
+        $books = [];
+
+        $books[$bookId] = ['accounts' => $this->account->exportAccountGroup($bookId, $accountGroupId)];
+
+        return $books;
+    }
+
+    /**
+     * Export the account item.
+     *
+     * @param  string  $bookId
+     * @param  string  $accountGroupId
+     * @param  string  $accountId
+     * @return array
+     */
+    public function exportAccountItem($bookId, $accountGroupId, $accountId): array
+    {
+        $books = [];
+
+        $books[$bookId] = ['accounts' => $this->account->exportAccountItem($bookId, $accountGroupId, $accountId)];
+
+        return $books;
+    }
+
+    /**
+     * Export a list of account items belonging to the account group.
+     *
+     * @param  string  $bookId
+     * @param  string  $accountGroupId
+     * @return array
+     */
+    public function exportAccountItems($bookId, $accountGroupId): array
+    {
+        $books = [];
+
+        $books[$bookId] = ['accounts' => $this->account->exportAccountItems($bookId, $accountGroupId)];
+
+        return $books;
+    }
+
+    /**
+     * Export accounts of the book.
+     *
+     * @param  string  $bookId
+     * @return array
+     */
+    public function exportAccounts($bookId): array
+    {
+        $books = [];
+
+        $books[$bookId] = ['accounts' => $this->account->exportAccounts($bookId, false)];
+
+        return $books;
+    }
+
+    /**
+     * Export the book.
+     *
+     * @param  string  $bookId
+     * @return array
+     */
+    public function exportBook($bookId): array
+    {
+        $books = [];
+
+        $books[$bookId] = ['book' => $this->book->exportInformation($bookId)];
+
+        return $books;
+    }
+
+    /**
+     * Export books.
+     *
+     * @param  bool  $dumpRequired
+     * @return array<string, array{
+     *   book: array{
+     *     book_id: string,
+     *     book_name: string,
+     *     display_order: int|null,
+     *     created_at: string|null,
+     *     updated_at: string|null,
+     *     deleted_at: string|null,
+     *   }|null,
+     *   accounts: array<string, array{
+     *     account_group_id: string,
+     *     book_id: string,
+     *     account_type: string,
+     *     account_group_title: string,
+     *     bk_uid: int|null,
+     *     account_group_bk_code: int|null,
+     *     is_current: bool,
+     *     display_order: int|null,
+     *     created_at: string|null,
+     *     updated_at: string|null,
+     *     deleted_at: string|null,
+     *     items: array<string, array{
+     *       account_id: string,
+     *       account_group_id: string,
+     *       account_title: string,
+     *       description: string,
+     *       selectable: bool,
+     *       bk_uid: int|null,
+     *       account_bk_code: int|null,
+     *       display_order: int|null,
+     *       created_at: string|null,
+     *       updated_at: string|null,
+     *       deleted_at: string|null,
+     *     }>,
+     *   }>,
+     *   slips: array<string, array{
+     *     slip_id: string,
+     *     book_id: string,
+     *     slip_outline: string,
+     *     slip_memo: string|null,
+     *     date: string,
+     *     is_draft: bool,
+     *     display_order: int|null,
+     *     created_at: string|null,
+     *     updated_at: string|null,
+     *     deleted_at: string|null,
+     *     entries: array<string, array{
+     *       slip_entry_id: string,
+     *       slip_id: string,
+     *       debit: string,
+     *       credit: string,
+     *       amount: int,
+     *       client: string,
+     *       outline: string,
+     *       display_order: int|null,
+     *       created_at: string|null,
+     *       updated_at: string|null,
+     *       deleted_at: string|null,
+     *     }>,
+     *   }>,
+     * }>
+     */
+    public function exportBooks($dumpRequired): array
+    {
+        $books = [];
+
+        $bookList = $this->book->retrieveBooks(intval(Auth::id()));
+        foreach ($bookList as $book) {
+            $bookId = $book['book_id'];
+            if ($dumpRequired) {
+                $books[$bookId] = [
+                    'book'     => $this->book->exportInformation($bookId),
+                    'accounts' => $this->account->exportAccounts($bookId, true),
+                    'slips'    => $this->slip->exportSlips($bookId, true),
+                ];
+            } else {
+                $bookInformation = $this->book->exportInformation($bookId);
+                $books[$bookId] = [
+                    'book' => [
+                        'book_id'    => $bookInformation['book_id'],
+                        'updated_at' => $bookInformation['updated_at'],
+                    ],
+                ];
+            }
+        }
+
+        return $books;
+    }
+
+    /**
+     * Export the slip.
+     *
+     * @param  string  $bookId
+     * @param  string  $slipId
+     * @return array
+     */
+    public function exportSlip($bookId, $slipId): array
+    {
+        $books = [];
+
+        $books[$bookId] = ['slips' => $this->slip->exportSlip($bookId, $slipId)];
+
+        return $books;
+    }
+
+    /**
+     * Export a list of entries on the slip.
+     *
+     * @param  string  $bookId
+     * @param  string  $slipId
+     * @return array
+     */
+    public function exportSlipEntries($bookId, $slipId): array
+    {
+        $books = [];
+
+        $books[$bookId] = ['slips' => $this->slip->exportSlipEntries($bookId, $slipId)];
+
+        return $books;
+    }
+
+    /**
+     * Export the slip entry.
+     *
+     * @param  string  $bookId
+     * @param  string  $slipId
+     * @param  string  $slipEntryId
+     * @return array
+     */
+    public function exportSlipEntry($bookId, $slipId, $slipEntryId): array
+    {
+        $books = [];
+
+        $books[$bookId] = ['slips' => $this->slip->exportSlipEntry($bookId, $slipId, $slipEntryId)];
+
+        return $books;
+    }
+
+    /**
+     * Export slips of the book.
+     *
+     * @param  string  $bookId
+     * @return array
+     */
+    public function exportSlips($bookId): array
+    {
+        $books = [];
+
+        $books[$bookId] = ['slips' => $this->slip->exportSlips($bookId, false)];
+
+        return $books;
     }
 
     /**

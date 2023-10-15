@@ -8,7 +8,7 @@ use App\Service\BookKeepingService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class ExportBooksActionApi extends AuthenticatedBookKeepingActionApi
+class ExportBooksBookIdSlipsSlipIdEntriesSlipEntryIdActionApi extends AuthenticatedBookKeepingActionApi
 {
     /**
      * ExportedBooksJsonResponder responder instance.
@@ -36,16 +36,11 @@ class ExportBooksActionApi extends AuthenticatedBookKeepingActionApi
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request, string $bookId, string $slipId, string $slipEntryId): JsonResponse
     {
         $context['version'] = '2.0';
 
-        $dumpRequired = $request->input('dump');
-        if (is_bool($dumpRequired) && $dumpRequired) {
-            $context['books'] = $this->BookKeeping->exportBooks(true);
-        } else {
-            $context['books'] = $this->BookKeeping->exportBooks(false);
-        }
+        $context['books'] = $this->BookKeeping->exportSlipEntry($bookId, $slipId, $slipEntryId);
 
         return $this->responder->response($context);
     }
