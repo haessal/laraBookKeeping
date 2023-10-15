@@ -102,28 +102,111 @@ class SlipService
     }
 
     /**
-     * Export slip list.
+     * Export slip list.FIXME
      *
      * @param string $bookId
+     * @param string $slipId
      *
      * @return array
      */
-    public function exportSlips(string $bookId): array
+    public function exportSlip(string $bookId, string $slipId): array
     {
         $slips = [];
-        $slipList = $this->slip->searchForExport($bookId);
 
+        $slipList = $this->slip->searchForExport($bookId, $slipId);
         foreach ($slipList as $slip) {
-            $slipId = $slip['slip_id'];
-            $slips[$slipId] = $slip;
+            $slips[$slip['slip_id']] = $slip;
+        }
 
+        return $slips;
+    }
+
+    /**
+     * Export slip list.FIXME
+     *
+     * @param string $bookId
+     * @param string $slipId
+     *
+     * @return array
+     */
+    public function exportSlipEntries(string $bookId, string $slipId): array
+    {
+        $slips = [];
+
+        $slipList = $this->slip->searchForExport($bookId, $slipId);
+        foreach ($slipList as $slip) {
             $entries = [];
-            $slipEntryList = $this->slipEntry->searchSlipEntriesForExport($slipId);
+            $slipEntryList = $this->slipEntry->searchSlipEntriesForExport($slip['slip_id']);
+            foreach ($slipEntryList as $slipEntry) {
+                $entries[$slipEntry['slip_entry_id']] = [
+                    'slip_entry_id' => $slipEntry['slip_entry_id'],
+                    'updated_at'    => $slipEntry['updated_at'],
+                ];
+            }
+            $slips[$slip['slip_id']] = ['entries' => $entries];
+        }
+
+        return $slips;
+    }
+
+    /**
+     * Export Books.FIXME
+     *
+     * @param string $bookId
+     * @param string $slipId
+     * @param string $slipEntryId
+     *
+     * @return array
+     */
+    public function exportSlipEntry(string $bookId, string $slipId, string $slipEntryId): array
+    {
+        $slips = [];
+
+        $slipList = $this->slip->searchForExport($bookId, $slipId);
+        foreach ($slipList as $slip) {
+            $entries = [];
+            $slipEntryList = $this->slipEntry->searchSlipEntriesForExport($slip['slip_id'], $slipEntryId);
             foreach ($slipEntryList as $slipEntry) {
                 $entries[$slipEntry['slip_entry_id']] = $slipEntry;
             }
+            $slips[$slip['slip_id']] = ['entries' => $entries];
+        }
 
-            $slips[$slipId]['entries'] = $entries;
+        return $slips;
+    }
+
+    /**
+     * Export slip list.FIXME
+     *
+     * @param string $bookId
+     * @param bool   $dumpRequired
+     *
+     * @return array
+     */
+    public function exportSlips(string $bookId, bool $dumpRequired): array
+    {
+        $slips = [];
+
+        $slipList = $this->slip->searchForExport($bookId);
+        foreach ($slipList as $slip) {
+            $slipId = $slip['slip_id'];
+            if ($dumpRequired) {
+
+                $slips[$slipId] = $slip;
+
+                $entries = [];
+                $slipEntryList = $this->slipEntry->searchSlipEntriesForExport($slipId);
+                foreach ($slipEntryList as $slipEntry) {
+                    $entries[$slipEntry['slip_entry_id']] = $slipEntry;
+                }
+
+                $slips[$slipId]['entries'] = $entries;
+            } else {
+                $slips[$slipId] = [
+                    'slip_id'    => $slip['slip_id'],
+                    'updated_at' => $slip['updated_at'],
+                ];
+            }
         }
 
         return $slips;
