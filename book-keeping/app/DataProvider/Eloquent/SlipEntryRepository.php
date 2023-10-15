@@ -179,14 +179,18 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
      * Search slip entries for export with slip id.
      *
      * @param string $slipId
+     * @param string|null $slipEntryId
      *
      * @return array
      */
-    public function searchSlipEntriesForExport(string $slipId): array
+    public function searchSlipEntriesForExport(string $slipId, string $slipEntryId = null): array
     {
-        $list = SlipEntry::select('*')
-            ->where('slip_id', $slipId)
-            ->get()->toArray();
+        $query = SlipEntry::select('*')
+            ->where('slip_id', $slipId);
+        if (isset($slipEntryId)) {
+            $query = $query->where('slip_entry_id', $slipEntryId);
+        }
+        $list = $query->get()->toArray();
 
         return $list;
     }

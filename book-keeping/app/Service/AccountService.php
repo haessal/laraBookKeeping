@@ -99,28 +99,110 @@ class AccountService
     }
 
     /**
-     * Export grouped account list.
+     * Export grouped account list.FIXME
      *
      * @param string $bookId
+     * @param string $accountGroupId
      *
      * @return array
      */
-    public function exportAccounts(string $bookId): array
+    public function exportAccountGroup(string $bookId, string $accountGroupId): array
     {
         $accountGroups = [];
-        $accountGroupList = $this->accountGroup->searchForExport($bookId);
 
+        $accountGroupList = $this->accountGroup->searchForExport($bookId, $accountGroupId);
         foreach ($accountGroupList as $accountGroup) {
-            $accountGroupId = $accountGroup['account_group_id'];
-            $accountGroups[$accountGroupId] = $accountGroup;
+            $accountGroups[$accountGroup['account_group_id']] = $accountGroup;
+        }
 
+        return $accountGroups;
+    }
+
+    /**
+     * Export grouped account list.FIXME
+     *
+     * @param string $bookId
+     * @param string $accountGroupId
+     * @param string $accountId
+     *
+     * @return array
+     */
+    public function exportAccountItem(string $bookId, string $accountGroupId, string $accountId): array
+    {
+        $accountGroups = [];
+
+        $accountGroupList = $this->accountGroup->searchForExport($bookId, $accountGroupId);
+        foreach ($accountGroupList as $accountGroup) {
             $accountItems = [];
-            $accountItemList = $this->account->searchAccountForExport($accountGroupId);
+            $accountItemList = $this->account->searchAccountForExport($accountGroup['account_group_id'], $accountId);
             foreach ($accountItemList as $accountItem) {
                 $accountItems[$accountItem['account_id']] = $accountItem;
             }
+            $accountGroups[$accountGroup['account_group_id']] = ['items' => $accountItems];
+        }
 
-            $accountGroups[$accountGroupId]['items'] = $accountItems;
+        return $accountGroups;
+    }
+
+    /**
+     * Export grouped account list.FIXME
+     *
+     * @param string $bookId
+     * @param string $accountGroupId
+     *
+     * @return array
+     */
+    public function exportAccountItems(string $bookId, string $accountGroupId): array
+    {
+        $accountGroups = [];
+
+        $accountGroupList = $this->accountGroup->searchForExport($bookId, $accountGroupId);
+        foreach ($accountGroupList as $accountGroup) {
+            $accountItems = [];
+            $accountItemList = $this->account->searchAccountForExport($accountGroup['account_group_id']);
+            foreach ($accountItemList as $accountItem) {
+                $accountItems[$accountItem['account_id']] = [
+                    'account_id' => $accountItem['account_id'],
+                    'updated_at' => $accountItem['updated_at'],
+                ];
+            }
+            $accountGroups[$accountGroup['account_group_id']] = ['items' => $accountItems];
+        }
+
+        return $accountGroups;
+    }
+
+    /**
+     * Export grouped account list.FIXME
+     *
+     * @param string $bookId
+     * @param bool  $dumpRequired
+     *
+     * @return array
+     */
+    public function exportAccounts(string $bookId, bool $dumpRequired): array
+    {
+        $accountGroups = [];
+
+        $accountGroupList = $this->accountGroup->searchForExport($bookId);
+        foreach ($accountGroupList as $accountGroup) {
+            $accountGroupId = $accountGroup['account_group_id'];
+            if ($dumpRequired) {
+                $accountGroups[$accountGroupId] = $accountGroup;
+
+                $accountItems = [];
+                $accountItemList = $this->account->searchAccountForExport($accountGroupId);
+                foreach ($accountItemList as $accountItem) {
+                    $accountItems[$accountItem['account_id']] = $accountItem;
+                }
+
+                $accountGroups[$accountGroupId]['items'] = $accountItems;
+            } else {
+                $accountGroups[$accountGroupId] = [
+                    'account_group_id' => $accountGroup['account_group_id'],
+                    'updated_at'       => $accountGroup['updated_at'],
+                ];
+            }
         }
 
         return $accountGroups;

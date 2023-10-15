@@ -166,23 +166,187 @@ class BookKeepingService
     }
 
     /**
-     * Export Books.
+     * Export Accounts.FIXME
+     *
+     * @param string $bookId
+     * @param string $accountGroupId
      *
      * @return array
      */
-    public function exportBooks(): array
+    public function exportAccountGroup(string $bookId, string $accountGroupId): array
+    {
+        $books = [];
+
+        $books[$bookId] = ['accounts' => $this->account->exportAccountGroup($bookId, $accountGroupId)];
+
+        return $books;
+    }
+
+    /**
+     * Export Accounts.FIXME
+     *
+     * @param string $bookId
+     * @param string $accountGroupId
+     * @param string $accountId
+     *
+     * @return array
+     */
+    public function exportAccountItem(string $bookId, string $accountGroupId, string $accountId): array
+    {
+        $books = [];
+
+        $books[$bookId] = ['accounts' => $this->account->exportAccountItem($bookId, $accountGroupId, $accountId)];
+
+        return $books;
+    }
+
+    /**
+     * Export Accounts.FIXME
+     *
+     * @param string $bookId
+     * @param string $accountGroupId
+     *
+     * @return array
+     */
+    public function exportAccountItems(string $bookId, string $accountGroupId): array
+    {
+        $books = [];
+
+        $books[$bookId] = ['accounts' => $this->account->exportAccountItems($bookId, $accountGroupId)];
+
+        return $books;
+    }
+
+    /**
+     * Export Accounts.FIXME
+     *
+     * @param string $bookId
+     *
+     * @return array
+     */
+    public function exportAccounts(string $bookId): array
+    {
+        $books = [];
+
+        $books[$bookId] = ['accounts' => $this->account->exportAccounts($bookId, false)];
+
+        return $books;
+    }
+
+    /**
+     * Export Book.FIXME
+     *
+     * @param string $bookId
+     *
+     * @return array
+     */
+    public function exportBook(string $bookId): array
+    {
+        $books = [];
+
+        $books[$bookId] = ['book' => $this->book->exportInformation($bookId)];
+
+        return $books;
+    }
+
+    /**
+     * Export Books.FIXME
+     *
+     * @param bool $dumpRequired
+     *
+     * @return array
+     */
+    public function exportBooks(bool $dumpRequired): array
     {
         $books = [];
 
         $bookList = $this->book->retrieveBookList(Auth::id());
         foreach ($bookList as $book) {
             $bookId = $book['book_id'];
-            $books[$bookId] = [
-                'book'     => $this->book->exportInformation($bookId),
-                'accounts' => $this->account->exportAccounts($bookId),
-                'slips'    => $this->slip->exportSlips($bookId),
-            ];
+            if ($dumpRequired) {
+                $books[$bookId] = [
+                    'book'     => $this->book->exportInformation($bookId),
+                    'accounts' => $this->account->exportAccounts($bookId, true),
+                    'slips'    => $this->slip->exportSlips($bookId, true),
+                ];
+            } else {
+                $bookInformation = $this->book->exportInformation($bookId);
+                $books[$bookId] = [
+                    'book' => [
+                        'book_id'    => $bookInformation['book_id'],
+                        'updated_at' => $bookInformation['updated_at'],
+                    ],
+                ];
+            }
         }
+
+        return $books;
+    }
+
+    /**
+     * Export Books.FIXME
+     *
+     * @param string $bookId
+     * @param string $slipId
+     *
+     * @return array
+     */
+    public function exportSlip(string $bookId, string $slipId): array
+    {
+        $books = [];
+
+        $books[$bookId] = ['slips' => $this->slip->exportSlip($bookId, $slipId)];
+
+        return $books;
+    }
+
+    /**
+     * Export Books.FIXME
+     *
+     * @param string $bookId
+     * @param string $slipId
+     *
+     * @return array
+     */
+    public function exportSlipEntries(string $bookId, string $slipId): array
+    {
+        $books = [];
+
+        $books[$bookId] = ['slips' => $this->slip->exportSlipEntries($bookId, $slipId)];
+
+        return $books;
+    }
+
+    /**
+     * Export Books.FIXME
+     *
+     * @param string $bookId
+     * @param string $slipId
+     * @param string $slipEntryId
+     *
+     * @return array
+     */
+    public function exportSlipEntry(string $bookId, string $slipId, string $slipEntryId): array
+    {
+        $books = [];
+
+        $books[$bookId] = ['slips' => $this->slip->exportSlipEntry($bookId, $slipId, $slipEntryId)];
+
+        return $books;
+    }
+
+    /**
+     * Export Books.FIXME
+     *
+     * @param string $bookId
+     *
+     * @return array
+     */
+    public function exportSlips(string $bookId): array
+    {
+        $books = [];
+
+        $books[$bookId] = ['slips' => $this->slip->exportSlips($bookId, false)];
 
         return $books;
     }
