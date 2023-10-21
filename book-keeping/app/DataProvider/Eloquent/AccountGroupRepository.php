@@ -69,6 +69,7 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
     public function searchForExport(string $bookId, string $accountGroupId = null): array
     {
         $query = AccountGroup::select('*')
+            ->withTrashed()
             ->where('book_id', $bookId);
         if (isset($accountGroupId)) {
             $query = $query->where('account_group_id', $accountGroupId);

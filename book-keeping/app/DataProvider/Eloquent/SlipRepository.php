@@ -94,6 +94,7 @@ class SlipRepository implements SlipRepositoryInterface
     public function searchForExport(string $bookId, string $slipId = null): array
     {
         $query = Slip::select('*')
+            ->withTrashed()
             ->where('book_id', $bookId);
         if (isset($slipId)) {
             $query = $query->where('slip_id', $slipId);
