@@ -76,6 +76,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function searchAccountForExport(string $accountGroupId, string $accountId = null): array
     {
         $query = Account::select('*')
+            ->withTrashed()
             ->where('account_group_id', $accountGroupId);
         if (isset($accountId)) {
             $query = $query->where('account_id', $accountId);

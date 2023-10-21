@@ -186,6 +186,7 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     public function searchSlipEntriesForExport(string $slipId, string $slipEntryId = null): array
     {
         $query = SlipEntry::select('*')
+            ->withTrashed()
             ->where('slip_id', $slipId);
         if (isset($slipEntryId)) {
             $query = $query->where('slip_entry_id', $slipEntryId);
