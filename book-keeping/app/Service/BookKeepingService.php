@@ -271,88 +271,8 @@ class BookKeepingService
     }
 
     /**
-     * Export the account group.
+     * Dump books.
      *
-     * @param  string  $bookId
-     * @param  string  $accountGroupId
-     * @return array
-     */
-    public function exportAccountGroup($bookId, $accountGroupId): array
-    {
-        $books = [];
-
-        $books[$bookId] = ['accounts' => $this->account->exportAccountGroup($bookId, $accountGroupId)];
-
-        return $books;
-    }
-
-    /**
-     * Export the account item.
-     *
-     * @param  string  $bookId
-     * @param  string  $accountGroupId
-     * @param  string  $accountId
-     * @return array
-     */
-    public function exportAccountItem($bookId, $accountGroupId, $accountId): array
-    {
-        $books = [];
-
-        $books[$bookId] = ['accounts' => $this->account->exportAccountItem($bookId, $accountGroupId, $accountId)];
-
-        return $books;
-    }
-
-    /**
-     * Export a list of account items belonging to the account group.
-     *
-     * @param  string  $bookId
-     * @param  string  $accountGroupId
-     * @return array
-     */
-    public function exportAccountItems($bookId, $accountGroupId): array
-    {
-        $books = [];
-
-        $books[$bookId] = ['accounts' => $this->account->exportAccountItems($bookId, $accountGroupId)];
-
-        return $books;
-    }
-
-    /**
-     * Export accounts of the book.
-     *
-     * @param  string  $bookId
-     * @return array
-     */
-    public function exportAccounts($bookId): array
-    {
-        $books = [];
-
-        $books[$bookId] = ['accounts' => $this->account->exportAccounts($bookId, false)];
-
-        return $books;
-    }
-
-    /**
-     * Export the book.
-     *
-     * @param  string  $bookId
-     * @return array
-     */
-    public function exportBook($bookId): array
-    {
-        $books = [];
-
-        $books[$bookId] = ['book' => $this->book->exportInformation($bookId)];
-
-        return $books;
-    }
-
-    /**
-     * Export books.
-     *
-     * @param  bool  $dumpRequired
      * @return array<string, array{
      *   book: array{
      *     book_id: string,
@@ -415,21 +335,121 @@ class BookKeepingService
      *   }>,
      * }>
      */
-    public function exportBooks($dumpRequired): array
+    public function dumpBooks(): array
     {
         $books = [];
 
         $bookList = $this->book->retrieveBooks(intval(Auth::id()));
         foreach ($bookList as $book) {
             $bookId = $book['book_id'];
-            if ($dumpRequired) {
-                $books[$bookId] = [
-                    'book'     => $this->book->exportInformation($bookId),
-                    'accounts' => $this->account->exportAccounts($bookId, true),
-                    'slips'    => $this->slip->exportSlips($bookId, true),
-                ];
-            } else {
-                $bookInformation = $this->book->exportInformation($bookId);
+            $books[$bookId] = [
+                'book'     => $this->book->exportInformation($bookId),
+                'accounts' => $this->account->dumpAccounts($bookId),
+                'slips'    => $this->slip->dumpSlips($bookId),
+            ];
+        }
+
+        return $books;
+    }
+
+    /**
+     * Export the account group.
+     *
+     * @param  string  $bookId
+     * @param  string  $accountGroupId
+     * @return array
+     */
+    public function exportAccountGroup($bookId, $accountGroupId): array
+    {
+        $books = [];
+
+        $books[$bookId] = ['accounts' => $this->account->exportAccountGroup($bookId, $accountGroupId)];
+
+        return $books;
+    }
+
+    /**
+     * Export the account item.
+     *
+     * @param  string  $bookId
+     * @param  string  $accountGroupId
+     * @param  string  $accountId
+     * @return array
+     */
+    public function exportAccountItem($bookId, $accountGroupId, $accountId): array
+    {
+        $books = [];
+
+        $books[$bookId] = ['accounts' => $this->account->exportAccountItem($bookId, $accountGroupId, $accountId)];
+
+        return $books;
+    }
+
+    /**
+     * Export a list of account items belonging to the account group.
+     *
+     * @param  string  $bookId
+     * @param  string  $accountGroupId
+     * @return array
+     */
+    public function exportAccountItems($bookId, $accountGroupId): array
+    {
+        $books = [];
+
+        $books[$bookId] = ['accounts' => $this->account->exportAccountItems($bookId, $accountGroupId)];
+
+        return $books;
+    }
+
+    /**
+     * Export accounts of the book.
+     *
+     * @param  string  $bookId
+     * @return array
+     */
+    public function exportAccounts($bookId): array
+    {
+        $books = [];
+
+        $books[$bookId] = ['accounts' => $this->account->exportAccounts($bookId)];
+
+        return $books;
+    }
+
+    /**
+     * Export the book.
+     *
+     * @param  string  $bookId
+     * @return array
+     */
+    public function exportBook($bookId): array
+    {
+        $books = [];
+
+        $books[$bookId] = ['book' => $this->book->exportInformation($bookId)];
+
+        return $books;
+    }
+
+    /**
+     * Export books.
+     *
+     * @return array<string, array{
+     *   book: array{
+     *     book_id: string,
+     *     updated_at: string|null,
+     *   },
+     * }>
+     */
+    public function exportBooks(): array
+    {
+        $books = [];
+
+        $bookList = $this->book->retrieveBooks(intval(Auth::id()));
+        foreach ($bookList as $book) {
+            $bookId = $book['book_id'];
+            $bookInformation = $this->book->exportInformation($bookId);
+            if (isset($bookInformation)) {
                 $books[$bookId] = [
                     'book' => [
                         'book_id'    => $bookInformation['book_id'],
@@ -501,7 +521,7 @@ class BookKeepingService
     {
         $books = [];
 
-        $books[$bookId] = ['slips' => $this->slip->exportSlips($bookId, false)];
+        $books[$bookId] = ['slips' => $this->slip->exportSlips($bookId)];
 
         return $books;
     }
