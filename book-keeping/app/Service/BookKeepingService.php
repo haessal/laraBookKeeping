@@ -357,15 +357,34 @@ class BookKeepingService
      *
      * @param  string  $bookId
      * @param  string  $accountGroupId
-     * @return array
+     * @return array{0:int, 1:array<string, array{
+     *   accounts: array<string, array{
+     *     account_group_id: string,
+     *     book_id: string,
+     *     account_type: string,
+     *     account_group_title: string,
+     *     bk_uid: int|null,
+     *     account_group_bk_code: int|null,
+     *     is_current: bool,
+     *     display_order: int|null,
+     *     created_at: string|null,
+     *     updated_at: string|null,
+     *     deleted_at: string|null,
+     *   }>,
+     * }>|null}
      */
     public function exportAccountGroup($bookId, $accountGroupId): array
     {
-        $books = [];
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckReadable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
+        }
 
+        $books = [];
         $books[$bookId] = ['accounts' => $this->account->exportAccountGroup($bookId, $accountGroupId)];
 
-        return $books;
+        return [self::STATUS_NORMAL, $books];
     }
 
     /**
@@ -374,15 +393,36 @@ class BookKeepingService
      * @param  string  $bookId
      * @param  string  $accountGroupId
      * @param  string  $accountId
-     * @return array
+     * @return array{0:int, 1:array<string, array{
+     *   accounts: array<string, array{
+     *     items: array<string, array{
+     *       account_id: string,
+     *       account_group_id: string,
+     *       account_title: string,
+     *       description: string,
+     *       selectable: bool,
+     *       bk_uid: int|null,
+     *       account_bk_code: int|null,
+     *       display_order: int|null,
+     *       created_at: string|null,
+     *       updated_at: string|null,
+     *       deleted_at: string|null,
+     *     }>,
+     *   }>,
+     * }>|null}
      */
     public function exportAccountItem($bookId, $accountGroupId, $accountId): array
     {
-        $books = [];
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckReadable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
+        }
 
+        $books = [];
         $books[$bookId] = ['accounts' => $this->account->exportAccountItem($bookId, $accountGroupId, $accountId)];
 
-        return $books;
+        return [self::STATUS_NORMAL, $books];
     }
 
     /**
@@ -390,45 +430,81 @@ class BookKeepingService
      *
      * @param  string  $bookId
      * @param  string  $accountGroupId
-     * @return array
+     * @return array{0:int, 1:array<string, array{
+     *   accounts: array<string, array{
+     *     items: array<string, array{
+     *       account_id: string,
+     *       updated_at: string|null,
+     *     }>,
+     *   }>,
+     * }>|null}
      */
     public function exportAccountItems($bookId, $accountGroupId): array
     {
-        $books = [];
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckReadable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
+        }
 
+        $books = [];
         $books[$bookId] = ['accounts' => $this->account->exportAccountItems($bookId, $accountGroupId)];
 
-        return $books;
+        return [self::STATUS_NORMAL, $books];
     }
 
     /**
      * Export accounts of the book.
      *
      * @param  string  $bookId
-     * @return array
+     * @return array{0:int, 1:array<string, array{
+     *   accounts: array<string, array{
+     *     account_group_id: string,
+     *     updated_at: string|null,
+     *   }>,
+     * }>|null}
      */
     public function exportAccounts($bookId): array
     {
-        $books = [];
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckReadable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
+        }
 
+        $books = [];
         $books[$bookId] = ['accounts' => $this->account->exportAccounts($bookId)];
 
-        return $books;
+        return [self::STATUS_NORMAL, $books];
     }
 
     /**
      * Export the book.
      *
      * @param  string  $bookId
-     * @return array
+     * @return array{0:int, 1:array<string, array{
+     *   book: array{
+     *     book_id: string,
+     *     book_name: string,
+     *     display_order: int|null,
+     *     created_at: string|null,
+     *     updated_at: string|null,
+     *     deleted_at: string|null,
+     *   }|null,
+     * }>|null}
      */
     public function exportBook($bookId): array
     {
-        $books = [];
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckReadable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
+        }
 
+        $books = [];
         $books[$bookId] = ['book' => $this->book->exportInformation($bookId)];
 
-        return $books;
+        return [self::STATUS_NORMAL, $books];
     }
 
     /**
@@ -467,15 +543,33 @@ class BookKeepingService
      *
      * @param  string  $bookId
      * @param  string  $slipId
-     * @return array
+     * @return array{0:int, 1:array<string, array{
+     *   slips: array<string, array{
+     *     slip_id: string,
+     *     book_id: string,
+     *     slip_outline: string,
+     *     slip_memo: string|null,
+     *     date: string,
+     *     is_draft: bool,
+     *     display_order: int|null,
+     *     created_at: string|null,
+     *     updated_at: string|null,
+     *     deleted_at: string|null,
+     *   }>,
+     * }>|null}
      */
     public function exportSlip($bookId, $slipId): array
     {
-        $books = [];
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckReadable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
+        }
 
+        $books = [];
         $books[$bookId] = ['slips' => $this->slip->exportSlip($bookId, $slipId)];
 
-        return $books;
+        return [self::STATUS_NORMAL, $books];
     }
 
     /**
@@ -483,15 +577,27 @@ class BookKeepingService
      *
      * @param  string  $bookId
      * @param  string  $slipId
-     * @return array
+     * @return array{0:int, 1:array<string, array{
+     *   slips: array<string, array{
+     *     entries: array<string, array{
+     *       slip_entry_id: string,
+     *       updated_at: string|null,
+     *     }>,
+     *   }>,
+     * }>|null}
      */
     public function exportSlipEntries($bookId, $slipId): array
     {
-        $books = [];
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckReadable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
+        }
 
+        $books = [];
         $books[$bookId] = ['slips' => $this->slip->exportSlipEntries($bookId, $slipId)];
 
-        return $books;
+        return [self::STATUS_NORMAL, $books];
     }
 
     /**
@@ -500,30 +606,61 @@ class BookKeepingService
      * @param  string  $bookId
      * @param  string  $slipId
      * @param  string  $slipEntryId
-     * @return array
+     * @return array{0:int, 1:array<string, array{
+     *   slips: array<string, array{
+     *     entries: array<string, array{
+     *       slip_entry_id: string,
+     *       slip_id: string,
+     *       debit: string,
+     *       credit: string,
+     *       amount: int,
+     *       client: string,
+     *       outline: string,
+     *       display_order: int|null,
+     *       created_at: string|null,
+     *       updated_at: string|null,
+     *       deleted_at: string|null,
+     *     }>,
+     *   }>,
+     * }>|null}
      */
     public function exportSlipEntry($bookId, $slipId, $slipEntryId): array
     {
-        $books = [];
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckReadable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
+        }
 
+        $books = [];
         $books[$bookId] = ['slips' => $this->slip->exportSlipEntry($bookId, $slipId, $slipEntryId)];
 
-        return $books;
+        return [self::STATUS_NORMAL, $books];
     }
 
     /**
      * Export slips of the book.
      *
      * @param  string  $bookId
-     * @return array
+     * @return array{0:int, 1:array<string, array{
+     *   slips: array<string, array{
+     *     slip_id: string,
+     *     updated_at: string|null,
+     *   }>,
+     * }>|null}
      */
     public function exportSlips($bookId): array
     {
-        $books = [];
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckReadable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
+        }
 
+        $books = [];
         $books[$bookId] = ['slips' => $this->slip->exportSlips($bookId)];
 
-        return $books;
+        return [self::STATUS_NORMAL, $books];
     }
 
     /**

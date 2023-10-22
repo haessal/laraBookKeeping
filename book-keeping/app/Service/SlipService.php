@@ -193,12 +193,36 @@ class SlipService
      *
      * @param  string  $bookId
      * @param  string  $slipId
-     * @return array
+     * @return array<string, array{
+     *   slip_id: string,
+     *   book_id: string,
+     *   slip_outline: string,
+     *   slip_memo: string|null,
+     *   date: string,
+     *   is_draft: bool,
+     *   display_order: int|null,
+     *   created_at: string|null,
+     *   updated_at: string|null,
+     *   deleted_at: string|null,
+     * }>
      */
     public function exportSlip($bookId, $slipId): array
     {
         $slips = [];
 
+        /** @var array{
+         *   slip_id: string,
+         *   book_id: string,
+         *   slip_outline: string,
+         *   slip_memo: string|null,
+         *   date: string,
+         *   is_draft: bool,
+         *   display_order: int|null,
+         *   created_at: string|null,
+         *   updated_at: string|null,
+         *   deleted_at: string|null,
+         * }[] $slipList
+         */
         $slipList = $this->slip->searchBookForExporting($bookId, $slipId);
         foreach ($slipList as $slip) {
             $slips[$slip['slip_id']] = $slip;
@@ -212,15 +236,47 @@ class SlipService
      *
      * @param  string  $bookId
      * @param  string  $slipId
-     * @return array
+     * @return array<string, array{
+     *   entries: array<string, array{
+     *     slip_entry_id: string,
+     *     updated_at: string|null,
+     *   }>,
+     * }>
      */
     public function exportSlipEntries($bookId, $slipId): array
     {
         $slips = [];
 
+        /** @var array{
+         *   slip_id: string,
+         *   book_id: string,
+         *   slip_outline: string,
+         *   slip_memo: string|null,
+         *   date: string,
+         *   is_draft: bool,
+         *   display_order: int|null,
+         *   created_at: string|null,
+         *   updated_at: string|null,
+         *   deleted_at: string|null,
+         * }[] $slipList
+         */
         $slipList = $this->slip->searchBookForExporting($bookId, $slipId);
         foreach ($slipList as $slip) {
             $entries = [];
+            /** @var array{
+             *   slip_entry_id: string,
+             *   slip_id: string,
+             *   debit: string,
+             *   credit: string,
+             *   amount: int,
+             *   client: string,
+             *   outline: string,
+             *   display_order: int|null,
+             *   created_at: string|null,
+             *   updated_at: string|null,
+             *   deleted_at: string|null,
+             * }[] $slipEntryList
+             */
             $slipEntryList = $this->slipEntry->searchSlipForExporting(strval($slip['slip_id']));
             foreach ($slipEntryList as $slipEntry) {
                 $entries[$slipEntry['slip_entry_id']] = [
@@ -240,15 +296,56 @@ class SlipService
      * @param  string  $bookId
      * @param  string  $slipId
      * @param  string  $slipEntryId
-     * @return array
+     * @return array<string, array{
+     *   entries: array<string, array{
+     *     slip_entry_id: string,
+     *     slip_id: string,
+     *     debit: string,
+     *     credit: string,
+     *     amount: int,
+     *     client: string,
+     *     outline: string,
+     *     display_order: int|null,
+     *     created_at: string|null,
+     *     updated_at: string|null,
+     *     deleted_at: string|null,
+     *   }>,
+     * }>
      */
     public function exportSlipEntry($bookId, $slipId, $slipEntryId): array
     {
         $slips = [];
 
+        /** @var array{
+         *   slip_id: string,
+         *   book_id: string,
+         *   slip_outline: string,
+         *   slip_memo: string|null,
+         *   date: string,
+         *   is_draft: bool,
+         *   display_order: int|null,
+         *   created_at: string|null,
+         *   updated_at: string|null,
+         *   deleted_at: string|null,
+         * }[] $slipList
+         */
         $slipList = $this->slip->searchBookForExporting($bookId, $slipId);
         foreach ($slipList as $slip) {
             $entries = [];
+            /** @var array{
+             *   slip_entry_id: string,
+             *   slip_id: string,
+             *   debit: string,
+             *   credit: string,
+             *   amount: int,
+             *   client: string,
+             *   outline: string,
+             *   display_order: int|null,
+             *   created_at: string|null,
+             *   updated_at: string|null,
+             *   deleted_at: string|null,
+             * }[] $slipEntryList
+             */
             $slipEntryList = $this->slipEntry->searchSlipForExporting(strval($slip['slip_id']), $slipEntryId);
             foreach ($slipEntryList as $slipEntry) {
                 $entries[$slipEntry['slip_entry_id']] = $slipEntry;

@@ -38,10 +38,32 @@ class ExportBooksBookIdSlipsActionApi extends AuthenticatedBookKeepingActionApi
      */
     public function __invoke(Request $request, string $bookId): JsonResponse
     {
-        $context['version'] = '2.0';
+        $context = [];
+        $response = null;
 
-        $context['books'] = $this->BookKeeping->exportSlips($bookId);
+        if (! $this->BookKeeping->validateUuid($bookId)) {
+            return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
+        }
 
-        return $this->responder->response($context);
+        [$status, $books] = $this->BookKeeping->exportSlips($bookId);
+        switch ($status) {
+            case BookKeepingService::STATUS_NORMAL:
+                if (isset($books)) {
+                    $context['version'] = '2.0';
+                    $context['books'] = $books;
+                    $response = $this->responder->response($context);
+                }
+                break;
+            case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
+                $response = new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
+                break;
+            default:
+                break;
+        }
+        if (is_null($response)) {
+            $response = new JsonResponse(null, JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return $response;
     }
 }
