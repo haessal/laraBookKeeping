@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\DataProvider\SlipEntryRepositoryInterface;
 use App\DataProvider\SlipRepositoryInterface;
+use Illuminate\Support\Carbon;
 
 class SlipService
 {
@@ -115,7 +116,7 @@ class SlipService
 
         $slipList = $this->slip->searchForExport($bookId, $slipId);
         foreach ($slipList as $slip) {
-            $slips[$slip['slip_id']] = $slip;
+            $slips[$slip['slip_id']] = $this->convertExportedData($slip);
         }
 
         return $slips;
@@ -138,10 +139,10 @@ class SlipService
             $entries = [];
             $slipEntryList = $this->slipEntry->searchSlipEntriesForExport($slip['slip_id']);
             foreach ($slipEntryList as $slipEntry) {
-                $entries[$slipEntry['slip_entry_id']] = [
+                $entries[$slipEntry['slip_entry_id']] = $this->convertExportedData([
                     'slip_entry_id' => $slipEntry['slip_entry_id'],
                     'updated_at'    => $slipEntry['updated_at'],
-                ];
+                ]);
             }
             $slips[$slip['slip_id']] = ['entries' => $entries];
         }
@@ -167,7 +168,7 @@ class SlipService
             $entries = [];
             $slipEntryList = $this->slipEntry->searchSlipEntriesForExport($slip['slip_id'], $slipEntryId);
             foreach ($slipEntryList as $slipEntry) {
-                $entries[$slipEntry['slip_entry_id']] = $slipEntry;
+                $entries[$slipEntry['slip_entry_id']] = $this->convertExportedData($slipEntry);
             }
             $slips[$slip['slip_id']] = ['entries' => $entries];
         }
@@ -192,20 +193,20 @@ class SlipService
             $slipId = $slip['slip_id'];
             if ($dumpRequired) {
 
-                $slips[$slipId] = $slip;
+                $slips[$slipId] = $this->convertExportedData($slip);
 
                 $entries = [];
                 $slipEntryList = $this->slipEntry->searchSlipEntriesForExport($slipId);
                 foreach ($slipEntryList as $slipEntry) {
-                    $entries[$slipEntry['slip_entry_id']] = $slipEntry;
+                    $entries[$slipEntry['slip_entry_id']] = $this->convertExportedData($slipEntry);
                 }
 
                 $slips[$slipId]['entries'] = $entries;
             } else {
-                $slips[$slipId] = [
+                $slips[$slipId] = $this->convertExportedData([
                     'slip_id'    => $slip['slip_id'],
                     'updated_at' => $slip['updated_at'],
-                ];
+                ]);
             }
         }
 
@@ -333,5 +334,28 @@ class SlipService
     public function updateSlipEntry(string $slipEntryId, array $newData)
     {
         $this->slipEntry->update($slipEntryId, $newData);
+    }
+
+    private function convertExportedData(array $exported)
+    {
+        $converted = [];
+        foreach ($exported as $key => $value) {
+            switch ($key) {
+                case 'created_at':
+                    break;
+                case 'updated_at':
+                    $d = Carbon::createFromFormat('Y-m-d H:i:s', $value);
+                    $converted['updated_at'] = $d->toAtomString();
+                    break;
+                case 'deleted_at':
+                    $converted['deleted'] = !is_null($value);
+                    break;
+                default:
+                    $converted[$key] = $value;
+                    break;
+            }
+        }
+
+        return $converted;
     }
 }

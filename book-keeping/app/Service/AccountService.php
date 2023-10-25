@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\DataProvider\AccountGroupRepositoryInterface;
 use App\DataProvider\AccountRepositoryInterface;
+use Illuminate\Support\Carbon;
 
 class AccountService
 {
@@ -112,7 +113,7 @@ class AccountService
 
         $accountGroupList = $this->accountGroup->searchForExport($bookId, $accountGroupId);
         foreach ($accountGroupList as $accountGroup) {
-            $accountGroups[$accountGroup['account_group_id']] = $accountGroup;
+            $accountGroups[$accountGroup['account_group_id']] = $this->convertExportedData($accountGroup);
         }
 
         return $accountGroups;
@@ -136,7 +137,7 @@ class AccountService
             $accountItems = [];
             $accountItemList = $this->account->searchAccountForExport($accountGroup['account_group_id'], $accountId);
             foreach ($accountItemList as $accountItem) {
-                $accountItems[$accountItem['account_id']] = $accountItem;
+                $accountItems[$accountItem['account_id']] = $this->convertExportedData($accountItem);
             }
             $accountGroups[$accountGroup['account_group_id']] = ['items' => $accountItems];
         }
@@ -161,10 +162,10 @@ class AccountService
             $accountItems = [];
             $accountItemList = $this->account->searchAccountForExport($accountGroup['account_group_id']);
             foreach ($accountItemList as $accountItem) {
-                $accountItems[$accountItem['account_id']] = [
+                $accountItems[$accountItem['account_id']] = $this->convertExportedData([
                     'account_id' => $accountItem['account_id'],
                     'updated_at' => $accountItem['updated_at'],
-                ];
+                ]);
             }
             $accountGroups[$accountGroup['account_group_id']] = ['items' => $accountItems];
         }
@@ -188,20 +189,20 @@ class AccountService
         foreach ($accountGroupList as $accountGroup) {
             $accountGroupId = $accountGroup['account_group_id'];
             if ($dumpRequired) {
-                $accountGroups[$accountGroupId] = $accountGroup;
+                $accountGroups[$accountGroupId] = $this->convertExportedData($accountGroup);
 
                 $accountItems = [];
                 $accountItemList = $this->account->searchAccountForExport($accountGroupId);
                 foreach ($accountItemList as $accountItem) {
-                    $accountItems[$accountItem['account_id']] = $accountItem;
+                    $accountItems[$accountItem['account_id']] = $this->convertExportedData($accountItem);
                 }
 
                 $accountGroups[$accountGroupId]['items'] = $accountItems;
             } else {
-                $accountGroups[$accountGroupId] = [
+                $accountGroups[$accountGroupId] = $this->convertExportedData([
                     'account_group_id' => $accountGroup['account_group_id'],
                     'updated_at'       => $accountGroup['updated_at'],
-                ];
+                ]);
             }
         }
 
@@ -266,5 +267,28 @@ class AccountService
     public function updateAccountGroup(string $accountGroupId, array $newData)
     {
         $this->accountGroup->update($accountGroupId, $newData);
+    }
+
+    private function convertExportedData(array $exported)
+    {
+        $converted = [];
+        foreach ($exported as $key => $value) {
+            switch ($key) {
+                case 'created_at':
+                    break;
+                case 'updated_at':
+                    $d = Carbon::createFromFormat('Y-m-d H:i:s', $value);
+                    $converted['updated_at'] = $d->toAtomString();
+                    break;
+                case 'deleted_at':
+                    $converted['deleted'] = !is_null($value);
+                    break;
+                default:
+                    $converted[$key] = $value;
+                    break;
+            }
+        }
+
+        return $converted;
     }
 }
