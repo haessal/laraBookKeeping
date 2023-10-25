@@ -5,6 +5,7 @@ namespace App\Service;
 use App\DataProvider\BookRepositoryInterface;
 use App\DataProvider\PermissionRepositoryInterface;
 use App\DataProvider\UserRepositoryInterface;
+use Illuminate\Support\Carbon;
 
 class BookService
 {
@@ -69,8 +70,29 @@ class BookService
     public function exportInformation(string $bookId): ?array
     {
         $book = $this->book->findByIdForExport($bookId);
+        if (isset($book)) {
+            $converted = [];
+            foreach ($book as $key => $value) {
+                switch ($key) {
+                    case 'created_at':
+                        break;
+                    case 'updated_at':
+                        $d = Carbon::createFromFormat('Y-m-d H:i:s', $value);
+                        $converted['updated_at'] = $d->toAtomString();
+                        break;
+                    case 'deleted_at':
+                        $converted['deleted'] = !is_null($value);
+                        break;
+                    default:
+                        $converted[$key] = $value;
+                        break;
+                }
+            }
+        } else {
+            $converted = null;
+        }
 
-        return $book;
+        return $converted;
     }
 
     /**
