@@ -124,9 +124,8 @@ class SlipService
      *   date: string,
      *   is_draft: bool,
      *   display_order: int|null,
-     *   created_at: string|null,
      *   updated_at: string|null,
-     *   deleted_at: string|null,
+     *   deleted: bool,
      *   entries: array<string, array{
      *     slip_entry_id: string,
      *     slip_id: string,
@@ -136,9 +135,8 @@ class SlipService
      *     client: string,
      *     outline: string,
      *     display_order: int|null,
-     *     created_at: string|null,
      *     updated_at: string|null,
-     *     deleted_at: string|null,
+     *     deleted: bool,
      *   }>,
      * }>
      */
@@ -162,7 +160,20 @@ class SlipService
         $slipList = $this->slip->searchBookForExporting($bookId);
         foreach ($slipList as $slip) {
             $slipId = $slip['slip_id'];
-            $slips[$slipId] = $slip;
+            /** @var array{
+             *   slip_id: string,
+             *   book_id: string,
+             *   slip_outline: string,
+             *   slip_memo: string|null,
+             *   date: string,
+             *   is_draft: bool,
+             *   display_order: int|null,
+             *   updated_at: string|null,
+             *   deleted: bool,
+             * } $convertedSlip
+             */
+            $convertedSlip = $this->convertExportedTimestamps($slip);
+            $slips[$slipId] = $convertedSlip;
             $entries = [];
             /** @var array{
              *   slip_entry_id: string,
@@ -180,7 +191,21 @@ class SlipService
              */
             $slipEntryList = $this->slipEntry->searchSlipForExporting($slipId);
             foreach ($slipEntryList as $slipEntry) {
-                $entries[$slipEntry['slip_entry_id']] = $slipEntry;
+                /** @var array{
+                 *   slip_entry_id: string,
+                 *   slip_id: string,
+                 *   debit: string,
+                 *   credit: string,
+                 *   amount: int,
+                 *   client: string,
+                 *   outline: string,
+                 *   display_order: int|null,
+                 *   updated_at: string|null,
+                 *   deleted: bool,
+                 * } $convertedSlipEntry
+                 */
+                $convertedSlipEntry = $this->convertExportedTimestamps($slipEntry);
+                $entries[$slipEntry['slip_entry_id']] = $convertedSlipEntry;
             }
             $slips[$slipId]['entries'] = $entries;
         }
@@ -201,9 +226,8 @@ class SlipService
      *   date: string,
      *   is_draft: bool,
      *   display_order: int|null,
-     *   created_at: string|null,
      *   updated_at: string|null,
-     *   deleted_at: string|null,
+     *   deleted: bool,
      * }>
      */
     public function exportSlip($bookId, $slipId): array
@@ -225,7 +249,20 @@ class SlipService
          */
         $slipList = $this->slip->searchBookForExporting($bookId, $slipId);
         foreach ($slipList as $slip) {
-            $slips[$slip['slip_id']] = $slip;
+            /** @var array{
+             *   slip_id: string,
+             *   book_id: string,
+             *   slip_outline: string,
+             *   slip_memo: string|null,
+             *   date: string,
+             *   is_draft: bool,
+             *   display_order: int|null,
+             *   updated_at: string|null,
+             *   deleted: bool,
+             * } $convertedSlip
+             */
+            $convertedSlip = $this->convertExportedTimestamps($slip);
+            $slips[$slip['slip_id']] = $convertedSlip;
         }
 
         return $slips;
@@ -306,9 +343,8 @@ class SlipService
      *     client: string,
      *     outline: string,
      *     display_order: int|null,
-     *     created_at: string|null,
      *     updated_at: string|null,
-     *     deleted_at: string|null,
+     *     deleted: bool,
      *   }>,
      * }>
      */
@@ -348,7 +384,21 @@ class SlipService
              */
             $slipEntryList = $this->slipEntry->searchSlipForExporting(strval($slip['slip_id']), $slipEntryId);
             foreach ($slipEntryList as $slipEntry) {
-                $entries[$slipEntry['slip_entry_id']] = $slipEntry;
+                /** @var array{
+                 *   slip_entry_id: string,
+                 *   slip_id: string,
+                 *   debit: string,
+                 *   credit: string,
+                 *   amount: int,
+                 *   client: string,
+                 *   outline: string,
+                 *   display_order: int|null,
+                 *   updated_at: string|null,
+                 *   deleted: bool,
+                 * } $convertedSlipEntry
+                 */
+                $convertedSlipEntry = $this->convertExportedTimestamps($slipEntry);
+                $entries[$slipEntry['slip_entry_id']] = $convertedSlipEntry;
             }
             $slips[$slip['slip_id']] = ['entries' => $entries];
         }
@@ -392,6 +442,21 @@ class SlipService
         }
 
         return $slips;
+    }
+
+    /**
+     * Import slips of the book.
+     *
+     * @param  string  $sourceUrl
+     * @param  string  $accessToken
+     * @param  string  $bookId
+     * @return array<string, mixed>
+     */
+    public function importSlips($sourceUrl, $accessToken, $bookId): array
+    {
+        $debug = ['sourceUrl' => $sourceUrl, 'accessToken' => $accessToken, 'bookId'=> $bookId];
+
+        return ['debug' => $debug];
     }
 
     /**
@@ -645,5 +710,30 @@ class SlipService
     public function updateSlipEntry($slipEntryId, array $newData)
     {
         $this->slipEntry->update($slipEntryId, $newData);
+    }
+
+    /**
+     * Convert exported timestamps.
+     *
+     * @param  array<string, mixed>  $exported
+     * @return array<string, mixed>
+     */
+    private function convertExportedTimestamps(array $exported)
+    {
+        $converted = [];
+        foreach ($exported as $key => $value) {
+            switch ($key) {
+                case 'created_at':
+                    break;
+                case 'deleted_at':
+                    $converted['deleted'] = ! is_null($value);
+                    break;
+                default:
+                    $converted[$key] = $value;
+                    break;
+            }
+        }
+
+        return $converted;
     }
 }

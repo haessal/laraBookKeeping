@@ -26,6 +26,7 @@ use App\Http\Controllers\api\v1\GetBooksSlipsSlipIdActionApi;
 use App\Http\Controllers\api\v1\GetSlipEntriesActionApi;
 use App\Http\Controllers\api\v1\GetSlipEntriesSlipEntryIdActionApi;
 use App\Http\Controllers\api\v1\GetSlipsSlipIdActionApi;
+use App\Http\Controllers\api\v1\ImportBooksActionApi;
 use App\Http\Controllers\api\v1\PatchBooksActionApi;
 use App\Http\Controllers\api\v1\PatchBooksSlipEntriesActionApi;
 use App\Http\Controllers\api\v1\PatchBooksSlipsActionApi;
@@ -100,4 +101,5 @@ Route::prefix('v1')->group(function () {
     Route::get('/export/books/{bookId}/slips/{slipId}', ExportBooksBookIdSlipsSlipIdActionApi::class);
     Route::get('/export/books/{bookId}/slips/{slipId}/entries', ExportBooksBookIdSlipsSlipIdEntriesActionApi::class);
     Route::get('/export/books/{bookId}/slips/{slipId}/entries/{slipEntryId}', ExportBooksBookIdSlipsSlipIdEntriesSlipEntryIdActionApi::class);
+    Route::post('/import/books', ImportBooksActionApi::class);
 });

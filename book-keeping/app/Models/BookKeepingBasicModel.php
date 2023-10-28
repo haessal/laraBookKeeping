@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -42,5 +43,13 @@ abstract class BookKeepingBasicModel extends Model
         parent::__construct($attributes);
 
         $this->attributes[$this->primaryKey] = (string) Str::uuid();
+    }
+
+    /**
+     * Prepare a date for array / JSON serialization.
+     */
+    protected function serializeDate(DateTimeInterface $date): string
+    {
+        return $date->format(DateTimeInterface::ATOM);
     }
 }

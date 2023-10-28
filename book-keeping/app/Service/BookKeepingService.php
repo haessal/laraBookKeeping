@@ -4,6 +4,7 @@ namespace App\Service;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class BookKeepingService
 {
@@ -278,9 +279,8 @@ class BookKeepingService
      *     book_id: string,
      *     book_name: string,
      *     display_order: int|null,
-     *     created_at: string|null,
      *     updated_at: string|null,
-     *     deleted_at: string|null,
+     *     deleted: bool,
      *   }|null,
      *   accounts: array<string, array{
      *     account_group_id: string,
@@ -291,9 +291,8 @@ class BookKeepingService
      *     account_group_bk_code: int|null,
      *     is_current: bool,
      *     display_order: int|null,
-     *     created_at: string|null,
      *     updated_at: string|null,
-     *     deleted_at: string|null,
+     *     deleted: bool,
      *     items: array<string, array{
      *       account_id: string,
      *       account_group_id: string,
@@ -303,9 +302,8 @@ class BookKeepingService
      *       bk_uid: int|null,
      *       account_bk_code: int|null,
      *       display_order: int|null,
-     *       created_at: string|null,
      *       updated_at: string|null,
-     *       deleted_at: string|null,
+     *       deleted: bool,
      *     }>,
      *   }>,
      *   slips: array<string, array{
@@ -316,9 +314,8 @@ class BookKeepingService
      *     date: string,
      *     is_draft: bool,
      *     display_order: int|null,
-     *     created_at: string|null,
      *     updated_at: string|null,
-     *     deleted_at: string|null,
+     *     deleted: bool,
      *     entries: array<string, array{
      *       slip_entry_id: string,
      *       slip_id: string,
@@ -328,9 +325,8 @@ class BookKeepingService
      *       client: string,
      *       outline: string,
      *       display_order: int|null,
-     *       created_at: string|null,
      *       updated_at: string|null,
-     *       deleted_at: string|null,
+     *       deleted: bool,
      *     }>,
      *   }>,
      * }>
@@ -367,9 +363,8 @@ class BookKeepingService
      *     account_group_bk_code: int|null,
      *     is_current: bool,
      *     display_order: int|null,
-     *     created_at: string|null,
      *     updated_at: string|null,
-     *     deleted_at: string|null,
+     *       deleted: bool,
      *   }>,
      * }>|null}
      */
@@ -404,9 +399,8 @@ class BookKeepingService
      *       bk_uid: int|null,
      *       account_bk_code: int|null,
      *       display_order: int|null,
-     *       created_at: string|null,
      *       updated_at: string|null,
-     *       deleted_at: string|null,
+     *       deleted: bool,
      *     }>,
      *   }>,
      * }>|null}
@@ -487,9 +481,8 @@ class BookKeepingService
      *     book_id: string,
      *     book_name: string,
      *     display_order: int|null,
-     *     created_at: string|null,
      *     updated_at: string|null,
-     *     deleted_at: string|null,
+     *     deleted: bool,
      *   }|null,
      * }>|null}
      */
@@ -552,9 +545,8 @@ class BookKeepingService
      *     date: string,
      *     is_draft: bool,
      *     display_order: int|null,
-     *     created_at: string|null,
      *     updated_at: string|null,
-     *     deleted_at: string|null,
+     *     deleted: bool,
      *   }>,
      * }>|null}
      */
@@ -617,9 +609,8 @@ class BookKeepingService
      *       client: string,
      *       outline: string,
      *       display_order: int|null,
-     *       created_at: string|null,
      *       updated_at: string|null,
-     *       deleted_at: string|null,
+     *       deleted: bool,
      *     }>,
      *   }>,
      * }>|null}
@@ -693,6 +684,66 @@ class BookKeepingService
         }
 
         return [self::STATUS_NORMAL, $bookPermission];
+    }
+
+    /**
+     * Import books.
+     *
+     * @param  string  $sourceUrl
+     * @param  string  $accessToken
+     * @return array{0:int, 1:array<string, mixed>|null}
+     */
+    public function importBooks($sourceUrl, $accessToken)
+    {
+        $status = self::STATUS_ERROR_BAD_CONDITION;
+        $importResult = null;
+
+        $response = Http::withToken($accessToken)->get($sourceUrl);
+        if ($response->ok()) {
+            $importResult = [];
+            /** @var array{
+             *   version: string,
+             *   books: array<string, array{
+             *     book: array{
+             *       book_id: string,
+             *       updated_at: string|null,
+             *     }
+             *   }>,
+             * } $responseBody
+             */
+            $responseBody = $response->json();
+            $books = $responseBody['books'];
+            $importResult['version'] = $responseBody['version'];
+            $importResult['books'] = [];
+            foreach ($books as $bookId => $book) {
+                [$importable, $reason] = $this->isImportable($bookId);
+                if ($importable) {
+                    $resultOfImportBook = $this->book->importInformation(
+                        $sourceUrl, $accessToken, intval(Auth::id()), $book['book']
+                    );
+                    $resultOfImportAccounts = $this->account->importAccounts(
+                        $sourceUrl, $accessToken, $book['book']['book_id']
+                    );
+                    $resultOfImportSlips = $this->slip->importSlips(
+                        $sourceUrl, $accessToken, $book['book']['book_id']
+                    );
+                    $importResult['books'][$bookId] = [
+                        'status'   => 'success',
+                        'book'     => $resultOfImportBook,
+                        'accounts' => $resultOfImportAccounts,
+                        'slips'    => $resultOfImportSlips,
+                    ];
+                } else {
+                    $importResult['books'][$bookId] = [
+                        'status' => 'failed',
+                        'reason' => 'The book is already exist and prohibit to write.('.strval($reason).')',
+                    ];
+                }
+            }
+            $status = self::STATUS_NORMAL;
+        }
+
+        return [$status, $importResult];
     }
 
     /**
@@ -1811,6 +1862,30 @@ class BookKeepingService
     public function validateUuid($uuid)
     {
         return preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/', $uuid) === 1;
+    }
+
+    /**
+     * Check if the authenticated user can create or update the book.
+     *
+     * @param  string  $bookId
+     * @return array{0:bool, 1:int}
+     */
+    private function isImportable($bookId): array
+    {
+        $bookInformation = $this->book->retrieveInformationOf($bookId);
+        if (isset($bookInformation)) {
+            $bookItem = $this->book->retrieveBook($bookId, intval(Auth::id()));
+            if (is_null($bookItem)) {
+                return [false, self::STATUS_ERROR_AUTH_NOTAVAILABLE];
+            }
+            if ($bookItem['modifiable'] == false) {
+                return [false, self::STATUS_ERROR_AUTH_FORBIDDEN];
+            }
+
+            return [true, self::STATUS_NORMAL];
+        }
+
+        return [true, self::STATUS_ERROR_AUTH_NOTAVAILABLE];
     }
 
     /**

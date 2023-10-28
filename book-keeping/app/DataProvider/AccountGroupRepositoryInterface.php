@@ -18,6 +18,25 @@ interface AccountGroupRepositoryInterface
     public function create($bookId, $accountType, $title, $isCurrent, $bk_uid, $bk_code);
 
     /**
+     * Create a new account group to import.
+     *
+     * @param  array{
+     *   account_group_id: string,
+     *   book_id: string,
+     *   account_type: string,
+     *   account_group_title: string,
+     *   bk_uid: int|null,
+     *   account_group_bk_code: int|null,
+     *   is_current: bool,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newAccountGroup
+     * @return void
+     */
+    public function createForImporting(array $newAccountGroup);
+
+    /**
      * Search the book for account groups.
      *
      * @param  string  $bookId
@@ -42,4 +61,23 @@ interface AccountGroupRepositoryInterface
      * @return void
      */
     public function update($accountGroupId, array $newData);
+
+    /**
+     * Update the account group to import.
+     *
+     * @param  array{
+     *   account_group_id: string,
+     *   book_id: string,
+     *   account_type: string,
+     *   account_group_title: string,
+     *   bk_uid: int|null,
+     *   account_group_bk_code: int|null,
+     *   is_current: bool,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newAccountGroup
+     * @return void
+     */
+    public function updateForImporting(array $newAccountGroup);
 }

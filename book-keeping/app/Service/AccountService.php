@@ -4,6 +4,8 @@ namespace App\Service;
 
 use App\DataProvider\AccountGroupRepositoryInterface;
 use App\DataProvider\AccountRepositoryInterface;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Http;
 
 class AccountService
 {
@@ -109,9 +111,8 @@ class AccountService
      *   account_group_bk_code: int|null,
      *   is_current: bool,
      *   display_order: int|null,
-     *   created_at: string|null,
      *   updated_at: string|null,
-     *   deleted_at: string|null,
+     *   deleted: bool,
      *   items: array<string, array{
      *     account_id: string,
      *     account_group_id: string,
@@ -121,9 +122,8 @@ class AccountService
      *     bk_uid: int|null,
      *     account_bk_code: int|null,
      *     display_order: int|null,
-     *     created_at: string|null,
      *     updated_at: string|null,
-     *     deleted_at: string|null,
+     *     deleted: bool,
      *   }>,
      * }>
      */
@@ -148,7 +148,21 @@ class AccountService
         $accountGroupList = $this->accountGroup->searchBookForExporting($bookId);
         foreach ($accountGroupList as $accountGroup) {
             $accountGroupId = $accountGroup['account_group_id'];
-            $accountGroups[$accountGroupId] = $accountGroup;
+            /** @var array{
+             *   account_group_id: string,
+             *   book_id: string,
+             *   account_type: string,
+             *   account_group_title: string,
+             *   bk_uid: int|null,
+             *   account_group_bk_code: int|null,
+             *   is_current: bool,
+             *   display_order: int|null,
+             *   updated_at: string|null,
+             *   deleted: bool,
+             * } $convertedAccountGroup
+             */
+            $convertedAccountGroup = $this->convertExportedTimestamps($accountGroup);
+            $accountGroups[$accountGroupId] = $convertedAccountGroup;
             $accountItems = [];
             /** @var array{
              *   account_id: string,
@@ -166,7 +180,21 @@ class AccountService
              */
             $accountItemList = $this->account->searchAccountGropupForExporting($accountGroupId);
             foreach ($accountItemList as $accountItem) {
-                $accountItems[$accountItem['account_id']] = $accountItem;
+                /** @var array{
+                 *   account_id: string,
+                 *   account_group_id: string,
+                 *   account_title: string,
+                 *   description: string,
+                 *   selectable: bool,
+                 *   bk_uid: int|null,
+                 *   account_bk_code: int|null,
+                 *   display_order: int|null,
+                 *   updated_at: string|null,
+                 *   deleted: bool,
+                 * } $convertedAccountItem
+                 */
+                $convertedAccountItem = $this->convertExportedTimestamps($accountItem);
+                $accountItems[$accountItem['account_id']] = $convertedAccountItem;
             }
             $accountGroups[$accountGroupId]['items'] = $accountItems;
         }
@@ -175,7 +203,7 @@ class AccountService
     }
 
     /**
-     * Export grouped account list of the book.
+     * Export the account group.
      *
      * @param  string  $bookId
      * @param  string  $accountGroupId
@@ -188,9 +216,8 @@ class AccountService
      *   account_group_bk_code: int|null,
      *   is_current: bool,
      *   display_order: int|null,
-     *   created_at: string|null,
      *   updated_at: string|null,
-     *   deleted_at: string|null,
+     *   deleted: bool,
      * }>
      */
     public function exportAccountGroup($bookId, $accountGroupId): array
@@ -213,7 +240,21 @@ class AccountService
          */
         $accountGroupList = $this->accountGroup->searchBookForExporting($bookId, $accountGroupId);
         foreach ($accountGroupList as $accountGroup) {
-            $accountGroups[$accountGroup['account_group_id']] = $accountGroup;
+            /** @var array{
+             *   account_group_id: string,
+             *   book_id: string,
+             *   account_type: string,
+             *   account_group_title: string,
+             *   bk_uid: int|null,
+             *   account_group_bk_code: int|null,
+             *   is_current: bool,
+             *   display_order: int|null,
+             *   updated_at: string|null,
+             *   deleted: bool,
+             * } $convertedAccountGroup
+             */
+            $convertedAccountGroup = $this->convertExportedTimestamps($accountGroup);
+            $accountGroups[$accountGroup['account_group_id']] = $convertedAccountGroup;
         }
 
         return $accountGroups;
@@ -235,9 +276,8 @@ class AccountService
      *     bk_uid: int|null,
      *     account_bk_code: int|null,
      *     display_order: int|null,
-     *     created_at: string|null,
      *     updated_at: string|null,
-     *     deleted_at: string|null,
+     *     deleted: bool,
      *   }>,
      * }>
      */
@@ -278,7 +318,21 @@ class AccountService
              */
             $accountItemList = $this->account->searchAccountGropupForExporting($accountGroupId, $accountId);
             foreach ($accountItemList as $accountItem) {
-                $accountItems[$accountItem['account_id']] = $accountItem;
+                /** @var array{
+                 *   account_id: string,
+                 *   account_group_id: string,
+                 *   account_title: string,
+                 *   description: string,
+                 *   selectable: bool,
+                 *   bk_uid: int|null,
+                 *   account_bk_code: int|null,
+                 *   display_order: int|null,
+                 *   updated_at: string|null,
+                 *   deleted: bool,
+                 * } $convertedAccountItem
+                 */
+                $convertedAccountItem = $this->convertExportedTimestamps($accountItem);
+                $accountItems[$accountItem['account_id']] = $convertedAccountItem;
             }
             $accountGroups[$accountGroup['account_group_id']] = ['items' => $accountItems];
         }
@@ -383,6 +437,254 @@ class AccountService
         }
 
         return $accountGroups;
+    }
+
+    /**
+     * Import the account group.
+     *
+     * @param  string  $sourceUrl
+     * @param  string  $accessToken
+     * @param  string  $bookId
+     * @param  array{
+     *   account_group_id: string,
+     *   updated_at: string|null,
+     * }  $accountGroup
+     * @param  array<string, array{
+     *   account_group_id: string,
+     *   updated_at: string|null,
+     * }>  $destinationAccountGroups
+     * @return array<string, mixed>
+     */
+    public function importAccountGroup($sourceUrl, $accessToken, $bookId, array $accountGroup, array $destinationAccountGroups): array
+    {
+        $mode = null;
+        $result = null;
+        $accountGroupId = $accountGroup['account_group_id'];
+        if (key_exists($accountGroupId, $destinationAccountGroups)) {
+            $sourceUpdateAt = $accountGroup['updated_at'];
+            $destinationUpdateAt = $destinationAccountGroups[$accountGroupId]['updated_at'];
+            if ($this->isSourceLater($sourceUpdateAt, $destinationUpdateAt)) {
+                $mode = 'update';
+            }
+        } else {
+            $mode = 'create';
+        }
+        if (isset($mode)) {
+            $response = Http::withToken($accessToken)->get(
+                $sourceUrl.'/'.$bookId.'/accounts/'.$accountGroupId
+            );
+            if ($response->ok()) {
+                /** @var array{
+                 *   version: string,
+                 *   books: array<string, array{
+                 *     accounts: array<string, array{
+                 *       account_group_id: string,
+                 *       book_id: string,
+                 *       account_type: string,
+                 *       account_group_title: string,
+                 *       bk_uid: int|null,
+                 *       account_group_bk_code: int|null,
+                 *       is_current: bool,
+                 *       display_order: int|null,
+                 *       updated_at: string|null,
+                 *       deleted: bool,
+                 *     }>,
+                 *   }>,
+                 * } $responseBody
+                 */
+                $responseBody = $response->json();
+                $accountGroup = $responseBody['books'][$bookId]['accounts'][$accountGroupId];
+                switch($mode) {
+                    case 'update':
+                        $this->accountGroup->updateForImporting($accountGroup);
+                        $result = 'updated';
+                        break;
+                    case 'create':
+                        $this->accountGroup->createForImporting($accountGroup);
+                        $result = 'created';
+                        break;
+                    default:
+                        break;
+                }
+            }
+        } else {
+            $result = 'already up-to-date';
+        }
+
+        return ['account_group_id' => $accountGroupId, 'result' => $result];
+    }
+
+    /**
+     * Import a list of account items belonging to the account group.
+     *
+     * @param  string  $sourceUrl
+     * @param  string  $accessToken
+     * @param  string  $bookId
+     * @param  string  $accountGroupId
+     * @param  array{
+     *   account_id: string,
+     *   updated_at: string|null,
+     * }  $accountItem
+     * @param  array<string, array{
+     *   account_id: string,
+     *   updated_at: string|null,
+     * }>  $destinationAccountItems
+     * @return array<string, mixed>
+     */
+    public function importAccountItem($sourceUrl, $accessToken, $bookId, $accountGroupId, array $accountItem, array $destinationAccountItems): array
+    {
+        $mode = null;
+        $result = null;
+        $accountId = $accountItem['account_id'];
+        if (key_exists($accountId, $destinationAccountItems)) {
+            $sourceUpdateAt = $accountItem['updated_at'];
+            $destinationUpdateAt = $destinationAccountItems[$accountId]['updated_at'];
+            if ($this->isSourceLater($sourceUpdateAt, $destinationUpdateAt)) {
+                $mode = 'update';
+            }
+        } else {
+            $mode = 'create';
+        }
+        if (isset($mode)) {
+            $response = Http::withToken($accessToken)->get(
+                $sourceUrl.'/'.$bookId.'/accounts/'.$accountGroupId.'/items/'.$accountId
+            );
+            if ($response->ok()) {
+                /** @var array{
+                 *   version: string,
+                 *   books: array<string, array{
+                 *     accounts: array<string, array{
+                 *       items: array<string, array{
+                 *         account_id: string,
+                 *         account_group_id: string,
+                 *         account_title: string,
+                 *         description: string,
+                 *         selectable: bool,
+                 *         bk_uid: int|null,
+                 *         account_bk_code: int|null,
+                 *         display_order: int|null,
+                 *         updated_at: string|null,
+                 *         deleted: bool,
+                 *       }>,
+                 *     }>,
+                 *   }>,
+                 * } $responseBody
+                 */
+                $responseBody = $response->json();
+                $accountItem = $responseBody['books'][$bookId]['accounts'][$accountGroupId]['items'][$accountId];
+                switch($mode) {
+                    case 'update':
+                        $this->account->updateForImporting($accountItem);
+                        $result = 'updated';
+                        break;
+                    case 'create':
+                        $this->account->createForImporting($accountItem);
+                        $result = 'created';
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                $result = 'response error('.$response->status().')';
+            }
+        } else {
+            $result = 'already up-to-date';
+        }
+
+        return ['account_id' => $accountId, 'result' => $result];
+    }
+
+    /**
+     * Import a list of account items belonging to the account group.
+     *
+     * @param  string  $sourceUrl
+     * @param  string  $accessToken
+     * @param  string  $bookId
+     * @param  string  $accountGroupId
+     * @return array<string, mixed>
+     */
+    public function importAccountItems($sourceUrl, $accessToken, $bookId, $accountGroupId): array
+    {
+        $result = [];
+
+        $destinationAccountItems = $this->exportAccountItems($bookId, $accountGroupId);
+        $debug['destinationAccountItems'] = $destinationAccountItems;
+        $response = Http::withToken($accessToken)->get(
+            $sourceUrl.'/'.$bookId.'/accounts/'.$accountGroupId.'/items'
+        );
+        if ($response->ok()) {
+            /** @var array{
+             *   version: string,
+             *   books: array<string, array{
+             *     accounts: array<string, array{
+             *       items: array<string, array{
+             *         account_id: string,
+             *         updated_at: string|null,
+             *       }>,
+             *     }>,
+             *   }>,
+             * } $responseBody
+             */
+            $responseBody = $response->json();
+            $sourceAccountItems = $responseBody['books'][$bookId]['accounts'][$accountGroupId]['items'];
+            foreach ($sourceAccountItems as $accountId => $accountItem) {
+                $result[$accountId] = $this->importAccountItem(
+                    $sourceUrl,
+                    $accessToken,
+                    $bookId,
+                    $accountGroupId,
+                    $accountItem,
+                    $destinationAccountItems[$accountGroupId]['items']
+                );
+            }
+        }
+        //$result['debug'] = $debug;
+
+        return $result;
+    }
+
+    /**
+     * Import accounts of the book.
+     *
+     * @param  string  $sourceUrl
+     * @param  string  $accessToken
+     * @param  string  $bookId
+     * @return array<string, mixed>
+     */
+    public function importAccounts($sourceUrl, $accessToken, $bookId): array
+    {
+        $result = [];
+
+        $debug = ['sourceUrl' => $sourceUrl, 'accessToken' => $accessToken, 'bookId'=> $bookId];
+        $destinationAccountGroups = $this->exportAccounts($bookId);
+        $debug['destinationAccountGropus'] = $destinationAccountGroups;
+        $response = Http::withToken($accessToken)->get($sourceUrl.'/'.$bookId.'/accounts');
+        if ($response->ok()) {
+            /** @var array{
+             *   version: string,
+             *   books: array<string, array{
+             *     accounts: array<string, array{
+             *       account_group_id: string,
+             *       updated_at: string|null,
+             *     }>,
+             *   }>,
+             * } $responseBody
+             */
+            $responseBody = $response->json();
+            $sourceAccountGropus = $responseBody['books'][$bookId]['accounts'];
+            $debug['sourceAccountGropus'] = $sourceAccountGropus;
+            foreach ($sourceAccountGropus as $accountGroupId => $accountGroup) {
+                $result[$accountGroupId] = $this->importAccountGroup(
+                    $sourceUrl, $accessToken, $bookId, $accountGroup, $destinationAccountGroups
+                );
+                $result[$accountGroupId]['items'] = $this->importAccountItems(
+                    $sourceUrl, $accessToken, $bookId, $accountGroupId
+                );
+            }
+        }
+        //$result['debug'] = $debug;
+
+        return $result;
     }
 
     /**
@@ -491,5 +793,60 @@ class AccountService
     public function updateAccountGroup($accountGroupId, array $newData)
     {
         $this->accountGroup->update($accountGroupId, $newData);
+    }
+
+    /**
+     * Check if the source is later than the destination.
+     *
+     * @param  string|null  $sourceUpdateAt
+     * @param  string|null  $destinationUpdateAt
+     * @return bool
+     */
+    private function isSourceLater($sourceUpdateAt, $destinationUpdateAt)
+    {
+        if (isset($sourceUpdateAt)) {
+            $source = Carbon::createFromFormat(Carbon::ATOM, $sourceUpdateAt);
+            if (! is_bool($source)) {
+                if (isset($destinationUpdateAt)) {
+                    $destination = Carbon::createFromFormat(Carbon::ATOM, $destinationUpdateAt);
+                    if (! is_bool($destination)) {
+                        return $source->gt($destination);
+                    } else {
+                        return true;
+                    }
+                } else {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Convert exported timestamps.
+     *
+     * @param  array<string, mixed>  $exported
+     * @return array<string, mixed>
+     */
+    private function convertExportedTimestamps(array $exported)
+    {
+        $converted = [];
+        foreach ($exported as $key => $value) {
+            switch ($key) {
+                case 'created_at':
+                    break;
+                case 'deleted_at':
+                    $converted['deleted'] = ! is_null($value);
+                    break;
+                default:
+                    $converted[$key] = $value;
+                    break;
+            }
+        }
+
+        return $converted;
     }
 }

@@ -23,6 +23,31 @@ class BookRepository implements BookRepositoryInterface
     }
 
     /**
+     * Create a new book to import.
+     *
+     * @param  array{
+     *   book_id: string,
+     *   book_name: string,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newBook
+     * @return void
+     */
+    public function createForImporting($newBook)
+    {
+        $book = new Book();
+        $book->book_id = $newBook['book_id'];
+        $book->book_name = $newBook['book_name'];
+        $book->display_order = $newBook['display_order'];
+        $book->save();
+        $book->refresh();
+        if ($newBook['deleted']) {
+            $book->delete();
+        }
+    }
+
+    /**
      * Find the book.
      *
      * @param  string  $bookId
@@ -53,6 +78,40 @@ class BookRepository implements BookRepositoryInterface
             ->first();
 
         return is_null($book) ? null : $book->toArray();
+    }
+
+    /**
+     * Update the book to import.
+     *
+     * @param  array{
+     *   book_id: string,
+     *   book_name: string,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newBook
+     * @return void
+     */
+    public function updateForImporting($newBook)
+    {
+        /** @var \App\Models\Book|null $book */
+        $book = Book::withTrashed()->find($newBook['book_id']);
+        if (! is_null($book)) {
+            $book->book_name = $newBook['book_name'];
+            $book->display_order = $newBook['display_order'];
+            $book->touch();
+            $book->save();
+            $book->refresh();
+            if ($book->trashed()) {
+                if (! $newBook['deleted']) {
+                    $book->restore();
+                }
+            } else {
+                if ($newBook['deleted']) {
+                    $book->delete();
+                }
+            }
+        }
     }
 
     /**

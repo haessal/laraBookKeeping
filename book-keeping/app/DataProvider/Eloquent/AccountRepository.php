@@ -32,6 +32,29 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * Create a new account to import.
+     *
+     * @param  array{
+     *   account_id: string,
+     *   account_group_id: string,
+     *   account_title: string,
+     *   description: string,
+     *   selectable: bool,
+     *   bk_uid: int|null,
+     *   account_bk_code: int|null,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newAccount
+     * @return void
+     */
+    public function createForImporting(array $newAccount)
+    {
+        // FIXME
+        return;
+    }
+
+    /**
      * Search the account group for account items to export.
      *
      * @param  string  $accountGroupId
@@ -113,5 +136,28 @@ class AccountRepository implements AccountRepositoryInterface
             }
             $account->save();
         }
+    }
+
+    /**
+     * Update the account to import.
+     *
+     * @param  array{
+     *   account_id: string,
+     *   account_group_id: string,
+     *   account_title: string,
+     *   description: string,
+     *   selectable: bool,
+     *   bk_uid: int|null,
+     *   account_bk_code: int|null,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newAccount
+     * @return void
+     */
+    public function updateForImporting(array $newAccount)
+    {
+        // FIXME
+        return;
     }
 }

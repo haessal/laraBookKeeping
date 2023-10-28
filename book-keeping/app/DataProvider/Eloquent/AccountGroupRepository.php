@@ -33,6 +33,29 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
     }
 
     /**
+     * Create a new account group to import.
+     *
+     * @param  array{
+     *   account_group_id: string,
+     *   book_id: string,
+     *   account_type: string,
+     *   account_group_title: string,
+     *   bk_uid: int|null,
+     *   account_group_bk_code: int|null,
+     *   is_current: bool,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newAccountGroup
+     * @return void
+     */
+    public function createForImporting(array $newAccountGroup)
+    {
+        // FIXME
+        return;
+    }
+
+    /**
      * Search the book for account groups.
      *
      * @param  string  $bookId
@@ -101,5 +124,28 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
             }
             $accountGroup->save();
         }
+    }
+
+    /**
+     * Update the account group to import.
+     *
+     * @param  array{
+     *   account_group_id: string,
+     *   book_id: string,
+     *   account_type: string,
+     *   account_group_title: string,
+     *   bk_uid: int|null,
+     *   account_group_bk_code: int|null,
+     *   is_current: bool,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newAccountGroup
+     * @return void
+     */
+    public function updateForImporting(array $newAccountGroup)
+    {
+        // FIXME
+        return;
     }
 }
