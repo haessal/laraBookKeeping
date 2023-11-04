@@ -37,9 +37,9 @@ class ImportingCompleted extends Mailable
     /**
      * Create a new message instance.
      *
-     * @param string $sourceUrl
-     * @param int $status
-     * @param string $result
+     * @param  string  $sourceUrl
+     * @param  int  $status
+     * @param  string  $result
      */
     public function __construct($sourceUrl, $status, $result)
     {
@@ -50,7 +50,7 @@ class ImportingCompleted extends Mailable
 
     /**
      * Get the message envelope.
-     * 
+     *
      * @return \Illuminate\Mail\Mailables\Envelope
      */
     public function envelope(): Envelope
@@ -62,7 +62,7 @@ class ImportingCompleted extends Mailable
 
     /**
      * Get the message content definition.
-     * 
+     *
      * @return \Illuminate\Mail\Mailables\Content
      */
     public function content(): Content
