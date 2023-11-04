@@ -60,7 +60,7 @@ class ProcessImportingBooks implements ShouldQueue, ShouldBeEncrypted
      */
     protected $user;
 
-     /**
+    /**
      * Create a new job instance.
      *
      * @param  \App\Models\User  $user
