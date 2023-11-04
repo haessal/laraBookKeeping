@@ -52,7 +52,7 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
     public function createForImporting(array $newAccountGroup)
     {
         // FIXME
-        return;
+
     }
 
     /**
@@ -146,6 +146,6 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
     public function updateForImporting(array $newAccountGroup)
     {
         // FIXME
-        return;
+
     }
 }

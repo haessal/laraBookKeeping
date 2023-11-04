@@ -51,7 +51,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function createForImporting(array $newAccount)
     {
         // FIXME
-        return;
+
     }
 
     /**
@@ -158,6 +158,6 @@ class AccountRepository implements AccountRepositoryInterface
     public function updateForImporting(array $newAccount)
     {
         // FIXME
-        return;
+
     }
 }
