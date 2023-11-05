@@ -360,6 +360,218 @@ class SlipMigrationService extends SlipService
     }
 
     /**
+     * Import the slip.
+     *
+     * @param  string  $sourceUrl
+     * @param  string  $accessToken
+     * @param  string  $bookId
+     * @param  array{
+     *   slip_id: string,
+     *   updated_at: string|null,
+     * }  $slipHead
+     * @param  array<string, array{
+     *   slip_id: string,
+     *   updated_at: string|null,
+     * }>  $destinationSlips
+     * @return array<string, mixed>
+     */
+    public function importSlip($sourceUrl, $accessToken, $bookId, $slipHead, $destinationSlips): array
+    {
+        $mode = null;
+        $result = null;
+        $slipId = $slipHead['slip_id'];
+        if (key_exists($slipId, $destinationSlips)) {
+            $sourceUpdateAt = $slipHead['updated_at'];
+            $destinationUpdateAt = $destinationSlips[$slipId]['updated_at'];
+            if ($this->tools->isSourceLater($sourceUpdateAt, $destinationUpdateAt)) {
+                $mode = 'update';
+            }
+        } else {
+            $mode = 'create';
+        }
+        if (isset($mode)) {
+            $response = $this->tools->getFromExporter(
+                $sourceUrl.'/'.$bookId.'/slips/'.$slipId,
+                $accessToken
+            );
+            if ($response->ok()) {
+                /** @var array{
+                 *   version: string,
+                 *   books: array<string, array{
+                 *     slips: array<string, array{
+                 *       slip_id: string,
+                 *       book_id: string,
+                 *       slip_outline: string,
+                 *       slip_memo: string|null,
+                 *       date: string,
+                 *       is_draft: bool,
+                 *       display_order: int|null,
+                 *       updated_at: string|null,
+                 *       deleted: bool,
+                 *     }>,
+                 *   }>,
+                 * }|null $responseBody
+                 */
+                $responseBody = $response->json();
+                if (isset($responseBody)) {
+                    $slip = $responseBody['books'][$bookId]['slips'][$slipId];
+                    switch($mode) {
+                        case 'update':
+                            $this->slip->updateForImporting($slip);
+                            $result = 'updated';
+                            break;
+                        case 'create':
+                            $this->slip->createForImporting($slip);
+                            $result = 'created';
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            } else {
+                $result = 'response error('.$response->status().')';
+            }
+        } else {
+            $result = 'already up-to-date';
+        }
+
+        return ['slip_id' => $slipId, 'result' => $result];
+    }
+
+    /**
+     * Import a list of slip entries belonging to the slip.
+     *
+     * @param  string  $sourceUrl
+     * @param  string  $accessToken
+     * @param  string  $bookId
+     * @param  string  $slipId
+     * @return array<string, mixed>
+     */
+    public function importSlipEntries($sourceUrl, $accessToken, $bookId, $slipId): array
+    {
+        $result = [];
+
+        $destinationSlipEntries = $this->exportSlipEntries($bookId, $slipId);
+        $response = $this->tools->getFromExporter(
+            $sourceUrl.'/'.$bookId.'/slips/'.$slipId.'/entries',
+            $accessToken
+        );
+        if ($response->ok()) {
+            /** @var array{
+             *   version: string,
+             *   books: array<string, array{
+             *     slips: array<string, array{
+             *       entries: array<string, array{
+             *         slip_entry_id: string,
+             *         updated_at: string|null,
+             *       }>,
+             *     }>,
+             *   }>,
+             * }|null $responseBody
+             */
+            $responseBody = $response->json();
+            if (isset($responseBody)) {
+                $sourceSlipEntries = $responseBody['books'][$bookId]['slips'][$slipId]['entries'];
+                foreach ($sourceSlipEntries as $slipEntryId => $slipEntry) {
+                    $result[$slipEntryId] = $this->importSlipEntry(
+                        $sourceUrl,
+                        $accessToken,
+                        $bookId,
+                        $slipId,
+                        $slipEntry,
+                        $destinationSlipEntries[$slipId]['entries']
+                    );
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Import the slip entry.
+     *
+     * @param  string  $sourceUrl
+     * @param  string  $accessToken
+     * @param  string  $bookId
+     * @param  string  $slipId
+     * @param  array{
+     *   slip_entry_id: string,
+     *   updated_at: string|null,
+     * }  $slipEntryHead
+     * @param  array<string, array{
+     *   slip_entry_id: string,
+     *   updated_at: string|null,
+     * }>  $destinationSlipEntries
+     * @return array<string, mixed>
+     */
+    public function importSlipEntry($sourceUrl, $accessToken, $bookId, $slipId, array $slipEntryHead, array $destinationSlipEntries): array
+    {
+        $mode = null;
+        $result = null;
+        $slipEntryId = $slipEntryHead['slip_entry_id'];
+        if (key_exists($slipEntryId, $destinationSlipEntries)) {
+            $sourceUpdateAt = $slipEntryHead['updated_at'];
+            $destinationUpdateAt = $destinationSlipEntries[$slipEntryId]['updated_at'];
+            if ($this->tools->isSourceLater($sourceUpdateAt, $destinationUpdateAt)) {
+                $mode = 'update';
+            }
+        } else {
+            $mode = 'create';
+        }
+        if (isset($mode)) {
+            $response = $this->tools->getFromExporter(
+                $sourceUrl.'/'.$bookId.'/slips/'.$slipId.'/entries/'.$slipEntryId,
+                $accessToken
+            );
+            if ($response->ok()) {
+                /** @var array{
+                 *   version: string,
+                 *   books: array<string, array{
+                 *     slips: array<string, array{
+                 *       entries: array<string, array{
+                 *         slip_entry_id: string,
+                 *         slip_id: string,
+                 *         debit: string,
+                 *         credit: string,
+                 *         amount: int,
+                 *         client: string,
+                 *         outline: string,
+                 *         display_order: int|null,
+                 *         updated_at: string|null,
+                 *         deleted: bool,
+                 *       }>,
+                 *     }>,
+                 *   }>,
+                 * }|null $responseBody
+                 */
+                $responseBody = $response->json();
+                if (isset($responseBody)) {
+                    $slipEntry = $responseBody['books'][$bookId]['slips'][$slipId]['entries'][$slipEntryId];
+                    switch($mode) {
+                        case 'update':
+                            $this->slipEntry->updateForImporting($slipEntry);
+                            $result = 'updated';
+                            break;
+                        case 'create':
+                            $this->slipEntry->createForImporting($slipEntry);
+                            $result = 'created';
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            } else {
+                $result = 'response error('.$response->status().')';
+            }
+        } else {
+            $result = 'already up-to-date';
+        }
+
+        return ['slip_entry_id' => $slipEntryId, 'result' => $result];
+    }
+
+    /**
      * Import slips of the book.
      *
      * @param  string  $sourceUrl
@@ -369,8 +581,35 @@ class SlipMigrationService extends SlipService
      */
     public function importSlips($sourceUrl, $accessToken, $bookId): array
     {
-        $debug = ['sourceUrl' => $sourceUrl, 'accessToken' => $accessToken, 'bookId'=> $bookId];
+        $result = [];
 
-        return ['debug' => $debug];
+        $destinationSlips = $this->exportSlips($bookId);
+        $response = $this->tools->getFromExporter($sourceUrl.'/'.$bookId.'/slips', $accessToken);
+        if ($response->ok()) {
+            /** @var array{
+             *   version: string,
+             *   books: array<string, array{
+             *     slips: array<string, array{
+             *       slip_id: string,
+             *       updated_at: string|null,
+             *     }>,
+             *   }>,
+             * }|null $responseBody
+             */
+            $responseBody = $response->json();
+            if (isset($responseBody)) {
+                $sourceSlips = $responseBody['books'][$bookId]['slips'];
+                foreach ($sourceSlips as $slipId => $slip) {
+                    $result[$slipId] = $this->importSlip(
+                        $sourceUrl, $accessToken, $bookId, $slip, $destinationSlips
+                    );
+                    $result[$slipId]['entries'] = $this->importSlipEntries(
+                        $sourceUrl, $accessToken, $bookId, $slipId
+                    );
+                }
+            }
+        }
+
+        return $result;
     }
 }

@@ -116,23 +116,27 @@ class BookMigrationService extends BookService
                  *       deleted: bool,
                  *     },
                  *   }>,
-                 * } $responseBody
+                 * }|null $responseBody
                  */
                 $responseBody = $response->json();
-                $book = $responseBody['books'][$bookId]['book'];
-                switch($mode) {
-                    case 'update':
-                        $this->book->updateForImporting($book);
-                        $result = 'updated';
-                        break;
-                    case 'create':
-                        $this->book->createForImporting($book);
-                        $this->permission->create($userId, $bookId, true, true, false);
-                        $result = 'created';
-                        break;
-                    default:
-                        break;
+                if (isset($responseBody)) {
+                    $book = $responseBody['books'][$bookId]['book'];
+                    switch($mode) {
+                        case 'update':
+                            $this->book->updateForImporting($book);
+                            $result = 'updated';
+                            break;
+                        case 'create':
+                            $this->book->createForImporting($book);
+                            $this->permission->create($userId, $bookId, true, true, false);
+                            $result = 'created';
+                            break;
+                        default:
+                            break;
+                    }
                 }
+            } else {
+                $result = 'response error('.$response->status().')';
             }
         } else {
             $result = 'already up-to-date';

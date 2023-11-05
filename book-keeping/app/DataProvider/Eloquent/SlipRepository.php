@@ -33,6 +33,27 @@ class SlipRepository implements SlipRepositoryInterface
     }
 
     /**
+     * Create a new slip to import.
+     *
+     * @param  array{
+     *   slip_id: string,
+     *   book_id: string,
+     *   slip_outline: string,
+     *   slip_memo: string|null,
+     *   date: string,
+     *   is_draft: bool,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newSlip
+     * @return void
+     */
+    public function createForImporting(array $newSlip)
+    {
+        // FIXME
+    }
+
+    /**
      * Delete the slip.
      *
      * @param  string  $slipId
@@ -147,5 +168,26 @@ class SlipRepository implements SlipRepositoryInterface
             $slip->is_draft = $isDraft;
             $slip->save();
         }
+    }
+
+    /**
+     * Update the slip to import.
+     *
+     * @param  array{
+     *   slip_id: string,
+     *   book_id: string,
+     *   slip_outline: string,
+     *   slip_memo: string|null,
+     *   date: string,
+     *   is_draft: bool,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newSlip
+     * @return void
+     */
+    public function updateForImporting(array $newSlip)
+    {
+        // FIXME
     }
 }

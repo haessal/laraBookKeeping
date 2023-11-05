@@ -36,6 +36,28 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     }
 
     /**
+     * Create a new slip entry to import.
+     *
+     * @param  array{
+     *   slip_entry_id: string,
+     *   slip_id: string,
+     *   debit: string,
+     *   credit: string,
+     *   amount: int,
+     *   client: string,
+     *   outline: string,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newSlipEntry
+     * @return void
+     */
+    public function createForImporting(array $newSlipEntry)
+    {
+        // FIXME
+    }
+
+    /**
      * Delete the slip entry.
      *
      * @param  string  $slipEntryId
@@ -232,6 +254,28 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
             }
             $slipEntry->save();
         }
+    }
+
+    /**
+     * Update the slip entry to import.
+     *
+     * @param  array{
+     *   slip_entry_id: string,
+     *   slip_id: string,
+     *   debit: string,
+     *   credit: string,
+     *   amount: int,
+     *   client: string,
+     *   outline: string,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newSlipEntry
+     * @return void
+     */
+    public function updateForImporting(array $newSlipEntry)
+    {
+        // FIXME
     }
 
     /**

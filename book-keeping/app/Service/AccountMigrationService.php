@@ -377,20 +377,20 @@ class AccountMigrationService extends AccountService
      * @param  array{
      *   account_group_id: string,
      *   updated_at: string|null,
-     * }  $accountGroup
+     * }  $accountGroupHead
      * @param  array<string, array{
      *   account_group_id: string,
      *   updated_at: string|null,
      * }>  $destinationAccountGroups
      * @return array<string, mixed>
      */
-    public function importAccountGroup($sourceUrl, $accessToken, $bookId, array $accountGroup, array $destinationAccountGroups): array
+    public function importAccountGroup($sourceUrl, $accessToken, $bookId, array $accountGroupHead, array $destinationAccountGroups): array
     {
         $mode = null;
         $result = null;
-        $accountGroupId = $accountGroup['account_group_id'];
+        $accountGroupId = $accountGroupHead['account_group_id'];
         if (key_exists($accountGroupId, $destinationAccountGroups)) {
-            $sourceUpdateAt = $accountGroup['updated_at'];
+            $sourceUpdateAt = $accountGroupHead['updated_at'];
             $destinationUpdateAt = $destinationAccountGroups[$accountGroupId]['updated_at'];
             if ($this->tools->isSourceLater($sourceUpdateAt, $destinationUpdateAt)) {
                 $mode = 'update';
@@ -420,22 +420,26 @@ class AccountMigrationService extends AccountService
                  *       deleted: bool,
                  *     }>,
                  *   }>,
-                 * } $responseBody
+                 * }|null $responseBody
                  */
                 $responseBody = $response->json();
-                $accountGroup = $responseBody['books'][$bookId]['accounts'][$accountGroupId];
-                switch($mode) {
-                    case 'update':
-                        $this->accountGroup->updateForImporting($accountGroup);
-                        $result = 'updated';
-                        break;
-                    case 'create':
-                        $this->accountGroup->createForImporting($accountGroup);
-                        $result = 'created';
-                        break;
-                    default:
-                        break;
+                if (isset($responseBody)) {
+                    $accountGroup = $responseBody['books'][$bookId]['accounts'][$accountGroupId];
+                    switch($mode) {
+                        case 'update':
+                            $this->accountGroup->updateForImporting($accountGroup);
+                            $result = 'updated';
+                            break;
+                        case 'create':
+                            $this->accountGroup->createForImporting($accountGroup);
+                            $result = 'created';
+                            break;
+                        default:
+                            break;
+                    }
                 }
+            } else {
+                $result = 'response error('.$response->status().')';
             }
         } else {
             $result = 'already up-to-date';
@@ -445,7 +449,7 @@ class AccountMigrationService extends AccountService
     }
 
     /**
-     * Import a list of account items belonging to the account group.
+     * Import the account item.
      *
      * @param  string  $sourceUrl
      * @param  string  $accessToken
@@ -454,20 +458,20 @@ class AccountMigrationService extends AccountService
      * @param  array{
      *   account_id: string,
      *   updated_at: string|null,
-     * }  $accountItem
+     * }  $accountItemHead
      * @param  array<string, array{
      *   account_id: string,
      *   updated_at: string|null,
      * }>  $destinationAccountItems
      * @return array<string, mixed>
      */
-    public function importAccountItem($sourceUrl, $accessToken, $bookId, $accountGroupId, array $accountItem, array $destinationAccountItems): array
+    public function importAccountItem($sourceUrl, $accessToken, $bookId, $accountGroupId, array $accountItemHead, array $destinationAccountItems): array
     {
         $mode = null;
         $result = null;
-        $accountId = $accountItem['account_id'];
+        $accountId = $accountItemHead['account_id'];
         if (key_exists($accountId, $destinationAccountItems)) {
-            $sourceUpdateAt = $accountItem['updated_at'];
+            $sourceUpdateAt = $accountItemHead['updated_at'];
             $destinationUpdateAt = $destinationAccountItems[$accountId]['updated_at'];
             if ($this->tools->isSourceLater($sourceUpdateAt, $destinationUpdateAt)) {
                 $mode = 'update';
@@ -499,21 +503,23 @@ class AccountMigrationService extends AccountService
                  *       }>,
                  *     }>,
                  *   }>,
-                 * } $responseBody
+                 * }|null $responseBody
                  */
                 $responseBody = $response->json();
-                $accountItem = $responseBody['books'][$bookId]['accounts'][$accountGroupId]['items'][$accountId];
-                switch($mode) {
-                    case 'update':
-                        $this->account->updateForImporting($accountItem);
-                        $result = 'updated';
-                        break;
-                    case 'create':
-                        $this->account->createForImporting($accountItem);
-                        $result = 'created';
-                        break;
-                    default:
-                        break;
+                if (isset($responseBody)) {
+                    $accountItem = $responseBody['books'][$bookId]['accounts'][$accountGroupId]['items'][$accountId];
+                    switch($mode) {
+                        case 'update':
+                            $this->account->updateForImporting($accountItem);
+                            $result = 'updated';
+                            break;
+                        case 'create':
+                            $this->account->createForImporting($accountItem);
+                            $result = 'created';
+                            break;
+                        default:
+                            break;
+                    }
                 }
             } else {
                 $result = 'response error('.$response->status().')';
@@ -554,19 +560,21 @@ class AccountMigrationService extends AccountService
              *       }>,
              *     }>,
              *   }>,
-             * } $responseBody
+             * }|null $responseBody
              */
             $responseBody = $response->json();
-            $sourceAccountItems = $responseBody['books'][$bookId]['accounts'][$accountGroupId]['items'];
-            foreach ($sourceAccountItems as $accountId => $accountItem) {
-                $result[$accountId] = $this->importAccountItem(
-                    $sourceUrl,
-                    $accessToken,
-                    $bookId,
-                    $accountGroupId,
-                    $accountItem,
-                    $destinationAccountItems[$accountGroupId]['items']
-                );
+            if (isset($responseBody)) {
+                $sourceAccountItems = $responseBody['books'][$bookId]['accounts'][$accountGroupId]['items'];
+                foreach ($sourceAccountItems as $accountId => $accountItem) {
+                    $result[$accountId] = $this->importAccountItem(
+                        $sourceUrl,
+                        $accessToken,
+                        $bookId,
+                        $accountGroupId,
+                        $accountItem,
+                        $destinationAccountItems[$accountGroupId]['items']
+                    );
+                }
             }
         }
 
@@ -596,17 +604,19 @@ class AccountMigrationService extends AccountService
              *       updated_at: string|null,
              *     }>,
              *   }>,
-             * } $responseBody
+             * }|null $responseBody
              */
             $responseBody = $response->json();
-            $sourceAccountGropus = $responseBody['books'][$bookId]['accounts'];
-            foreach ($sourceAccountGropus as $accountGroupId => $accountGroup) {
-                $result[$accountGroupId] = $this->importAccountGroup(
-                    $sourceUrl, $accessToken, $bookId, $accountGroup, $destinationAccountGroups
-                );
-                $result[$accountGroupId]['items'] = $this->importAccountItems(
-                    $sourceUrl, $accessToken, $bookId, $accountGroupId
-                );
+            if (isset($responseBody)) {
+                $sourceAccountGropus = $responseBody['books'][$bookId]['accounts'];
+                foreach ($sourceAccountGropus as $accountGroupId => $accountGroup) {
+                    $result[$accountGroupId] = $this->importAccountGroup(
+                        $sourceUrl, $accessToken, $bookId, $accountGroup, $destinationAccountGroups
+                    );
+                    $result[$accountGroupId]['items'] = $this->importAccountItems(
+                        $sourceUrl, $accessToken, $bookId, $accountGroupId
+                    );
+                }
             }
         }
 

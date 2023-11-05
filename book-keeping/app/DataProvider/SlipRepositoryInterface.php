@@ -18,6 +18,24 @@ interface SlipRepositoryInterface
     public function create($bookId, $outline, $date, $memo, $displayOrder, $isDraft);
 
     /**
+     * Create a new slip to import.
+     *
+     * @param  array{
+     *   slip_id: string,
+     *   book_id: string,
+     *   slip_outline: string,
+     *   slip_memo: string|null,
+     *   date: string,
+     *   is_draft: bool,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newSlip
+     * @return void
+     */
+    public function createForImporting(array $newSlip);
+
+    /**
      * Delete the slip.
      *
      * @param  string  $slipId
@@ -68,4 +86,22 @@ interface SlipRepositoryInterface
      * @return void
      */
     public function updateDraftMark($slipId, $isDraft);
+
+    /**
+     * Update the slip to import.
+     *
+     * @param  array{
+     *   slip_id: string,
+     *   book_id: string,
+     *   slip_outline: string,
+     *   slip_memo: string|null,
+     *   date: string,
+     *   is_draft: bool,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newSlip
+     * @return void
+     */
+    public function updateForImporting(array $newSlip);
 }
