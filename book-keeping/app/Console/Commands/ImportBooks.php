@@ -5,20 +5,17 @@ namespace App\Console\Commands;
 use App\DataProvider\Eloquent\AccountGroupRepository;
 use App\DataProvider\Eloquent\AccountRepository;
 use App\DataProvider\Eloquent\BookRepository;
-use App\DataProvider\Eloquent\BudgetRepository;
 use App\DataProvider\Eloquent\PermissionRepository;
 use App\DataProvider\Eloquent\SlipEntryRepository;
 use App\DataProvider\Eloquent\SlipRepository;
 use App\Models\User;
-use App\Service\AccountService;
-use App\Service\BookKeepingService;
-use App\Service\BookService;
-use App\Service\BudgetService;
-use App\Service\SlipService;
+use App\Service\AccountMigrationService;
+use App\Service\BookKeepingMigration;
+use App\Service\BookKeepingMigrationTools;
+use App\Service\BookMigrationService;
+use App\Service\SlipMigrationService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 
 class ImportBooks extends Command
 {
@@ -41,11 +38,12 @@ class ImportBooks extends Command
      */
     public function handle(): void
     {
-        $service = new BookKeepingService(
-            new BookService(new BookRepository(), new PermissionRepository),
-            new AccountService(new AccountRepository(), new AccountGroupRepository()),
-            new BudgetService(new BudgetRepository),
-            new SlipService(new SlipRepository(), new SlipEntryRepository())
+        $tools = new BookKeepingMigrationTools();
+        $service = new BookKeepingMigration(
+            new BookMigrationService(new BookRepository(), new PermissionRepository, $tools),
+            new AccountMigrationService(new AccountRepository(), new AccountGroupRepository(), $tools),
+            new SlipMigrationService(new SlipRepository(), new SlipEntryRepository(), $tools),
+            $tools
         );
         $userId = intval($this->argument('userId'));
         $sourceSiteUrl = strval($this->argument('sourceUrl'));
@@ -53,7 +51,7 @@ class ImportBooks extends Command
 
         $user = User::find($userId); /* @phpstan-ignore-line */
         Auth::login($user);
-        $this->info('Start importting...');
+        $this->info('Importing...');
         [$status, $importResult] = $service->importBooks($sourceSiteUrl, $accessToken);
         $result = json_encode($importResult, JSON_PRETTY_PRINT);
 
