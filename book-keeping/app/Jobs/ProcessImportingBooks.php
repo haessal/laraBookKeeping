@@ -4,7 +4,7 @@ namespace App\Jobs;
 
 use App\Mail\ImportingCompleted;
 use App\Models\User;
-use App\Service\BookKeepingService;
+use App\Service\BookKeepingMigration;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeEncrypted;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -33,11 +33,11 @@ class ProcessImportingBooks implements ShouldQueue, ShouldBeEncrypted
     public $timeout = 120;
 
     /**
-     * BookKeeping service instance.
+     * BookKeeping migration instance.
      *
-     * @var \App\Service\BookKeepingService
+     * @var \App\Service\BookKeepingMigration
      */
-    protected $BookKeeping;
+    protected $service;
 
     /**
      * The URL of the import source.
@@ -64,15 +64,15 @@ class ProcessImportingBooks implements ShouldQueue, ShouldBeEncrypted
      * Create a new job instance.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Service\BookKeepingService  $BookKeeping
+     * @param  \App\Service\BookKeepingMigration  $service
      * @param  string  $sourceUrl
      * @param  string  $accessToken
      * @return void
      */
-    public function __construct(User $user, BookKeepingService $BookKeeping, $sourceUrl, $accessToken)
+    public function __construct(User $user, BookKeepingMigration $service, $sourceUrl, $accessToken)
     {
         $this->user = $user;
-        $this->BookKeeping = $BookKeeping;
+        $this->service = $service;
         $this->sourceUrl = $sourceUrl;
         $this->accessToken = $accessToken;
     }
@@ -83,7 +83,7 @@ class ProcessImportingBooks implements ShouldQueue, ShouldBeEncrypted
     public function handle(): void
     {
         Auth::login($this->user);
-        [$status, $importResult] = $this->BookKeeping->importBooks($this->sourceUrl, $this->accessToken);
+        [$status, $importResult] = $this->service->importBooks($this->sourceUrl, $this->accessToken);
         $result = json_encode($importResult, JSON_PRETTY_PRINT);
         Mail::to(Auth::user())->send(new ImportingCompleted($this->sourceUrl, $status, strval($result)));
     }
