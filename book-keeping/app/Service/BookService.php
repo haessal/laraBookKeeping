@@ -4,8 +4,6 @@ namespace App\Service;
 
 use App\DataProvider\BookRepositoryInterface;
 use App\DataProvider\PermissionRepositoryInterface;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Http;
 
 class BookService
 {
@@ -14,14 +12,14 @@ class BookService
      *
      * @var \App\DataProvider\BookRepositoryInterface
      */
-    private $book;
+    protected $book;
 
     /**
      * Permission repository instance.
      *
      * @var \App\DataProvider\PermissionRepositoryInterface
      */
-    private $permission;
+    protected $permission;
 
     /**
      * Create a new BookService instance.
@@ -72,45 +70,6 @@ class BookService
     }
 
     /**
-     * Export information.
-     *
-     * @param  string  $bookId
-     * @return array{
-     *   book_id: string,
-     *   book_name: string,
-     *   display_order: int|null,
-     *   updated_at: string|null,
-     *   deleted: bool,
-     * }|null
-     */
-    public function exportInformation(string $bookId): ?array
-    {
-        /** @var array{
-         *   book_id: string,
-         *   book_name: string,
-         *   display_order: int|null,
-         *   created_at: string|null,
-         *   updated_at: string|null,
-         *   deleted_at: string|null,
-         * }|null $book
-         */
-        $book = $this->book->findByIdForExporting($bookId);
-        if (isset($book)) {
-            $converted = [
-                'book_id'       => $book['book_id'],
-                'book_name'     => $book['book_name'],
-                'display_order' => $book['display_order'],
-                'updated_at'    => $book['updated_at'],
-                'deleted'       => ! is_null($book['deleted_at']),
-            ];
-        } else {
-            $converted = null;
-        }
-
-        return $converted;
-    }
-
-    /**
      * Delete the permission that the user access to the book.
      *
      * @param  string  $bookId
@@ -123,95 +82,6 @@ class BookService
         if (isset($user)) {
             $this->permission->delete(intval($user['id']), $bookId);
         }
-    }
-
-    /**
-     * Import information.
-     *
-     * @param  string  $sourceUrl
-     * @param  string  $accessToken
-     * @param  int  $userId
-     * @param  array{
-     *   book_id: string,
-     *   updated_at: string|null,
-     * }  $bookHead
-     * @return array<string, mixed>
-     */
-    public function importInformation($sourceUrl, $accessToken, $userId, array $bookHead): array
-    {
-        $bookId = $bookHead['book_id'];
-        $mode = null;
-        $result = null;
-        /** @var array{
-         *   book_id: string,
-         *   book_name: string,
-         *   display_order: int|null,
-         *   created_at: string|null,
-         *   updated_at: string|null,
-         *   deleted_at: string|null,
-         * }|null $destinationInformation
-         */
-        $destinationInformation = $this->book->findByIdForExporting($bookId);
-        if (isset($destinationInformation)) {
-            $destinationUpdateDate = null;
-            if (isset($destinationInformation['updated_at'])) {
-                $dD = Carbon::createFromFormat(Carbon::ATOM, $destinationInformation['updated_at']);
-                if (! is_bool($dD)) {
-                    $destinationUpdateDate = $dD;
-                }
-            }
-            $sourceUpdateDate = null;
-            if (isset($bookHead['updated_at'])) {
-                $sD = Carbon::createFromFormat(Carbon::ATOM, $bookHead['updated_at']);
-                if (! is_bool($sD)) {
-                    $sourceUpdateDate = $sD;
-                }
-            }
-            if (isset($sourceUpdateDate)) {
-                if (is_null($destinationUpdateDate) || $sourceUpdateDate->gt($destinationUpdateDate)) {
-                    $mode = 'update';
-                }
-            }
-        } else {
-            $mode = 'create';
-        }
-        if (isset($mode)) {
-            $response = Http::withToken($accessToken)->get($sourceUrl.'/'.$bookId);
-            if ($response->ok()) {
-                /** @var array{
-                 *   version: string,
-                 *   books: array<string, array{
-                 *     book: array{
-                 *       book_id: string,
-                 *       book_name: string,
-                 *       display_order: int|null,
-                 *       updated_at: string|null,
-                 *       deleted: bool,
-                 *     },
-                 *   }>,
-                 * } $responseBody
-                 */
-                $responseBody = $response->json();
-                $book = $responseBody['books'][$bookId]['book'];
-                switch($mode) {
-                    case 'update':
-                        $this->book->updateForImporting($book);
-                        $result = 'updated';
-                        break;
-                    case 'create':
-                        $this->book->createForImporting($book);
-                        $this->permission->create($userId, $bookId, true, true, false);
-                        $result = 'created';
-                        break;
-                    default:
-                        break;
-                }
-            }
-        } else {
-            $result = 'already up-to-date';
-        }
-
-        return ['bookId' => $bookId, 'result' => $result];
     }
 
     /**
