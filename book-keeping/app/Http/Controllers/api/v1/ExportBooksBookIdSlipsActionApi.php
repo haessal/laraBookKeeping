@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\api\v1;
 
-use App\Http\Controllers\api\AuthenticatedBookKeepingActionApi;
+use App\Http\Controllers\api\AuthenticatedBookKeepingMigrationActionApi;
 use App\Http\Responder\api\v1\ExportedBooksJsonResponder;
+use App\Service\BookKeepingMigration;
 use App\Service\BookKeepingService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class ExportBooksBookIdSlipsActionApi extends AuthenticatedBookKeepingActionApi
+class ExportBooksBookIdSlipsActionApi extends AuthenticatedBookKeepingMigrationActionApi
 {
     /**
      * ExportedBooksJsonResponder responder instance.
@@ -20,11 +21,11 @@ class ExportBooksBookIdSlipsActionApi extends AuthenticatedBookKeepingActionApi
     /**
      * Create a new controller instance.
      *
-     * @param  \App\Service\BookKeepingService  $BookKeeping
+     * @param  \App\Service\BookKeepingMigration  $BookKeeping
      * @param  \App\Http\Responder\api\v1\ExportedBooksJsonResponder  $responder
      * @return void
      */
-    public function __construct(BookKeepingService $BookKeeping, ExportedBooksJsonResponder $responder)
+    public function __construct(BookKeepingMigration $BookKeeping, ExportedBooksJsonResponder $responder)
     {
         parent::__construct($BookKeeping);
         $this->responder = $responder;
