@@ -40,7 +40,7 @@ class BookKeepingMigration
      * @param  \App\Service\BookMigrationService  $book
      * @param  \App\Service\AccountMigrationService  $account
      * @param  \App\Service\SlipMigrationService  $slip
-     * @param  \App\Service\BookKeepingMigrationTools $tools
+     * @param  \App\Service\BookKeepingMigrationTools  $tools
      */
     public function __construct(BookMigrationService $book, AccountMigrationService $account, SlipMigrationService $slip, BookKeepingMigrationTools $tools)
     {

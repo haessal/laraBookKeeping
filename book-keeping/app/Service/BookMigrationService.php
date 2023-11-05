@@ -19,7 +19,7 @@ class BookMigrationService extends BookService
      *
      * @param  \App\DataProvider\BookRepositoryInterface  $book
      * @param  \App\DataProvider\PermissionRepositoryInterface  $permission
-     * @param  \App\Service\BookKeepingMigrationTools $tools
+     * @param  \App\Service\BookKeepingMigrationTools  $tools
      */
     public function __construct(BookRepositoryInterface $book, PermissionRepositoryInterface $permission, BookKeepingMigrationTools $tools)
     {

@@ -19,7 +19,7 @@ class AccountMigrationService extends AccountService
      *
      * @param  \App\DataProvider\AccountRepositoryInterface  $account
      * @param  \App\DataProvider\AccountGroupRepositoryInterface  $accountGroup
-     * @param  \App\Service\BookKeepingMigrationTools $tools
+     * @param  \App\Service\BookKeepingMigrationTools  $tools
      */
     public function __construct(AccountRepositoryInterface $account, AccountGroupRepositoryInterface $accountGroup, BookKeepingMigrationTools $tools)
     {

@@ -19,7 +19,7 @@ class SlipMigrationService extends SlipService
      *
      * @param  \App\DataProvider\SlipRepositoryInterface  $slip
      * @param  \App\DataProvider\SlipEntryRepositoryInterface  $slipEntry
-     * @param  \App\Service\BookKeepingMigrationTools $tools
+     * @param  \App\Service\BookKeepingMigrationTools  $tools
      */
     public function __construct(SlipRepositoryInterface $slip, SlipEntryRepositoryInterface $slipEntry, BookKeepingMigrationTools $tools)
     {

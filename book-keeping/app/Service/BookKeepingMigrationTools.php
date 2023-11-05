@@ -37,15 +37,15 @@ class BookKeepingMigrationTools
     /**
      * Pull data to import from exporter.
      *
-     * @param string $exporterUrl
-     * @param string $accessToken
+     * @param  string  $exporterUrl
+     * @param  string  $accessToken
      * @return \Illuminate\Http\Client\Response
      */
     public function getFromExporter($exporterUrl, $accessToken): ClientResponse
     {
         $accessComplete = false;
 
-        while(!$accessComplete) {
+        while (! $accessComplete) {
             $response = Http::withToken($accessToken)->get($exporterUrl);
             if ($response->status() != Response::HTTP_TOO_MANY_REQUESTS) {
                 $accessComplete = true;
@@ -53,7 +53,7 @@ class BookKeepingMigrationTools
                 sleep(5);
             }
         }
-    
+
         return $response;
     }
 

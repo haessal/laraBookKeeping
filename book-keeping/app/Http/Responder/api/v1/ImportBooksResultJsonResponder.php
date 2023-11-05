@@ -10,8 +10,8 @@ class ImportBooksResultJsonResponder extends BaseJsonResponder
     /**
      * Setup a new JSON response.
      *
-     * @param  array<string, mixed> $context
-     * @param  int $status
+     * @param  array<string, mixed>  $context
+     * @param  int  $status
      * @return \Illuminate\Http\JsonResponse
      */
     public function response(array $context, int $status = JsonResponse::HTTP_OK): JsonResponse
