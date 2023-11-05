@@ -10,16 +10,14 @@ class ImportBooksResultJsonResponder extends BaseJsonResponder
     /**
      * Setup a new JSON response.
      *
-     * @param  array{
-     *   sourceUrl: string,
-     *   result: array<string, mixed>,
-     * }  $context
+     * @param  array<string, mixed> $context
+     * @param  int $status
      * @return \Illuminate\Http\JsonResponse
      */
-    public function response(array $context): JsonResponse
+    public function response(array $context, int $status = JsonResponse::HTTP_OK): JsonResponse
     {
         $this->response->setData($context);
-        $this->response->setStatusCode(JsonResponse::HTTP_OK);
+        $this->response->setStatusCode($status);
 
         return $this->response;
     }

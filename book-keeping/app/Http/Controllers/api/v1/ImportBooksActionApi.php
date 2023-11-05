@@ -4,9 +4,11 @@ namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\api\AuthenticatedBookKeepingMigrationActionApi;
 use App\Http\Responder\api\v1\ImportBooksResultJsonResponder;
+use App\Jobs\ProcessImportingBooks;
 use App\Service\BookKeepingMigration;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ImportBooksActionApi extends AuthenticatedBookKeepingMigrationActionApi
 {
@@ -51,23 +53,8 @@ class ImportBooksActionApi extends AuthenticatedBookKeepingMigrationActionApi
             return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
         }
 
-        [$status, $importResult] = $this->BookKeeping->importBooks($sourceUrl, $accessToken);
-        switch ($status) {
-            case BookKeepingService::STATUS_NORMAL:
-                if (isset($importResult)) {
-                    $context['sourceUrl'] = $sourceUrl;
-                    $context['result'] = $importResult;
-                    $response = $this->responder->response($context);
-                }
-                break;
-            default:
-                // return new JsonResponse(null, JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
-                break;
-        }
-        if (is_null($response)) {
-            $response = new JsonResponse(null, JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        ProcessImportingBooks::dispatch(Auth::user(), $this->BookKeeping, $sourceUrl, $accessToken);
 
-        return $response;
+        return $this->responder->response($context, JsonResponse::HTTP_ACCEPTED);
     }
 }
