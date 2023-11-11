@@ -52,11 +52,14 @@ class ImportBooks extends Command
         $user = User::find($userId); /* @phpstan-ignore-line */
         Auth::login($user);
         $this->info('Importing...');
-        [$status, $importResult] = $service->importBooks($sourceSiteUrl, $accessToken);
+        [$status, $importResult, $message] = $service->importBooks($sourceSiteUrl, $accessToken);
         $result = json_encode($importResult, JSON_PRETTY_PRINT);
 
         $this->line('sourceUrl: '.$sourceSiteUrl);
         $this->line('status:    '.strval($status));
+        if (isset($message)) {
+            $this->error($message);
+        }
         $this->line('"result": '.$result);
     }
 }

@@ -373,13 +373,15 @@ class SlipMigrationService extends SlipService
      *   slip_id: string,
      *   updated_at: string|null,
      * }>  $destinationSlips
-     * @return array<string, mixed>
+     * @return array{0: array<string, mixed>, 1: string|null}
      */
     public function importSlip($sourceUrl, $accessToken, $bookId, $slipHead, $destinationSlips): array
     {
+        $slipId = $slipHead['slip_id'];
         $mode = null;
         $result = null;
-        $slipId = $slipHead['slip_id'];
+        $error = null;
+
         if (key_exists($slipId, $destinationSlips)) {
             $sourceUpdateAt = $slipHead['updated_at'];
             $destinationUpdateAt = $destinationSlips[$slipId]['updated_at'];
@@ -390,10 +392,8 @@ class SlipMigrationService extends SlipService
             $mode = 'create';
         }
         if (isset($mode)) {
-            $response = $this->tools->getFromExporter(
-                $sourceUrl.'/'.$bookId.'/slips/'.$slipId,
-                $accessToken
-            );
+            $url = $sourceUrl.'/'.$bookId.'/slips/'.$slipId;
+            $response = $this->tools->getFromExporter($url, $accessToken);
             if ($response->ok()) {
                 /** @var array{
                  *   version: string,
@@ -427,15 +427,17 @@ class SlipMigrationService extends SlipService
                         default:
                             break;
                     }
+                } else {
+                    $error = 'No response data. '.$url;
                 }
             } else {
-                $result = 'response error('.$response->status().')';
+                $error = 'Response error('.$response->status().'). '.$url;
             }
         } else {
             $result = 'already up-to-date';
         }
 
-        return ['slip_id' => $slipId, 'result' => $result];
+        return [['slip_id' => $slipId, 'result' => $result], $error];
     }
 
     /**
@@ -445,17 +447,22 @@ class SlipMigrationService extends SlipService
      * @param  string  $accessToken
      * @param  string  $bookId
      * @param  string  $slipId
-     * @return array<string, mixed>
+     * @return array{0: array<string, mixed>, 1: string|null}
      */
     public function importSlipEntries($sourceUrl, $accessToken, $bookId, $slipId): array
     {
         $result = [];
+        $error = null;
 
         $destinationSlipEntries = $this->exportSlipEntries($bookId, $slipId);
-        $response = $this->tools->getFromExporter(
-            $sourceUrl.'/'.$bookId.'/slips/'.$slipId.'/entries',
-            $accessToken
-        );
+        if (! key_exists($slipId, $destinationSlipEntries)) {
+            $error = 'The slip that the entries are bound to is not exist. '.$slipId;
+
+            return [$result, $error];
+        }
+
+        $url = $sourceUrl.'/'.$bookId.'/slips/'.$slipId.'/entries';
+        $response = $this->tools->getFromExporter($url, $accessToken);
         if ($response->ok()) {
             /** @var array{
              *   version: string,
@@ -473,7 +480,7 @@ class SlipMigrationService extends SlipService
             if (isset($responseBody)) {
                 $sourceSlipEntries = $responseBody['books'][$bookId]['slips'][$slipId]['entries'];
                 foreach ($sourceSlipEntries as $slipEntryId => $slipEntry) {
-                    $result[$slipEntryId] = $this->importSlipEntry(
+                    [$result[$slipEntryId], $error] = $this->importSlipEntry(
                         $sourceUrl,
                         $accessToken,
                         $bookId,
@@ -481,11 +488,18 @@ class SlipMigrationService extends SlipService
                         $slipEntry,
                         $destinationSlipEntries[$slipId]['entries']
                     );
+                    if (isset($error)) {
+                        break;
+                    }
                 }
+            } else {
+                $error = 'No response data. '.$url;
             }
+        } else {
+            $error = 'Response error('.$response->status().'). '.$url;
         }
 
-        return $result;
+        return [$result, $error];
     }
 
     /**
@@ -503,13 +517,15 @@ class SlipMigrationService extends SlipService
      *   slip_entry_id: string,
      *   updated_at: string|null,
      * }>  $destinationSlipEntries
-     * @return array<string, mixed>
+     * @return array{0: array<string, mixed>, 1: string|null}
      */
     public function importSlipEntry($sourceUrl, $accessToken, $bookId, $slipId, array $slipEntryHead, array $destinationSlipEntries): array
     {
+        $slipEntryId = $slipEntryHead['slip_entry_id'];
         $mode = null;
         $result = null;
-        $slipEntryId = $slipEntryHead['slip_entry_id'];
+        $error = null;
+
         if (key_exists($slipEntryId, $destinationSlipEntries)) {
             $sourceUpdateAt = $slipEntryHead['updated_at'];
             $destinationUpdateAt = $destinationSlipEntries[$slipEntryId]['updated_at'];
@@ -520,10 +536,8 @@ class SlipMigrationService extends SlipService
             $mode = 'create';
         }
         if (isset($mode)) {
-            $response = $this->tools->getFromExporter(
-                $sourceUrl.'/'.$bookId.'/slips/'.$slipId.'/entries/'.$slipEntryId,
-                $accessToken
-            );
+            $url = $sourceUrl.'/'.$bookId.'/slips/'.$slipId.'/entries/'.$slipEntryId;
+            $response = $this->tools->getFromExporter($url, $accessToken);
             if ($response->ok()) {
                 /** @var array{
                  *   version: string,
@@ -560,15 +574,17 @@ class SlipMigrationService extends SlipService
                         default:
                             break;
                     }
+                } else {
+                    $error = 'No response data. '.$url;
                 }
             } else {
-                $result = 'response error('.$response->status().')';
+                $error = 'Response error('.$response->status().'). '.$url;
             }
         } else {
             $result = 'already up-to-date';
         }
 
-        return ['slip_entry_id' => $slipEntryId, 'result' => $result];
+        return [['slip_entry_id' => $slipEntryId, 'result' => $result], $error];
     }
 
     /**
@@ -577,14 +593,16 @@ class SlipMigrationService extends SlipService
      * @param  string  $sourceUrl
      * @param  string  $accessToken
      * @param  string  $bookId
-     * @return array<string, mixed>
+     * @return array{0: array<string, mixed>, 1: string|null}
      */
     public function importSlips($sourceUrl, $accessToken, $bookId): array
     {
         $result = [];
+        $error = null;
 
         $destinationSlips = $this->exportSlips($bookId);
-        $response = $this->tools->getFromExporter($sourceUrl.'/'.$bookId.'/slips', $accessToken);
+        $url = $sourceUrl.'/'.$bookId.'/slips';
+        $response = $this->tools->getFromExporter($url, $accessToken);
         if ($response->ok()) {
             /** @var array{
              *   version: string,
@@ -600,16 +618,26 @@ class SlipMigrationService extends SlipService
             if (isset($responseBody)) {
                 $sourceSlips = $responseBody['books'][$bookId]['slips'];
                 foreach ($sourceSlips as $slipId => $slip) {
-                    $result[$slipId] = $this->importSlip(
+                    [$result[$slipId], $error] = $this->importSlip(
                         $sourceUrl, $accessToken, $bookId, $slip, $destinationSlips
                     );
-                    $result[$slipId]['entries'] = $this->importSlipEntries(
+                    if (isset($error)) {
+                        break;
+                    }
+                    [$result[$slipId]['entries'], $error] = $this->importSlipEntries(
                         $sourceUrl, $accessToken, $bookId, $slipId
                     );
+                    if (isset($error)) {
+                        break;
+                    }
                 }
+            } else {
+                $error = 'No response data. '.$url;
             }
+        } else {
+            $error = 'Response error('.$response->status().'). '.$url;
         }
 
-        return $result;
+        return [$result, $error];
     }
 }

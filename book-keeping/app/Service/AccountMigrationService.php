@@ -382,13 +382,15 @@ class AccountMigrationService extends AccountService
      *   account_group_id: string,
      *   updated_at: string|null,
      * }>  $destinationAccountGroups
-     * @return array<string, mixed>
+     * @return array{0: array<string, mixed>, 1: string|null}
      */
     public function importAccountGroup($sourceUrl, $accessToken, $bookId, array $accountGroupHead, array $destinationAccountGroups): array
     {
+        $accountGroupId = $accountGroupHead['account_group_id'];
         $mode = null;
         $result = null;
-        $accountGroupId = $accountGroupHead['account_group_id'];
+        $error = null;
+
         if (key_exists($accountGroupId, $destinationAccountGroups)) {
             $sourceUpdateAt = $accountGroupHead['updated_at'];
             $destinationUpdateAt = $destinationAccountGroups[$accountGroupId]['updated_at'];
@@ -399,10 +401,8 @@ class AccountMigrationService extends AccountService
             $mode = 'create';
         }
         if (isset($mode)) {
-            $response = $this->tools->getFromExporter(
-                $sourceUrl.'/'.$bookId.'/accounts/'.$accountGroupId,
-                $accessToken
-            );
+            $url = $sourceUrl.'/'.$bookId.'/accounts/'.$accountGroupId;
+            $response = $this->tools->getFromExporter($url, $accessToken);
             if ($response->ok()) {
                 /** @var array{
                  *   version: string,
@@ -437,15 +437,17 @@ class AccountMigrationService extends AccountService
                         default:
                             break;
                     }
+                } else {
+                    $error = 'No response data. '.$url;
                 }
             } else {
-                $result = 'response error('.$response->status().')';
+                $error = 'Response error('.$response->status().'). '.$url;
             }
         } else {
             $result = 'already up-to-date';
         }
 
-        return ['account_group_id' => $accountGroupId, 'result' => $result];
+        return [['account_group_id' => $accountGroupId, 'result' => $result], $error];
     }
 
     /**
@@ -463,13 +465,15 @@ class AccountMigrationService extends AccountService
      *   account_id: string,
      *   updated_at: string|null,
      * }>  $destinationAccountItems
-     * @return array<string, mixed>
+     * @return array{0: array<string, mixed>, 1: string|null}
      */
     public function importAccountItem($sourceUrl, $accessToken, $bookId, $accountGroupId, array $accountItemHead, array $destinationAccountItems): array
     {
+        $accountId = $accountItemHead['account_id'];
         $mode = null;
         $result = null;
-        $accountId = $accountItemHead['account_id'];
+        $error = null;
+
         if (key_exists($accountId, $destinationAccountItems)) {
             $sourceUpdateAt = $accountItemHead['updated_at'];
             $destinationUpdateAt = $destinationAccountItems[$accountId]['updated_at'];
@@ -480,10 +484,8 @@ class AccountMigrationService extends AccountService
             $mode = 'create';
         }
         if (isset($mode)) {
-            $response = $this->tools->getFromExporter(
-                $sourceUrl.'/'.$bookId.'/accounts/'.$accountGroupId.'/items/'.$accountId,
-                $accessToken
-            );
+            $url = $sourceUrl.'/'.$bookId.'/accounts/'.$accountGroupId.'/items/'.$accountId;
+            $response = $this->tools->getFromExporter($url, $accessToken);
             if ($response->ok()) {
                 /** @var array{
                  *   version: string,
@@ -520,15 +522,17 @@ class AccountMigrationService extends AccountService
                         default:
                             break;
                     }
+                } else {
+                    $error = 'No response data. '.$url;
                 }
             } else {
-                $result = 'response error('.$response->status().')';
+                $error = 'Response error('.$response->status().'). '.$url;
             }
         } else {
             $result = 'already up-to-date';
         }
 
-        return ['account_id' => $accountId, 'result' => $result];
+        return [['account_id' => $accountId, 'result' => $result], $error];
     }
 
     /**
@@ -538,17 +542,22 @@ class AccountMigrationService extends AccountService
      * @param  string  $accessToken
      * @param  string  $bookId
      * @param  string  $accountGroupId
-     * @return array<string, mixed>
+     * @return array{0: array<string, mixed>, 1: string|null}
      */
     public function importAccountItems($sourceUrl, $accessToken, $bookId, $accountGroupId): array
     {
         $result = [];
+        $error = null;
 
         $destinationAccountItems = $this->exportAccountItems($bookId, $accountGroupId);
-        $response = $this->tools->getFromExporter(
-            $sourceUrl.'/'.$bookId.'/accounts/'.$accountGroupId.'/items',
-            $accessToken
-        );
+        if (! key_exists($accountGroupId, $destinationAccountItems)) {
+            $error = 'The account group that the items are bound to is not exist. '.$accountGroupId;
+
+            return [$result, $error];
+        }
+
+        $url = $sourceUrl.'/'.$bookId.'/accounts/'.$accountGroupId.'/items';
+        $response = $this->tools->getFromExporter($url, $accessToken);
         if ($response->ok()) {
             /** @var array{
              *   version: string,
@@ -566,7 +575,7 @@ class AccountMigrationService extends AccountService
             if (isset($responseBody)) {
                 $sourceAccountItems = $responseBody['books'][$bookId]['accounts'][$accountGroupId]['items'];
                 foreach ($sourceAccountItems as $accountId => $accountItem) {
-                    $result[$accountId] = $this->importAccountItem(
+                    [$result[$accountId], $error] = $this->importAccountItem(
                         $sourceUrl,
                         $accessToken,
                         $bookId,
@@ -574,11 +583,18 @@ class AccountMigrationService extends AccountService
                         $accountItem,
                         $destinationAccountItems[$accountGroupId]['items']
                     );
+                    if (isset($error)) {
+                        break;
+                    }
                 }
+            } else {
+                $error = 'No response data. '.$url;
             }
+        } else {
+            $error = 'Response error('.$response->status().'). '.$url;
         }
 
-        return $result;
+        return [$result, $error];
     }
 
     /**
@@ -587,14 +603,16 @@ class AccountMigrationService extends AccountService
      * @param  string  $sourceUrl
      * @param  string  $accessToken
      * @param  string  $bookId
-     * @return array<string, mixed>
+     * @return array{0: array<string, mixed>, 1: string|null}
      */
     public function importAccounts($sourceUrl, $accessToken, $bookId): array
     {
         $result = [];
+        $error = null;
 
         $destinationAccountGroups = $this->exportAccounts($bookId);
-        $response = $this->tools->getFromExporter($sourceUrl.'/'.$bookId.'/accounts', $accessToken);
+        $url = $sourceUrl.'/'.$bookId.'/accounts';
+        $response = $this->tools->getFromExporter($url, $accessToken);
         if ($response->ok()) {
             /** @var array{
              *   version: string,
@@ -610,16 +628,26 @@ class AccountMigrationService extends AccountService
             if (isset($responseBody)) {
                 $sourceAccountGropus = $responseBody['books'][$bookId]['accounts'];
                 foreach ($sourceAccountGropus as $accountGroupId => $accountGroup) {
-                    $result[$accountGroupId] = $this->importAccountGroup(
+                    [$result[$accountGroupId], $error] = $this->importAccountGroup(
                         $sourceUrl, $accessToken, $bookId, $accountGroup, $destinationAccountGroups
                     );
-                    $result[$accountGroupId]['items'] = $this->importAccountItems(
+                    if (isset($error)) {
+                        break;
+                    }
+                    [$result[$accountGroupId]['items'], $error] = $this->importAccountItems(
                         $sourceUrl, $accessToken, $bookId, $accountGroupId
                     );
+                    if (isset($error)) {
+                        break;
+                    }
                 }
+            } else {
+                $error = 'No response data. '.$url;
             }
+        } else {
+            $error = 'Response error('.$response->status().'). '.$url;
         }
 
-        return $result;
+        return [$result, $error];
     }
 }

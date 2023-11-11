@@ -438,12 +438,13 @@ class BookKeepingMigration
      *
      * @param  string  $sourceUrl
      * @param  string  $accessToken
-     * @return array{0:int, 1:array<string, mixed>|null}
+     * @return array{0:int, 1:array<string, mixed>|null, 2: string|null}
      */
     public function importBooks($sourceUrl, $accessToken)
     {
-        $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;
+        $status = BookKeepingService::STATUS_NORMAL;
         $importResult = null;
+        $errorMessage = null;
 
         $response = $this->tools->getFromExporter($sourceUrl, $accessToken);
         if ($response->ok()) {
@@ -464,35 +465,52 @@ class BookKeepingMigration
                 $importResult['version'] = $responseBody['version'];
                 $importResult['books'] = [];
                 foreach ($books as $bookId => $book) {
+                    $importResult['books'][$bookId] = [];
                     [$importable, $reason] = $this->isImportable($bookId);
                     if ($importable) {
-                        $resultOfImportBook = $this->book->importInformation(
+                        // book
+                        [$resultOfImportBook, $errorMessage] = $this->book->importInformation(
                             $sourceUrl, $accessToken, intval(Auth::id()), $book['book']
                         );
-                        $resultOfImportAccounts = $this->account->importAccounts(
+                        $importResult['books'][$bookId]['book'] = $resultOfImportBook;
+                        if (isset($errorMessage)) {
+                            $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;
+                            break;
+                        }
+                        // accounts
+                        [$resultOfImportAccounts, $errorMessage] = $this->account->importAccounts(
                             $sourceUrl, $accessToken, $book['book']['book_id']
                         );
-                        $resultOfImportSlips = $this->slip->importSlips(
+                        $importResult['books'][$bookId]['accounts'] = $resultOfImportAccounts;
+                        if (isset($errorMessage)) {
+                            $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;
+                            break;
+                        }
+                        // slips
+                        [$resultOfImportSlips, $errorMessage] = $this->slip->importSlips(
                             $sourceUrl, $accessToken, $book['book']['book_id']
                         );
-                        $importResult['books'][$bookId] = [
-                            'status'   => 'success',
-                            'book'     => $resultOfImportBook,
-                            'accounts' => $resultOfImportAccounts,
-                            'slips'    => $resultOfImportSlips,
-                        ];
+                        $importResult['books'][$bookId]['slips'] = $resultOfImportSlips;
+                        if (isset($errorMessage)) {
+                            $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;
+                            break;
+                        }
                     } else {
-                        $importResult['books'][$bookId] = [
-                            'status' => 'failed',
-                            'reason' => 'The book is already exist and prohibit to write.('.strval($reason).')',
-                        ];
+                        $errorMessage = 'The book is already exist and prohibit to write. '.$bookId;
+                        $status = $reason;
+                        break;
                     }
                 }
-                $status = BookKeepingService::STATUS_NORMAL;
+            } else {
+                $errorMessage = 'No response data. '.$sourceUrl;
+                $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;
             }
+        } else {
+            $errorMessage = 'Response error('.$response->status().'). '.$sourceUrl;
+            $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;
         }
 
-        return [$status, $importResult];
+        return [$status, $importResult, $errorMessage];
     }
 
     /**

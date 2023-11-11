@@ -83,8 +83,8 @@ class ProcessImportingBooks implements ShouldQueue, ShouldBeEncrypted
     public function handle(): void
     {
         Auth::login($this->user);
-        [$status, $importResult] = $this->service->importBooks($this->sourceUrl, $this->accessToken);
+        [$status, $importResult, $errorMessage] = $this->service->importBooks($this->sourceUrl, $this->accessToken);
         $result = json_encode($importResult, JSON_PRETTY_PRINT);
-        Mail::to(Auth::user())->send(new ImportingCompleted($this->sourceUrl, $status, strval($result)));
+        Mail::to(Auth::user())->send(new ImportingCompleted($this->sourceUrl, $status, $errorMessage, strval($result)));
     }
 }

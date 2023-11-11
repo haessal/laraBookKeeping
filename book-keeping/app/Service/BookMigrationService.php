@@ -76,13 +76,15 @@ class BookMigrationService extends BookService
      *   book_id: string,
      *   updated_at: string|null,
      * }  $bookHead
-     * @return array<string, mixed>
+     * @return array{0: array<string, mixed>, 1: string|null}
      */
     public function importInformation($sourceUrl, $accessToken, $userId, array $bookHead): array
     {
         $bookId = $bookHead['book_id'];
         $mode = null;
         $result = null;
+        $error = null;
+
         /** @var array{
          *   book_id: string,
          *   book_name: string,
@@ -103,7 +105,8 @@ class BookMigrationService extends BookService
             $mode = 'create';
         }
         if (isset($mode)) {
-            $response = $this->tools->getFromExporter($sourceUrl.'/'.$bookId, $accessToken);
+            $url = $sourceUrl.'/'.$bookId;
+            $response = $this->tools->getFromExporter($url, $accessToken);
             if ($response->ok()) {
                 /** @var array{
                  *   version: string,
@@ -134,14 +137,16 @@ class BookMigrationService extends BookService
                         default:
                             break;
                     }
+                } else {
+                    $error = 'No response data. '.$url;
                 }
             } else {
-                $result = 'response error('.$response->status().')';
+                $error = 'Response error('.$response->status().'). '.$url;
             }
         } else {
             $result = 'already up-to-date';
         }
 
-        return ['bookId' => $bookId, 'result' => $result];
+        return [['bookId' => $bookId, 'result' => $result], $error];
     }
 }

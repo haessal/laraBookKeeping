@@ -28,6 +28,13 @@ class ImportingCompleted extends Mailable
     public $status;
 
     /**
+     * The error message of the importing.
+     *
+     * @var string|null
+     */
+    public $errorMessage;
+
+    /**
      * The result of the importing.
      *
      * @var string
@@ -39,12 +46,14 @@ class ImportingCompleted extends Mailable
      *
      * @param  string  $sourceUrl
      * @param  int  $status
+     * @param  string|null  $errorMessage
      * @param  string  $result
      */
-    public function __construct($sourceUrl, $status, $result)
+    public function __construct($sourceUrl, $status, $errorMessage, $result)
     {
         $this->sourceUrl = $sourceUrl;
         $this->status = $status;
+        $this->errorMessage = $errorMessage;
         $this->result = $result;
     }
 

@@ -18,6 +18,12 @@
                     <td>status:</td>
                     <td>{{ $status }}</td>
                 </tr>
+                @if (isset($errorMessage))
+                <tr>
+                    <td>error:</td>
+                    <td>{{ $errorMessage }}</td>
+                </tr>
+                @endif
             </tbody>
         </table>
         <br />
