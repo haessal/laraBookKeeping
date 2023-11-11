@@ -54,7 +54,20 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
      */
     public function createForImporting(array $newSlipEntry)
     {
-        // FIXME
+        $slipEntry = new SlipEntry();
+        $slipEntry->slip_entry_id = $newSlipEntry['slip_entry_id'];
+        $slipEntry->slip_id = $newSlipEntry['slip_id'];
+        $slipEntry->debit = $newSlipEntry['debit'];
+        $slipEntry->credit = $newSlipEntry['credit'];
+        $slipEntry->amount = $newSlipEntry['amount'];
+        $slipEntry->client = $newSlipEntry['client'];
+        $slipEntry->outline = $newSlipEntry['outline'];
+        $slipEntry->display_order = $newSlipEntry['display_order'];
+        $slipEntry->save();
+        $slipEntry->refresh();
+        if ($newSlipEntry['deleted']) {
+            $slipEntry->delete();
+        }
     }
 
     /**
@@ -275,7 +288,29 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
      */
     public function updateForImporting(array $newSlipEntry)
     {
-        // FIXME
+        /** @var \App\Models\SlipEntry|null $slipEntry */
+        $slipEntry = SlipEntry::withTrashed()->find($newSlipEntry['slip_entry_id']);
+        if (! is_null($slipEntry)) {
+            $slipEntry->slip_id = $newSlipEntry['slip_id'];
+            $slipEntry->debit = $newSlipEntry['debit'];
+            $slipEntry->credit = $newSlipEntry['credit'];
+            $slipEntry->amount = $newSlipEntry['amount'];
+            $slipEntry->client = $newSlipEntry['client'];
+            $slipEntry->outline = $newSlipEntry['outline'];
+            $slipEntry->display_order = $newSlipEntry['display_order'];
+            $slipEntry->touch();
+            $slipEntry->save();
+            $slipEntry->refresh();
+            if ($slipEntry->trashed()) {
+                if (! $newSlipEntry['deleted']) {
+                    $slipEntry->restore();
+                }
+            } else {
+                if ($newSlipEntry['deleted']) {
+                    $slipEntry->delete();
+                }
+            }
+        }
     }
 
     /**

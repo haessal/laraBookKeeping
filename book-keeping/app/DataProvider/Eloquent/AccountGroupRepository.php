@@ -51,8 +51,20 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
      */
     public function createForImporting(array $newAccountGroup)
     {
-        // FIXME
-
+        $accountGroup = new AccountGroup();
+        $accountGroup->account_group_id = $newAccountGroup['account_group_id'];
+        $accountGroup->book_id = $newAccountGroup['book_id'];
+        $accountGroup->account_type = $newAccountGroup['account_type'];
+        $accountGroup->account_group_title = $newAccountGroup['account_group_title'];
+        $accountGroup->bk_uid = $newAccountGroup['bk_uid'];
+        $accountGroup->account_group_bk_code = $newAccountGroup['account_group_bk_code'];
+        $accountGroup->is_current = $newAccountGroup['is_current'];
+        $accountGroup->display_order = $newAccountGroup['display_order'];
+        $accountGroup->save();
+        $accountGroup->refresh();
+        if ($newAccountGroup['deleted']) {
+            $accountGroup->delete();
+        }
     }
 
     /**
@@ -145,7 +157,28 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
      */
     public function updateForImporting(array $newAccountGroup)
     {
-        // FIXME
-
+        /** @var \App\Models\AccountGroup|null $accountGroup */
+        $accountGroup = AccountGroup::withTrashed()->find($newAccountGroup['account_group_id']);
+        if (! is_null($accountGroup)) {
+            $accountGroup->book_id = $newAccountGroup['book_id'];
+            $accountGroup->account_type = $newAccountGroup['account_type'];
+            $accountGroup->account_group_title = $newAccountGroup['account_group_title'];
+            $accountGroup->bk_uid = $newAccountGroup['bk_uid'];
+            $accountGroup->account_group_bk_code = $newAccountGroup['account_group_bk_code'];
+            $accountGroup->is_current = $newAccountGroup['is_current'];
+            $accountGroup->display_order = $newAccountGroup['display_order'];
+            $accountGroup->touch();
+            $accountGroup->save();
+            $accountGroup->refresh();
+            if ($accountGroup->trashed()) {
+                if (! $newAccountGroup['deleted']) {
+                    $accountGroup->restore();
+                }
+            } else {
+                if ($newAccountGroup['deleted']) {
+                    $accountGroup->delete();
+                }
+            }
+        }
     }
 }

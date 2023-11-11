@@ -50,7 +50,19 @@ class SlipRepository implements SlipRepositoryInterface
      */
     public function createForImporting(array $newSlip)
     {
-        // FIXME
+        $slip = new Slip();
+        $slip->slip_id = $newSlip['slip_id'];
+        $slip->book_id = $newSlip['book_id'];
+        $slip->slip_outline = $newSlip['slip_outline'];
+        $slip->slip_memo = $newSlip['slip_memo'];
+        $slip->date = $newSlip['date'];
+        $slip->is_draft = $newSlip['is_draft'];
+        $slip->display_order = $newSlip['display_order'];
+        $slip->save();
+        $slip->refresh();
+        if ($newSlip['deleted']) {
+            $slip->delete();
+        }
     }
 
     /**
@@ -188,6 +200,27 @@ class SlipRepository implements SlipRepositoryInterface
      */
     public function updateForImporting(array $newSlip)
     {
-        // FIXME
+        /** @var \App\Models\Slip|null $slip */
+        $slip = Slip::withTrashed()->find($newSlip['slip_id']);
+        if (! is_null($slip)) {
+            $slip->book_id = $newSlip['book_id'];
+            $slip->slip_outline = $newSlip['slip_outline'];
+            $slip->slip_memo = $newSlip['slip_memo'];
+            $slip->date = $newSlip['date'];
+            $slip->is_draft = $newSlip['is_draft'];
+            $slip->display_order = $newSlip['display_order'];
+            $slip->touch();
+            $slip->save();
+            $slip->refresh();
+            if ($slip->trashed()) {
+                if (! $newSlip['deleted']) {
+                    $slip->restore();
+                }
+            } else {
+                if ($newSlip['deleted']) {
+                    $slip->delete();
+                }
+            }
+        }
     }
 }

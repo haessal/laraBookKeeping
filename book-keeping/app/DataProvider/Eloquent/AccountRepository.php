@@ -50,8 +50,20 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function createForImporting(array $newAccount)
     {
-        // FIXME
-
+        $account = new Account();
+        $account->account_id = $newAccount['account_id'];
+        $account->account_group_id = $newAccount['account_group_id'];
+        $account->account_title = $newAccount['account_title'];
+        $account->description = $newAccount['description'];
+        $account->selectable = $newAccount['selectable'];
+        $account->bk_uid = $newAccount['bk_uid'];
+        $account->account_bk_code = $newAccount['account_bk_code'];
+        $account->display_order = $newAccount['display_order'];
+        $account->save();
+        $account->refresh();
+        if ($newAccount['deleted']) {
+            $account->delete();
+        }
     }
 
     /**
@@ -157,7 +169,28 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function updateForImporting(array $newAccount)
     {
-        // FIXME
-
+        /** @var \App\Models\Account|null $account */
+        $account = Account::withTrashed()->find($newAccount['account_id']);
+        if (! is_null($account)) {
+            $account->account_group_id = $newAccount['account_group_id'];
+            $account->account_title = $newAccount['account_title'];
+            $account->description = $newAccount['description'];
+            $account->selectable = $newAccount['selectable'];
+            $account->bk_uid = $newAccount['bk_uid'];
+            $account->account_bk_code = $newAccount['account_bk_code'];
+            $account->display_order = $newAccount['display_order'];
+            $account->touch();
+            $account->save();
+            $account->refresh();
+            if ($account->trashed()) {
+                if (! $newAccount['deleted']) {
+                    $account->restore();
+                }
+            } else {
+                if ($newAccount['deleted']) {
+                    $account->delete();
+                }
+            }
+        }
     }
 }
