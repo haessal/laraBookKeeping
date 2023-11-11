@@ -21,11 +21,10 @@
             },
             "extensions": [
                 "arjun.swagger-viewer",
-                "bmewburn.vscode-intelephense-client",
+                "bmewburn.vscode-intelephense-client@1.9.5",
                 "bradlc.vscode-tailwindcss",
                 "csstools.postcss",
                 "eamodio.gitlens",
-                "felixfbecker.php-intellisense",
                 "humao.rest-client",
                 "mikestead.dotenv",
                 "neilbrayfield.php-docblocker",
