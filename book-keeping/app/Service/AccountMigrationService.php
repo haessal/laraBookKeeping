@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\DataProvider\AccountGroupRepositoryInterface;
 use App\DataProvider\AccountRepositoryInterface;
+use Illuminate\Support\Facades\Log;
 
 class AccountMigrationService extends AccountService
 {
@@ -574,6 +575,8 @@ class AccountMigrationService extends AccountService
             $responseBody = $response->json();
             if (isset($responseBody)) {
                 $sourceAccountItems = $responseBody['books'][$bookId]['accounts'][$accountGroupId]['items'];
+                $accountItemNumber = count($sourceAccountItems);
+                $accountItemCount = 0;
                 foreach ($sourceAccountItems as $accountId => $accountItem) {
                     [$result[$accountId], $error] = $this->importAccountItem(
                         $sourceUrl,
@@ -586,6 +589,8 @@ class AccountMigrationService extends AccountService
                     if (isset($error)) {
                         break;
                     }
+                    Log::debug('import: account item     '.sprintf('%2d', $accountItemCount).'/'.sprintf('%2d',$accountItemNumber).' '.$accountId.' '.$result[$accountId]['result']);
+                    $accountItemCount++;
                 }
             } else {
                 $error = 'No response data. '.$url;
@@ -627,6 +632,8 @@ class AccountMigrationService extends AccountService
             $responseBody = $response->json();
             if (isset($responseBody)) {
                 $sourceAccountGropus = $responseBody['books'][$bookId]['accounts'];
+                $accountGroupNumber = count($sourceAccountGropus);
+                $accountGroupCount = 0;
                 foreach ($sourceAccountGropus as $accountGroupId => $accountGroup) {
                     [$result[$accountGroupId], $error] = $this->importAccountGroup(
                         $sourceUrl, $accessToken, $bookId, $accountGroup, $destinationAccountGroups
@@ -634,6 +641,8 @@ class AccountMigrationService extends AccountService
                     if (isset($error)) {
                         break;
                     }
+                    Log::debug('import: account group    '.sprintf('%2d', $accountGroupCount).'/'.sprintf('%2d', $accountGroupNumber).' '.$accountGroupId.' '.$result[$accountGroupId]['result']);
+                    $accountGroupCount++;
                     [$result[$accountGroupId]['items'], $error] = $this->importAccountItems(
                         $sourceUrl, $accessToken, $bookId, $accountGroupId
                     );

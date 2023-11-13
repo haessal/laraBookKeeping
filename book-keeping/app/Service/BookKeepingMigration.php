@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class BookKeepingMigration
 {
@@ -464,6 +465,8 @@ class BookKeepingMigration
                 $books = $responseBody['books'];
                 $importResult['version'] = $responseBody['version'];
                 $importResult['books'] = [];
+                $booksNumber = count($books);
+                $booksCount = 0;
                 foreach ($books as $bookId => $book) {
                     $importResult['books'][$bookId] = [];
                     [$importable, $reason] = $this->isImportable($bookId);
@@ -477,6 +480,8 @@ class BookKeepingMigration
                             $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;
                             break;
                         }
+                        Log::debug('import: book information '.sprintf('%2d', $booksCount).'/'.sprintf('%2d', $booksNumber).' '.$bookId.' '.$resultOfImportBook['result']);
+                        $booksCount++;
                         // accounts
                         [$resultOfImportAccounts, $errorMessage] = $this->account->importAccounts(
                             $sourceUrl, $accessToken, $book['book']['book_id']

@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\DataProvider\SlipEntryRepositoryInterface;
 use App\DataProvider\SlipRepositoryInterface;
+use Illuminate\Support\Facades\Log;
 
 class SlipMigrationService extends SlipService
 {
@@ -479,6 +480,8 @@ class SlipMigrationService extends SlipService
             $responseBody = $response->json();
             if (isset($responseBody)) {
                 $sourceSlipEntries = $responseBody['books'][$bookId]['slips'][$slipId]['entries'];
+                $slipEntryNumber = count($sourceSlipEntries);
+                $slipEntryCount = 0;
                 foreach ($sourceSlipEntries as $slipEntryId => $slipEntry) {
                     [$result[$slipEntryId], $error] = $this->importSlipEntry(
                         $sourceUrl,
@@ -491,6 +494,8 @@ class SlipMigrationService extends SlipService
                     if (isset($error)) {
                         break;
                     }
+                    Log::debug('import: skip entry       '.sprintf('%5d', $slipEntryCount).'/'.sprintf('%5d', $slipEntryNumber).' '.$slipEntryId.' '.$result[$slipEntryId]['result']);
+                    $slipEntryCount++;
                 }
             } else {
                 $error = 'No response data. '.$url;
@@ -617,6 +622,8 @@ class SlipMigrationService extends SlipService
             $responseBody = $response->json();
             if (isset($responseBody)) {
                 $sourceSlips = $responseBody['books'][$bookId]['slips'];
+                $slipNumber = count($sourceSlips);
+                $slipCount = 0;
                 foreach ($sourceSlips as $slipId => $slip) {
                     [$result[$slipId], $error] = $this->importSlip(
                         $sourceUrl, $accessToken, $bookId, $slip, $destinationSlips
@@ -624,6 +631,8 @@ class SlipMigrationService extends SlipService
                     if (isset($error)) {
                         break;
                     }
+                    Log::debug('import: skip             '.sprintf('%5d', $slipCount).'/'.sprintf('%5d', $slipNumber).' '.$slipId.' '.$result[$slipId]['result']);
+                    $slipCount++;
                     [$result[$slipId]['entries'], $error] = $this->importSlipEntries(
                         $sourceUrl, $accessToken, $bookId, $slipId
                     );
