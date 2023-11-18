@@ -149,4 +149,106 @@ class BookMigrationService extends BookService
 
         return [['bookId' => $bookId, 'result' => $result], $error];
     }
+
+    /**
+     * Load information.
+     *
+     * @param  int  $userId
+     * @param  array<string, mixed>  $bookInformation
+     * @return array{0: array<string, mixed>, 1: string|null}
+     */
+    public function loadInformation($userId, $bookInformation): array
+    {
+        $mode = null;
+        $result = null;
+        $error = null;
+
+        $newBook = $this->validateBookInformation($bookInformation);
+        if (is_null($newBook)) {
+            $error = 'invalid data format: book';
+
+            return [['bookId' => null, 'result' => $result], $error];
+        }
+        $bookId = $newBook['book_id'];
+
+        /** @var array{
+         *   book_id: string,
+         *   book_name: string,
+         *   display_order: int|null,
+         *   created_at: string|null,
+         *   updated_at: string|null,
+         *   deleted_at: string|null,
+         * }|null $destinationInformation
+         */
+        $destinationInformation = $this->book->findByIdForExporting($bookId);
+        if (isset($destinationInformation)) {
+            $sourceUpdateAt = $newBook['updated_at'];
+            $destinationUpdateAt = $destinationInformation['updated_at'];
+            if ($this->tools->isSourceLater($sourceUpdateAt, $destinationUpdateAt)) {
+                $mode = 'update';
+            }
+        } else {
+            $mode = 'create';
+        }
+        if (isset($mode)) {
+            switch($mode) {
+                case 'update':
+                    $this->book->updateForImporting($newBook);
+                    $result = 'updated';
+                    break;
+                case 'create':
+                    $this->book->createForImporting($newBook);
+                    $this->permission->create($userId, $bookId, true, true, false);
+                    $result = 'created';
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            $result = 'already up-to-date';
+        }
+
+        return [['bookId' => $bookId, 'result' => $result], $error];
+    }
+
+    /**
+     * Validate the book information.
+     *
+     * @param  array<string, mixed>  $bookInformation
+     * @return array{
+     *   book_id: string,
+     *   book_name: string,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }|null
+     */
+    private function validateBookInformation(array $bookInformation): ?array
+    {
+        if (! key_exists('book_id', $bookInformation) || ! is_string($bookInformation['book_id'])) {
+            return null;
+        }
+        if (! key_exists('book_name', $bookInformation) || ! is_string($bookInformation['book_name'])) {
+            return null;
+        }
+        if (! key_exists('display_order', $bookInformation) ||
+                (! is_int($bookInformation['display_order']) && ! is_null($bookInformation['display_order']))) {
+            return null;
+        }
+        if (! key_exists('updated_at', $bookInformation) ||
+                (! is_string($bookInformation['updated_at']) && ! is_null($bookInformation['updated_at']))) {
+            return null;
+        }
+        if (! key_exists('deleted', $bookInformation) || ! is_bool($bookInformation['deleted'])) {
+            return null;
+        }
+
+        return [
+            'book_id'       => $bookInformation['book_id'],
+            'book_name'     => $bookInformation['book_name'],
+            'display_order' => $bookInformation['display_order'],
+            'updated_at'    => $bookInformation['updated_at'],
+            'deleted'       => $bookInformation['deleted'],
+        ];
+    }
 }

@@ -649,4 +649,312 @@ class SlipMigrationService extends SlipService
 
         return [$result, $error];
     }
+
+    /**
+     * Load the slip.
+     *
+     * @param  array<string, mixed>  $slip
+     * @param array<string, array{
+     *   slip_id: string,
+     *   updated_at: string|null,
+     * }> $destinationSlips
+     * @return array{0: array<string, mixed>, 1: string|null}
+     */
+    public function loadSlip(array $slip, array $destinationSlips): array
+    {
+        $mode = null;
+        $result = null;
+        $error = null;
+
+        $newSlip = $this->validateSlip($slip);
+        if (is_null($newSlip)) {
+            $error = 'invalid data format: slip';
+
+            return [['slip_id' => null, 'result' => $result], $error];
+        }
+        $slipId = $newSlip['slip_id'];
+        if (key_exists($slipId, $destinationSlips)) {
+            $sourceUpdateAt = $newSlip['updated_at'];
+            $destinationUpdateAt = $destinationSlips[$slipId]['updated_at'];
+            if ($this->tools->isSourceLater($sourceUpdateAt, $destinationUpdateAt)) {
+                $mode = 'update';
+            }
+        } else {
+            $mode = 'create';
+        }
+        if (isset($mode)) {
+            switch($mode) {
+                case 'update':
+                    $this->slip->updateForImporting($newSlip);
+                    $result = 'updated';
+                    break;
+                case 'create':
+                    $this->slip->createForImporting($newSlip);
+                    $result = 'created';
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            $result = 'already up-to-date';
+        }
+
+        return [['slip_id' => $slipId, 'result' => $result], $error];
+    }
+
+    /**
+     * Load the slip entries belonging to the slip.
+     *
+     * @param  string  $bookId
+     * @param  string  $slipId
+     * @param  array<string, array<string, mixed>>  $slipEntries
+     * @return array{0: array<string, mixed>, 1: string|null}
+     */
+    public function loadSlipEntries($bookId, $slipId, $slipEntries): array
+    {
+        $result = [];
+        $error = null;
+
+        $destinationSlipEntries = $this->exportSlipEntries($bookId, $slipId);
+        if (! key_exists($slipId, $destinationSlipEntries)) {
+            $error = 'The slip that the entires are bound to is not exist. '.$slipId;
+
+            return [$result, $error];
+        }
+        $slipEntryNumber = count($slipEntries);
+        $slipEntryCount = 0;
+        foreach ($slipEntries as $slipEntryId => $slipEntry) {
+            [$result[$slipEntryId], $error] = $this->loadSlipEntry(
+                $slipEntry, $destinationSlipEntries[$slipId]['entries']
+            );
+            if (isset($error)) {
+                break;
+            }
+            Log::debug('load: slip entry '.sprintf('%5d', $slipEntryCount).'/'.sprintf('%5d', $slipEntryNumber).' '.$slipEntryId.' '.$result[$slipEntryId]['result']);
+            $slipEntryCount++;
+        }
+
+        return [$result, $error];
+    }
+
+    /**
+     * Load the slip entry.
+     *
+     * @param  array<string, mixed>  $slipEntry
+     * @param array<string, array{
+     *   slip_entry_id: string,
+     *   updated_at: string|null,
+     * }>  $destinationSlipEntries
+     * @return array{0: array<string, mixed>, 1: string|null}
+     */
+    public function loadSlipEntry(array $slipEntry, array $destinationSlipEntries): array
+    {
+        $mode = null;
+        $result = null;
+        $error = null;
+
+        $newSlipEntry = $this->validateSlipEntry($slipEntry);
+        if (is_null($newSlipEntry)) {
+            $error = 'invalid data format: slip entry';
+
+            return [['slip_entry_id' => null, 'result' => $result], $error];
+        }
+        $slipEntryId = $newSlipEntry['slip_entry_id'];
+        if (key_exists($slipEntryId, $destinationSlipEntries)) {
+            $sourceUpdateAt = $newSlipEntry['updated_at'];
+            $destinationUpdateAt = $destinationSlipEntries[$slipEntryId]['updated_at'];
+            if ($this->tools->isSourceLater($sourceUpdateAt, $destinationUpdateAt)) {
+                $mode = 'update';
+            }
+        } else {
+            $mode = 'create';
+        }
+        if (isset($mode)) {
+            switch($mode) {
+                case 'update':
+                    $this->slipEntry->updateForImporting($newSlipEntry);
+                    $result = 'updated';
+                    break;
+                case 'create':
+                    $this->slipEntry->createForImporting($newSlipEntry);
+                    $result = 'created';
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            $result = 'already up-to-date';
+        }
+
+        return [['slip_entry_id' => $slipEntryId, 'result' => $result], $error];
+    }
+
+    /**
+     * Load the slips of the book.
+     *
+     * @param  string  $bookId
+     * @param  array<string, array<string, mixed>>  $slips
+     * @return array{0: array<string, mixed>, 1: string|null}
+     */
+    public function loadSlips($bookId, $slips): array
+    {
+        $result = [];
+        $error = null;
+
+        $destinationSlips = $this->exportSlips($bookId);
+        $slipNumber = count($slips);
+        $slipCount = 0;
+        foreach ($slips as $slipId => $slip) {
+            if (key_exists('slip_id', $slip)) {
+                [$result[$slipId], $error] = $this->loadSlip($slip, $destinationSlips);
+                if (isset($error)) {
+                    break;
+                }
+                Log::debug('load: slip       '.sprintf('%5d', $slipCount).'/'.sprintf('%5d', $slipNumber).' '.$slipId.' '.$result[$slipId]['result']);
+            }
+            $slipCount++;
+            if (key_exists('entries', $slip)) {
+                if (is_array($slip['entries'])) {
+                    [$result[$slipId]['entries'], $error] = $this->loadSlipEntries(
+                        $bookId, $slipId, $slip['entries']
+                    );
+                    if (isset($error)) {
+                        break;
+                    }
+                } else {
+                    $error = 'invalid data format: slip entries';
+                }
+            }
+        }
+
+        return [$result, $error];
+    }
+
+    /**
+     * Validate the slip.
+     *
+     * @param  array<string, mixed>  $slip
+     * @return array{
+     *   slip_id: string,
+     *   book_id: string,
+     *   slip_outline: string,
+     *   slip_memo: string|null,
+     *   date: string,
+     *   is_draft: bool,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }|null
+     */
+    private function validateSlip(array $slip): ?array
+    {
+        if (! key_exists('slip_id', $slip) || ! is_string($slip['slip_id'])) {
+            return null;
+        }
+        if (! key_exists('book_id', $slip) || ! is_string($slip['book_id'])) {
+            return null;
+        }
+        if (! key_exists('slip_outline', $slip) || ! is_string($slip['slip_outline'])) {
+            return null;
+        }
+        if (! key_exists('slip_memo', $slip) ||
+                (! is_string($slip['slip_memo']) && ! is_null($slip['slip_memo']))) {
+            return null;
+        }
+        if (! key_exists('date', $slip) || ! is_string($slip['date'])) {
+            return null;
+        }
+        if (! key_exists('is_draft', $slip) || ! is_int($slip['is_draft'])) {
+            return null;
+        }
+        if (! key_exists('display_order', $slip) ||
+                (! is_int($slip['display_order']) && ! is_null($slip['display_order']))) {
+            return null;
+        }
+        if (! key_exists('updated_at', $slip) ||
+                (! is_string($slip['updated_at']) && ! is_null($slip['updated_at']))) {
+            return null;
+        }
+        if (! key_exists('deleted', $slip) || ! is_bool($slip['deleted'])) {
+            return null;
+        }
+
+        return [
+            'slip_id'       => $slip['slip_id'],
+            'book_id'       => $slip['book_id'],
+            'slip_outline'  => $slip['slip_outline'],
+            'slip_memo'     => $slip['slip_memo'],
+            'date'          => $slip['date'],
+            'is_draft'      => boolval($slip['is_draft']),
+            'display_order' => $slip['display_order'],
+            'updated_at'    => $slip['updated_at'],
+            'deleted'       => $slip['deleted'],
+        ];
+    }
+
+    /**
+     * Validate the slip entry.
+     *
+     * @param  array<string, mixed>  $slipEntry
+     * @return array{
+     *   slip_entry_id: string,
+     *   slip_id: string,
+     *   debit: string,
+     *   credit: string,
+     *   amount: int,
+     *   client: string,
+     *   outline: string,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }|null
+     */
+    private function validateSlipEntry(array $slipEntry): ?array
+    {
+        if (! key_exists('slip_entry_id', $slipEntry) || ! is_string($slipEntry['slip_entry_id'])) {
+            return null;
+        }
+        if (! key_exists('slip_id', $slipEntry) || ! is_string($slipEntry['slip_id'])) {
+            return null;
+        }
+        if (! key_exists('debit', $slipEntry) || ! is_string($slipEntry['debit'])) {
+            return null;
+        }
+        if (! key_exists('credit', $slipEntry) || ! is_string($slipEntry['credit'])) {
+            return null;
+        }
+        if (! key_exists('amount', $slipEntry) || ! is_int($slipEntry['amount'])) {
+            return null;
+        }
+        if (! key_exists('client', $slipEntry) || ! is_string($slipEntry['client'])) {
+            return null;
+        }
+        if (! key_exists('outline', $slipEntry) || ! is_string($slipEntry['outline'])) {
+            return null;
+        }
+        if (! key_exists('display_order', $slipEntry) ||
+                (! is_int($slipEntry['display_order']) && ! is_null($slipEntry['display_order']))) {
+            return null;
+        }
+        if (! key_exists('updated_at', $slipEntry) ||
+                (! is_string($slipEntry['updated_at']) && ! is_null($slipEntry['updated_at']))) {
+            return null;
+        }
+        if (! key_exists('deleted', $slipEntry) || ! is_bool($slipEntry['deleted'])) {
+            return null;
+        }
+
+        return [
+            'slip_entry_id' => $slipEntry['slip_entry_id'],
+            'slip_id'       => $slipEntry['slip_id'],
+            'debit'         => $slipEntry['debit'],
+            'credit'        => $slipEntry['credit'],
+            'amount'        => $slipEntry['amount'],
+            'client'        => $slipEntry['client'],
+            'outline'       => $slipEntry['outline'],
+            'display_order' => $slipEntry['display_order'],
+            'updated_at'    => $slipEntry['updated_at'],
+            'deleted'       => $slipEntry['deleted'],
+        ];
+    }
 }

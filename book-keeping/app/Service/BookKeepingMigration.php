@@ -519,6 +519,82 @@ class BookKeepingMigration
     }
 
     /**
+     * Load books.
+     *
+     * @param  array<string, mixed>  $contents
+     * @return array{0:int, 1:array<string, mixed>|null, 2: string|null}
+     */
+    public function loadBooks($contents)
+    {
+        $status = BookKeepingService::STATUS_NORMAL;
+        $importResult = null;
+        $errorMessage = null;
+
+        $importResult = [];
+        if (key_exists('version', $contents) && is_string($contents['version'])) {
+            $importResult['version'] = $contents['version'];
+        } else {
+            $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;
+            $errorMessage = 'invalid data format: version';
+
+            return [$status, $importResult, $errorMessage];
+        }
+        if (key_exists('books', $contents) && is_array($contents['books'])) {
+            $importResult['books'] = [];
+            $books = $contents['books'];
+            $booksNumber = count($books);
+            $booksCount = 0;
+            foreach ($books as $bookId => $book) {
+                Log::debug('load: start book '.sprintf('%2d', $booksCount).'/'.sprintf('%2d', $booksNumber).' '.$bookId);
+                $importResult['books'][$bookId] = [];
+                [$importable, $reason] = $this->isImportable($bookId);
+                if ($importable) {
+                    // book
+                    if (key_exists('book', $book)) {
+                        [$resultOfImportBook, $errorMessage] = $this->book->loadInformation(intval(Auth::id()), $book['book']);
+                        $importResult['books'][$bookId]['book'] = $resultOfImportBook;
+                        if (isset($errorMessage)) {
+                            $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;
+                            break;
+                        }
+                        Log::debug('load: book information '.sprintf('%2d', $booksCount).'/'.sprintf('%2d', $booksNumber).' '.$bookId.' '.$resultOfImportBook['result']);
+                    }
+                    $booksCount++;
+                    // accounts
+                    if (key_exists('accounts', $book)) {
+                        [$resultOfImportAccounts, $errorMessage] = $this->account->loadAccounts($bookId, $book['accounts']);
+                        $importResult['books'][$bookId]['accounts'] = $resultOfImportAccounts;
+                        if (isset($errorMessage)) {
+                            $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;
+                            break;
+                        }
+                    }
+                    // slips
+                    if (key_exists('slips', $book)) {
+                        [$resultOfImportSlips, $errorMessage] = $this->slip->loadSlips($bookId, $book['slips']);
+                        $importResult['books'][$bookId]['slips'] = $resultOfImportSlips;
+                        if (isset($errorMessage)) {
+                            $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;
+                            break;
+                        }
+                    }
+                } else {
+                    $errorMessage = 'The book is already exist and prohibit to write. '.$bookId;
+                    $status = $reason;
+                    break;
+                }
+            }
+        } else {
+            $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;
+            $errorMessage = 'invalid data format: books';
+
+            return [$status, $importResult, $errorMessage];
+        }
+
+        return [$status, $importResult, $errorMessage];
+    }
+
+    /**
      * Check if the authenticated user can create or update the book.
      *
      * @param  string  $bookId

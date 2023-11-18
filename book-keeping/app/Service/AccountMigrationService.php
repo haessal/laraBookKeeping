@@ -589,7 +589,7 @@ class AccountMigrationService extends AccountService
                     if (isset($error)) {
                         break;
                     }
-                    Log::debug('import: account item     '.sprintf('%2d', $accountItemCount).'/'.sprintf('%2d',$accountItemNumber).' '.$accountId.' '.$result[$accountId]['result']);
+                    Log::debug('import: account item     '.sprintf('%2d', $accountItemCount).'/'.sprintf('%2d', $accountItemNumber).' '.$accountId.' '.$result[$accountId]['result']);
                     $accountItemCount++;
                 }
             } else {
@@ -658,5 +658,321 @@ class AccountMigrationService extends AccountService
         }
 
         return [$result, $error];
+    }
+
+    /**
+     * Load the account group.
+     *
+     * @param  array<string, mixed>  $accountGroup
+     * @param array<string, array{
+     *   account_group_id: string,
+     *   updated_at: string|null,
+     * }> $destinationAccountGroups
+     * @return array{0: array<string, mixed>, 1: string|null}
+     */
+    public function loadAccountGroup(array $accountGroup, array $destinationAccountGroups): array
+    {
+        $mode = null;
+        $result = null;
+        $error = null;
+
+        $newAccountGroup = $this->validateAccountGroup($accountGroup);
+        if (is_null($newAccountGroup)) {
+            $error = 'invalid data format: account group';
+
+            return [['account_group_id' => null, 'result' => $result], $error];
+        }
+        $accountGroupId = $newAccountGroup['account_group_id'];
+        if (key_exists($accountGroupId, $destinationAccountGroups)) {
+            $sourceUpdateAt = $newAccountGroup['updated_at'];
+            $destinationUpdateAt = $destinationAccountGroups[$accountGroupId]['updated_at'];
+            if ($this->tools->isSourceLater($sourceUpdateAt, $destinationUpdateAt)) {
+                $mode = 'update';
+            }
+        } else {
+            $mode = 'create';
+        }
+        if (isset($mode)) {
+            switch($mode) {
+                case 'update':
+                    $this->accountGroup->updateForImporting($newAccountGroup);
+                    $result = 'updated';
+                    break;
+                case 'create':
+                    $this->accountGroup->createForImporting($newAccountGroup);
+                    $result = 'created';
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            $result = 'already up-to-date';
+        }
+
+        return [['account_group_id' => $accountGroupId, 'result' => $result], $error];
+    }
+
+    /**
+     * Load the account item.
+     *
+     * @param  array<string, mixed>  $accountItem
+     * @param array<string, array{
+     *   account_id: string,
+     *   updated_at: string|null,
+     * }>  $destinationAccountItems
+     * @return array{0: array<string, mixed>, 1: string|null}
+     */
+    public function loadAccountItem(array $accountItem, array $destinationAccountItems): array
+    {
+        $mode = null;
+        $result = null;
+        $error = null;
+
+        $newAccountItem = $this->validateAccountItem($accountItem);
+        if (is_null($newAccountItem)) {
+            $error = 'invalid data format: account item';
+
+            return [['account_id' => null, 'result' => $result], $error];
+        }
+        $accountId = $newAccountItem['account_id'];
+        if (key_exists($accountId, $destinationAccountItems)) {
+            $sourceUpdateAt = $newAccountItem['updated_at'];
+            $destinationUpdateAt = $destinationAccountItems[$accountId]['updated_at'];
+            if ($this->tools->isSourceLater($sourceUpdateAt, $destinationUpdateAt)) {
+                $mode = 'update';
+            }
+        } else {
+            $mode = 'create';
+        }
+        if (isset($mode)) {
+            switch($mode) {
+                case 'update':
+                    $this->account->updateForImporting($newAccountItem);
+                    $result = 'updated';
+                    break;
+                case 'create':
+                    $this->account->createForImporting($newAccountItem);
+                    $result = 'created';
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            $result = 'already up-to-date';
+        }
+
+        return [['account_id' => $accountId, 'result' => $result], $error];
+    }
+
+    /**
+     * Load the account items belonging to the account group.
+     *
+     * @param  string  $bookId
+     * @param  string  $accountGroupId
+     * @param  array<string, array<string, mixed>>  $accountItems
+     * @return array{0: array<string, mixed>, 1: string|null}
+     */
+    public function loadAccountItems($bookId, $accountGroupId, $accountItems): array
+    {
+        $result = [];
+        $error = null;
+
+        $destinationAccountItems = $this->exportAccountItems($bookId, $accountGroupId);
+        if (! key_exists($accountGroupId, $destinationAccountItems)) {
+            $error = 'The account group that the items are bound to is not exist. '.$accountGroupId;
+
+            return [$result, $error];
+        }
+        $accountItemNumber = count($accountItems);
+        $accountItemCount = 0;
+        foreach ($accountItems as $accountId => $accountItem) {
+            [$result[$accountId], $error] = $this->loadAccountItem(
+                $accountItem, $destinationAccountItems[$accountGroupId]['items']
+            );
+            if (isset($error)) {
+                break;
+            }
+            Log::debug('load: account item     '.sprintf('%2d', $accountItemCount).'/'.sprintf('%2d', $accountItemNumber).' '.$accountId.' '.$result[$accountId]['result']);
+            $accountItemCount++;
+        }
+
+        return [$result, $error];
+    }
+
+    /**
+     * Load the accounts of the book.
+     *
+     * @param  string  $bookId
+     * @param  array<string, array<string, mixed>>  $accounts
+     * @return array{0: array<string, mixed>, 1: string|null}
+     */
+    public function loadAccounts($bookId, $accounts): array
+    {
+        $result = [];
+        $error = null;
+
+        $destinationAccountGroups = $this->exportAccounts($bookId);
+        $accountGroupNumber = count($accounts);
+        $accountGroupCount = 0;
+        foreach ($accounts as $accountGroupId => $accountGroup) {
+            if (key_exists('account_group_id', $accountGroup)) {
+                [$result[$accountGroupId], $error] = $this->loadAccountGroup($accountGroup, $destinationAccountGroups);
+                if (isset($error)) {
+                    break;
+                }
+                Log::debug('load: account group    '.sprintf('%2d', $accountGroupCount).'/'.sprintf('%2d', $accountGroupNumber).' '.$accountGroupId.' '.$result[$accountGroupId]['result']);
+            }
+            $accountGroupCount++;
+            if (key_exists('items', $accountGroup)) {
+                if (is_array($accountGroup['items'])) {
+                    [$result[$accountGroupId]['items'], $error] = $this->loadAccountItems(
+                        $bookId, $accountGroupId, $accountGroup['items']
+                    );
+                    if (isset($error)) {
+                        break;
+                    }
+                } else {
+                    $error = 'invalid data format: account items';
+                }
+            }
+        }
+
+        return [$result, $error];
+    }
+
+    /**
+     * Validate the account group.
+     *
+     * @param  array<string, mixed>  $accountGroup
+     * @return array{
+     *   account_group_id: string,
+     *   book_id: string,
+     *   account_type: string,
+     *   account_group_title: string,
+     *   bk_uid: int|null,
+     *   account_group_bk_code: int|null,
+     *   is_current: bool,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }|null
+     */
+    private function validateAccountGroup(array $accountGroup): ?array
+    {
+        if (! key_exists('account_group_id', $accountGroup) || ! is_string($accountGroup['account_group_id'])) {
+            return null;
+        }
+        if (! key_exists('book_id', $accountGroup) || ! is_string($accountGroup['book_id'])) {
+            return null;
+        }
+        if (! key_exists('account_type', $accountGroup) || ! is_string($accountGroup['account_type'])) {
+            return null;
+        }
+        if (! key_exists('account_group_title', $accountGroup) || ! is_string($accountGroup['account_group_title'])) {
+            return null;
+        }
+        if (! key_exists('bk_uid', $accountGroup) ||
+                (! is_int($accountGroup['bk_uid']) && ! is_null($accountGroup['bk_uid']))) {
+            return null;
+        }
+        if (! key_exists('account_group_bk_code', $accountGroup) ||
+                (! is_int($accountGroup['account_group_bk_code']) && ! is_null($accountGroup['account_group_bk_code']))) {
+            return null;
+        }
+        if (! key_exists('is_current', $accountGroup) || ! is_int($accountGroup['is_current'])) {
+            return null;
+        }
+        if (! key_exists('display_order', $accountGroup) ||
+                (! is_int($accountGroup['display_order']) && ! is_null($accountGroup['display_order']))) {
+            return null;
+        }
+        if (! key_exists('updated_at', $accountGroup) ||
+                (! is_string($accountGroup['updated_at']) && ! is_null($accountGroup['updated_at']))) {
+            return null;
+        }
+        if (! key_exists('deleted', $accountGroup) || ! is_bool($accountGroup['deleted'])) {
+            return null;
+        }
+
+        return [
+            'account_group_id'      => $accountGroup['account_group_id'],
+            'book_id'               => $accountGroup['book_id'],
+            'account_type'          => $accountGroup['account_type'],
+            'account_group_title'   => $accountGroup['account_group_title'],
+            'bk_uid'                => $accountGroup['bk_uid'],
+            'account_group_bk_code' => $accountGroup['account_group_bk_code'],
+            'is_current'            => boolval($accountGroup['is_current']),
+            'display_order'         => $accountGroup['display_order'],
+            'updated_at'            => $accountGroup['updated_at'],
+            'deleted'               => $accountGroup['deleted'],
+        ];
+    }
+
+    /**
+     * Validate the account item.
+     *
+     * @param  array<string, mixed>  $accountItem
+     * @return array{
+     *   account_id: string,
+     *   account_group_id: string,
+     *   account_title: string,
+     *   description: string,
+     *   selectable: bool,
+     *   bk_uid: int|null,
+     *   account_bk_code: int|null,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }|null
+     */
+    private function validateAccountItem(array $accountItem): ?array
+    {
+        if (! key_exists('account_id', $accountItem) || ! is_string($accountItem['account_id'])) {
+            return null;
+        }
+        if (! key_exists('account_group_id', $accountItem) || ! is_string($accountItem['account_group_id'])) {
+            return null;
+        }
+        if (! key_exists('account_title', $accountItem) || ! is_string($accountItem['account_title'])) {
+            return null;
+        }
+        if (! key_exists('description', $accountItem) || ! is_string($accountItem['description'])) {
+            return null;
+        }
+        if (! key_exists('selectable', $accountItem) || ! is_int($accountItem['selectable'])) {
+            return null;
+        }
+        if (! key_exists('bk_uid', $accountItem) ||
+                (! is_int($accountItem['bk_uid']) && ! is_null($accountItem['bk_uid']))) {
+            return null;
+        }
+        if (! key_exists('account_bk_code', $accountItem) ||
+                (! is_int($accountItem['account_bk_code']) && ! is_null($accountItem['account_bk_code']))) {
+            return null;
+        }
+        if (! key_exists('display_order', $accountItem) ||
+                (! is_int($accountItem['display_order']) && ! is_null($accountItem['display_order']))) {
+            return null;
+        }
+        if (! key_exists('updated_at', $accountItem) ||
+                (! is_string($accountItem['updated_at']) && ! is_null($accountItem['updated_at']))) {
+            return null;
+        }
+        if (! key_exists('deleted', $accountItem) || ! is_bool($accountItem['deleted'])) {
+            return null;
+        }
+
+        return [
+            'account_id'       => $accountItem['account_id'],
+            'account_group_id' => $accountItem['account_group_id'],
+            'account_title'    => $accountItem['account_title'],
+            'description'      => $accountItem['description'],
+            'selectable'       => boolval($accountItem['selectable']),
+            'bk_uid'           => $accountItem['bk_uid'],
+            'account_bk_code'  => $accountItem['account_bk_code'],
+            'display_order'    => $accountItem['display_order'],
+            'updated_at'       => $accountItem['updated_at'],
+            'deleted'          => $accountItem['deleted'],
+        ];
     }
 }
