@@ -77,8 +77,8 @@ class FindSlipsActionHTML extends AuthenticatedBookKeepingAction
             }
             $beginningDate = trim(strval($request->input('BEGINNING')));
             $endDate = trim(strval($request->input('END')));
-            $debit = trim(strval($$request->input('debit')));
-            $credit = trim(strval($$request->input('credit')));
+            $debit = trim(strval($request->input('debit')));
+            $credit = trim(strval($request->input('credit')));
             $andOr = trim(strval($request->input('and_or')));
             $keyword = trim(strval($request->input('KEYWORD')));
             if (! empty($beginningDate) || ! empty($endDate) || ! empty($debit) || ! empty($credit) || ! empty($keyword)) {
