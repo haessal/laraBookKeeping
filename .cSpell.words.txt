@@ -20,8 +20,6 @@ haessal
 humao
 intelephense
 mysqld
-necolas
-nunomaduro
 Otwell
 ryanluker
 Vehikl
