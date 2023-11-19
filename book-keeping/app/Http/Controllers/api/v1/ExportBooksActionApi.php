@@ -42,8 +42,8 @@ class ExportBooksActionApi extends AuthenticatedBookKeepingActionApi
     {
         $context['version'] = '2.0';
 
-        $dumpRequired = $request->input('dump');
-        if (is_bool($dumpRequired) && $dumpRequired) {
+        $dumpRequired = $request->query('mode');
+        if ($dumpRequired=='dump') {
             $context['books'] = $this->BookKeeping->exportBooks(true);
         } else {
             $context['books'] = $this->BookKeeping->exportBooks(false);
