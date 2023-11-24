@@ -193,15 +193,23 @@ class SlipService
             $slipId = $slip['slip_id'];
             if ($dumpRequired) {
 
-                $slips[$slipId] = $this->convertExportedData($slip);
+                $convertedSlip = $this->convertExportedData($slip);
 
                 $entries = [];
                 $slipEntryList = $this->slipEntry->searchSlipEntriesForExport($slipId);
                 foreach ($slipEntryList as $slipEntry) {
-                    $entries[$slipEntry['slip_entry_id']] = $this->convertExportedData($slipEntry);
+                    $convertedSlipEntry = $this->convertExportedData($slipEntry);
+                    $entries[] = [
+                        'slip_entry_id' => $slipEntry['slip_entry_id'],
+                        'slip_entry'    => $convertedSlipEntry,
+                    ];
                 }
 
-                $slips[$slipId]['entries'] = $entries;
+                $slips[] = [
+                    'slip_id' => $slipId,
+                    'slip'    => $convertedSlip,
+                    'entries' => $entries,
+                ];
             } else {
                 $slips[$slipId] = $this->convertExportedData([
                     'slip_id'    => $slip['slip_id'],

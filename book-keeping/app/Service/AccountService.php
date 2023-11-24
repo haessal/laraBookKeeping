@@ -189,15 +189,23 @@ class AccountService
         foreach ($accountGroupList as $accountGroup) {
             $accountGroupId = $accountGroup['account_group_id'];
             if ($dumpRequired) {
-                $accountGroups[$accountGroupId] = $this->convertExportedData($accountGroup);
+                $convertedAccountGroup = $this->convertExportedData($accountGroup);
 
                 $accountItems = [];
                 $accountItemList = $this->account->searchAccountForExport($accountGroupId);
                 foreach ($accountItemList as $accountItem) {
-                    $accountItems[$accountItem['account_id']] = $this->convertExportedData($accountItem);
+                    $convertedAccountItem = $this->convertExportedData($accountItem);
+                    $accountItems[] = [
+                        'account_id' => $accountItem['account_id'],
+                        'account'    => $convertedAccountItem,
+                    ];
                 }
 
-                $accountGroups[$accountGroupId]['items'] = $accountItems;
+                $accountGroups[] = [
+                    'account_group_id' => $accountGroupId,
+                    'account_group'    => $convertedAccountGroup,
+                    'items'            => $accountItems,
+                ];
             } else {
                 $accountGroups[$accountGroupId] = $this->convertExportedData([
                     'account_group_id' => $accountGroup['account_group_id'],

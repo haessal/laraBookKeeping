@@ -264,15 +264,17 @@ class BookKeepingService
         foreach ($bookList as $book) {
             $bookId = $book['book_id'];
             if ($dumpRequired) {
-                $books[$bookId] = [
+                $books[] = [
+                    'book_id'  => $bookId,
                     'book'     => $this->book->exportInformation($bookId),
                     'accounts' => $this->account->exportAccounts($bookId, true),
                     'slips'    => $this->slip->exportSlips($bookId, true),
                 ];
             } else {
                 $bookInformation = $this->book->exportInformation($bookId);
-                $books[$bookId] = [
-                    'book' => [
+                $books[] = [
+                    'book_id' => $bookId,
+                    'book'    => [
                         'book_id'    => $bookInformation['book_id'],
                         'updated_at' => $bookInformation['updated_at'],
                     ],
