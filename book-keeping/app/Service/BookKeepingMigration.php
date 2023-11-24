@@ -297,12 +297,13 @@ class BookKeepingMigration
     /**
      * Export books.
      *
-     * @return array<string, array{
+     * @return array{
+     *   book_id: string,
      *   book: array{
      *     book_id: string,
      *     updated_at: string|null,
      *   },
-     * }>
+     * }[]
      */
     public function exportBooks(): array
     {
@@ -313,8 +314,9 @@ class BookKeepingMigration
             $bookId = $book['book_id'];
             $bookInformation = $this->book->exportInformation($bookId);
             if (isset($bookInformation)) {
-                $books[$bookId] = [
-                    'book' => [
+                $books[] = [
+                    'book_id' => $bookId,
+                    'book'    => [
                         'book_id'    => $bookInformation['book_id'],
                         'updated_at' => $bookInformation['updated_at'],
                     ],
