@@ -32,29 +32,35 @@ class SlipMigrationService extends SlipService
      * Dump slips of the book.
      *
      * @param  string  $bookId
-     * @return array<string, array{
+     * @return array{
      *   slip_id: string,
-     *   book_id: string,
-     *   slip_outline: string,
-     *   slip_memo: string|null,
-     *   date: string,
-     *   is_draft: bool,
-     *   display_order: int|null,
-     *   updated_at: string|null,
-     *   deleted: bool,
-     *   entries: array<string, array{
-     *     slip_entry_id: string,
+     *   slip: array{
      *     slip_id: string,
-     *     debit: string,
-     *     credit: string,
-     *     amount: int,
-     *     client: string,
-     *     outline: string,
+     *     book_id: string,
+     *     slip_outline: string,
+     *     slip_memo: string|null,
+     *     date: string,
+     *     is_draft: bool,
      *     display_order: int|null,
      *     updated_at: string|null,
      *     deleted: bool,
-     *   }>,
-     * }>
+     *   },
+     *   entries: array{
+     *     slip_entry_id: string,
+     *     slip_entry: array{
+     *       slip_entry_id: string,
+     *       slip_id: string,
+     *       debit: string,
+     *       credit: string,
+     *       amount: int,
+     *       client: string,
+     *       outline: string,
+     *       display_order: int|null,
+     *       updated_at: string|null,
+     *       deleted: bool,
+     *     }
+     *   }[],
+     * }[]
      */
     public function dumpSlips($bookId): array
     {
@@ -89,7 +95,6 @@ class SlipMigrationService extends SlipService
              * } $convertedSlip
              */
             $convertedSlip = $this->tools->convertExportedTimestamps($slip);
-            $slips[$slipId] = $convertedSlip;
             $entries = [];
             /** @var array{
              *   slip_entry_id: string,
@@ -121,9 +126,16 @@ class SlipMigrationService extends SlipService
                  * } $convertedSlipEntry
                  */
                 $convertedSlipEntry = $this->tools->convertExportedTimestamps($slipEntry);
-                $entries[$slipEntry['slip_entry_id']] = $convertedSlipEntry;
+                $entries[] = [
+                    'slip_entry_id' => $slipEntry['slip_entry_id'],
+                    'slip_entry'    => $convertedSlipEntry,
+                ];
             }
-            $slips[$slipId]['entries'] = $entries;
+            $slips[] = [
+                'slip_id' => $slipId,
+                'slip'    => $convertedSlip,
+                'entries' => $entries,
+            ];
         }
 
         return $slips;

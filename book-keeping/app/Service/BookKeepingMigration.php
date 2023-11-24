@@ -54,7 +54,8 @@ class BookKeepingMigration
     /**
      * Dump books.
      *
-     * @return array<string, array{
+     * @return array{
+     *   book_id: string,
      *   book: array{
      *     book_id: string,
      *     book_name: string,
@@ -62,54 +63,66 @@ class BookKeepingMigration
      *     updated_at: string|null,
      *     deleted: bool,
      *   }|null,
-     *   accounts: array<string, array{
+     *   accounts: array{
      *     account_group_id: string,
-     *     book_id: string,
-     *     account_type: string,
-     *     account_group_title: string,
-     *     bk_uid: int|null,
-     *     account_group_bk_code: int|null,
-     *     is_current: bool,
-     *     display_order: int|null,
-     *     updated_at: string|null,
-     *     deleted: bool,
-     *     items: array<string, array{
-     *       account_id: string,
+     *     account_group: array{
      *       account_group_id: string,
-     *       account_title: string,
-     *       description: string,
-     *       selectable: bool,
+     *       book_id: string,
+     *       account_type: string,
+     *       account_group_title: string,
      *       bk_uid: int|null,
-     *       account_bk_code: int|null,
+     *       account_group_bk_code: int|null,
+     *       is_current: bool,
      *       display_order: int|null,
      *       updated_at: string|null,
      *       deleted: bool,
-     *     }>,
-     *   }>,
-     *   slips: array<string, array{
+     *     },
+     *     items: array{
+     *       account_id: string,
+     *       account: array{
+     *         account_id: string,
+     *         account_group_id: string,
+     *         account_title: string,
+     *         description: string,
+     *         selectable: bool,
+     *         bk_uid: int|null,
+     *         account_bk_code: int|null,
+     *         display_order: int|null,
+     *         updated_at: string|null,
+     *         deleted: bool,
+     *       },
+     *     }[],
+     *   }[],
+     *   slips: array{
      *     slip_id: string,
-     *     book_id: string,
-     *     slip_outline: string,
-     *     slip_memo: string|null,
-     *     date: string,
-     *     is_draft: bool,
-     *     display_order: int|null,
-     *     updated_at: string|null,
-     *     deleted: bool,
-     *     entries: array<string, array{
-     *       slip_entry_id: string,
+     *     slip: array{
      *       slip_id: string,
-     *       debit: string,
-     *       credit: string,
-     *       amount: int,
-     *       client: string,
-     *       outline: string,
+     *       book_id: string,
+     *       slip_outline: string,
+     *       slip_memo: string|null,
+     *       date: string,
+     *       is_draft: bool,
      *       display_order: int|null,
      *       updated_at: string|null,
      *       deleted: bool,
-     *     }>,
-     *   }>,
-     * }>
+     *     },
+     *     entries: array{
+     *       slip_entry_id: string,
+     *       slip_entry: array{
+     *         slip_entry_id: string,
+     *         slip_id: string,
+     *         debit: string,
+     *         credit: string,
+     *         amount: int,
+     *         client: string,
+     *         outline: string,
+     *         display_order: int|null,
+     *         updated_at: string|null,
+     *         deleted: bool,
+     *       },
+     *     }[],
+     *   }[],
+     * }[]
      */
     public function dumpBooks(): array
     {
@@ -118,7 +131,8 @@ class BookKeepingMigration
         $bookList = $this->book->retrieveBooks(intval(Auth::id()));
         foreach ($bookList as $book) {
             $bookId = $book['book_id'];
-            $books[$bookId] = [
+            $books[] = [
+                'book_id'  => $bookId,
                 'book'     => $this->book->exportInformation($bookId),
                 'accounts' => $this->account->dumpAccounts($bookId),
                 'slips'    => $this->slip->dumpSlips($bookId),
