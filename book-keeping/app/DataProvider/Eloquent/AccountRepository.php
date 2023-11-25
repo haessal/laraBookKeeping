@@ -32,6 +32,63 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * Create a new account to import.
+     *
+     * @param  array{
+     *   account_id: string,
+     *   account_group_id: string,
+     *   account_title: string,
+     *   description: string,
+     *   selectable: bool,
+     *   bk_uid: int|null,
+     *   account_bk_code: int|null,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newAccount
+     * @return void
+     */
+    public function createForImporting(array $newAccount)
+    {
+        $account = new Account();
+        $account->account_id = $newAccount['account_id'];
+        $account->account_group_id = $newAccount['account_group_id'];
+        $account->account_title = $newAccount['account_title'];
+        $account->description = $newAccount['description'];
+        $account->selectable = $newAccount['selectable'];
+        $account->bk_uid = $newAccount['bk_uid'];
+        $account->account_bk_code = $newAccount['account_bk_code'];
+        $account->display_order = $newAccount['display_order'];
+        $account->save();
+        $account->refresh();
+        if ($newAccount['deleted']) {
+            $account->delete();
+        }
+    }
+
+    /**
+     * Search the account group for account items to export.
+     *
+     * @param  string  $accountGroupId
+     * @param  string|null  $accountId
+     * @return array<int, array<string, mixed>>
+     */
+    public function searchAccountGropupForExporting($accountGroupId, $accountId = null): array
+    {
+        /** @var \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder $query */
+        $query = Account::withTrashed()
+            ->select('*')
+            ->where('account_group_id', $accountGroupId);
+        if (isset($accountId)) {
+            $query = $query->where('account_id', $accountId);
+        }
+        /** @var array<int, array<string, mixed>> $list */
+        $list = $query->get()->toArray();
+
+        return $list;
+    }
+
+    /**
      * Search the book for accounts.
      *
      * @param  string  $bookId
@@ -90,6 +147,50 @@ class AccountRepository implements AccountRepositoryInterface
                 $account->selectable = boolval($newData['selectable']);
             }
             $account->save();
+        }
+    }
+
+    /**
+     * Update the account to import.
+     *
+     * @param  array{
+     *   account_id: string,
+     *   account_group_id: string,
+     *   account_title: string,
+     *   description: string,
+     *   selectable: bool,
+     *   bk_uid: int|null,
+     *   account_bk_code: int|null,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newAccount
+     * @return void
+     */
+    public function updateForImporting(array $newAccount)
+    {
+        /** @var \App\Models\Account|null $account */
+        $account = Account::withTrashed()->find($newAccount['account_id']);
+        if (! is_null($account)) {
+            $account->account_group_id = $newAccount['account_group_id'];
+            $account->account_title = $newAccount['account_title'];
+            $account->description = $newAccount['description'];
+            $account->selectable = $newAccount['selectable'];
+            $account->bk_uid = $newAccount['bk_uid'];
+            $account->account_bk_code = $newAccount['account_bk_code'];
+            $account->display_order = $newAccount['display_order'];
+            $account->touch();
+            $account->save();
+            $account->refresh();
+            if ($account->trashed()) {
+                if (! $newAccount['deleted']) {
+                    $account->restore();
+                }
+            } else {
+                if ($newAccount['deleted']) {
+                    $account->delete();
+                }
+            }
         }
     }
 }

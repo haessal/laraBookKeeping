@@ -36,6 +36,41 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     }
 
     /**
+     * Create a new slip entry to import.
+     *
+     * @param  array{
+     *   slip_entry_id: string,
+     *   slip_id: string,
+     *   debit: string,
+     *   credit: string,
+     *   amount: int,
+     *   client: string,
+     *   outline: string,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newSlipEntry
+     * @return void
+     */
+    public function createForImporting(array $newSlipEntry)
+    {
+        $slipEntry = new SlipEntry();
+        $slipEntry->slip_entry_id = $newSlipEntry['slip_entry_id'];
+        $slipEntry->slip_id = $newSlipEntry['slip_id'];
+        $slipEntry->debit = $newSlipEntry['debit'];
+        $slipEntry->credit = $newSlipEntry['credit'];
+        $slipEntry->amount = $newSlipEntry['amount'];
+        $slipEntry->client = $newSlipEntry['client'];
+        $slipEntry->outline = $newSlipEntry['outline'];
+        $slipEntry->display_order = $newSlipEntry['display_order'];
+        $slipEntry->save();
+        $slipEntry->refresh();
+        if ($newSlipEntry['deleted']) {
+            $slipEntry->delete();
+        }
+    }
+
+    /**
      * Delete the slip entry.
      *
      * @param  string  $slipEntryId
@@ -182,6 +217,28 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     }
 
     /**
+     * Search the slip for its entries to export.
+     *
+     * @param  string  $slipId
+     * @param  string|null  $slipEntryId
+     * @return array<int, array<string, mixed>>
+     */
+    public function searchSlipForExporting($slipId, $slipEntryId = null): array
+    {
+        /** @var \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder $query */
+        $query = SlipEntry::withTrashed()
+            ->select('*')
+            ->where('slip_id', $slipId);
+        if (isset($slipEntryId)) {
+            $query = $query->where('slip_entry_id', $slipEntryId);
+        }
+        /** @var array<int, array<string, mixed>> $list */
+        $list = $query->get()->toArray();
+
+        return $list;
+    }
+
+    /**
      * Update the slip entry.
      *
      * @param  string  $slipEntryId
@@ -209,6 +266,50 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
                 $slipEntry->outline = strval($newData['outline']);
             }
             $slipEntry->save();
+        }
+    }
+
+    /**
+     * Update the slip entry to import.
+     *
+     * @param  array{
+     *   slip_entry_id: string,
+     *   slip_id: string,
+     *   debit: string,
+     *   credit: string,
+     *   amount: int,
+     *   client: string,
+     *   outline: string,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newSlipEntry
+     * @return void
+     */
+    public function updateForImporting(array $newSlipEntry)
+    {
+        /** @var \App\Models\SlipEntry|null $slipEntry */
+        $slipEntry = SlipEntry::withTrashed()->find($newSlipEntry['slip_entry_id']);
+        if (! is_null($slipEntry)) {
+            $slipEntry->slip_id = $newSlipEntry['slip_id'];
+            $slipEntry->debit = $newSlipEntry['debit'];
+            $slipEntry->credit = $newSlipEntry['credit'];
+            $slipEntry->amount = $newSlipEntry['amount'];
+            $slipEntry->client = $newSlipEntry['client'];
+            $slipEntry->outline = $newSlipEntry['outline'];
+            $slipEntry->display_order = $newSlipEntry['display_order'];
+            $slipEntry->touch();
+            $slipEntry->save();
+            $slipEntry->refresh();
+            if ($slipEntry->trashed()) {
+                if (! $newSlipEntry['deleted']) {
+                    $slipEntry->restore();
+                }
+            } else {
+                if ($newSlipEntry['deleted']) {
+                    $slipEntry->delete();
+                }
+            }
         }
     }
 
