@@ -33,6 +33,41 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
     }
 
     /**
+     * Create a new account group to import.
+     *
+     * @param  array{
+     *   account_group_id: string,
+     *   book_id: string,
+     *   account_type: string,
+     *   account_group_title: string,
+     *   bk_uid: int|null,
+     *   account_group_bk_code: int|null,
+     *   is_current: bool,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newAccountGroup
+     * @return void
+     */
+    public function createForImporting(array $newAccountGroup)
+    {
+        $accountGroup = new AccountGroup();
+        $accountGroup->account_group_id = $newAccountGroup['account_group_id'];
+        $accountGroup->book_id = $newAccountGroup['book_id'];
+        $accountGroup->account_type = $newAccountGroup['account_type'];
+        $accountGroup->account_group_title = $newAccountGroup['account_group_title'];
+        $accountGroup->bk_uid = $newAccountGroup['bk_uid'];
+        $accountGroup->account_group_bk_code = $newAccountGroup['account_group_bk_code'];
+        $accountGroup->is_current = $newAccountGroup['is_current'];
+        $accountGroup->display_order = $newAccountGroup['display_order'];
+        $accountGroup->save();
+        $accountGroup->refresh();
+        if ($newAccountGroup['deleted']) {
+            $accountGroup->delete();
+        }
+    }
+
+    /**
      * Search the book for account groups.
      *
      * @param  string  $bookId
@@ -60,6 +95,28 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
     }
 
     /**
+     * Search the book for account groups to export.
+     *
+     * @param  string  $bookId
+     * @param  string|null  $accountGroupId
+     * @return array<int, array<string, mixed>>
+     */
+    public function searchBookForExporting($bookId, $accountGroupId = null): array
+    {
+        /** @var \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder $query */
+        $query = AccountGroup::withTrashed()
+            ->select('*')
+            ->where('book_id', $bookId);
+        if (isset($accountGroupId)) {
+            $query = $query->where('account_group_id', $accountGroupId);
+        }
+        /** @var array<int, array<string, mixed>> $list */
+        $list = $query->get()->toArray();
+
+        return $list;
+    }
+
+    /**
      * Update the account group.
      *
      * @param  string  $accountGroupId
@@ -78,6 +135,50 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
                 $accountGroup->is_current = boolval($newData['is_current']);
             }
             $accountGroup->save();
+        }
+    }
+
+    /**
+     * Update the account group to import.
+     *
+     * @param  array{
+     *   account_group_id: string,
+     *   book_id: string,
+     *   account_type: string,
+     *   account_group_title: string,
+     *   bk_uid: int|null,
+     *   account_group_bk_code: int|null,
+     *   is_current: bool,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newAccountGroup
+     * @return void
+     */
+    public function updateForImporting(array $newAccountGroup)
+    {
+        /** @var \App\Models\AccountGroup|null $accountGroup */
+        $accountGroup = AccountGroup::withTrashed()->find($newAccountGroup['account_group_id']);
+        if (! is_null($accountGroup)) {
+            $accountGroup->book_id = $newAccountGroup['book_id'];
+            $accountGroup->account_type = $newAccountGroup['account_type'];
+            $accountGroup->account_group_title = $newAccountGroup['account_group_title'];
+            $accountGroup->bk_uid = $newAccountGroup['bk_uid'];
+            $accountGroup->account_group_bk_code = $newAccountGroup['account_group_bk_code'];
+            $accountGroup->is_current = $newAccountGroup['is_current'];
+            $accountGroup->display_order = $newAccountGroup['display_order'];
+            $accountGroup->touch();
+            $accountGroup->save();
+            $accountGroup->refresh();
+            if ($accountGroup->trashed()) {
+                if (! $newAccountGroup['deleted']) {
+                    $accountGroup->restore();
+                }
+            } else {
+                if ($newAccountGroup['deleted']) {
+                    $accountGroup->delete();
+                }
+            }
         }
     }
 }

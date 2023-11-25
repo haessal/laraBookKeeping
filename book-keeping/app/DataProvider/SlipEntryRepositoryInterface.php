@@ -19,6 +19,25 @@ interface SlipEntryRepositoryInterface
     public function create($slipId, $debit, $credit, $amount, $client, $outline, $displayOrder);
 
     /**
+     * Create a new slip entry to import.
+     *
+     * @param  array{
+     *   slip_entry_id: string,
+     *   slip_id: string,
+     *   debit: string,
+     *   credit: string,
+     *   amount: int,
+     *   client: string,
+     *   outline: string,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newSlipEntry
+     * @return void
+     */
+    public function createForImporting(array $newSlipEntry);
+
+    /**
      * Delete the slip entry.
      *
      * @param  string  $slipEntryId
@@ -67,6 +86,15 @@ interface SlipEntryRepositoryInterface
     public function searchSlip($slipId): array;
 
     /**
+     * Search the slip for its entries to export.
+     *
+     * @param  string  $slipId
+     * @param  string|null  $slipEntryId
+     * @return array<int, array<string, mixed>>
+     */
+    public function searchSlipForExporting($slipId, $slipEntryId = null): array;
+
+    /**
      * Update the slip entry.
      *
      * @param  string  $slipEntryId
@@ -74,4 +102,23 @@ interface SlipEntryRepositoryInterface
      * @return void
      */
     public function update($slipEntryId, array $newData);
+
+    /**
+     * Update the slip entry to import.
+     *
+     * @param  array{
+     *   slip_entry_id: string,
+     *   slip_id: string,
+     *   debit: string,
+     *   credit: string,
+     *   amount: int,
+     *   client: string,
+     *   outline: string,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newSlipEntry
+     * @return void
+     */
+    public function updateForImporting(array $newSlipEntry);
 }
