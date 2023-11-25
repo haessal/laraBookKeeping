@@ -24,7 +24,7 @@ class LoadBooks extends Command
      *
      * @var string
      */
-    protected $signature = 'bookkeeping:loadbooks {userId} {file}';
+    protected $signature = 'bookkeeping:load-books {userId} {file}';
 
     /**
      * The console command description.

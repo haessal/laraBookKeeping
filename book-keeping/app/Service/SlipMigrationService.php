@@ -735,14 +735,22 @@ class SlipMigrationService extends SlipService
         }
         $slipEntryNumber = count($slipEntries);
         $slipEntryCount = 0;
-        foreach ($slipEntries as $slipEntryId => $slipEntry) {
-            [$result[$slipEntryId], $error] = $this->loadSlipEntry(
-                $slipEntry, $destinationSlipEntries[$slipId]['entries']
-            );
-            if (isset($error)) {
+        foreach ($slipEntries as $slipEntryIndex => $slipEntry) {
+            if (key_exists('slip_entry_id', $slipEntry)) {
+                $slipEntryId = $slipEntry['slip_entry_id'];
+            } else {
+                $error = 'invalid data format: slip_entry_id';
                 break;
             }
-            Log::debug('load: slip entry '.sprintf('%5d', $slipEntryCount).'/'.sprintf('%5d', $slipEntryNumber).' '.$slipEntryId.' '.$result[$slipEntryId]['result']);
+            if (key_exists('slip_entry', $slipEntry) && is_array($slipEntry['slip_entry'])) {
+                [$result[$slipEntryIndex], $error] = $this->loadSlipEntry(
+                    $slipEntry['slip_entry'], $destinationSlipEntries[$slipId]['entries']
+                );
+                if (isset($error)) {
+                    break;
+                }
+                Log::debug('load: slip entry '.sprintf('%5d', $slipEntryCount).'/'.sprintf('%5d', $slipEntryNumber).' '.$slipEntryId.' '.$result[$slipEntryIndex]['result']);
+            }
             $slipEntryCount++;
         }
 
@@ -816,18 +824,24 @@ class SlipMigrationService extends SlipService
         $destinationSlips = $this->exportSlips($bookId);
         $slipNumber = count($slips);
         $slipCount = 0;
-        foreach ($slips as $slipId => $slip) {
-            if (key_exists('slip_id', $slip)) {
-                [$result[$slipId], $error] = $this->loadSlip($slip, $destinationSlips);
+        foreach ($slips as $slipIndex => $slip) {
+            if (key_exists('slip_id', $slip) && is_string($slip['slip_id'])) {
+                $slipId = $slip['slip_id'];
+            } else {
+                $error = 'invalid data format: slip_id';
+                break;
+            }
+            if (key_exists('slip', $slip) && is_array($slip['slip'])) {
+                [$result[$slipIndex], $error] = $this->loadSlip($slip['slip'], $destinationSlips);
                 if (isset($error)) {
                     break;
                 }
-                Log::debug('load: slip       '.sprintf('%5d', $slipCount).'/'.sprintf('%5d', $slipNumber).' '.$slipId.' '.$result[$slipId]['result']);
+                Log::debug('load: slip       '.sprintf('%5d', $slipCount).'/'.sprintf('%5d', $slipNumber).' '.$slipId.' '.$result[$slipIndex]['result']);
             }
             $slipCount++;
             if (key_exists('entries', $slip)) {
                 if (is_array($slip['entries'])) {
-                    [$result[$slipId]['entries'], $error] = $this->loadSlipEntries(
+                    [$result[$slipIndex]['entries'], $error] = $this->loadSlipEntries(
                         $bookId, $slipId, $slip['entries']
                     );
                     if (isset($error)) {
