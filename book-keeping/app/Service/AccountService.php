@@ -40,14 +40,14 @@ class AccountService
      *
      * @var \App\DataProvider\AccountRepositoryInterface
      */
-    private $account;
+    protected $account;
 
     /**
      * Account group repository instance.
      *
      * @var \App\DataProvider\AccountGroupRepositoryInterface
      */
-    private $accountGroup;
+    protected $accountGroup;
 
     /**
      * Create a new AccountService instance.
