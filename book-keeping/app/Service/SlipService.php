@@ -12,14 +12,14 @@ class SlipService
      *
      * @var \App\DataProvider\SlipRepositoryInterface
      */
-    private $slip;
+    protected $slip;
 
     /**
      * Slip repository instance.
      *
      * @var \App\DataProvider\SlipEntryRepositoryInterface
      */
-    private $slipEntry;
+    protected $slipEntry;
 
     /**
      * Create a new SlipService instance.

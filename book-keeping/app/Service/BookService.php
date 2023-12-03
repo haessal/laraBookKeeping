@@ -12,14 +12,14 @@ class BookService
      *
      * @var \App\DataProvider\BookRepositoryInterface
      */
-    private $book;
+    protected $book;
 
     /**
      * Permission repository instance.
      *
      * @var \App\DataProvider\PermissionRepositoryInterface
      */
-    private $permission;
+    protected $permission;
 
     /**
      * Create a new BookService instance.
