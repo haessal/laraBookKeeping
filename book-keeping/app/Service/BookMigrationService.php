@@ -8,14 +8,23 @@ use App\DataProvider\PermissionRepositoryInterface;
 class BookMigrationService extends BookService
 {
     /**
+     * BookKeeping migration tools instance.
+     *
+     * @var \App\Service\BookKeepingMigrationTools
+     */
+    protected $tools;
+
+    /**
      * Create a new BookMigrationService instance.
      *
      * @param  \App\DataProvider\BookRepositoryInterface  $book
      * @param  \App\DataProvider\PermissionRepositoryInterface  $permission
+     * @param  \App\Service\BookKeepingMigrationTools  $tools
      */
-    public function __construct(BookRepositoryInterface $book, PermissionRepositoryInterface $permission)
+    public function __construct(BookRepositoryInterface $book, PermissionRepositoryInterface $permission, BookKeepingMigrationTools $tools)
     {
         parent::__construct($book, $permission);
+        $this->tools = $tools;
     }
 
     /**
