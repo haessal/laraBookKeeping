@@ -122,17 +122,17 @@ class AccountService
         $accountList = $this->account->searchBook($bookId);
         foreach ($accountList as $accountItem) {
             $accounts[strval($accountItem['account_id'])] = [
-                'account_type'             => strval($accountItem['account_type']),
-                'account_group_id'         => strval($accountItem['account_group_id']),
-                'account_group_title'      => strval($accountItem['account_group_title']),
-                'is_current'               => boolval($accountItem['is_current']),
-                'account_id'               => strval($accountItem['account_id']),
-                'account_title'            => strval($accountItem['account_title']),
-                'description'              => strval($accountItem['description']),
-                'selectable'               => boolval($accountItem['selectable']),
-                'account_bk_code'          => intval($accountItem['account_bk_code']),
-                'created_at'               => strval($accountItem['created_at']),
-                'account_group_bk_code'    => intval($accountItem['account_group_bk_code']),
+                'account_type' => strval($accountItem['account_type']),
+                'account_group_id' => strval($accountItem['account_group_id']),
+                'account_group_title' => strval($accountItem['account_group_title']),
+                'is_current' => boolval($accountItem['is_current']),
+                'account_id' => strval($accountItem['account_id']),
+                'account_title' => strval($accountItem['account_title']),
+                'description' => strval($accountItem['description']),
+                'selectable' => boolval($accountItem['selectable']),
+                'account_bk_code' => intval($accountItem['account_bk_code']),
+                'created_at' => strval($accountItem['created_at']),
+                'account_group_bk_code' => intval($accountItem['account_group_bk_code']),
                 'account_group_created_at' => strval($accountItem['account_group_created_at']),
             ];
         }
@@ -160,12 +160,12 @@ class AccountService
         $accountGroupList = $this->accountGroup->searchBook($bookId);
         foreach ($accountGroupList as $accountGroup) {
             $accountGroups[strval($accountGroup['account_group_id'])] = [
-                'account_group_id'      => strval($accountGroup['account_group_id']),
-                'account_type'          => strval($accountGroup['account_type']),
-                'account_group_title'   => strval($accountGroup['account_group_title']),
-                'is_current'            => boolval($accountGroup['is_current']),
+                'account_group_id' => strval($accountGroup['account_group_id']),
+                'account_type' => strval($accountGroup['account_type']),
+                'account_group_title' => strval($accountGroup['account_group_title']),
+                'is_current' => boolval($accountGroup['is_current']),
                 'account_group_bk_code' => intval($accountGroup['account_group_bk_code']),
-                'created_at'            => strval($accountGroup['created_at']),
+                'created_at' => strval($accountGroup['created_at']),
             ];
         }
 

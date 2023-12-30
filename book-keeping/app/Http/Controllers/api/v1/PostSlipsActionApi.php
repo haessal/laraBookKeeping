@@ -177,10 +177,10 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
 
         return [
             'success' => $success,
-            'slip'    => [
-                'date'    => array_key_exists('date', $trimmed_slip) ? $trimmed_slip['date'] : '',
+            'slip' => [
+                'date' => array_key_exists('date', $trimmed_slip) ? $trimmed_slip['date'] : '',
                 'outline' => array_key_exists('outline', $trimmed_slip) ? $trimmed_slip['outline'] : '',
-                'memo'    => array_key_exists('memo', $trimmed_slip) ? $trimmed_slip['memo'] : '',
+                'memo' => array_key_exists('memo', $trimmed_slip) ? $trimmed_slip['memo'] : '',
                 'entries' => array_key_exists('entries', $trimmed_slip) ? $trimmed_slip['entries'] : [],
             ],
         ];
@@ -237,12 +237,12 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
         }
 
         return [
-            'success'   => $success,
+            'success' => $success,
             'slipEntry' => [
-                'debit'   => array_key_exists('debit', $trimmed_slipEntry) ? strval($trimmed_slipEntry['debit']) : '',
-                'credit'  => array_key_exists('credit', $trimmed_slipEntry) ? strval($trimmed_slipEntry['credit']) : '',
-                'amount'  => array_key_exists('amount', $trimmed_slipEntry) ? intval($trimmed_slipEntry['amount']) : 0,
-                'client'  => array_key_exists('client', $trimmed_slipEntry) ? strval($trimmed_slipEntry['client']) : '',
+                'debit' => array_key_exists('debit', $trimmed_slipEntry) ? strval($trimmed_slipEntry['debit']) : '',
+                'credit' => array_key_exists('credit', $trimmed_slipEntry) ? strval($trimmed_slipEntry['credit']) : '',
+                'amount' => array_key_exists('amount', $trimmed_slipEntry) ? intval($trimmed_slipEntry['amount']) : 0,
+                'client' => array_key_exists('client', $trimmed_slipEntry) ? strval($trimmed_slipEntry['client']) : '',
                 'outline' => array_key_exists('outline', $trimmed_slipEntry) ? strval($trimmed_slipEntry['outline']) : '',
             ],
         ];

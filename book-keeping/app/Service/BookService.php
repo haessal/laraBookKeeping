@@ -103,10 +103,10 @@ class BookService
         $book = $this->permission->findBook($userId, $bookId);
 
         return is_null($book) ? null : [
-            'book_id'    => strval($book['book_id']),
-            'book_name'  => strval($book['book_name']),
+            'book_id' => strval($book['book_id']),
+            'book_name' => strval($book['book_name']),
             'modifiable' => boolval($book['modifiable']),
-            'is_owner'   => boolval($book['is_owner']),
+            'is_owner' => boolval($book['is_owner']),
             'is_default' => boolval($book['is_default']),
             'created_at' => strval($book['created_at']),
         ];
@@ -132,10 +132,10 @@ class BookService
         $list = $this->permission->searchForAccessibleBooks($userId);
         foreach ($list as $book) {
             $booklist[] = [
-                'book_id'    => strval($book['book_id']),
-                'book_name'  => strval($book['book_name']),
+                'book_id' => strval($book['book_id']),
+                'book_name' => strval($book['book_name']),
                 'modifiable' => boolval($book['modifiable']),
-                'is_owner'   => boolval($book['is_owner']),
+                'is_owner' => boolval($book['is_owner']),
                 'is_default' => boolval($book['is_default']),
                 'created_at' => strval($book['created_at']),
             ];
@@ -221,7 +221,7 @@ class BookService
         $book = $this->book->findById($bookId);
 
         return is_null($book) ? null : [
-            'book_id'   => strval($book['book_id']),
+            'book_id' => strval($book['book_id']),
             'book_name' => strval($book['book_name']),
         ];
     }
