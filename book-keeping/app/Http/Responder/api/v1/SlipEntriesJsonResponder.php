@@ -71,17 +71,17 @@ class SlipEntriesJsonResponder extends BaseJsonResponder
         foreach ($slips as $slipId => $slip) {
             foreach ($slip['items'] as $slipEntryId => $slipEntry) {
                 $slipEntries[] = [
-                    'id'      => $slipEntryId,
-                    'debit'   => ['id' => $slipEntry['debit']['account_id'], 'title' => $slipEntry['debit']['account_title']],
-                    'credit'  => ['id' => $slipEntry['credit']['account_id'], 'title' => $slipEntry['credit']['account_title']],
-                    'amount'  => $slipEntry['amount'],
-                    'client'  => $slipEntry['client'],
+                    'id' => $slipEntryId,
+                    'debit' => ['id' => $slipEntry['debit']['account_id'], 'title' => $slipEntry['debit']['account_title']],
+                    'credit' => ['id' => $slipEntry['credit']['account_id'], 'title' => $slipEntry['credit']['account_title']],
+                    'amount' => $slipEntry['amount'],
+                    'client' => $slipEntry['client'],
                     'outline' => $slipEntry['outline'],
-                    'slip'    => [
-                        'id'      => $slipId,
-                        'date'    => $slip['date'],
+                    'slip' => [
+                        'id' => $slipId,
+                        'date' => $slip['date'],
                         'outline' => $slip['slip_outline'],
-                        'memo'    => $slip['slip_memo'],
+                        'memo' => $slip['slip_memo'],
                     ],
                 ];
             }

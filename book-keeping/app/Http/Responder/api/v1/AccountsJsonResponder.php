@@ -61,13 +61,13 @@ class AccountsJsonResponder extends BaseJsonResponder
 
         foreach ($accounts as $accountId => $accountItem) {
             $accountList[] = [
-                'id'          => $accountId,
-                'title'       => $accountItem['account_title'],
+                'id' => $accountId,
+                'title' => $accountItem['account_title'],
                 'description' => $accountItem['description'],
-                'group'       => $accountItem['account_group_id'],
+                'group' => $accountItem['account_group_id'],
                 'group_title' => $accountItem['account_group_title'],
-                'is_current'  => $accountItem['is_current'],
-                'type'        => $accountItem['account_type'],
+                'is_current' => $accountItem['is_current'],
+                'type' => $accountItem['account_type'],
             ];
         }
 

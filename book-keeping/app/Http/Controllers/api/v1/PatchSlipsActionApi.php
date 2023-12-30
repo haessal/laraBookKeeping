@@ -136,11 +136,11 @@ class PatchSlipsActionApi extends AuthenticatedBookKeepingActionApi
         }
 
         return [
-            'success'      => $success,
+            'success' => $success,
             'slipContents' => [
-                'date'    => array_key_exists('date', $trimmed) ? strval($trimmed['date']) : '',
+                'date' => array_key_exists('date', $trimmed) ? strval($trimmed['date']) : '',
                 'outline' => array_key_exists('outline', $trimmed) ? strval($trimmed['outline']) : '',
-                'memo'    => array_key_exists('memo', $trimmed) ? strval($trimmed['memo']) : '',
+                'memo' => array_key_exists('memo', $trimmed) ? strval($trimmed['memo']) : '',
             ],
         ];
     }

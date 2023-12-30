@@ -127,7 +127,7 @@ class SlipService
         $list = $this->slipEntry->searchBookAndCalculateSum($bookId, $fromDate, $toDate);
         foreach ($list as $accountId => $amountFlow) {
             $amountFlows[$accountId] = [
-                'debit'  => $amountFlow['debit'],
+                'debit' => $amountFlow['debit'],
                 'credit' => $amountFlow['credit'],
             ];
         }
@@ -153,10 +153,10 @@ class SlipService
         $list = $this->slip->searchBookForDraft($bookId);
         foreach ($list as $slip) {
             $slips[] = [
-                'slip_id'      => strval($slip['slip_id']),
-                'date'         => strval($slip['date']),
+                'slip_id' => strval($slip['slip_id']),
+                'date' => strval($slip['date']),
                 'slip_outline' => strval($slip['slip_outline']),
-                'slip_memo'    => strval($slip['slip_memo']),
+                'slip_memo' => strval($slip['slip_memo']),
             ];
         }
 
@@ -181,11 +181,11 @@ class SlipService
         $slip = $this->slip->findById($slipId, $bookId);
 
         return is_null($slip) ? null : [
-            'book_id'      => strval($slip['book_id']),
-            'slip_id'      => strval($slip['slip_id']),
-            'date'         => strval($slip['date']),
+            'book_id' => strval($slip['book_id']),
+            'slip_id' => strval($slip['slip_id']),
+            'date' => strval($slip['date']),
             'slip_outline' => strval($slip['slip_outline']),
-            'slip_memo'    => strval($slip['slip_memo']),
+            'slip_memo' => strval($slip['slip_memo']),
         ];
     }
 
@@ -221,16 +221,16 @@ class SlipService
         $list = $this->slipEntry->searchBook($bookId, $fromDate, $toDate, $condition);
         foreach ($list as $slipEntry) {
             $slipEntries[] = [
-                'slip_id'       => strval($slipEntry['slip_id']),
-                'date'          => strval($slipEntry['date']),
-                'slip_outline'  => strval($slipEntry['slip_outline']),
-                'slip_memo'     => strval($slipEntry['slip_memo']),
+                'slip_id' => strval($slipEntry['slip_id']),
+                'date' => strval($slipEntry['date']),
+                'slip_outline' => strval($slipEntry['slip_outline']),
+                'slip_memo' => strval($slipEntry['slip_memo']),
                 'slip_entry_id' => strval($slipEntry['slip_entry_id']),
-                'debit'         => strval($slipEntry['debit']),
-                'credit'        => strval($slipEntry['credit']),
-                'amount'        => intval($slipEntry['amount']),
-                'client'        => strval($slipEntry['client']),
-                'outline'       => strval($slipEntry['outline']),
+                'debit' => strval($slipEntry['debit']),
+                'credit' => strval($slipEntry['credit']),
+                'amount' => intval($slipEntry['amount']),
+                'client' => strval($slipEntry['client']),
+                'outline' => strval($slipEntry['outline']),
             ];
         }
 
@@ -259,12 +259,12 @@ class SlipService
         foreach ($list as $slipEntry) {
             $slipEntries[] = [
                 'slip_entry_id' => strval($slipEntry['slip_entry_id']),
-                'slip_id'       => strval($slipEntry['slip_id']),
-                'debit'         => strval($slipEntry['debit']),
-                'credit'        => strval($slipEntry['credit']),
-                'amount'        => intval($slipEntry['amount']),
-                'client'        => strval($slipEntry['client']),
-                'outline'       => strval($slipEntry['outline']),
+                'slip_id' => strval($slipEntry['slip_id']),
+                'debit' => strval($slipEntry['debit']),
+                'credit' => strval($slipEntry['credit']),
+                'amount' => intval($slipEntry['amount']),
+                'client' => strval($slipEntry['client']),
+                'outline' => strval($slipEntry['outline']),
             ];
         }
 
@@ -295,16 +295,16 @@ class SlipService
         $slipEntry = $this->slipEntry->findById($slipEntryId, $bookId, $draftInclude);
 
         return is_null($slipEntry) ? null : [
-            'slip_id'       => strval($slipEntry['slip_id']),
-            'date'          => strval($slipEntry['date']),
-            'slip_outline'  => strval($slipEntry['slip_outline']),
-            'slip_memo'     => strval($slipEntry['slip_memo']),
+            'slip_id' => strval($slipEntry['slip_id']),
+            'date' => strval($slipEntry['date']),
+            'slip_outline' => strval($slipEntry['slip_outline']),
+            'slip_memo' => strval($slipEntry['slip_memo']),
             'slip_entry_id' => strval($slipEntry['slip_entry_id']),
-            'debit'         => strval($slipEntry['debit']),
-            'credit'        => strval($slipEntry['credit']),
-            'amount'        => intval($slipEntry['amount']),
-            'client'        => strval($slipEntry['client']),
-            'outline'       => strval($slipEntry['outline']),
+            'debit' => strval($slipEntry['debit']),
+            'credit' => strval($slipEntry['credit']),
+            'amount' => intval($slipEntry['amount']),
+            'client' => strval($slipEntry['client']),
+            'outline' => strval($slipEntry['outline']),
         ];
     }
 

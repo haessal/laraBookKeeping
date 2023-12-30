@@ -55,12 +55,12 @@ class BookJsonResponder extends BaseJsonResponder
     {
         $mode = ($book['modifiable'] == 1) ? 'ReadWrite' : 'ReadOnly';
         $bookItem = [
-            'id'           => $book['id'],
-            'name'         => $book['name'],
-            'default'      => $book['is_default'],
-            'own'          => $book['is_owner'],
+            'id' => $book['id'],
+            'name' => $book['name'],
+            'default' => $book['is_default'],
+            'own' => $book['is_owner'],
             'permitted_to' => $mode,
-            'owner'        => $book['owner'],
+            'owner' => $book['owner'],
         ];
 
         return $bookItem;

@@ -146,10 +146,10 @@ class GetBooksSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
             $success = false;
         }
         $trimmed_query = [
-            'from'    => $from,
-            'to'      => $to,
-            'debit'   => $debit,
-            'credit'  => $credit,
+            'from' => $from,
+            'to' => $to,
+            'debit' => $debit,
+            'credit' => $credit,
             'operand' => $operand,
             'keyword' => $keyword,
         ];
