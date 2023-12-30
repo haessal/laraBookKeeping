@@ -31,27 +31,27 @@ class UpdateTest extends TestCase
         $isCurrent_updated = false;
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $accountGroupId = AccountGroup::factory()->create([
-            'book_id'               => $bookId,
-            'account_type'          => $accountType,
-            'account_group_title'   => $title,
-            'is_current'            => $isCurrent,
-            'bk_uid'                => null,
+            'book_id' => $bookId,
+            'account_type' => $accountType,
+            'account_group_title' => $title,
+            'is_current' => $isCurrent,
+            'bk_uid' => null,
             'account_group_bk_code' => null,
         ])->account_group_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $this->accountGroup->update($accountGroupId, [
-            'title'      => $title_updated,
+            'title' => $title_updated,
             'is_current' => $isCurrent_updated,
         ]);
 
         $this->assertDatabaseHas('bk2_0_account_groups', [
-            'account_group_id'      => $accountGroupId,
-            'book_id'               => $bookId,
-            'account_type'          => 'asset',
-            'account_group_title'   => $title_updated,
-            'is_current'            => $isCurrent_updated,
-            'bk_uid'                => null,
+            'account_group_id' => $accountGroupId,
+            'book_id' => $bookId,
+            'account_type' => 'asset',
+            'account_group_title' => $title_updated,
+            'is_current' => $isCurrent_updated,
+            'bk_uid' => null,
             'account_group_bk_code' => null,
         ]);
     }

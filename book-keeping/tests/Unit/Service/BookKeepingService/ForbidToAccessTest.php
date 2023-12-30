@@ -28,10 +28,10 @@ class ForbidToAccessTest extends TestCase
         $owner->id = $userIdOfOwner;
         $this->be($owner);
         $bookInformationForOwner = [
-            'book_id'    => $bookId,
-            'book_name'  => 'BookName32',
+            'book_id' => $bookId,
+            'book_name' => 'BookName32',
             'modifiable' => true,
-            'is_owner'   => true,
+            'is_owner' => true,
             'is_default' => true,
             'created_at' => '2023-05-02 14:52:01',
         ];
@@ -77,10 +77,10 @@ class ForbidToAccessTest extends TestCase
         $owner->id = $userIdOfOwner;
         $this->be($owner);
         $bookInformationForOwner = [
-            'book_id'    => $bookId,
-            'book_name'  => 'BookName82',
+            'book_id' => $bookId,
+            'book_name' => 'BookName82',
             'modifiable' => true,
-            'is_owner'   => false,
+            'is_owner' => false,
             'is_default' => false,
             'created_at' => '2023-05-02 15:52:01',
         ];
@@ -117,10 +117,10 @@ class ForbidToAccessTest extends TestCase
         $owner->id = $userIdOfOwner;
         $this->be($owner);
         $bookInformationForOwner = [
-            'book_id'    => $bookId,
-            'book_name'  => 'BookName121',
+            'book_id' => $bookId,
+            'book_name' => 'BookName121',
             'modifiable' => true,
-            'is_owner'   => true,
+            'is_owner' => true,
             'is_default' => true,
             'created_at' => '2023-05-02 15:10:01',
         ];

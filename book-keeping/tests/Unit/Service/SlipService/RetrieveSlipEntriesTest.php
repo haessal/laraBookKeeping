@@ -28,16 +28,16 @@ class RetrieveSlipEntriesTest extends TestCase
 
         $slipEntries_expected = [
             [
-                'slip_id'       => $slipId,
-                'date'          => '2019-08-11',
-                'slip_outline'  => 'slip_outline3',
-                'slip_memo'     => 'memo3',
+                'slip_id' => $slipId,
+                'date' => '2019-08-11',
+                'slip_outline' => 'slip_outline3',
+                'slip_memo' => 'memo3',
                 'slip_entry_id' => $slipEntryId,
-                'debit'         => $accountId1,
-                'credit'        => $accountId2,
-                'amount'        => 100,
-                'client'        => 'client3',
-                'outline'       => 'outline3',
+                'debit' => $accountId1,
+                'credit' => $accountId2,
+                'amount' => 100,
+                'client' => 'client3',
+                'outline' => 'outline3',
             ],
         ];
         /** @var \App\DataProvider\SlipRepositoryInterface|\Mockery\MockInterface $slipMock */

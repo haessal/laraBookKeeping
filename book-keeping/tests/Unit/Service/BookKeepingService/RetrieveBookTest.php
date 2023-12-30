@@ -28,21 +28,21 @@ class RetrieveBookTest extends TestCase
         $user->id = $userId;
         $this->be($user);
         $bookItem = [
-            'book_id'    => $bookId,
-            'book_name'  => $bookName,
+            'book_id' => $bookId,
+            'book_name' => $bookName,
             'modifiable' => false,
-            'is_owner'   => false,
+            'is_owner' => false,
             'is_default' => false,
             'created_at' => '2023-05-02 19:18:01',
         ];
         $userNameOfOwner = 'owner37';
         $book_expected = [
-            'id'         => $bookId,
-            'name'       => $bookName,
+            'id' => $bookId,
+            'name' => $bookName,
             'is_default' => false,
-            'is_owner'   => false,
+            'is_owner' => false,
             'modifiable' => false,
-            'owner'      => $userNameOfOwner,
+            'owner' => $userNameOfOwner,
         ];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);

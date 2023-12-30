@@ -31,23 +31,23 @@ class SearchSlipTest extends TestCase
         $outline = 'outline6';
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $slipEntryId = SlipEntry::factory()->create([
-            'slip_id'       => $slipId,
-            'debit'         => $accountId1,
-            'credit'        => $accountId2,
-            'amount'        => $amount,
-            'client'        => $client,
-            'outline'       => $outline,
+            'slip_id' => $slipId,
+            'debit' => $accountId1,
+            'credit' => $accountId2,
+            'amount' => $amount,
+            'client' => $client,
+            'outline' => $outline,
         ])->slip_entry_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $slipEntries_expected = [
             [
                 'slip_entry_id' => $slipEntryId,
-                'slip_id'       => $slipId,
-                'debit'         => $accountId1,
-                'credit'        => $accountId2,
-                'amount'        => $amount,
-                'client'        => $client,
-                'outline'       => $outline,
+                'slip_id' => $slipId,
+                'debit' => $accountId1,
+                'credit' => $accountId2,
+                'amount' => $amount,
+                'client' => $client,
+                'outline' => $outline,
             ],
         ];
 

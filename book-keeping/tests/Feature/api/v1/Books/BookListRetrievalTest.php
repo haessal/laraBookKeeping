@@ -38,37 +38,37 @@ class BookListRetrievalTest extends TestCase
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
-            'readable_book'  => $this->book->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => true,
+            'readable_book' => $this->book->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => true,
         ]);
         $this->sharedBook = Book::factory()->create([
             'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->otherUser->id,
-            'readable_book'  => $this->sharedBook->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => false,
+            'readable_book' => $this->sharedBook->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => false,
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
-            'readable_book'  => $this->sharedBook->book_id,
-            'modifiable'     => false,
-            'is_owner'       => false,
-            'is_default'     => false,
+            'readable_book' => $this->sharedBook->book_id,
+            'modifiable' => false,
+            'is_owner' => false,
+            'is_default' => false,
         ]);
         $this->unavailableBook = Book::factory()->create([
             'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->otherUser->id,
-            'readable_book'  => $this->unavailableBook->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => true,
+            'readable_book' => $this->unavailableBook->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => true,
         ]);
     }
 
@@ -80,22 +80,22 @@ class BookListRetrievalTest extends TestCase
         $response->assertOk()
             ->assertJsonFragment([
                 [
-                    'id'           => $this->book->book_id,
-                    'name'         => $this->book->book_name,
-                    'default'      => true,
-                    'own'          => true,
+                    'id' => $this->book->book_id,
+                    'name' => $this->book->book_name,
+                    'default' => true,
+                    'own' => true,
                     'permitted_to' => 'ReadWrite',
-                    'owner'        => $this->user->name,
+                    'owner' => $this->user->name,
                 ],
             ])
             ->assertJsonFragment([
                 [
-                    'id'           => $this->sharedBook->book_id,
-                    'name'         => $this->sharedBook->book_name,
-                    'default'      => false,
-                    'own'          => false,
+                    'id' => $this->sharedBook->book_id,
+                    'name' => $this->sharedBook->book_name,
+                    'default' => false,
+                    'own' => false,
                     'permitted_to' => 'ReadOnly',
-                    'owner'        => $this->otherUser->name,
+                    'owner' => $this->otherUser->name,
                 ],
             ])
             ->assertJsonMissing(['id' => $this->unavailableBook->book_id]);

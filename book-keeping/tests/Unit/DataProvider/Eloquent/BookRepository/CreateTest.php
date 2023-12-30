@@ -25,7 +25,7 @@ class CreateTest extends TestCase
         $bookId = $this->book->create($title);
 
         $this->assertDatabaseHas('bk2_0_books', [
-            'book_id'   => $bookId,
+            'book_id' => $bookId,
             'book_name' => $title,
         ]);
     }

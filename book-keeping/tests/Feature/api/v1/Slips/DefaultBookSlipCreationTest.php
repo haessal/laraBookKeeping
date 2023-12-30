@@ -44,23 +44,23 @@ class DefaultBookSlipCreationTest extends TestCase
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
-            'readable_book'  => $this->book->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => true,
+            'readable_book' => $this->book->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => true,
         ]);
         $this->accountGroup = AccountGroup::factory()->create([
-            'book_id'      => $this->book->book_id,
+            'book_id' => $this->book->book_id,
             'account_type' => 'asset',
-            'is_current'   => true,
+            'is_current' => true,
         ]);
         $this->debit = Account::factory()->create([
             'account_group_id' => $this->accountGroup->account_group_id,
-            'selectable'       => true,
+            'selectable' => true,
         ]);
         $this->credit = Account::factory()->create([
             'account_group_id' => $this->accountGroup->account_group_id,
-            'selectable'       => true,
+            'selectable' => true,
         ]);
     }
 
@@ -75,15 +75,15 @@ class DefaultBookSlipCreationTest extends TestCase
 
         $response = $this->actingAs($this->user)
             ->post('/api/v1/slips', [
-                'date'    => $slipDate,
+                'date' => $slipDate,
                 'outline' => $slipOutline,
-                'memo'    => $slipMemo,
+                'memo' => $slipMemo,
                 'entries' => [
                     [
-                        'debit'   => $this->debit->account_id,
-                        'credit'  => $this->credit->account_id,
-                        'amount'  => $amount,
-                        'client'  => $client,
+                        'debit' => $this->debit->account_id,
+                        'credit' => $this->credit->account_id,
+                        'amount' => $amount,
+                        'client' => $client,
                         'outline' => $outline,
                     ],
                 ],
@@ -92,43 +92,43 @@ class DefaultBookSlipCreationTest extends TestCase
         $response->assertCreated()
             ->assertJsonStructure(['id', 'date', 'outline', 'memo', 'entries'])
             ->assertJson([
-                'date'    => $slipDate,
+                'date' => $slipDate,
                 'outline' => $slipOutline,
-                'memo'    => $slipMemo,
+                'memo' => $slipMemo,
             ])
             ->assertJsonFragment([
                 'debit' => [
-                    'id'    => $this->debit->account_id,
+                    'id' => $this->debit->account_id,
                     'title' => $this->debit->account_title,
                 ],
             ])
             ->assertJsonFragment([
                 'credit' => [
-                    'id'    => $this->credit->account_id,
+                    'id' => $this->credit->account_id,
                     'title' => $this->credit->account_title,
                 ],
             ])
             ->assertJsonFragment([
-                'amount'  => $amount,
-                'client'  => $client,
+                'amount' => $amount,
+                'client' => $client,
                 'outline' => $outline,
             ]);
         $this->assertDatabaseHas('bk2_0_slips', [
-            'slip_id'      => $response['id'],
-            'book_id'      => $this->book->book_id,
+            'slip_id' => $response['id'],
+            'book_id' => $this->book->book_id,
             'slip_outline' => $slipOutline,
-            'slip_memo'    => $slipMemo,
-            'date'         => $slipDate,
-            'is_draft'     => false,
+            'slip_memo' => $slipMemo,
+            'date' => $slipDate,
+            'is_draft' => false,
         ]);
         $this->assertDatabaseHas('bk2_0_slip_entries', [
             'slip_entry_id' => $response['entries'][0]['id'],
-            'slip_id'       => $response['id'],
-            'debit'         => $this->debit->account_id,
-            'credit'        => $this->credit->account_id,
-            'amount'        => $amount,
-            'client'        => $client,
-            'outline'       => $outline,
+            'slip_id' => $response['id'],
+            'debit' => $this->debit->account_id,
+            'credit' => $this->credit->account_id,
+            'amount' => $amount,
+            'client' => $client,
+            'outline' => $outline,
         ]);
     }
 
@@ -146,8 +146,8 @@ class DefaultBookSlipCreationTest extends TestCase
     {
         $response = $this->actingAs($this->user)
             ->post('/api/v1/slips', [
-                'date'    => 'date',
-                'memo'    => '',
+                'date' => 'date',
+                'memo' => '',
                 'entries' => 'entries',
             ]);
 
@@ -170,10 +170,10 @@ class DefaultBookSlipCreationTest extends TestCase
             ->post('/api/v1/slips', [
                 'entries' => [
                     [
-                        'debit'   => 'debit',
-                        'credit'  => 'credit',
-                        'amount'  => 0,
-                        'client'  => '',
+                        'debit' => 'debit',
+                        'credit' => 'credit',
+                        'amount' => 0,
+                        'client' => '',
                         'outline' => '',
                     ],
                 ],
@@ -188,7 +188,7 @@ class DefaultBookSlipCreationTest extends TestCase
             ->post('/api/v1/slips', [
                 'entries' => [
                     [
-                        'debit'  => $this->debit->account_id,
+                        'debit' => $this->debit->account_id,
                         'credit' => $this->debit->account_id,
                     ],
                 ],
@@ -208,15 +208,15 @@ class DefaultBookSlipCreationTest extends TestCase
 
         $response = $this->actingAs($this->otherUser)
             ->post('/api/v1/slips', [
-                'date'    => $slipDate,
+                'date' => $slipDate,
                 'outline' => $slipOutline,
-                'memo'    => $slipMemo,
+                'memo' => $slipMemo,
                 'entries' => [
                     [
-                        'debit'   => $this->debit->account_id,
-                        'credit'  => $this->credit->account_id,
-                        'amount'  => $amount,
-                        'client'  => $client,
+                        'debit' => $this->debit->account_id,
+                        'credit' => $this->credit->account_id,
+                        'amount' => $amount,
+                        'client' => $client,
                         'outline' => $outline,
                     ],
                 ],
@@ -236,15 +236,15 @@ class DefaultBookSlipCreationTest extends TestCase
 
         $response = $this->actingAs($this->user)
             ->post('/api/v1/slips', [
-                'date'    => $slipDate,
+                'date' => $slipDate,
                 'outline' => $slipOutline,
-                'memo'    => $slipMemo,
+                'memo' => $slipMemo,
                 'entries' => [
                     [
-                        'debit'   => $this->debit->account_id,
-                        'credit'  => (string) Str::uuid(),
-                        'amount'  => $amount,
-                        'client'  => $client,
+                        'debit' => $this->debit->account_id,
+                        'credit' => (string) Str::uuid(),
+                        'amount' => $amount,
+                        'client' => $client,
                         'outline' => $outline,
                     ],
                 ],

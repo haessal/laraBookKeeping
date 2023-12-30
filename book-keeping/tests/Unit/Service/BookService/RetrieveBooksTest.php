@@ -21,18 +21,18 @@ class RetrieveBooksTest extends TestCase
         $userId = 1;
         $booklist_expected = [
             [
-                'book_id'    => (string) Str::uuid(),
-                'book_name'  => 'book1',
+                'book_id' => (string) Str::uuid(),
+                'book_name' => 'book1',
                 'modifiable' => true,
-                'is_owner'   => true,
+                'is_owner' => true,
                 'is_default' => true,
                 'created_at' => '2023-05-01 10:53:42',
             ],
             [
-                'book_id'    => (string) Str::uuid(),
-                'book_name'  => 'book2',
+                'book_id' => (string) Str::uuid(),
+                'book_name' => 'book2',
                 'modifiable' => true,
-                'is_owner'   => false,
+                'is_owner' => false,
                 'is_default' => false,
                 'created_at' => '2023-05-01 10:43:42',
             ],

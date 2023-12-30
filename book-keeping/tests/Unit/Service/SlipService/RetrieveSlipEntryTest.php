@@ -24,16 +24,16 @@ class RetrieveSlipEntryTest extends TestCase
         $accountId1 = (string) Str::uuid();
         $accountId2 = (string) Str::uuid();
         $slip_expected = [
-            'slip_id'       => $slipId,
-            'date'          => '2020-03-31',
-            'slip_outline'  => 'slip_outline336',
-            'slip_memo'     => '',
+            'slip_id' => $slipId,
+            'date' => '2020-03-31',
+            'slip_outline' => 'slip_outline336',
+            'slip_memo' => '',
             'slip_entry_id' => $slipEntryId,
-            'debit'         => $accountId1,
-            'credit'        => $accountId2,
-            'amount'        => 341,
-            'client'        => 'client342',
-            'outline'       => 'outline343',
+            'debit' => $accountId1,
+            'credit' => $accountId2,
+            'amount' => 341,
+            'client' => 'client342',
+            'outline' => 'outline343',
         ];
         $draftInclude = true;
         /** @var \App\DataProvider\SlipRepositoryInterface|\Mockery\MockInterface $slipMock */

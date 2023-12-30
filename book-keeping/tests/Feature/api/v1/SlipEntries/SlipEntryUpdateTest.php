@@ -61,58 +61,58 @@ class SlipEntryUpdateTest extends TestCase
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
-            'readable_book'  => $this->book->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => false,
+            'readable_book' => $this->book->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => false,
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->otherUser->id,
-            'readable_book'  => $this->book->book_id,
-            'modifiable'     => false,
-            'is_owner'       => false,
-            'is_default'     => false,
+            'readable_book' => $this->book->book_id,
+            'modifiable' => false,
+            'is_owner' => false,
+            'is_default' => false,
         ]);
         $this->unavailableBook = Book::factory()->create([
             'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->otherUser->id,
-            'readable_book'  => $this->unavailableBook->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => true,
+            'readable_book' => $this->unavailableBook->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => true,
         ]);
         $this->accountGroup = AccountGroup::factory()->create([
-            'book_id'      => $this->book->book_id,
+            'book_id' => $this->book->book_id,
             'account_type' => 'asset',
-            'is_current'   => true,
+            'is_current' => true,
         ]);
         $this->debit = Account::factory()->create([
             'account_group_id' => $this->accountGroup->account_group_id,
-            'selectable'       => true,
+            'selectable' => true,
         ]);
         $this->credit = Account::factory()->create([
             'account_group_id' => $this->accountGroup->account_group_id,
-            'selectable'       => true,
+            'selectable' => true,
         ]);
         $this->slip = Slip::factory()->create([
-            'book_id'  => $this->book->book_id,
+            'book_id' => $this->book->book_id,
             'is_draft' => false,
         ]);
         $this->slipEntry = SlipEntry::factory()->create([
             'slip_id' => $this->slip->slip_id,
-            'debit'   => $this->debit->account_id,
-            'credit'  => $this->credit->account_id,
+            'debit' => $this->debit->account_id,
+            'credit' => $this->credit->account_id,
         ]);
         $this->unavailableSlip = Slip::factory()->create([
-            'book_id'  => $this->unavailableBook->book_id,
+            'book_id' => $this->unavailableBook->book_id,
             'is_draft' => false,
         ]);
         $this->unavailableSlipEntry = SlipEntry::factory()->create([
             'slip_id' => $this->unavailableSlip->slip_id,
-            'debit'   => $this->debit->account_id,
-            'credit'  => $this->credit->account_id,
+            'debit' => $this->debit->account_id,
+            'credit' => $this->credit->account_id,
         ]);
     }
 
@@ -124,44 +124,44 @@ class SlipEntryUpdateTest extends TestCase
 
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/books/'.$this->book->book_id.'/slipentries/'.$this->slipEntry->slip_entry_id, [
-                'debit'    => $this->credit->account_id,
-                'credit'   => $this->debit->account_id,
-                'amount'   => $newAmount,
-                'client'   => $newClient,
-                'outline'  => $newOutline,
+                'debit' => $this->credit->account_id,
+                'credit' => $this->debit->account_id,
+                'amount' => $newAmount,
+                'client' => $newClient,
+                'outline' => $newOutline,
             ]);
 
         $response->assertOk()
             ->assertJsonFragment([
                 [
-                    'id'      => $this->slipEntry->slip_entry_id,
-                    'debit'   => [
-                        'id'    => $this->credit->account_id,
+                    'id' => $this->slipEntry->slip_entry_id,
+                    'debit' => [
+                        'id' => $this->credit->account_id,
                         'title' => $this->credit->account_title,
                     ],
-                    'credit'  => [
-                        'id'    => $this->debit->account_id,
+                    'credit' => [
+                        'id' => $this->debit->account_id,
                         'title' => $this->debit->account_title,
                     ],
-                    'amount'  => $newAmount,
-                    'client'  => $newClient,
+                    'amount' => $newAmount,
+                    'client' => $newClient,
                     'outline' => $newOutline,
                     'slip' => [
-                        'id'      => $this->slip->slip_id,
-                        'date'    => $this->slip->date,
+                        'id' => $this->slip->slip_id,
+                        'date' => $this->slip->date,
                         'outline' => $this->slip->slip_outline,
-                        'memo'    => $this->slip->slip_memo,
+                        'memo' => $this->slip->slip_memo,
                     ],
                 ],
             ]);
         $this->assertDatabaseHas('bk2_0_slip_entries', [
             'slip_entry_id' => $this->slipEntry->slip_entry_id,
-            'slip_id'       => $this->slip->slip_id,
-            'debit'         => $this->credit->account_id,
-            'credit'        => $this->debit->account_id,
-            'amount'        => $newAmount,
-            'client'        => $newClient,
-            'outline'       => $newOutline,
+            'slip_id' => $this->slip->slip_id,
+            'debit' => $this->credit->account_id,
+            'credit' => $this->debit->account_id,
+            'amount' => $newAmount,
+            'client' => $newClient,
+            'outline' => $newOutline,
         ]);
     }
 
@@ -173,10 +173,10 @@ class SlipEntryUpdateTest extends TestCase
 
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/books/0/slipentries/'.$this->slipEntry->slip_entry_id, [
-                'debit'   => $this->credit->account_id,
-                'credit'  => $this->debit->account_id,
-                'amount'  => $newAmount,
-                'client'  => $newClient,
+                'debit' => $this->credit->account_id,
+                'credit' => $this->debit->account_id,
+                'amount' => $newAmount,
+                'client' => $newClient,
                 'outline' => $newOutline,
             ]);
 
@@ -191,10 +191,10 @@ class SlipEntryUpdateTest extends TestCase
 
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/books/'.$this->book->book_id.'/slipentries/0', [
-                'debit'   => $this->credit->account_id,
-                'credit'  => $this->debit->account_id,
-                'amount'  => $newAmount,
-                'client'  => $newClient,
+                'debit' => $this->credit->account_id,
+                'credit' => $this->debit->account_id,
+                'amount' => $newAmount,
+                'client' => $newClient,
                 'outline' => $newOutline,
             ]);
 
@@ -215,10 +215,10 @@ class SlipEntryUpdateTest extends TestCase
     {
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/books/'.$this->book->book_id.'/slipentries/'.$this->slipEntry->slip_entry_id, [
-                'debit'   => 'debit',
-                'credit'  => 'debit',
-                'amount'  => 0,
-                'client'  => '',
+                'debit' => 'debit',
+                'credit' => 'debit',
+                'amount' => 0,
+                'client' => '',
                 'outline' => '',
             ]);
 
@@ -253,10 +253,10 @@ class SlipEntryUpdateTest extends TestCase
 
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/books/'.$this->unavailableBook->book_id.'/slipentries/'.$this->slipEntry->slip_entry_id, [
-                'debit'   => $this->credit->account_id,
-                'credit'  => $this->debit->account_id,
-                'amount'  => $newAmount,
-                'client'  => $newClient,
+                'debit' => $this->credit->account_id,
+                'credit' => $this->debit->account_id,
+                'amount' => $newAmount,
+                'client' => $newClient,
                 'outline' => $newOutline,
             ]);
 
@@ -271,10 +271,10 @@ class SlipEntryUpdateTest extends TestCase
 
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/books/'.$this->book->book_id.'/slipentries/'.$this->unavailableSlipEntry->slip_entry_id, [
-                'debit'   => $this->credit->account_id,
-                'credit'  => $this->debit->account_id,
-                'amount'  => $newAmount,
-                'client'  => $newClient,
+                'debit' => $this->credit->account_id,
+                'credit' => $this->debit->account_id,
+                'amount' => $newAmount,
+                'client' => $newClient,
                 'outline' => $newOutline,
             ]);
 
@@ -289,10 +289,10 @@ class SlipEntryUpdateTest extends TestCase
 
         $response = $this->actingAs($this->otherUser)
             ->patch('/api/v1/books/'.$this->book->book_id.'/slipentries/'.$this->slipEntry->slip_entry_id, [
-                'debit'   => $this->credit->account_id,
-                'credit'  => $this->debit->account_id,
-                'amount'  => $newAmount,
-                'client'  => $newClient,
+                'debit' => $this->credit->account_id,
+                'credit' => $this->debit->account_id,
+                'amount' => $newAmount,
+                'client' => $newClient,
                 'outline' => $newOutline,
             ]);
 
@@ -307,11 +307,11 @@ class SlipEntryUpdateTest extends TestCase
 
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/books/'.$this->book->book_id.'/slipentries/'.$this->slipEntry->slip_entry_id, [
-                'debit'    => $this->debit->account_id,
-                'credit'   => (string) Str::uuid(),
-                'amount'   => $newAmount,
-                'client'   => $newClient,
-                'outline'  => $newOutline,
+                'debit' => $this->debit->account_id,
+                'credit' => (string) Str::uuid(),
+                'amount' => $newAmount,
+                'client' => $newClient,
+                'outline' => $newOutline,
             ]);
 
         $response->assertUnprocessable();

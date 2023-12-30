@@ -47,74 +47,74 @@ class PermissionCreationTest extends TestCase
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
-            'readable_book'  => $this->book->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => true,
+            'readable_book' => $this->book->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => true,
         ]);
         $this->sharedBook = Book::factory()->create([
             'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
-            'readable_book'  => $this->sharedBook->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => false,
+            'readable_book' => $this->sharedBook->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => false,
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->otherUser->id,
-            'readable_book'  => $this->sharedBook->book_id,
-            'modifiable'     => false,
-            'is_owner'       => false,
-            'is_default'     => false,
+            'readable_book' => $this->sharedBook->book_id,
+            'modifiable' => false,
+            'is_owner' => false,
+            'is_default' => false,
         ]);
         $this->sharedWritableBook = Book::factory()->create([
             'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
-            'readable_book'  => $this->sharedWritableBook->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => false,
+            'readable_book' => $this->sharedWritableBook->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => false,
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->otherUser->id,
-            'readable_book'  => $this->sharedWritableBook->book_id,
-            'modifiable'     => true,
-            'is_owner'       => false,
-            'is_default'     => false,
+            'readable_book' => $this->sharedWritableBook->book_id,
+            'modifiable' => true,
+            'is_owner' => false,
+            'is_default' => false,
         ]);
         $this->bookToBeSharedToRead = Book::factory()->create([
             'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
-            'readable_book'  => $this->bookToBeSharedToRead->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => true,
+            'readable_book' => $this->bookToBeSharedToRead->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => true,
         ]);
         $this->bookToBeSharedToReadWrite = Book::factory()->create([
             'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
-            'readable_book'  => $this->bookToBeSharedToReadWrite->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => true,
+            'readable_book' => $this->bookToBeSharedToReadWrite->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => true,
         ]);
         $this->unavailableBook = Book::factory()->create([
             'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->otherUser->id,
-            'readable_book'  => $this->unavailableBook->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => false,
+            'readable_book' => $this->unavailableBook->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => false,
         ]);
     }
 
@@ -122,7 +122,7 @@ class PermissionCreationTest extends TestCase
     {
         $response = $this->actingAs($this->user)
             ->put('/api/v1/books/'.$this->unavailableBook->book_id.'/permissions', [
-                'user'         => $this->otherUser->name,
+                'user' => $this->otherUser->name,
                 'permitted_to' => 'ReadWrite',
             ]);
 
@@ -133,7 +133,7 @@ class PermissionCreationTest extends TestCase
     {
         $response = $this->actingAs($this->otherUser)
             ->put('/api/v1/books/'.$this->sharedBook->book_id.'/permissions', [
-                'user'         => $this->otherUser->name,
+                'user' => $this->otherUser->name,
                 'permitted_to' => 'ReadWrite',
             ]);
 
@@ -144,7 +144,7 @@ class PermissionCreationTest extends TestCase
     {
         $response = $this->actingAs($this->user)
             ->put('/api/v1/books/0/permissions', [
-                'user'         => $this->otherUser->name,
+                'user' => $this->otherUser->name,
                 'permitted_to' => 'ReadWrite',
             ]);
 
@@ -163,23 +163,23 @@ class PermissionCreationTest extends TestCase
     {
         $response = $this->actingAs($this->user)
             ->put('/api/v1/books/'.$this->bookToBeSharedToRead->book_id.'/permissions', [
-                'user'         => $this->otherUser->name,
+                'user' => $this->otherUser->name,
                 'permitted_to' => 'ReadOnly',
             ]);
 
         $response->assertOk()
             ->assertJsonFragment([
                 [
-                    'user'         => $this->otherUser->name,
+                    'user' => $this->otherUser->name,
                     'permitted_to' => 'ReadOnly',
                 ],
             ]);
         $this->assertDatabaseHas('bk2_0_permissions', [
             'permitted_user' => $this->otherUser->id,
-            'readable_book'  => $this->bookToBeSharedToRead->book_id,
-            'modifiable'     => false,
-            'is_owner'       => false,
-            'is_default'     => false,
+            'readable_book' => $this->bookToBeSharedToRead->book_id,
+            'modifiable' => false,
+            'is_owner' => false,
+            'is_default' => false,
         ]);
     }
 
@@ -187,23 +187,23 @@ class PermissionCreationTest extends TestCase
     {
         $response = $this->actingAs($this->user)
             ->put('/api/v1/books/'.$this->bookToBeSharedToReadWrite->book_id.'/permissions', [
-                'user'         => $this->otherUser->name,
+                'user' => $this->otherUser->name,
                 'permitted_to' => 'ReadWrite',
             ]);
 
         $response->assertOk()
             ->assertJsonFragment([
                 [
-                    'user'         => $this->otherUser->name,
+                    'user' => $this->otherUser->name,
                     'permitted_to' => 'ReadWrite',
                 ],
             ]);
         $this->assertDatabaseHas('bk2_0_permissions', [
             'permitted_user' => $this->otherUser->id,
-            'readable_book'  => $this->bookToBeSharedToReadWrite->book_id,
-            'modifiable'     => true,
-            'is_owner'       => false,
-            'is_default'     => false,
+            'readable_book' => $this->bookToBeSharedToReadWrite->book_id,
+            'modifiable' => true,
+            'is_owner' => false,
+            'is_default' => false,
         ]);
     }
 
@@ -211,23 +211,23 @@ class PermissionCreationTest extends TestCase
     {
         $response = $this->actingAs($this->user)
             ->put('/api/v1/books/'.$this->sharedBook->book_id.'/permissions', [
-                'user'         => $this->otherUser->name,
+                'user' => $this->otherUser->name,
                 'permitted_to' => 'ReadOnly',
             ]);
 
         $response->assertOk()
             ->assertJsonFragment([
                 [
-                    'user'         => $this->otherUser->name,
+                    'user' => $this->otherUser->name,
                     'permitted_to' => 'ReadOnly',
                 ],
             ]);
         $this->assertDatabaseHas('bk2_0_permissions', [
             'permitted_user' => $this->otherUser->id,
-            'readable_book'  => $this->sharedBook->book_id,
-            'modifiable'     => false,
-            'is_owner'       => false,
-            'is_default'     => false,
+            'readable_book' => $this->sharedBook->book_id,
+            'modifiable' => false,
+            'is_owner' => false,
+            'is_default' => false,
         ]);
     }
 
@@ -235,23 +235,23 @@ class PermissionCreationTest extends TestCase
     {
         $response = $this->actingAs($this->user)
             ->put('/api/v1/books/'.$this->sharedWritableBook->book_id.'/permissions', [
-                'user'         => $this->otherUser->name,
+                'user' => $this->otherUser->name,
                 'permitted_to' => 'ReadWrite',
             ]);
 
         $response->assertOk()
             ->assertJsonFragment([
                 [
-                    'user'         => $this->otherUser->name,
+                    'user' => $this->otherUser->name,
                     'permitted_to' => 'ReadWrite',
                 ],
             ]);
         $this->assertDatabaseHas('bk2_0_permissions', [
             'permitted_user' => $this->otherUser->id,
-            'readable_book'  => $this->sharedWritableBook->book_id,
-            'modifiable'     => true,
-            'is_owner'       => false,
-            'is_default'     => false,
+            'readable_book' => $this->sharedWritableBook->book_id,
+            'modifiable' => true,
+            'is_owner' => false,
+            'is_default' => false,
         ]);
     }
 
@@ -259,17 +259,17 @@ class PermissionCreationTest extends TestCase
     {
         $response = $this->actingAs($this->user)
             ->put('/api/v1/books/'.$this->sharedWritableBook->book_id.'/permissions', [
-                'user'         => $this->otherUser->name,
+                'user' => $this->otherUser->name,
                 'permitted_to' => 'ReadOnly',
             ]);
 
         $response->assertUnprocessable();
         $this->assertDatabaseHas('bk2_0_permissions', [
             'permitted_user' => $this->otherUser->id,
-            'readable_book'  => $this->sharedWritableBook->book_id,
-            'modifiable'     => true,
-            'is_owner'       => false,
-            'is_default'     => false,
+            'readable_book' => $this->sharedWritableBook->book_id,
+            'modifiable' => true,
+            'is_owner' => false,
+            'is_default' => false,
         ]);
     }
 
@@ -277,17 +277,17 @@ class PermissionCreationTest extends TestCase
     {
         $response = $this->actingAs($this->user)
             ->put('/api/v1/books/'.$this->sharedBook->book_id.'/permissions', [
-                'user'         => $this->otherUser->name,
+                'user' => $this->otherUser->name,
                 'permitted_to' => 'ReadWrite',
             ]);
 
         $response->assertUnprocessable();
         $this->assertDatabaseHas('bk2_0_permissions', [
             'permitted_user' => $this->otherUser->id,
-            'readable_book'  => $this->sharedBook->book_id,
-            'modifiable'     => false,
-            'is_owner'       => false,
-            'is_default'     => false,
+            'readable_book' => $this->sharedBook->book_id,
+            'modifiable' => false,
+            'is_owner' => false,
+            'is_default' => false,
         ]);
     }
 
@@ -295,23 +295,23 @@ class PermissionCreationTest extends TestCase
     {
         $response = $this->actingAs($this->user)
             ->put('/api/v1/books/'.$this->book->book_id.'/permissions', [
-                'user'         => $this->user->name,
+                'user' => $this->user->name,
                 'permitted_to' => 'ReadWrite',
             ]);
 
         $response->assertOk()
             ->assertJsonFragment([
                 [
-                    'user'         => $this->user->name,
+                    'user' => $this->user->name,
                     'permitted_to' => 'ReadWrite',
                 ],
             ]);
         $this->assertDatabaseHas('bk2_0_permissions', [
             'permitted_user' => $this->user->id,
-            'readable_book'  => $this->book->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => true,
+            'readable_book' => $this->book->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => true,
         ]);
     }
 
@@ -319,17 +319,17 @@ class PermissionCreationTest extends TestCase
     {
         $response = $this->actingAs($this->user)
             ->put('/api/v1/books/'.$this->book->book_id.'/permissions', [
-                'user'         => $this->user->name,
+                'user' => $this->user->name,
                 'permitted_to' => 'ReadOnly',
             ]);
 
         $response->assertUnprocessable();
         $this->assertDatabaseHas('bk2_0_permissions', [
             'permitted_user' => $this->user->id,
-            'readable_book'  => $this->book->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => true,
+            'readable_book' => $this->book->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => true,
         ]);
     }
 }

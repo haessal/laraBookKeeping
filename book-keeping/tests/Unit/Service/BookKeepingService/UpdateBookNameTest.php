@@ -27,10 +27,10 @@ class UpdateBookNameTest extends TestCase
         $owner->id = $userIdOfOwner;
         $this->be($owner);
         $bookInformationForOwner = [
-            'book_id'    => $bookId,
-            'book_name'  => 'BookName31',
+            'book_id' => $bookId,
+            'book_name' => 'BookName31',
             'modifiable' => true,
-            'is_owner'   => true,
+            'is_owner' => true,
             'is_default' => true,
             'created_at' => '2023-05-03 07:5101',
         ];

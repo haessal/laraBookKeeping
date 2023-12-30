@@ -32,11 +32,11 @@ class CreateTest extends TestCase
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $this->assertDatabaseHas('bk2_0_budgets', [
-            'budget_id'     => $budgetId,
-            'book_id'       => $bookId,
-            'account_code'  => $accountId,
-            'date'          => $date,
-            'amount'        => $amount,
+            'budget_id' => $budgetId,
+            'book_id' => $bookId,
+            'account_code' => $accountId,
+            'date' => $date,
+            'amount' => $amount,
         ]);
     }
 }

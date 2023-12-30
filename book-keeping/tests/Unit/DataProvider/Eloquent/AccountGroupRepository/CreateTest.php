@@ -34,13 +34,13 @@ class CreateTest extends TestCase
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $this->assertDatabaseHas('bk2_0_account_groups', [
-            'account_group_id'      => $accountGroupId,
-            'book_id'               => $bookId,
-            'account_type'          => $accountType,
-            'account_group_title'   => $title,
-            'bk_uid'                => $bk_uid,
+            'account_group_id' => $accountGroupId,
+            'book_id' => $bookId,
+            'account_type' => $accountType,
+            'account_group_title' => $title,
+            'bk_uid' => $bk_uid,
             'account_group_bk_code' => $bk_code,
-            'is_current'            => $isCurrent,
+            'is_current' => $isCurrent,
         ]);
     }
 }
