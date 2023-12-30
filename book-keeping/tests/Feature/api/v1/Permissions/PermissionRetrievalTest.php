@@ -35,27 +35,27 @@ class PermissionRetrievalTest extends TestCase
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
-            'readable_book'  => $this->sharedBook->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => false,
+            'readable_book' => $this->sharedBook->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => false,
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->otherUser->id,
-            'readable_book'  => $this->sharedBook->book_id,
-            'modifiable'     => false,
-            'is_owner'       => false,
-            'is_default'     => false,
+            'readable_book' => $this->sharedBook->book_id,
+            'modifiable' => false,
+            'is_owner' => false,
+            'is_default' => false,
         ]);
         $this->unavailableBook = Book::factory()->create([
             'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->otherUser->id,
-            'readable_book'  => $this->unavailableBook->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => false,
+            'readable_book' => $this->unavailableBook->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => false,
         ]);
     }
 
@@ -75,13 +75,13 @@ class PermissionRetrievalTest extends TestCase
         $response->assertOk()
             ->assertJsonFragment([
                 [
-                    'user'         => $this->user->name,
+                    'user' => $this->user->name,
                     'permitted_to' => 'ReadWrite',
                 ],
             ])
             ->assertJsonFragment([
                 [
-                    'user'         => $this->otherUser->name,
+                    'user' => $this->otherUser->name,
                     'permitted_to' => 'ReadOnly',
                 ],
             ]);

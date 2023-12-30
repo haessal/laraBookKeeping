@@ -41,28 +41,28 @@ class RetrieveSlipEntryTest extends TestCase
         $client = 'client1328';
         $outline = 'outline1329';
         $slipEntry = [
-            'slip_id'       => $slipId,
-            'date'          => $date,
-            'slip_outline'  => $slip_outline,
-            'slip_memo'     => $slip_memo,
+            'slip_id' => $slipId,
+            'date' => $date,
+            'slip_outline' => $slip_outline,
+            'slip_memo' => $slip_memo,
             'slip_entry_id' => $slipEntryId,
-            'debit'         => $accountId_1,
-            'credit'        => $accountId_2,
-            'amount'        => $amount,
-            'client'        => $client,
-            'outline'       => $outline,
+            'debit' => $accountId_1,
+            'credit' => $accountId_2,
+            'amount' => $amount,
+            'client' => $client,
+            'outline' => $outline,
         ];
         $slips = [
             $slipId => [
-                'date'         => $date,
+                'date' => $date,
                 'slip_outline' => $slip_outline,
-                'slip_memo'    => $slip_memo,
-                'items'        => [
+                'slip_memo' => $slip_memo,
+                'items' => [
                     $slipEntryId => [
-                        'debit'   => ['account_id' => $accountId_1, 'account_title' => 'accountTitle_1'],
-                        'credit'  => ['account_id' => $accountId_2, 'account_title' => 'accountTitle_2'],
-                        'amount'  => $amount,
-                        'client'  => $client,
+                        'debit' => ['account_id' => $accountId_1, 'account_title' => 'accountTitle_1'],
+                        'credit' => ['account_id' => $accountId_2, 'account_title' => 'accountTitle_2'],
+                        'amount' => $amount,
+                        'client' => $client,
                         'outline' => $outline,
                     ],
                 ],

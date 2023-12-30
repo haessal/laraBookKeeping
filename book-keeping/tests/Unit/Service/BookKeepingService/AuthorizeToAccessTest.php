@@ -27,10 +27,10 @@ class AuthorizeToAccessTest extends TestCase
         $owner->id = $userIdOfOwner;
         $this->be($owner);
         $bookInformationForOwner = [
-            'book_id'    => $bookId,
-            'book_name'  => 'BookName31',
+            'book_id' => $bookId,
+            'book_name' => 'BookName31',
             'modifiable' => true,
-            'is_owner'   => true,
+            'is_owner' => true,
             'is_default' => true,
             'created_at' => '2023-05-02 10:29:01',
         ];
@@ -104,10 +104,10 @@ class AuthorizeToAccessTest extends TestCase
         $owner->id = $userIdOfOwner;
         $this->be($owner);
         $bookInformationForOwner = [
-            'book_id'    => $bookId,
-            'book_name'  => 'BookName108',
+            'book_id' => $bookId,
+            'book_name' => 'BookName108',
             'modifiable' => true,
-            'is_owner'   => true,
+            'is_owner' => true,
             'is_default' => true,
             'created_at' => '2023-05-02 10:57:01',
         ];
@@ -149,10 +149,10 @@ class AuthorizeToAccessTest extends TestCase
         $owner->id = $userIdOfOwner;
         $this->be($owner);
         $bookInformationForOwner = [
-            'book_id'    => $bookId,
-            'book_name'  => 'BookName153',
+            'book_id' => $bookId,
+            'book_name' => 'BookName153',
             'modifiable' => true,
-            'is_owner'   => true,
+            'is_owner' => true,
             'is_default' => true,
             'created_at' => '2023-06-29 10:57:01',
         ];

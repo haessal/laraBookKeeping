@@ -57,20 +57,20 @@ class SlipRetrievalTest extends TestCase
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
-            'readable_book'  => $this->book->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => false,
+            'readable_book' => $this->book->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => false,
         ]);
         $this->unavailableBook = Book::factory()->create([
             'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->otherUser->id,
-            'readable_book'  => $this->unavailableBook->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => true,
+            'readable_book' => $this->unavailableBook->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => true,
         ]);
         $this->accountGroup = AccountGroup::factory()->create([
             'book_id' => $this->book->book_id,
@@ -79,23 +79,23 @@ class SlipRetrievalTest extends TestCase
         ]);
         $this->debit = Account::factory()->create([
             'account_group_id' => $this->accountGroup->account_group_id,
-            'selectable'       => true,
+            'selectable' => true,
         ]);
         $this->credit = Account::factory()->create([
             'account_group_id' => $this->accountGroup->account_group_id,
-            'selectable'       => true,
+            'selectable' => true,
         ]);
         $this->slip = Slip::factory()->create([
-            'book_id'  => $this->book->book_id,
+            'book_id' => $this->book->book_id,
             'is_draft' => false,
         ]);
         $this->slipEntry = SlipEntry::factory()->create([
             'slip_id' => $this->slip->slip_id,
-            'debit'   => $this->debit->account_id,
-            'credit'  => $this->credit->account_id,
+            'debit' => $this->debit->account_id,
+            'credit' => $this->credit->account_id,
         ]);
         $this->unavailableSlip = Slip::factory()->create([
-            'book_id'  => $this->unavailableBook->book_id,
+            'book_id' => $this->unavailableBook->book_id,
             'is_draft' => false,
         ]);
     }
@@ -107,23 +107,23 @@ class SlipRetrievalTest extends TestCase
 
         $response->assertOk()
             ->assertJson([
-                'id'      => $this->slip->slip_id,
-                'date'    => $this->slip->date,
+                'id' => $this->slip->slip_id,
+                'date' => $this->slip->date,
                 'outline' => $this->slip->slip_outline,
-                'memo'    => $this->slip->slip_memo,
+                'memo' => $this->slip->slip_memo,
                 'entries' => [
                     [
-                        'id'      => $this->slipEntry->slip_entry_id,
-                        'debit'   => [
-                            'id'    => $this->debit->account_id,
+                        'id' => $this->slipEntry->slip_entry_id,
+                        'debit' => [
+                            'id' => $this->debit->account_id,
                             'title' => $this->debit->account_title,
                         ],
-                        'credit'  => [
-                            'id'    => $this->credit->account_id,
+                        'credit' => [
+                            'id' => $this->credit->account_id,
                             'title' => $this->credit->account_title,
                         ],
-                        'amount'  => $this->slipEntry->amount,
-                        'client'  => $this->slipEntry->client,
+                        'amount' => $this->slipEntry->amount,
+                        'client' => $this->slipEntry->client,
                         'outline' => $this->slipEntry->outline,
                     ],
                 ],

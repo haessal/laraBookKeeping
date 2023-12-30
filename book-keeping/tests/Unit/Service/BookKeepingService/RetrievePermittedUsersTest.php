@@ -27,10 +27,10 @@ class RetrievePermittedUsersTest extends TestCase
         $owner->id = $userIdOfOwner;
         $this->be($owner);
         $bookInformationForOwner = [
-            'book_id'    => $bookId,
-            'book_name'  => 'BookName331',
+            'book_id' => $bookId,
+            'book_name' => 'BookName331',
             'modifiable' => true,
-            'is_owner'   => true,
+            'is_owner' => true,
             'is_default' => true,
             'created_at' => '2023-05-02 23:17:01',
         ];

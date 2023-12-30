@@ -29,11 +29,11 @@ class SearchBookForDraftTest extends TestCase
         $date = '2019-10-03';
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $slipId = Slip::factory()->create([
-            'book_id'       => $bookId,
-            'slip_outline'  => $outline,
-            'slip_memo'     => $memo,
-            'date'          => $date,
-            'is_draft'      => true,
+            'book_id' => $bookId,
+            'slip_outline' => $outline,
+            'slip_memo' => $memo,
+            'date' => $date,
+            'is_draft' => true,
         ])->slip_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $slips_expected = [

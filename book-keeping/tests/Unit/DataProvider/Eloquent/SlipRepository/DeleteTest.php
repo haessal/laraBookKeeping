@@ -30,23 +30,23 @@ class DeleteTest extends TestCase
         $isDraft = false;
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $slipId = Slip::factory()->create([
-            'book_id'       => $bookId,
-            'slip_outline'  => $outline,
-            'slip_memo'     => $memo,
-            'date'          => $date,
-            'is_draft'      => $isDraft,
+            'book_id' => $bookId,
+            'slip_outline' => $outline,
+            'slip_memo' => $memo,
+            'date' => $date,
+            'is_draft' => $isDraft,
         ])->slip_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $this->slip->delete($slipId);
 
         $this->assertSoftDeleted('bk2_0_slips', [
-            'slip_id'       => $slipId,
-            'book_id'       => $bookId,
-            'slip_outline'  => $outline,
-            'slip_memo'     => $memo,
-            'date'          => $date,
-            'is_draft'      => $isDraft,
+            'slip_id' => $slipId,
+            'book_id' => $bookId,
+            'slip_outline' => $outline,
+            'slip_memo' => $memo,
+            'date' => $date,
+            'is_draft' => $isDraft,
         ]);
     }
 }

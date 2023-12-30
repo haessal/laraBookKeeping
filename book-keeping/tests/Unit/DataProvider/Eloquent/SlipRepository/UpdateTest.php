@@ -33,27 +33,27 @@ class UpdateTest extends TestCase
         $date_updated = '2019-12-03';
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $slipId = Slip::factory()->create([
-            'book_id'       => $bookId,
-            'slip_outline'  => $outline,
-            'slip_memo'     => $memo,
-            'date'          => $date,
-            'is_draft'      => $isDraft,
+            'book_id' => $bookId,
+            'slip_outline' => $outline,
+            'slip_memo' => $memo,
+            'date' => $date,
+            'is_draft' => $isDraft,
         ])->slip_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $this->slip->update($slipId, [
-            'outline'  => $outline_updated,
-            'memo'     => $memo_updated,
-            'date'     => $date_updated,
+            'outline' => $outline_updated,
+            'memo' => $memo_updated,
+            'date' => $date_updated,
         ]);
 
         $this->assertDatabaseHas('bk2_0_slips', [
-            'slip_id'       => $slipId,
-            'book_id'       => $bookId,
-            'slip_outline'  => $outline_updated,
-            'slip_memo'     => $memo_updated,
-            'date'          => $date_updated,
-            'is_draft'      => $isDraft,
+            'slip_id' => $slipId,
+            'book_id' => $bookId,
+            'slip_outline' => $outline_updated,
+            'slip_memo' => $memo_updated,
+            'date' => $date_updated,
+            'is_draft' => $isDraft,
         ]);
     }
 }

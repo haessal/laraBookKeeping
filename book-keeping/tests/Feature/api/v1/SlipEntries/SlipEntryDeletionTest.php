@@ -60,58 +60,58 @@ class SlipEntryDeletionTest extends TestCase
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
-            'readable_book'  => $this->book->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => false,
+            'readable_book' => $this->book->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => false,
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->otherUser->id,
-            'readable_book'  => $this->book->book_id,
-            'modifiable'     => false,
-            'is_owner'       => false,
-            'is_default'     => false,
+            'readable_book' => $this->book->book_id,
+            'modifiable' => false,
+            'is_owner' => false,
+            'is_default' => false,
         ]);
         $this->unavailableBook = Book::factory()->create([
             'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->otherUser->id,
-            'readable_book'  => $this->unavailableBook->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => true,
+            'readable_book' => $this->unavailableBook->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => true,
         ]);
         $this->accountGroup = AccountGroup::factory()->create([
-            'book_id'      => $this->book->book_id,
+            'book_id' => $this->book->book_id,
             'account_type' => 'asset',
-            'is_current'   => true,
+            'is_current' => true,
         ]);
         $this->debit = Account::factory()->create([
             'account_group_id' => $this->accountGroup->account_group_id,
-            'selectable'       => true,
+            'selectable' => true,
         ]);
         $this->credit = Account::factory()->create([
             'account_group_id' => $this->accountGroup->account_group_id,
-            'selectable'       => true,
+            'selectable' => true,
         ]);
         $this->slip = Slip::factory()->create([
-            'book_id'  => $this->book->book_id,
+            'book_id' => $this->book->book_id,
             'is_draft' => false,
         ]);
         $this->slipEntry = SlipEntry::factory()->create([
             'slip_id' => $this->slip->slip_id,
-            'debit'   => $this->debit->account_id,
-            'credit'  => $this->credit->account_id,
+            'debit' => $this->debit->account_id,
+            'credit' => $this->credit->account_id,
         ]);
         $this->unavailableSlip = Slip::factory()->create([
-            'book_id'  => $this->unavailableBook->book_id,
+            'book_id' => $this->unavailableBook->book_id,
             'is_draft' => false,
         ]);
         $this->unavailableSlipEntry = SlipEntry::factory()->create([
             'slip_id' => $this->unavailableSlip->slip_id,
-            'debit'   => $this->debit->account_id,
-            'credit'  => $this->credit->account_id,
+            'debit' => $this->debit->account_id,
+            'credit' => $this->credit->account_id,
         ]);
     }
 

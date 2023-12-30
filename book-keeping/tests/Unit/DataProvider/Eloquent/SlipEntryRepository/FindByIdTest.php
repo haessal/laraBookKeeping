@@ -34,32 +34,32 @@ class FindByIdTest extends TestCase
         $outline = 'outline7';
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $slipId = Slip::factory()->create([
-            'book_id'      => $bookId,
+            'book_id' => $bookId,
             'slip_outline' => $slip_outline,
-            'slip_memo'     => null,
-            'date'         => $date,
-            'is_draft'     => true,
+            'slip_memo' => null,
+            'date' => $date,
+            'is_draft' => true,
         ])->slip_id;
         $slipEntryId = SlipEntry::factory()->create([
-            'slip_id'       => $slipId,
-            'debit'         => $accountId1,
-            'credit'        => $accountId2,
-            'amount'        => $amount,
-            'client'        => $client,
-            'outline'       => $outline,
+            'slip_id' => $slipId,
+            'debit' => $accountId1,
+            'credit' => $accountId2,
+            'amount' => $amount,
+            'client' => $client,
+            'outline' => $outline,
         ])->slip_entry_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $slipEntry_expected = [
-            'slip_id'       => $slipId,
-            'date'          => $date,
-            'slip_outline'  => $slip_outline,
-            'slip_memo'     => null,
+            'slip_id' => $slipId,
+            'date' => $date,
+            'slip_outline' => $slip_outline,
+            'slip_memo' => null,
             'slip_entry_id' => $slipEntryId,
-            'debit'         => $accountId1,
-            'credit'        => $accountId2,
-            'amount'        => $amount,
-            'client'        => $client,
-            'outline'       => $outline,
+            'debit' => $accountId1,
+            'credit' => $accountId2,
+            'amount' => $amount,
+            'client' => $client,
+            'outline' => $outline,
         ];
 
         $slipEntry_actual = $this->slipEntry->findById($slipEntryId, $bookId, true);
@@ -77,18 +77,18 @@ class FindByIdTest extends TestCase
         $outline = 'outline7';
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $slipId = Slip::factory()->create([
-            'book_id'      => $bookId,
+            'book_id' => $bookId,
             'slip_outline' => 'slip_outline208',
-            'date'         => '2020-05-31',
-            'is_draft'     => true,
+            'date' => '2020-05-31',
+            'is_draft' => true,
         ])->slip_id;
         $slipEntryId = SlipEntry::factory()->create([
-            'slip_id'       => $slipId,
-            'debit'         => $accountId1,
-            'credit'        => $accountId2,
-            'amount'        => $amount,
-            'client'        => $client,
-            'outline'       => $outline,
+            'slip_id' => $slipId,
+            'debit' => $accountId1,
+            'credit' => $accountId2,
+            'amount' => $amount,
+            'client' => $client,
+            'outline' => $outline,
         ])->slip_entry_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 

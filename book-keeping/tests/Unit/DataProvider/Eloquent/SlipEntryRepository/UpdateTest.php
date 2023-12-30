@@ -37,32 +37,32 @@ class UpdateTest extends TestCase
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $slipEntryId = SlipEntry::factory()->create([
             'slip_id' => $slipId,
-            'debit'   => $debit,
-            'credit'  => $credit,
-            'amount'  => $amount,
-            'client'  => $client,
+            'debit' => $debit,
+            'credit' => $credit,
+            'amount' => $amount,
+            'client' => $client,
             'outline' => $outline,
         ])->slip_entry_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $this->slipEntry->update($slipEntryId, [
-            'debit'   => $debit_updated,
-            'credit'  => $credit_updated,
-            'amount'  => $amount_updated,
-            'client'  => $client_updated,
+            'debit' => $debit_updated,
+            'credit' => $credit_updated,
+            'amount' => $amount_updated,
+            'client' => $client_updated,
             'outline' => $outline_updated,
         ]);
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $this->assertDatabaseHas('bk2_0_slip_entries', [
             'slip_entry_id' => $slipEntryId,
-            'slip_id'       => $slipId,
-            'debit'         => $debit_updated,
-            'credit'        => $credit_updated,
-            'amount'        => $amount_updated,
-            'client'        => $client_updated,
-            'outline'       => $outline_updated,
+            'slip_id' => $slipId,
+            'debit' => $debit_updated,
+            'credit' => $credit_updated,
+            'amount' => $amount_updated,
+            'client' => $client_updated,
+            'outline' => $outline_updated,
         ]);
     }
 }

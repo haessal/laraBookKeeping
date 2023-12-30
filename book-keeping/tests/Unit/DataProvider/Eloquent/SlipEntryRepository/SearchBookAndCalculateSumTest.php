@@ -38,35 +38,35 @@ class SearchBookAndCalculateSumTest extends TestCase
         $outline = 'outline10';
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $slipId = Slip::factory()->create([
-            'book_id'       => $bookId,
-            'slip_outline'  => $slipOutline,
-            'slip_memo'     => $memo,
-            'date'          => $date,
-            'is_draft'      => $isDraft,
+            'book_id' => $bookId,
+            'slip_outline' => $slipOutline,
+            'slip_memo' => $memo,
+            'date' => $date,
+            'is_draft' => $isDraft,
         ])->slip_id;
         $slipEntryId1 = SlipEntry::factory()->create([
-            'slip_id'       => $slipId,
-            'debit'         => $accountId1,
-            'credit'        => $accountId2,
-            'amount'        => 10,
-            'client'        => $client,
-            'outline'       => $outline,
+            'slip_id' => $slipId,
+            'debit' => $accountId1,
+            'credit' => $accountId2,
+            'amount' => 10,
+            'client' => $client,
+            'outline' => $outline,
         ])->slip_entry_id;
         $slipEntryId2 = SlipEntry::factory()->create([
-            'slip_id'       => $slipId,
-            'debit'         => $accountId1,
-            'credit'        => $accountId3,
-            'amount'        => 200,
-            'client'        => $client,
-            'outline'       => $outline,
+            'slip_id' => $slipId,
+            'debit' => $accountId1,
+            'credit' => $accountId3,
+            'amount' => 200,
+            'client' => $client,
+            'outline' => $outline,
         ])->slip_entry_id;
         $slipEntryId3 = SlipEntry::factory()->create([
-            'slip_id'       => $slipId,
-            'debit'         => $accountId2,
-            'credit'        => $accountId3,
-            'amount'        => 3000,
-            'client'        => $client,
-            'outline'       => $outline,
+            'slip_id' => $slipId,
+            'debit' => $accountId2,
+            'credit' => $accountId3,
+            'amount' => 3000,
+            'client' => $client,
+            'outline' => $outline,
         ])->slip_entry_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 

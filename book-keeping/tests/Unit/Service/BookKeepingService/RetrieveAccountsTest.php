@@ -30,17 +30,17 @@ class RetrieveAccountsTest extends TestCase
         $accountGroupId_1 = (string) Str::uuid();
         $accounts = [
             $accountId_1 => [
-                'account_type'             => AccountService::ACCOUNT_TYPE_ASSET,
-                'account_group_id'         => $accountGroupId_1,
-                'account_group_title'      => 'accountGroupTitle_1',
-                'is_current'               => 0,
-                'account_id'               => $accountId_1,
-                'account_title'            => 'accountTitle_1',
-                'description'              => 'description_1',
-                'selectable'               => 1,
-                'account_bk_code'          => 1201,
-                'created_at'               => '2019-12-03 12:00:01',
-                'account_group_bk_code'    => 1200,
+                'account_type' => AccountService::ACCOUNT_TYPE_ASSET,
+                'account_group_id' => $accountGroupId_1,
+                'account_group_title' => 'accountGroupTitle_1',
+                'is_current' => 0,
+                'account_id' => $accountId_1,
+                'account_title' => 'accountTitle_1',
+                'description' => 'description_1',
+                'selectable' => 1,
+                'account_bk_code' => 1201,
+                'created_at' => '2019-12-03 12:00:01',
+                'account_group_bk_code' => 1200,
                 'account_group_created_at' => '2019-12-04 12:00:12',
             ],
         ];

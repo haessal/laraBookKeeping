@@ -30,7 +30,7 @@ class UpdateNameTest extends TestCase
         $this->book->updateName($bookId, $newName);
 
         $this->assertDatabaseHas('bk2_0_books', [
-            'book_id'   => $bookId,
+            'book_id' => $bookId,
             'book_name' => $newName,
         ]);
     }

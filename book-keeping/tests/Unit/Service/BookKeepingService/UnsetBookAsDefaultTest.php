@@ -28,29 +28,29 @@ class UnsetBookAsDefaultTest extends TestCase
         $owner->id = $userIdOfOwner;
         $this->be($owner);
         $bookInformationForOwner = [
-            'book_id'    => $bookId,
-            'book_name'  => $bookName,
+            'book_id' => $bookId,
+            'book_name' => $bookName,
             'modifiable' => true,
-            'is_owner'   => true,
+            'is_owner' => true,
             'is_default' => true,
             'created_at' => '2023-05-03 00:47:01',
         ];
         $bookInformationForOwnerAfterUpdated = [
-            'book_id'    => $bookId,
-            'book_name'  => $bookName,
+            'book_id' => $bookId,
+            'book_name' => $bookName,
             'modifiable' => true,
-            'is_owner'   => true,
+            'is_owner' => true,
             'is_default' => false,
             'created_at' => '2023-05-03 00:47:01',
         ];
         $userNameOfOwner = 'owner38';
         $book = [
-            'id'         => $bookId,
-            'name'       => $bookName,
+            'id' => $bookId,
+            'name' => $bookName,
             'is_default' => false,
-            'is_owner'   => true,
+            'is_owner' => true,
             'modifiable' => true,
-            'owner'      => $userNameOfOwner,
+            'owner' => $userNameOfOwner,
         ];
         $result_expected = [BookKeepingService::STATUS_NORMAL, $book];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */

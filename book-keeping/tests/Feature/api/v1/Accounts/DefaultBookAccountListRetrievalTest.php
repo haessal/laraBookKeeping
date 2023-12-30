@@ -40,10 +40,10 @@ class DefaultBookAccountListRetrievalTest extends TestCase
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
-            'readable_book'  => $this->book->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => true,
+            'readable_book' => $this->book->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => true,
         ]);
         $this->accountGroup = AccountGroup::factory()->create([
             'book_id' => $this->book->book_id,
@@ -64,13 +64,13 @@ class DefaultBookAccountListRetrievalTest extends TestCase
         $response->assertOk()
             ->assertJsonFragment([
                 [
-                    'id'          => $this->account->account_id,
-                    'title'       => $this->account->account_title,
+                    'id' => $this->account->account_id,
+                    'title' => $this->account->account_title,
                     'description' => $this->account->description,
-                    'group'       => $this->accountGroup->account_group_id,
+                    'group' => $this->accountGroup->account_group_id,
                     'group_title' => $this->accountGroup->account_group_title,
-                    'is_current'  => true,
-                    'type'        => 'asset',
+                    'is_current' => true,
+                    'type' => 'asset',
                 ],
             ]);
     }

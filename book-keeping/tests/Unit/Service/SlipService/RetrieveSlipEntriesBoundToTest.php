@@ -25,12 +25,12 @@ class RetrieveSlipEntriesBoundToTest extends TestCase
         $slipEntries_expected = [
             [
                 'slip_entry_id' => $slipEntryId,
-                'slip_id'       => $slipId,
-                'debit'         => $accountId1,
-                'credit'        => $accountId2,
-                'amount'        => 2240,
-                'client'        => 'client5',
-                'outline'       => 'outline5',
+                'slip_id' => $slipId,
+                'debit' => $accountId1,
+                'credit' => $accountId2,
+                'amount' => 2240,
+                'client' => 'client5',
+                'outline' => 'outline5',
             ],
         ];
         /** @var \App\DataProvider\SlipRepositoryInterface|\Mockery\MockInterface $slipMock */

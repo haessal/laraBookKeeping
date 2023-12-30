@@ -33,12 +33,12 @@ class CreateTest extends TestCase
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $this->assertDatabaseHas('bk2_0_permissions', [
-            'permission_id'  => $permissionId,
+            'permission_id' => $permissionId,
             'permitted_user' => $userId,
-            'readable_book'  => $bookId,
-            'modifiable'     => $modifiable,
-            'is_owner'       => $is_owner,
-            'is_default'     => $is_default,
+            'readable_book' => $bookId,
+            'modifiable' => $modifiable,
+            'is_owner' => $is_owner,
+            'is_default' => $is_default,
         ]);
     }
 }

@@ -50,16 +50,16 @@ class DeleteSlipEntryAndEmptySlipTest extends TestCase
             ->once()
             ->with($slipEntryId, $bookId, true)
             ->andReturn([
-                'slip_id'       => $slipId,
-                'date'          => '2020-04-30',
-                'slip_outline'  => 'slip_outline284',
-                'slip_memo'     => null,
+                'slip_id' => $slipId,
+                'date' => '2020-04-30',
+                'slip_outline' => 'slip_outline284',
+                'slip_memo' => null,
                 'slip_entry_id' => $slipEntryId,
-                'debit'         => $accountId1,
-                'credit'        => $accountId2,
-                'amount'        => 289,
-                'client'        => 'client290',
-                'outline'       => 'outline291',
+                'debit' => $accountId1,
+                'credit' => $accountId2,
+                'amount' => 289,
+                'client' => 'client290',
+                'outline' => 'outline291',
             ]);
         $slipMock->shouldReceive('deleteSlipEntry')
             ->once()
@@ -70,12 +70,12 @@ class DeleteSlipEntryAndEmptySlipTest extends TestCase
             ->andReturn([
                 [
                     'slip_entry_id' => $slipEntryId_r,
-                    'slip_id'       => $slipId,
-                    'debit'         => $accountId3,
-                    'credit'        => $accountId4,
-                    'amount'        => 1340,
-                    'client'        => 'client135',
-                    'outline'       => 'outline136',
+                    'slip_id' => $slipId,
+                    'debit' => $accountId3,
+                    'credit' => $accountId4,
+                    'amount' => 1340,
+                    'client' => 'client135',
+                    'outline' => 'outline136',
                 ],
             ]);
         $slipMock->shouldNotReceive('deleteSlip');
@@ -114,16 +114,16 @@ class DeleteSlipEntryAndEmptySlipTest extends TestCase
             ->once()
             ->with($slipEntryId, $bookId, true)
             ->andReturn([
-                'slip_id'       => $slipId,
-                'date'          => '2020-04-30',
-                'slip_outline'  => 'slip_outline284',
-                'slip_memo'     => null,
+                'slip_id' => $slipId,
+                'date' => '2020-04-30',
+                'slip_outline' => 'slip_outline284',
+                'slip_memo' => null,
                 'slip_entry_id' => $slipEntryId,
-                'debit'         => $accountId1,
-                'credit'        => $accountId2,
-                'amount'        => 289,
-                'client'        => 'client290',
-                'outline'       => 'outline291',
+                'debit' => $accountId1,
+                'credit' => $accountId2,
+                'amount' => 289,
+                'client' => 'client290',
+                'outline' => 'outline291',
             ]);
         $slipMock->shouldReceive('deleteSlipEntry')
             ->once()

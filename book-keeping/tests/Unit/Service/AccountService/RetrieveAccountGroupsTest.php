@@ -23,28 +23,28 @@ class RetrieveAccountGroupsTest extends TestCase
         $accountGroupId_2 = (string) Str::uuid();
         $accountGroupId_3 = (string) Str::uuid();
         $accountGroup_1 = [
-            'account_group_id'      => $accountGroupId_1,
-            'account_type'          => 'asset',
-            'account_group_title'   => 'group_title_1',
-            'is_current'            => true,
+            'account_group_id' => $accountGroupId_1,
+            'account_type' => 'asset',
+            'account_group_title' => 'group_title_1',
+            'is_current' => true,
             'account_group_bk_code' => 1100,
-            'created_at'            => '2020-06-01 12:00:20',
+            'created_at' => '2020-06-01 12:00:20',
         ];
         $accountGroup_2 = [
-            'account_group_id'      => $accountGroupId_2,
-            'account_type'          => 'asset',
-            'account_group_title'   => 'group_title_2',
-            'is_current'            => false,
+            'account_group_id' => $accountGroupId_2,
+            'account_type' => 'asset',
+            'account_group_title' => 'group_title_2',
+            'is_current' => false,
             'account_group_bk_code' => 1200,
-            'created_at'            => '2020-06-02 12:00:20',
+            'created_at' => '2020-06-02 12:00:20',
         ];
         $accountGroup_3 = [
-            'account_group_id'      => $accountGroupId_3,
-            'account_type'          => 'liability',
-            'account_group_title'   => 'group_title_3',
-            'is_current'            => false,
+            'account_group_id' => $accountGroupId_3,
+            'account_type' => 'liability',
+            'account_group_title' => 'group_title_3',
+            'is_current' => false,
             'account_group_bk_code' => 2100,
-            'created_at'            => '2020-06-02 12:00:20',
+            'created_at' => '2020-06-02 12:00:20',
         ];
         $accountGroups_expected = [$accountGroupId_1 => $accountGroup_1, $accountGroupId_2 => $accountGroup_2, $accountGroupId_3 => $accountGroup_3];
         /** @var \App\DataProvider\AccountGroupRepositoryInterface|\Mockery\MockInterface $accountGroupMock */

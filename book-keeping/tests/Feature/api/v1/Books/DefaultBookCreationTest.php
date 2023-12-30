@@ -38,37 +38,37 @@ class DefaultBookCreationTest extends TestCase
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
-            'readable_book'  => $this->book->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => false,
+            'readable_book' => $this->book->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => false,
         ]);
         $this->sharedBook = Book::factory()->create([
             'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
-            'readable_book'  => $this->sharedBook->book_id,
-            'modifiable'     => false,
-            'is_owner'       => false,
-            'is_default'     => false,
+            'readable_book' => $this->sharedBook->book_id,
+            'modifiable' => false,
+            'is_owner' => false,
+            'is_default' => false,
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->otherUser->id,
-            'readable_book'  => $this->sharedBook->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => true,
+            'readable_book' => $this->sharedBook->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => true,
         ]);
         $this->unavailableBook = Book::factory()->create([
             'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->otherUser->id,
-            'readable_book'  => $this->unavailableBook->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => false,
+            'readable_book' => $this->unavailableBook->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => false,
         ]);
     }
 
@@ -79,19 +79,19 @@ class DefaultBookCreationTest extends TestCase
 
         $response->assertOk()
             ->assertJson([
-                'id'           => $this->book->book_id,
-                'name'         => $this->book->book_name,
-                'default'      => true,
-                'own'          => true,
+                'id' => $this->book->book_id,
+                'name' => $this->book->book_name,
+                'default' => true,
+                'own' => true,
                 'permitted_to' => 'ReadWrite',
-                'owner'        => $this->user->name,
+                'owner' => $this->user->name,
             ]);
         $this->assertDatabaseHas('bk2_0_permissions', [
             'permitted_user' => $this->user->id,
-            'readable_book'  => $this->book->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => true,
+            'readable_book' => $this->book->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => true,
         ]);
     }
 
@@ -102,19 +102,19 @@ class DefaultBookCreationTest extends TestCase
 
         $response->assertOk()
             ->assertJson([
-                'id'           => $this->sharedBook->book_id,
-                'name'         => $this->sharedBook->book_name,
-                'default'      => true,
-                'own'          => true,
+                'id' => $this->sharedBook->book_id,
+                'name' => $this->sharedBook->book_name,
+                'default' => true,
+                'own' => true,
                 'permitted_to' => 'ReadWrite',
-                'owner'        => $this->otherUser->name,
+                'owner' => $this->otherUser->name,
             ]);
         $this->assertDatabaseHas('bk2_0_permissions', [
             'permitted_user' => $this->otherUser->id,
-            'readable_book'  => $this->sharedBook->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => true,
+            'readable_book' => $this->sharedBook->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => true,
         ]);
     }
 
@@ -142,10 +142,10 @@ class DefaultBookCreationTest extends TestCase
         $response->assertUnprocessable();
         $this->assertDatabaseHas('bk2_0_permissions', [
             'permitted_user' => $this->otherUser->id,
-            'readable_book'  => $this->unavailableBook->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => false,
+            'readable_book' => $this->unavailableBook->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => false,
         ]);
     }
 

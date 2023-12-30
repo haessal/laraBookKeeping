@@ -57,45 +57,45 @@ class DefaultBookSlipUpdateTest extends TestCase
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->user->id,
-            'readable_book'  => $this->book->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => true,
+            'readable_book' => $this->book->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => true,
         ]);
         $this->unavailableBook = Book::factory()->create([
             'book_name' => $this->faker->word(),
         ]);
         Permission::factory()->create([
             'permitted_user' => $this->otherUser->id,
-            'readable_book'  => $this->unavailableBook->book_id,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => true,
+            'readable_book' => $this->unavailableBook->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => true,
         ]);
         $this->accountGroup = AccountGroup::factory()->create([
-            'book_id'      => $this->book->book_id,
+            'book_id' => $this->book->book_id,
             'account_type' => 'asset',
-            'is_current'   => true,
+            'is_current' => true,
         ]);
         $this->debit = Account::factory()->create([
             'account_group_id' => $this->accountGroup->account_group_id,
-            'selectable'       => true,
+            'selectable' => true,
         ]);
         $this->credit = Account::factory()->create([
             'account_group_id' => $this->accountGroup->account_group_id,
-            'selectable'       => true,
+            'selectable' => true,
         ]);
         $this->slip = Slip::factory()->create([
-            'book_id'  => $this->book->book_id,
+            'book_id' => $this->book->book_id,
             'is_draft' => false,
         ]);
         $this->slipEntry = SlipEntry::factory()->create([
             'slip_id' => $this->slip->slip_id,
-            'debit'   => $this->debit->account_id,
-            'credit'  => $this->credit->account_id,
+            'debit' => $this->debit->account_id,
+            'credit' => $this->credit->account_id,
         ]);
         $this->unavailableSlip = Slip::factory()->create([
-            'book_id'  => $this->unavailableBook->book_id,
+            'book_id' => $this->unavailableBook->book_id,
             'is_draft' => false,
         ]);
     }
@@ -108,50 +108,50 @@ class DefaultBookSlipUpdateTest extends TestCase
 
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/slips/'.$this->slip->slip_id, [
-                'date'    => $newDate,
+                'date' => $newDate,
                 'outline' => $newOutline,
-                'memo'    => $newMemo,
+                'memo' => $newMemo,
             ]);
 
         $response->assertOk()
             ->assertJson([
-                'id'      => $this->slip->slip_id,
-                'date'    => $newDate,
+                'id' => $this->slip->slip_id,
+                'date' => $newDate,
                 'outline' => $newOutline,
-                'memo'    => $newMemo,
+                'memo' => $newMemo,
                 'entries' => [
                     [
-                        'id'      => $this->slipEntry->slip_entry_id,
-                        'debit'   => [
-                            'id'    => $this->debit->account_id,
+                        'id' => $this->slipEntry->slip_entry_id,
+                        'debit' => [
+                            'id' => $this->debit->account_id,
                             'title' => $this->debit->account_title,
                         ],
-                        'credit'  => [
-                            'id'    => $this->credit->account_id,
+                        'credit' => [
+                            'id' => $this->credit->account_id,
                             'title' => $this->credit->account_title,
                         ],
-                        'amount'  => $this->slipEntry->amount,
-                        'client'  => $this->slipEntry->client,
+                        'amount' => $this->slipEntry->amount,
+                        'client' => $this->slipEntry->client,
                         'outline' => $this->slipEntry->outline,
                     ],
                 ],
             ]);
         $this->assertDatabaseHas('bk2_0_slips', [
-            'slip_id'      => $this->slip->slip_id,
-            'book_id'      => $this->book->book_id,
+            'slip_id' => $this->slip->slip_id,
+            'book_id' => $this->book->book_id,
             'slip_outline' => $newOutline,
-            'slip_memo'    => $newMemo,
-            'date'         => $newDate,
-            'is_draft'     => false,
+            'slip_memo' => $newMemo,
+            'date' => $newDate,
+            'is_draft' => false,
         ]);
         $this->assertDatabaseHas('bk2_0_slip_entries', [
             'slip_entry_id' => $this->slipEntry->slip_entry_id,
-            'slip_id'       => $this->slip->slip_id,
-            'debit'         => $this->debit->account_id,
-            'credit'        => $this->credit->account_id,
-            'amount'        => $this->slipEntry->amount,
-            'client'        => $this->slipEntry->client,
-            'outline'       => $this->slipEntry->outline,
+            'slip_id' => $this->slip->slip_id,
+            'debit' => $this->debit->account_id,
+            'credit' => $this->credit->account_id,
+            'amount' => $this->slipEntry->amount,
+            'client' => $this->slipEntry->client,
+            'outline' => $this->slipEntry->outline,
         ]);
     }
 
@@ -163,9 +163,9 @@ class DefaultBookSlipUpdateTest extends TestCase
 
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/slips/0', [
-                'date'    => $newDate,
+                'date' => $newDate,
                 'outline' => $newOutline,
-                'memo'    => $newMemo,
+                'memo' => $newMemo,
             ]);
 
         $response->assertBadRequest();
@@ -185,9 +185,9 @@ class DefaultBookSlipUpdateTest extends TestCase
     {
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/slips/'.$this->slip->slip_id, [
-                'date'    => 'date',
+                'date' => 'date',
                 'outline' => '',
-                'memo'    => '',
+                'memo' => '',
             ]);
 
         $response->assertBadRequest();
@@ -201,9 +201,9 @@ class DefaultBookSlipUpdateTest extends TestCase
 
         $response = $this->actingAs($this->otherUser)
             ->patch('/api/v1/slips/'.$this->slip->slip_id, [
-                'date'    => $newDate,
+                'date' => $newDate,
                 'outline' => $newOutline,
-                'memo'    => $newMemo,
+                'memo' => $newMemo,
             ]);
 
         $response->assertNotFound();
@@ -217,9 +217,9 @@ class DefaultBookSlipUpdateTest extends TestCase
 
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/slips/'.$this->unavailableSlip->slip_id, [
-                'date'    => $newDate,
+                'date' => $newDate,
                 'outline' => $newOutline,
-                'memo'    => $newMemo,
+                'memo' => $newMemo,
             ]);
 
         $response->assertNotFound();

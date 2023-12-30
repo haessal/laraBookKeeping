@@ -28,29 +28,29 @@ class SetBookAsDefaultTest extends TestCase
         $owner->id = $userIdOfOwner;
         $this->be($owner);
         $bookInformationForOwner = [
-            'book_id'    => $bookId,
-            'book_name'  => $bookName,
+            'book_id' => $bookId,
+            'book_name' => $bookName,
             'modifiable' => true,
-            'is_owner'   => true,
+            'is_owner' => true,
             'is_default' => false,
             'created_at' => '2023-05-02 23:33:01',
         ];
         $bookInformationForOwnerAfterUpdated = [
-            'book_id'    => $bookId,
-            'book_name'  => $bookName,
+            'book_id' => $bookId,
+            'book_name' => $bookName,
             'modifiable' => true,
-            'is_owner'   => true,
+            'is_owner' => true,
             'is_default' => true,
             'created_at' => '2023-05-02 23:33:01',
         ];
         $userNameOfOwner = 'owner38';
         $book = [
-            'id'         => $bookId,
-            'name'       => $bookName,
+            'id' => $bookId,
+            'name' => $bookName,
             'is_default' => true,
-            'is_owner'   => true,
+            'is_owner' => true,
             'modifiable' => true,
-            'owner'      => $userNameOfOwner,
+            'owner' => $userNameOfOwner,
         ];
         $result_expected = [BookKeepingService::STATUS_NORMAL, $book];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
@@ -96,21 +96,21 @@ class SetBookAsDefaultTest extends TestCase
         $owner->id = $userIdOfOwner;
         $this->be($owner);
         $bookInformationForOwner = [
-            'book_id'    => $bookId,
-            'book_name'  => $bookName,
+            'book_id' => $bookId,
+            'book_name' => $bookName,
             'modifiable' => true,
-            'is_owner'   => true,
+            'is_owner' => true,
             'is_default' => true,
             'created_at' => '2023-05-02 23:33:01',
         ];
         $userNameOfOwner = 'owner106';
         $book = [
-            'id'         => $bookId,
-            'name'       => $bookName,
+            'id' => $bookId,
+            'name' => $bookName,
             'is_default' => true,
-            'is_owner'   => true,
+            'is_owner' => true,
             'modifiable' => true,
-            'owner'      => $userNameOfOwner,
+            'owner' => $userNameOfOwner,
         ];
         $result_expected = [BookKeepingService::STATUS_NORMAL, $book];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
@@ -185,10 +185,10 @@ class SetBookAsDefaultTest extends TestCase
         $owner->id = $userIdOfOwner;
         $this->be($owner);
         $bookInformationForOwner = [
-            'book_id'    => $bookId,
-            'book_name'  => 'BookName129',
+            'book_id' => $bookId,
+            'book_name' => 'BookName129',
             'modifiable' => true,
-            'is_owner'   => true,
+            'is_owner' => true,
             'is_default' => false,
             'created_at' => '2023-05-02 23:33:01',
         ];

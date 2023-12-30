@@ -30,12 +30,12 @@ class DeleteTest extends TestCase
         $outline = 'outline5';
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $slipEntryId = SlipEntry::factory()->create([
-            'slip_id'       => $slipId,
-            'debit'         => $accountId1,
-            'credit'        => $accountId2,
-            'amount'        => 1234,
-            'client'        => $client,
-            'outline'       => $outline,
+            'slip_id' => $slipId,
+            'debit' => $accountId1,
+            'credit' => $accountId2,
+            'amount' => 1234,
+            'client' => $client,
+            'outline' => $outline,
         ])->slip_entry_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
@@ -43,12 +43,12 @@ class DeleteTest extends TestCase
 
         $this->assertSoftDeleted('bk2_0_slip_entries', [
             'slip_entry_id' => $slipEntryId,
-            'slip_id'       => $slipId,
-            'debit'         => $accountId1,
-            'credit'        => $accountId2,
-            'amount'        => 1234,
-            'client'        => $client,
-            'outline'       => $outline,
+            'slip_id' => $slipId,
+            'debit' => $accountId1,
+            'credit' => $accountId2,
+            'amount' => 1234,
+            'client' => $client,
+            'outline' => $outline,
         ]);
     }
 }
