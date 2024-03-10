@@ -4,6 +4,7 @@ namespace Tests\Unit\Service\BookMigrationService;
 
 use App\DataProvider\BookRepositoryInterface;
 use App\DataProvider\PermissionRepositoryInterface;
+use App\Service\BookKeepingMigrationTools;
 use App\Service\BookMigrationService;
 use Illuminate\Support\Str;
 use Mockery;
@@ -38,6 +39,8 @@ class ExportInformationTest extends TestCase
             'updated_at' => $updatedAt,
             'deleted' => false,
         ];
+        /** @var \App\Service\BookKeepingMigrationTools|\Mockery\MockInterface $toolsMock */
+        $toolsMock = Mockery::mock(BookKeepingMigrationTools::class);
         /** @var \App\DataProvider\BookRepositoryInterface|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookRepositoryInterface::class);
         $bookMock->shouldReceive('findByIdForExporting')
@@ -47,7 +50,7 @@ class ExportInformationTest extends TestCase
         /** @var \App\DataProvider\PermissionRepositoryInterface|\Mockery\MockInterface $permissionMock */
         $permissionMock = Mockery::mock(PermissionRepositoryInterface::class);
 
-        $service = new BookMigrationService($bookMock, $permissionMock);
+        $service = new BookMigrationService($bookMock, $permissionMock, $toolsMock);
         $bookInformation_actual = $service->exportInformation($bookId);
 
         $this->assertSame($bookInformation_expected, $bookInformation_actual);
@@ -57,6 +60,8 @@ class ExportInformationTest extends TestCase
     {
         $bookId = (string) Str::uuid();
         $bookInformation_expected = null;
+        /** @var \App\Service\BookKeepingMigrationTools|\Mockery\MockInterface $toolsMock */
+        $toolsMock = Mockery::mock(BookKeepingMigrationTools::class);
         /** @var \App\DataProvider\BookRepositoryInterface|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookRepositoryInterface::class);
         $bookMock->shouldReceive('findByIdForExporting')
@@ -66,7 +71,7 @@ class ExportInformationTest extends TestCase
         /** @var \App\DataProvider\PermissionRepositoryInterface|\Mockery\MockInterface $permissionMock */
         $permissionMock = Mockery::mock(PermissionRepositoryInterface::class);
 
-        $service = new BookMigrationService($bookMock, $permissionMock);
+        $service = new BookMigrationService($bookMock, $permissionMock, $toolsMock);
         $bookInformation_actual = $service->exportInformation($bookId);
 
         $this->assertSame($bookInformation_expected, $bookInformation_actual);
