@@ -32,7 +32,7 @@ class BookKeepingMigrationTools
     }
 
     /**
-     * Check if the source is later than the destination.
+     * Check if the date format is valid and source is later than the destination.
      *
      * @param  string|null  $sourceUpdateAt
      * @param  string|null  $destinationUpdateAt
@@ -41,11 +41,14 @@ class BookKeepingMigrationTools
     public function isSourceLater($sourceUpdateAt, $destinationUpdateAt)
     {
         if (isset($sourceUpdateAt)) {
-            $source = Carbon::createFromFormat(Carbon::ATOM, $sourceUpdateAt);
-            if (! is_bool($source)) {
+            if (Carbon::canBeCreatedFromFormat($sourceUpdateAt, Carbon::ATOM)) {
+                /** @var \Illuminate\Support\Carbon $source */
+                $source = Carbon::createFromFormat(Carbon::ATOM, $sourceUpdateAt);
                 if (isset($destinationUpdateAt)) {
-                    $destination = Carbon::createFromFormat(Carbon::ATOM, $destinationUpdateAt);
-                    if (! is_bool($destination)) {
+                    if (Carbon::canBeCreatedFromFormat($destinationUpdateAt, Carbon::ATOM)) {
+                        /** @var \Illuminate\Support\Carbon $destination */
+                        $destination = Carbon::createFromFormat(Carbon::ATOM, $destinationUpdateAt);
+
                         return $source->gt($destination);
                     } else {
                         return true;

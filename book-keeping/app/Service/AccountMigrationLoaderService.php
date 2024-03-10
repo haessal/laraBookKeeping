@@ -148,7 +148,7 @@ class AccountMigrationLoaderService extends AccountMigrationService
 
         $destinationAccountItems = $this->exportAccountItems($bookId, $accountGroupId);
         if (! key_exists($accountGroupId, $destinationAccountItems)) {
-            $error = 'The account group that the items are bound to is not exist. '.$accountGroupId;
+            $error = 'The account group that the items are bound to does not exist. '.$accountGroupId;
 
             return [$result, $error];
         }

@@ -96,7 +96,7 @@ class SlipMigrationLoaderService extends SlipMigrationService
 
         $destinationSlipEntries = $this->exportSlipEntries($bookId, $slipId);
         if (! key_exists($slipId, $destinationSlipEntries)) {
-            $error = 'The slip that the entires are bound to is not exist. '.$slipId;
+            $error = 'The slip that the entires are bound to does not exist. '.$slipId;
 
             return [$result, $error];
         }

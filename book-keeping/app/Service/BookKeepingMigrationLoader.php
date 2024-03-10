@@ -5,7 +5,7 @@ namespace App\Service;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
-class BookKeepingLoaderMigration
+class BookKeepingMigrationLoader
 {
     /**
      * Account migration service instance.
@@ -51,10 +51,9 @@ class BookKeepingLoaderMigration
     public function loadBooks(array $contents): array
     {
         $status = BookKeepingService::STATUS_NORMAL;
-        $importResult = null;
+        $importResult = [];
         $errorMessage = null;
 
-        $importResult = [];
         if (key_exists('version', $contents) && is_string($contents['version'])) {
             $importResult['version'] = $contents['version'];
         } else {
