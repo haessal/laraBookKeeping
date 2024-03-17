@@ -33,15 +33,15 @@ class ShowAccountsListViewResponder extends BaseViewResponder
         $accounts = $context['accounts'];
         $account_list = $this->translateAccountsListFormat(
             [
-                'asset'     => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['asset']['groups'])],
+                'asset' => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['asset']['groups'])],
                 'liability' => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['liability']['groups'])],
-                'expense'   => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['expense']['groups'])],
-                'revenue'   => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['revenue']['groups'])],
+                'expense' => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['expense']['groups'])],
+                'revenue' => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['revenue']['groups'])],
             ]
         );
         $this->response->setContent($this->view->make('bookkeeping.v1.pageaccountslist', [
-            'navigation'     => $this->navigationList(),
-            'accounts_list'  => $account_list,
+            'navigation' => $this->navigationList(),
+            'accounts_list' => $account_list,
         ]));
         $this->response->setStatusCode(Response::HTTP_OK);
 

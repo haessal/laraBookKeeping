@@ -115,8 +115,8 @@ class ShowTopViewResponder extends BaseViewResponder
         $balanceSheet = $context['balance_sheet'];
         $slips = $context['slips'];
         $this->response->setContent($this->view->make('bookkeeping.v1.pagetop', [
-            'navigation'       => $this->navigationList(),
-            'date'             => $context['date'],
+            'navigation' => $this->navigationList(),
+            'date' => $context['date'],
             'income_statement' => $this->translateIncomeStatementFormat([
                 'expense' => [
                     'amount' => $incomeStatement['expense']['amount'],
@@ -138,7 +138,7 @@ class ShowTopViewResponder extends BaseViewResponder
                     'groups' => $this->sortAccountInAscendingCodeOrder($balanceSheet['liability']['groups']),
                 ],
                 'current_net_asset' => $balanceSheet['current_net_asset'],
-                'net_asset'         => $balanceSheet['net_asset'],
+                'net_asset' => $balanceSheet['net_asset'],
             ]),
             'slips' => $this->translateSlipsFormat($slips),
         ]));

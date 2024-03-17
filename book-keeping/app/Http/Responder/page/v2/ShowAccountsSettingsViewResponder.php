@@ -39,19 +39,19 @@ class ShowAccountsSettingsViewResponder extends BaseAccountsViewResponder
         $accounts = $context['accounts'];
         $accounts_title = $this->translateAccountListToTitleList(
             [
-                'asset'     => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['asset']['groups'])],
+                'asset' => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['asset']['groups'])],
                 'liability' => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['liability']['groups'])],
-                'expense'   => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['expense']['groups'])],
-                'revenue'   => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['revenue']['groups'])],
+                'expense' => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['expense']['groups'])],
+                'revenue' => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['revenue']['groups'])],
             ],
             true
         );
         $this->response->setContent($this->view->make('bookkeeping.v2.pageaccountssettings', [
-            'bookId'           => $context['bookId'],
-            'book'             => $context['book'],
-            'selflinkname'     => 'v2_accounts',
+            'bookId' => $context['bookId'],
+            'book' => $context['book'],
+            'selflinkname' => 'v2_accounts',
             'selfaccountsmenu' => 'accounts_settings',
-            'accountstitle'    => $accounts_title,
+            'accountstitle' => $accounts_title,
         ]));
         $this->response->setStatusCode(Response::HTTP_OK);
 

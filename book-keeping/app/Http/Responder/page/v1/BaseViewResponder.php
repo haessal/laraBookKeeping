@@ -134,10 +134,10 @@ class BaseViewResponder
     {
         $account_list = [];
         $accountTypeTitle = [
-            'asset'     => __('Assets'),
+            'asset' => __('Assets'),
             'liability' => __('Liabilities'),
-            'expense'   => __('Expense'),
-            'revenue'   => __('Revenue'),
+            'expense' => __('Expense'),
+            'revenue' => __('Revenue'),
         ];
         $tableRowEvenOrOdd = 'evn';
         foreach ($accounts as $accountTypeKey => $accountType) {
@@ -149,12 +149,12 @@ class BaseViewResponder
                         $code = intval($accountItem['bk_code']);
                     }
                     $account_list[$accountId] = [
-                        'code'        => $code,
-                        'type'        => strval($accountTypeTitle[$accountTypeKey]),
+                        'code' => $code,
+                        'type' => strval($accountTypeTitle[$accountTypeKey]),
                         'group_title' => strval($accountGroupItem['title']),
-                        'title'       => strval($accountItem['title']),
+                        'title' => strval($accountItem['title']),
                         'description' => strval($accountItem['description']),
-                        'evenOdd'     => $tableRowEvenOrOdd,
+                        'evenOdd' => $tableRowEvenOrOdd,
                     ];
                     if ($tableRowEvenOrOdd == 'evn') {
                         $tableRowEvenOrOdd = 'odd';
@@ -233,10 +233,10 @@ class BaseViewResponder
     public function translateBalanceSheetFormat(array $statements): array
     {
         return $this->translateStatementsFormat($statements, [
-            'debitTitle'             => 'Assets',
-            'debitGroup'             => 'asset',
-            'creditTitle'            => 'Liabilities',
-            'creditGroup'            => 'liability',
+            'debitTitle' => 'Assets',
+            'debitGroup' => 'asset',
+            'creditTitle' => 'Liabilities',
+            'creditGroup' => 'liability',
             'displayCurrentNetAsset' => true,
         ]);
     }
@@ -279,12 +279,12 @@ class BaseViewResponder
         $tableRowEvenOrOdd = 'evn';
         foreach ($slip[$slipId]['items'] as $slipEntryId => $slipEntryItem) {
             $formatted[$slipEntryId] = [
-                'no'      => substr($slipEntryId, 0, 6).'..',
-                'debit'   => $slipEntryItem['debit']['account_title'],
-                'client'  => $slipEntryItem['client'],
+                'no' => substr($slipEntryId, 0, 6).'..',
+                'debit' => $slipEntryItem['debit']['account_title'],
+                'client' => $slipEntryItem['client'],
                 'outline' => $slipEntryItem['outline'],
-                'credit'  => $slipEntryItem['credit']['account_title'],
-                'amount'  => $slipEntryItem['amount'],
+                'credit' => $slipEntryItem['credit']['account_title'],
+                'amount' => $slipEntryItem['amount'],
                 'evenOdd' => $tableRowEvenOrOdd,
             ];
             if ($tableRowEvenOrOdd == 'evn') {
@@ -359,10 +359,10 @@ class BaseViewResponder
     public function translateIncomeStatementFormat(array $statements): array
     {
         return $this->translateStatementsFormat($statements, [
-            'debitTitle'             => 'Expense',
-            'debitGroup'             => 'expense',
-            'creditTitle'            => 'Revenue',
-            'creditGroup'            => 'revenue',
+            'debitTitle' => 'Expense',
+            'debitGroup' => 'expense',
+            'creditTitle' => 'Revenue',
+            'creditGroup' => 'revenue',
             'displayCurrentNetAsset' => false,
         ]);
     }
@@ -405,13 +405,13 @@ class BaseViewResponder
         foreach ($slips as $slipId => $slip) {
             foreach ($slip['items'] as $slipEntryId => $slipEntry) {
                 $slipentryline[$slipEntryId] = [
-                    'no'      => substr($slipEntryId, 0, 6).'..',
-                    'slipNo'  => substr($slipId, 0, 6).'..',
-                    'date'    => $slip['date'],
-                    'debit'   => $slipEntry['debit']['account_title'],
-                    'credit'  => $slipEntry['credit']['account_title'],
-                    'amount'  => number_format($slipEntry['amount']),
-                    'client'  => $slipEntry['client'],
+                    'no' => substr($slipEntryId, 0, 6).'..',
+                    'slipNo' => substr($slipId, 0, 6).'..',
+                    'date' => $slip['date'],
+                    'debit' => $slipEntry['debit']['account_title'],
+                    'credit' => $slipEntry['credit']['account_title'],
+                    'amount' => number_format($slipEntry['amount']),
+                    'client' => $slipEntry['client'],
                     'outline' => $slipEntry['outline'],
                 ];
             }
@@ -542,23 +542,23 @@ class BaseViewResponder
 
         if (array_key_exists($debitGroup, $statements)) {
             $debitcreditline[$debit_count++]['debit'] = [
-                'title'  => strval(__($debitTitle)),
+                'title' => strval(__($debitTitle)),
                 'amount' => number_format($statements[$debitGroup]['amount']),
-                'bold'   => true,
+                'bold' => true,
                 'italic' => true,
             ];
             foreach ($statements[$debitGroup]['groups'] as $key => $group) {
                 $debitcreditline[$debit_count++]['debit'] = [
-                    'title'  => strval($group['title']),
+                    'title' => strval($group['title']),
                     'amount' => number_format($group['amount']),
-                    'bold'   => false,
+                    'bold' => false,
                     'italic' => true,
                 ];
                 foreach ($group['items'] as $key => $item) {
                     $debitcreditline[$debit_count++]['debit'] = [
-                        'title'  => strval($item['title']),
+                        'title' => strval($item['title']),
                         'amount' => number_format($item['amount']),
-                        'bold'   => false,
+                        'bold' => false,
                         'italic' => false,
                     ];
                 }
@@ -570,9 +570,9 @@ class BaseViewResponder
                 = ['title' => '', 'amount' => '', 'bold' => false, 'italic' => false];
             if (array_key_exists('net_income', $statements)) {
                 $debitcreditline[$debit_count++]['debit'] = [
-                    'title'  => strval(__('Net Income')),
+                    'title' => strval(__('Net Income')),
                     'amount' => number_format($statements['net_income']['amount']),
-                    'bold'   => true,
+                    'bold' => true,
                     'italic' => true,
                 ];
             }
@@ -580,23 +580,23 @@ class BaseViewResponder
 
         if (array_key_exists($creditGroup, $statements)) {
             $debitcreditline[$credit_count++]['credit'] = [
-                'title'  => strval(__($creditTitle)),
+                'title' => strval(__($creditTitle)),
                 'amount' => number_format($statements[$creditGroup]['amount']),
-                'bold'   => true,
+                'bold' => true,
                 'italic' => true,
             ];
             foreach ($statements[$creditGroup]['groups'] as $key => $group) {
                 $debitcreditline[$credit_count++]['credit'] = [
-                    'title'  => strval($group['title']),
+                    'title' => strval($group['title']),
                     'amount' => number_format($group['amount']),
-                    'bold'   => false,
+                    'bold' => false,
                     'italic' => true,
                 ];
                 foreach ($group['items'] as $key => $item) {
                     $debitcreditline[$credit_count++]['credit'] = [
-                        'title'  => strval($item['title']),
+                        'title' => strval($item['title']),
                         'amount' => number_format($item['amount']),
-                        'bold'   => false,
+                        'bold' => false,
                         'italic' => false,
                     ];
                 }
@@ -608,17 +608,17 @@ class BaseViewResponder
                 = ['title' => '', 'amount' => '', 'bold' => false, 'italic' => false];
             if ($displayCurrentNetAsset && array_key_exists('current_net_asset', $statements)) {
                 $debitcreditline[$credit_count++]['credit'] = [
-                    'title'  => strval(__('Current Net Asset')),
+                    'title' => strval(__('Current Net Asset')),
                     'amount' => number_format($statements['current_net_asset']['amount']),
-                    'bold'   => true,
+                    'bold' => true,
                     'italic' => true,
                 ];
             }
             if (array_key_exists('net_asset', $statements)) {
                 $debitcreditline[$credit_count++]['credit'] = [
-                    'title'  => strval(__('Net Asset')),
+                    'title' => strval(__('Net Asset')),
                     'amount' => number_format($statements['net_asset']['amount']),
-                    'bold'   => true,
+                    'bold' => true,
                     'italic' => true,
                 ];
             }

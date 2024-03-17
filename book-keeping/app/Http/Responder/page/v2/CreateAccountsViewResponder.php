@@ -50,10 +50,10 @@ class CreateAccountsViewResponder extends BaseAccountsViewResponder
         $accounts = $context['accounts'];
         $accounts_title = $this->translateAccountListToTitleList(
             [
-                'asset'     => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['asset']['groups'])],
+                'asset' => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['asset']['groups'])],
                 'liability' => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['liability']['groups'])],
-                'expense'   => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['expense']['groups'])],
-                'revenue'   => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['revenue']['groups'])],
+                'expense' => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['expense']['groups'])],
+                'revenue' => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['revenue']['groups'])],
             ],
             true
         );
@@ -62,14 +62,14 @@ class CreateAccountsViewResponder extends BaseAccountsViewResponder
             $accounttype[$context['accounttype']] = 'checked';
         }
         $this->response->setContent($this->view->make('bookkeeping.v2.pageaccountscreate', [
-            'bookId'           => $context['bookId'],
-            'book'             => $context['book'],
-            'selflinkname'     => 'v2_accounts',
+            'bookId' => $context['bookId'],
+            'book' => $context['book'],
+            'selflinkname' => 'v2_accounts',
             'selfaccountsmenu' => 'accounts_add',
-            'accounttype'      => $accounttype,
-            'accountstitle'    => $accounts_title['groupsWithType'],
-            'accountcreate'    => $context['accountcreate'],
-            'messages'         => $context['messages'],
+            'accounttype' => $accounttype,
+            'accountstitle' => $accounts_title['groupsWithType'],
+            'accountcreate' => $context['accountcreate'],
+            'messages' => $context['messages'],
         ]));
         $this->response->setStatusCode(Response::HTTP_OK);
 

@@ -26,8 +26,8 @@ class ShowDashboardViewResponder extends BaseLayoutViewResponder
         $book_list = empty($context['books']) ? null : $context['books'];
 
         $this->response->setContent($this->view->make('dashboard', [
-            'book_list'         => $book_list,
-            'v2_book_page'      => 'v2',
+            'book_list' => $book_list,
+            'v2_book_page' => 'v2',
         ]));
         $this->response->setStatusCode(Response::HTTP_OK);
 

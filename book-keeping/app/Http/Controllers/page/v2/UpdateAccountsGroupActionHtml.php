@@ -107,10 +107,10 @@ class UpdateAccountsGroupActionHtml extends AuthenticatedBookKeepingAction
                 abort(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         $accountTypeCaption = [
-            'asset'     => __('Assets'),
+            'asset' => __('Assets'),
             'liability' => __('Liabilities'),
-            'expense'   => __('Expense'),
-            'revenue'   => __('Revenue'),
+            'expense' => __('Expense'),
+            'revenue' => __('Revenue'),
         ];
         $context['accountsgroup'] = null;
         foreach ($categorizedAccounts as $accountTypeKey => $accountType) {

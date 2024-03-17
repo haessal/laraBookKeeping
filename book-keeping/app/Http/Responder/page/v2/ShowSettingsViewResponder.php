@@ -22,9 +22,9 @@ class ShowSettingsViewResponder extends BaseViewResponder
     public function response(array $context): Response
     {
         $this->response->setContent($this->view->make('bookkeeping.v2.pagesettings', [
-            'bookId'            => $context['bookId'],
-            'book'              => $context['book'],
-            'selflinkname'      => 'v2_settings',
+            'bookId' => $context['bookId'],
+            'book' => $context['book'],
+            'selflinkname' => 'v2_settings',
         ]));
         $this->response->setStatusCode(Response::HTTP_OK);
 

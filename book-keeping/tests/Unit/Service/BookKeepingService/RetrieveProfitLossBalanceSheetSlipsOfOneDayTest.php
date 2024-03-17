@@ -149,62 +149,62 @@ class RetrieveProfitLossBalanceSheetSlipsOfOneDayTest extends TestCase
         $client = 'client156';
         $outline = 'outline157';
         $slipEntries = [[
-            'slip_id'       => $slipId_1,
-            'date'          => $date,
-            'slip_outline'  => $slipOutline,
-            'slip_memo'     => $slipMemo,
+            'slip_id' => $slipId_1,
+            'date' => $date,
+            'slip_outline' => $slipOutline,
+            'slip_memo' => $slipMemo,
             'slip_entry_id' => $slipEntryId_1,
-            'debit'         => $accountId_1,
-            'credit'        => $accountId_2,
-            'amount'        => $amount,
-            'client'        => $client,
-            'outline'       => $outline,
+            'debit' => $accountId_1,
+            'credit' => $accountId_2,
+            'amount' => $amount,
+            'client' => $client,
+            'outline' => $outline,
         ]];
         $profitLoss = [
-            AccountService::ACCOUNT_TYPE_EXPENSE   => ['amount' => 400, 'groups' => [
+            AccountService::ACCOUNT_TYPE_EXPENSE => ['amount' => 400, 'groups' => [
                 $accountGroupId_3 => [
-                    'title'     => 'accountGroupTitle_3',
+                    'title' => 'accountGroupTitle_3',
                     'isCurrent' => 0,
-                    'amount'    => 400,
-                    'bk_code'   => 4100,
+                    'amount' => 400,
+                    'bk_code' => 4100,
                     'createdAt' => '2019-12-01 12:41:00',
-                    'items'     => [
+                    'items' => [
                         $accountId_4 => [
-                            'title'     => 'accountTitle_4',
-                            'amount'    => -300,
-                            'bk_code'   => 4104,
+                            'title' => 'accountTitle_4',
+                            'amount' => -300,
+                            'bk_code' => 4104,
                             'createdAt' => '2019-12-01 12:41:04',
                         ],
                         $accountId_8 => [
-                            'title'     => 'accountTitle_8',
-                            'amount'    => 700,
-                            'bk_code'   => 4108,
+                            'title' => 'accountTitle_8',
+                            'amount' => 700,
+                            'bk_code' => 4108,
                             'createdAt' => '2019-12-01 12:41:08',
                         ],
                     ],
                 ],
             ]],
-            AccountService::ACCOUNT_TYPE_REVENUE   => ['amount' => -400, 'groups' => [
+            AccountService::ACCOUNT_TYPE_REVENUE => ['amount' => -400, 'groups' => [
                 $accountGroupId_4 => [
-                    'title'     => 'accountGroupTitle_4',
+                    'title' => 'accountGroupTitle_4',
                     'isCurrent' => 0,
-                    'amount'    => -400,
-                    'bk_code'   => 5100,
+                    'amount' => -400,
+                    'bk_code' => 5100,
                     'createdAt' => '2019-12-01 12:51:00',
-                    'items'     => [
+                    'items' => [
                         $accountId_5 => [
-                            'title'     => 'accountTitle_5',
-                            'amount'    => -400,
-                            'bk_code'   => 5105,
+                            'title' => 'accountTitle_5',
+                            'amount' => -400,
+                            'bk_code' => 5105,
                             'createdAt' => '2019-12-01 12:51:05',
                         ],
                     ],
                 ],
             ]],
-            'net_income'                           => ['amount' => -800],
+            'net_income' => ['amount' => -800],
         ];
         $balanceSheet = [
-            AccountService::ACCOUNT_TYPE_ASSET     => ['amount' => 6600, 'groups' => [
+            AccountService::ACCOUNT_TYPE_ASSET => ['amount' => 6600, 'groups' => [
                 $accountGroupId_1 => [
                     'title' => 'accountGroupTitle_1',
                     'isCurrent' => 0,
@@ -268,25 +268,25 @@ class RetrieveProfitLossBalanceSheetSlipsOfOneDayTest extends TestCase
                     ],
                 ],
             ]],
-            'current_net_asset'                    => ['amount' => -1100],
-            'net_asset'                            => ['amount' => -1200],
+            'current_net_asset' => ['amount' => -1100],
+            'net_asset' => ['amount' => -1200],
         ];
         $slips = [$slipId_1 => [
-            'date'         => $date,
+            'date' => $date,
             'slip_outline' => $slipOutline,
-            'slip_memo'    => $slipMemo,
-            'items'        => [$slipEntryId_1 => [
-                'debit'   => ['account_id' => $accountId_1, 'account_title' => 'accountTitle_1'],
-                'credit'  => ['account_id' => $accountId_2, 'account_title' => 'accountTitle_2'],
-                'amount'  => $amount,
-                'client'  => $client,
+            'slip_memo' => $slipMemo,
+            'items' => [$slipEntryId_1 => [
+                'debit' => ['account_id' => $accountId_1, 'account_title' => 'accountTitle_1'],
+                'credit' => ['account_id' => $accountId_2, 'account_title' => 'accountTitle_2'],
+                'amount' => $amount,
+                'client' => $client,
                 'outline' => $outline,
             ]],
         ]];
         $result_expected = [BookKeepingService::STATUS_NORMAL, [
-            'profit_loss'   => $profitLoss,
+            'profit_loss' => $profitLoss,
             'balance_sheet' => $balanceSheet,
-            'slips'         => $slips,
+            'slips' => $slips,
         ]];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);

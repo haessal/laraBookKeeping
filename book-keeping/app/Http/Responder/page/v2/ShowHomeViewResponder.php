@@ -22,9 +22,9 @@ class ShowHomeViewResponder extends BaseViewResponder
     public function response(array $context): Response
     {
         $this->response->setContent($this->view->make('bookkeeping.v2.pagehome', [
-            'bookId'            => $context['bookId'],
-            'book'              => $context['book'],
-            'selflinkname'      => 'v2_home',
+            'bookId' => $context['bookId'],
+            'book' => $context['book'],
+            'selflinkname' => 'v2_home',
         ]));
         $this->response->setStatusCode(Response::HTTP_OK);
 

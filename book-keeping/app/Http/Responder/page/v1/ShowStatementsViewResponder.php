@@ -262,16 +262,16 @@ class ShowStatementsViewResponder extends BaseViewResponder
             $formatted_slips = $this->translateSlipsFormat($slips);
         }
         $this->response->setContent($this->view->make('bookkeeping.v1.pagestatements', [
-            'navigation'                 => $this->navigationList(),
-            'beginning_date'             => $context['beginning_date'],
-            'end_date'                   => $context['end_date'],
-            'display_statements'         => $context['display_statements'],
-            'income_statement'           => $income_statement,
+            'navigation' => $this->navigationList(),
+            'beginning_date' => $context['beginning_date'],
+            'end_date' => $context['end_date'],
+            'display_statements' => $context['display_statements'],
+            'income_statement' => $income_statement,
             'trial_balance_of_real_flow' => $trial_balance_of_real_flow,
-            'previous_balance_sheet'     => $previous_balance_sheet,
-            'balance_sheet'              => $balance_sheet,
-            'slips'                      => $formatted_slips,
-            'message'                    => $context['message'],
+            'previous_balance_sheet' => $previous_balance_sheet,
+            'balance_sheet' => $balance_sheet,
+            'slips' => $formatted_slips,
+            'message' => $context['message'],
         ]));
         $this->response->setStatusCode(Response::HTTP_OK);
 

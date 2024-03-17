@@ -63,14 +63,14 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
 
         $context['accounttype'] = null;
         $context['accountcreate'] = [
-            'grouptitle'  => null,
-            'groupId'     => null,
-            'itemtitle'   => null,
+            'grouptitle' => null,
+            'groupId' => null,
+            'itemtitle' => null,
             'description' => null,
         ];
         $context['messages'] = [
             'group' => null,
-            'item'  => null,
+            'item' => null,
         ];
         if ($request->isMethod('post')) {
             $button_action = $request->input('create');

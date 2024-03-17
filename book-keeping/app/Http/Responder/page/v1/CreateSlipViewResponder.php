@@ -65,10 +65,10 @@ class CreateSlipViewResponder extends BaseViewResponder
         $accounts = $context['accounts'];
         $account_title_list = $this->translateAccountListToTitleList(
             [
-                'asset'     => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['asset']['groups'])],
+                'asset' => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['asset']['groups'])],
                 'liability' => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['liability']['groups'])],
-                'expense'   => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['expense']['groups'])],
-                'revenue'   => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['revenue']['groups'])],
+                'expense' => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['expense']['groups'])],
+                'revenue' => ['groups' => $this->sortAccountInAscendingCodeOrder($accounts['revenue']['groups'])],
             ]
         );
         $draftslip = [];
@@ -76,12 +76,12 @@ class CreateSlipViewResponder extends BaseViewResponder
             $draftslip = $this->translateDraftSlipFormat($context['draftslip']);
         }
         $this->response->setContent($this->view->make('bookkeeping.v1.pageslip', [
-            'navigation'         => $this->navigationList(),
-            'add'                => $addparameter,
+            'navigation' => $this->navigationList(),
+            'add' => $addparameter,
             'account_title_list' => $account_title_list,
-            'slipdate'           => $context['slipdate'],
-            'draftslip'          => $draftslip,
-            'totalamount'        => $context['totalamount'],
+            'slipdate' => $context['slipdate'],
+            'draftslip' => $draftslip,
+            'totalamount' => $context['totalamount'],
         ]));
         $this->response->setStatusCode(Response::HTTP_OK);
 

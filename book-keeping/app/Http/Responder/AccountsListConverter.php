@@ -68,10 +68,10 @@ trait AccountsListConverter
         $accountTypeGroup_title_list = [];
 
         $accountTypeCaption = [
-            'asset'     => __('Assets'),
+            'asset' => __('Assets'),
             'liability' => __('Liabilities'),
-            'expense'   => __('Expense'),
-            'revenue'   => __('Revenue'),
+            'expense' => __('Expense'),
+            'revenue' => __('Revenue'),
         ];
         foreach ($accounts as $accountTypeKey => $accountType) {
             foreach ($accountType['groups'] as $accountGroupId => $accountGroupItem) {
@@ -85,9 +85,9 @@ trait AccountsListConverter
         }
         if ($withGroupList) {
             $account_title_list = [
-                'groups'         => $accountGroup_title_list,
+                'groups' => $accountGroup_title_list,
                 'groupsWithType' => $accountTypeGroup_title_list,
-                'items'          => $accountItem_title_list,
+                'items' => $accountItem_title_list,
             ];
         } else {
             $account_title_list = $accountItem_title_list;
@@ -181,10 +181,10 @@ trait AccountsListConverter
                 $amount = 0;
             }
             $reordered[$groupId] = [
-                'title'     => $groupedList[$groupId]['title'],
+                'title' => $groupedList[$groupId]['title'],
                 'isCurrent' => $groupedList[$groupId]['isCurrent'],
-                'amount'    => $amount,
-                'bk_code'   => $groupedList[$groupId]['bk_code'],
+                'amount' => $amount,
+                'bk_code' => $groupedList[$groupId]['bk_code'],
                 'createdAt' => $groupedList[$groupId]['createdAt'],
                 'items' => $this->sortAccountListInAscendingCodeOrder($groupedList[$groupId]['items']),
             ];
@@ -234,12 +234,12 @@ trait AccountsListConverter
                 $selectable = true;
             }
             $reordered[$id] = [
-                'title'       => $list[$id]['title'],
-                'amount'      => $amount,
+                'title' => $list[$id]['title'],
+                'amount' => $amount,
                 'description' => $description,
-                'selectable'  => $selectable,
-                'bk_code'     => $list[$id]['bk_code'],
-                'createdAt'   => $list[$id]['createdAt'],
+                'selectable' => $selectable,
+                'bk_code' => $list[$id]['bk_code'],
+                'createdAt' => $list[$id]['createdAt'],
             ];
         }
 

@@ -78,11 +78,11 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
                         );
                     }
                     $context['add'] = [
-                        'debit'   => $addDebit,
-                        'client'  => $addClient,
+                        'debit' => $addDebit,
+                        'client' => $addClient,
                         'outline' => $addOutline,
-                        'credit'  => $addCredit,
-                        'amount'  => $addAmount,
+                        'credit' => $addCredit,
+                        'amount' => $addAmount,
                     ];
                     break;
                 case 'delete':
