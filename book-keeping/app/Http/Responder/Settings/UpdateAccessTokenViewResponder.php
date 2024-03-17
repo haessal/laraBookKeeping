@@ -26,6 +26,7 @@ class UpdateAccessTokenViewResponder
      *
      * @param  \Illuminate\Http\Response  $response
      * @param  \Illuminate\Contracts\View\Factory  $view
+     * @return void
      */
     public function __construct(Response $response, ViewFactory $view)
     {
