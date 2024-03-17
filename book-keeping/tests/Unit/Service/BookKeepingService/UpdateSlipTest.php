@@ -28,11 +28,11 @@ class UpdateSlipTest extends TestCase
         $this->be($user);
         $slipId = (string) Str::uuid();
         $slip_head = [
-            'book_id'      => $bookId,
-            'slip_id'      => $slipId,
-            'date'         => '2023-07-09',
+            'book_id' => $bookId,
+            'slip_id' => $slipId,
+            'date' => '2023-07-09',
             'slip_outline' => 'slip_outline34',
-            'slip_memo'    => 'slip_memo35',
+            'slip_memo' => 'slip_memo35',
         ];
         $newData = ['date' => '2020-06-21'];
         $result_expected = [BookKeepingService::STATUS_NORMAL, null];

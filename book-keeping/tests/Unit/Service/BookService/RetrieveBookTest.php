@@ -21,10 +21,10 @@ class RetrieveBookTest extends TestCase
         $bookId = (string) Str::uuid();
         $userId = 23;
         $book_expected = [
-            'book_id'    => $bookId,
-            'book_name'  => 'BookName26',
+            'book_id' => $bookId,
+            'book_name' => 'BookName26',
             'modifiable' => true,
-            'is_owner'   => true,
+            'is_owner' => true,
             'is_default' => true,
             'created_at' => '2023-05-03 16:21:20',
         ];

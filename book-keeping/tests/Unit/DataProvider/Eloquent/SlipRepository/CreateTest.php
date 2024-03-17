@@ -33,12 +33,12 @@ class CreateTest extends TestCase
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $this->assertDatabaseHas('bk2_0_slips', [
-            'slip_id'       => $slipId,
-            'book_id'       => $bookId,
-            'slip_outline'  => $outline,
-            'slip_memo'     => $memo,
-            'date'          => $date,
-            'is_draft'      => $isDraft,
+            'slip_id' => $slipId,
+            'book_id' => $bookId,
+            'slip_outline' => $outline,
+            'slip_memo' => $memo,
+            'date' => $date,
+            'is_draft' => $isDraft,
         ]);
     }
 }

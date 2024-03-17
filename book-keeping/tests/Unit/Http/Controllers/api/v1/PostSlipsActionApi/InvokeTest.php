@@ -26,11 +26,11 @@ class InvokeTest extends TestCase
         $credit = (string) Str::uuid();
         $slipEntries[] =
             [
-                'debit'         => $debit,
-                'credit'        => $credit,
-                'amount'        => 31,
-                'client'        => 'client32',
-                'outline'       => 'outline33',
+                'debit' => $debit,
+                'credit' => $credit,
+                'amount' => 31,
+                'client' => 'client32',
+                'outline' => 'outline33',
                 'display_order' => 0,
             ];
         /** @var \App\Service\BookKeepingService|\Mockery\MockInterface $serviceMock */
@@ -60,9 +60,9 @@ class InvokeTest extends TestCase
         $requestMock->shouldReceive('all')
             ->once()
             ->andReturn([
-                'date'    => $slipDate,
+                'date' => $slipDate,
                 'outline' => $slipOutline,
-                'memo'    => null,
+                'memo' => null,
                 'entries' => $slipEntries,
             ]);
 
@@ -80,11 +80,11 @@ class InvokeTest extends TestCase
         $credit = (string) Str::uuid();
         $slipEntries[] =
             [
-                'debit'         => $debit,
-                'credit'        => $credit,
-                'amount'        => 85,
-                'client'        => 'client86',
-                'outline'       => 'outline87',
+                'debit' => $debit,
+                'credit' => $credit,
+                'amount' => 85,
+                'client' => 'client86',
+                'outline' => 'outline87',
                 'display_order' => 0,
             ];
         $slipId = (string) Str::uuid();
@@ -118,9 +118,9 @@ class InvokeTest extends TestCase
         $requestMock->shouldReceive('all')
             ->once()
             ->andReturn([
-                'date'    => $slipDate,
+                'date' => $slipDate,
                 'outline' => $slipOutline,
-                'memo'    => null,
+                'memo' => null,
                 'entries' => $slipEntries,
             ]);
 

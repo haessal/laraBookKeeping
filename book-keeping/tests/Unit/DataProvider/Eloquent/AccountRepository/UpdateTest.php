@@ -35,38 +35,38 @@ class UpdateTest extends TestCase
         $selectable_updated = false;
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $accountGroupId_updated = AccountGroup::factory()->create([
-            'book_id'               => $bookId,
-            'account_type'          => 'asset',
-            'account_group_title'   => 'group title',
-            'bk_uid'                => null,
+            'book_id' => $bookId,
+            'account_type' => 'asset',
+            'account_group_title' => 'group title',
+            'bk_uid' => null,
             'account_group_bk_code' => null,
-            'is_current'            => true,
+            'is_current' => true,
         ])->account_group_id;
         $accountId = Account::factory()->create([
             'account_group_id' => $accountGroupId,
-            'account_title'    => $title,
-            'description'      => $description,
-            'selectable'       => $selectable,
-            'bk_uid'           => null,
-            'account_bk_code'  => null,
+            'account_title' => $title,
+            'description' => $description,
+            'selectable' => $selectable,
+            'bk_uid' => null,
+            'account_bk_code' => null,
         ])->account_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $this->account->update($accountId, [
-            'group'       => $accountGroupId_updated,
-            'title'       => $title_updated,
+            'group' => $accountGroupId_updated,
+            'title' => $title_updated,
             'description' => $description_updated,
-            'selectable'  => $selectable_updated,
+            'selectable' => $selectable_updated,
         ]);
 
         $this->assertDatabaseHas('bk2_0_accounts', [
-            'account_id'       => $accountId,
+            'account_id' => $accountId,
             'account_group_id' => $accountGroupId_updated,
-            'account_title'    => $title_updated,
-            'description'      => $description_updated,
-            'selectable'       => $selectable_updated,
-            'bk_uid'           => null,
-            'account_bk_code'  => null,
+            'account_title' => $title_updated,
+            'description' => $description_updated,
+            'selectable' => $selectable_updated,
+            'bk_uid' => null,
+            'account_bk_code' => null,
         ]);
     }
 }

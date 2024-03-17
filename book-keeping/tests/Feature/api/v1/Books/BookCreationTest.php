@@ -30,22 +30,22 @@ class BookCreationTest extends TestCase
         $response->assertCreated()
             ->assertJsonStructure(['id', 'name', 'default', 'own', 'permitted_to', 'owner'])
             ->assertJson([
-                'name'         => $bookName,
-                'default'      => false,
-                'own'          => true,
+                'name' => $bookName,
+                'default' => false,
+                'own' => true,
                 'permitted_to' => 'ReadWrite',
-                'owner'        => $this->user->name,
+                'owner' => $this->user->name,
             ]);
         $this->assertDatabaseHas('bk2_0_books', [
-            'book_id'   => $response['id'],
+            'book_id' => $response['id'],
             'book_name' => $bookName,
         ]);
         $this->assertDatabaseHas('bk2_0_permissions', [
             'permitted_user' => $this->user->id,
-            'readable_book'  => $response['id'],
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => false,
+            'readable_book' => $response['id'],
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => false,
         ]);
     }
 

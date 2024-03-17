@@ -70,19 +70,19 @@ class SlipJsonResponder extends BaseJsonResponder
     private function convert(string $slipId, array $slip): array
     {
         $slipItem = [
-            'id'      => $slipId,
-            'date'    => $slip['date'],
+            'id' => $slipId,
+            'date' => $slip['date'],
             'outline' => $slip['slip_outline'],
-            'memo'    => $slip['slip_memo'],
+            'memo' => $slip['slip_memo'],
             'entries' => [],
         ];
         foreach ($slip['items'] as $slipEntryId => $slipEntryItem) {
             $slipItem['entries'][] = [
-                'id'      => $slipEntryId,
-                'debit'   => ['id' => $slipEntryItem['debit']['account_id'], 'title' => $slipEntryItem['debit']['account_title']],
-                'credit'  => ['id' => $slipEntryItem['credit']['account_id'], 'title' => $slipEntryItem['credit']['account_title']],
-                'amount'  => $slipEntryItem['amount'],
-                'client'  => $slipEntryItem['client'],
+                'id' => $slipEntryId,
+                'debit' => ['id' => $slipEntryItem['debit']['account_id'], 'title' => $slipEntryItem['debit']['account_title']],
+                'credit' => ['id' => $slipEntryItem['credit']['account_id'], 'title' => $slipEntryItem['credit']['account_title']],
+                'amount' => $slipEntryItem['amount'],
+                'client' => $slipEntryItem['client'],
                 'outline' => $slipEntryItem['outline'],
             ];
         }

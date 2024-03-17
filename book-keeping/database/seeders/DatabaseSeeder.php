@@ -218,7 +218,7 @@ class DatabaseSeeder extends Seeder
         foreach ($slipIds as $slipId) {
             SlipGroupEntry::factory()->create([
                 'slip_group_id' => $slipGroup->slip_group_id,
-                'related_slip' =>  $slipId,
+                'related_slip' => $slipId,
             ]);
         }
     }
@@ -237,42 +237,42 @@ class DatabaseSeeder extends Seeder
             'readable_book' => $bookIds[0],
             'modifiable' => true,
             'is_owner' => true,
-            'is_default'=> true,
+            'is_default' => true,
         ]);
         Permission::factory()->create([
             'permitted_user' => $userIds[0],
             'readable_book' => $bookIds[3],
             'modifiable' => true,
             'is_owner' => true,
-            'is_default'=> false,
+            'is_default' => false,
         ]);
         Permission::factory()->create([
             'permitted_user' => $userIds[0],
             'readable_book' => $bookIds[1],
             'modifiable' => true,
             'is_owner' => false,
-            'is_default'=> false,
+            'is_default' => false,
         ]);
         Permission::factory()->create([
             'permitted_user' => $userIds[0],
             'readable_book' => $bookIds[2],
             'modifiable' => false,
             'is_owner' => false,
-            'is_default'=> false,
+            'is_default' => false,
         ]);
         Permission::factory()->create([
             'permitted_user' => $userIds[1],
             'readable_book' => $bookIds[1],
             'modifiable' => true,
             'is_owner' => true,
-            'is_default'=> true,
+            'is_default' => true,
         ]);
         Permission::factory()->create([
             'permitted_user' => $userIds[2],
             'readable_book' => $bookIds[2],
             'modifiable' => true,
             'is_owner' => true,
-            'is_default'=> true,
+            'is_default' => true,
         ]);
     }
 }

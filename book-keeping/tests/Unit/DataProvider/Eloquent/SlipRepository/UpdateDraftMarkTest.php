@@ -31,23 +31,23 @@ class UpdateDraftMarkTest extends TestCase
         $isDraft_updated = true;
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $slipId = Slip::factory()->create([
-            'book_id'       => $bookId,
-            'slip_outline'  => $outline,
-            'slip_memo'     => $memo,
-            'date'          => $date,
-            'is_draft'      => $isDraft,
+            'book_id' => $bookId,
+            'slip_outline' => $outline,
+            'slip_memo' => $memo,
+            'date' => $date,
+            'is_draft' => $isDraft,
         ])->slip_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $this->slip->updateDraftMark($slipId, $isDraft_updated);
 
         $this->assertDatabaseHas('bk2_0_slips', [
-            'slip_id'       => $slipId,
-            'book_id'       => $bookId,
-            'slip_outline'  => $outline,
-            'slip_memo'     => $memo,
-            'date'          => $date,
-            'is_draft'      => $isDraft_updated,
+            'slip_id' => $slipId,
+            'book_id' => $bookId,
+            'slip_outline' => $outline,
+            'slip_memo' => $memo,
+            'date' => $date,
+            'is_draft' => $isDraft_updated,
         ]);
     }
 }

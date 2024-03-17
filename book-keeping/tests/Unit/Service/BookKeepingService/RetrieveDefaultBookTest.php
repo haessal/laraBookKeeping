@@ -28,21 +28,21 @@ class RetrieveDefaultBookTest extends TestCase
         $user->id = $userId;
         $this->be($user);
         $bookItem = [
-            'book_id'    => $bookId,
-            'book_name'  => $bookName,
+            'book_id' => $bookId,
+            'book_name' => $bookName,
             'modifiable' => false,
-            'is_owner'   => false,
+            'is_owner' => false,
             'is_default' => false,
             'created_at' => '2023-05-02 19:50:01',
         ];
         $userNameOfOwner = 'owner37';
         $book = [
-            'id'         => $bookId,
-            'name'       => $bookName,
+            'id' => $bookId,
+            'name' => $bookName,
             'is_default' => false,
-            'is_owner'   => false,
+            'is_owner' => false,
             'modifiable' => false,
-            'owner'      => $userNameOfOwner,
+            'owner' => $userNameOfOwner,
         ];
         $result_expected = [BookKeepingService::STATUS_NORMAL, $book];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */

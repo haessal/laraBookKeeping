@@ -4,6 +4,7 @@ use App\Http\Controllers\api\v1\DeleteBooksDefaultActionApi;
 use App\Http\Controllers\api\v1\DeleteBooksPermissionsActionApi;
 use App\Http\Controllers\api\v1\DeleteBooksSlipEntriesActionApi;
 use App\Http\Controllers\api\v1\DeleteSlipEntriesActionApi;
+use App\Http\Controllers\api\v1\ExportBooksActionApi;
 use App\Http\Controllers\api\v1\GetAccountsActionApi;
 use App\Http\Controllers\api\v1\GetBooksAccountsActionApi;
 use App\Http\Controllers\api\v1\GetBooksActionApi;
@@ -79,4 +80,6 @@ Route::prefix('v1')->group(function () {
         Route::patch('/slipentries/{slipEntryId}', PatchBooksSlipEntriesActionApi::class);
         Route::delete('/slipentries/{slipEntryId}', DeleteBooksSlipEntriesActionApi::class);
     });
+
+    Route::get('/export/books', ExportBooksActionApi::class);
 });

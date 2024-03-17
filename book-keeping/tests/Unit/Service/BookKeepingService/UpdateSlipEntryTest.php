@@ -28,16 +28,16 @@ class UpdateSlipEntryTest extends TestCase
         $this->be($user);
         $slipEntryId = (string) Str::uuid();
         $slipEntry = [
-            'slip_id'       => (string) Str::uuid(),
-            'date'          => '2023-07-08',
-            'slip_outline'  => 'slip_outline33',
-            'slip_memo'     => 'slip_memo34',
+            'slip_id' => (string) Str::uuid(),
+            'date' => '2023-07-08',
+            'slip_outline' => 'slip_outline33',
+            'slip_memo' => 'slip_memo34',
             'slip_entry_id' => $slipEntryId,
-            'debit'         => (string) Str::uuid(),
-            'credit'        => (string) Str::uuid(),
-            'amount'        => 3800,
-            'client'        => 'client39',
-            'outline'       => 'outline40',
+            'debit' => (string) Str::uuid(),
+            'credit' => (string) Str::uuid(),
+            'amount' => 3800,
+            'client' => 'client39',
+            'outline' => 'outline40',
         ];
         $newData = ['amount' => 10000];
         $result_expected = [BookKeepingService::STATUS_NORMAL, null];
@@ -147,16 +147,16 @@ class UpdateSlipEntryTest extends TestCase
         $this->be($user);
         $slipEntryId = (string) Str::uuid();
         $slipEntry = [
-            'slip_id'       => (string) Str::uuid(),
-            'date'          => '2023-07-08',
-            'slip_outline'  => 'slip_outline152',
-            'slip_memo'     => 'slip_memo153',
+            'slip_id' => (string) Str::uuid(),
+            'date' => '2023-07-08',
+            'slip_outline' => 'slip_outline152',
+            'slip_memo' => 'slip_memo153',
             'slip_entry_id' => $slipEntryId,
-            'debit'         => (string) Str::uuid(),
-            'credit'        => (string) Str::uuid(),
-            'amount'        => 1570,
-            'client'        => 'client158',
-            'outline'       => 'outline159',
+            'debit' => (string) Str::uuid(),
+            'credit' => (string) Str::uuid(),
+            'amount' => 1570,
+            'client' => 'client158',
+            'outline' => 'outline159',
         ];
         $accountId1 = (string) Str::uuid();
         $accountId2 = (string) Str::uuid();
@@ -202,16 +202,16 @@ class UpdateSlipEntryTest extends TestCase
         $this->be($user);
         $slipEntryId = (string) Str::uuid();
         $slipEntry = [
-            'slip_id'       => (string) Str::uuid(),
-            'date'          => '2023-07-08',
-            'slip_outline'  => 'slip_outline207',
-            'slip_memo'     => 'slip_memo208',
+            'slip_id' => (string) Str::uuid(),
+            'date' => '2023-07-08',
+            'slip_outline' => 'slip_outline207',
+            'slip_memo' => 'slip_memo208',
             'slip_entry_id' => $slipEntryId,
-            'debit'         => (string) Str::uuid(),
-            'credit'        => (string) Str::uuid(),
-            'amount'        => 2120,
-            'client'        => 'client213',
-            'outline'       => 'outline214',
+            'debit' => (string) Str::uuid(),
+            'credit' => (string) Str::uuid(),
+            'amount' => 2120,
+            'client' => 'client213',
+            'outline' => 'outline214',
         ];
         $accountId1 = (string) Str::uuid();
         $accountId2 = (string) Str::uuid();

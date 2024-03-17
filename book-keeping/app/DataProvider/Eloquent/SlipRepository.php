@@ -33,6 +33,39 @@ class SlipRepository implements SlipRepositoryInterface
     }
 
     /**
+     * Create a new slip to import.
+     *
+     * @param  array{
+     *   slip_id: string,
+     *   book_id: string,
+     *   slip_outline: string,
+     *   slip_memo: string|null,
+     *   date: string,
+     *   is_draft: bool,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newSlip
+     * @return void
+     */
+    public function createForImporting(array $newSlip)
+    {
+        $slip = new Slip();
+        $slip->slip_id = $newSlip['slip_id'];
+        $slip->book_id = $newSlip['book_id'];
+        $slip->slip_outline = $newSlip['slip_outline'];
+        $slip->slip_memo = $newSlip['slip_memo'];
+        $slip->date = $newSlip['date'];
+        $slip->is_draft = $newSlip['is_draft'];
+        $slip->display_order = $newSlip['display_order'];
+        $slip->save();
+        $slip->refresh();
+        if ($newSlip['deleted']) {
+            $slip->delete();
+        }
+    }
+
+    /**
      * Delete the slip.
      *
      * @param  string  $slipId
@@ -86,6 +119,28 @@ class SlipRepository implements SlipRepositoryInterface
     }
 
     /**
+     * Search the book for slips to export.
+     *
+     * @param  string  $bookId
+     * @param  string|null  $slipId
+     * @return array<int, array<string, mixed>>
+     */
+    public function searchBookForExporting($bookId, $slipId = null): array
+    {
+        /** @var \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder $query */
+        $query = Slip::withTrashed()
+            ->select('*')
+            ->where('book_id', $bookId);
+        if (isset($slipId)) {
+            $query = $query->where('slip_id', $slipId);
+        }
+        /** @var array<int, array<string, mixed>> $list */
+        $list = $query->get()->toArray();
+
+        return $list;
+    }
+
+    /**
      * Update the slip.
      *
      * @param  string  $slipId
@@ -124,6 +179,48 @@ class SlipRepository implements SlipRepositoryInterface
         if (! is_null($slip)) {
             $slip->is_draft = $isDraft;
             $slip->save();
+        }
+    }
+
+    /**
+     * Update the slip to import.
+     *
+     * @param  array{
+     *   slip_id: string,
+     *   book_id: string,
+     *   slip_outline: string,
+     *   slip_memo: string|null,
+     *   date: string,
+     *   is_draft: bool,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newSlip
+     * @return void
+     */
+    public function updateForImporting(array $newSlip)
+    {
+        /** @var \App\Models\Slip|null $slip */
+        $slip = Slip::withTrashed()->find($newSlip['slip_id']);
+        if (! is_null($slip)) {
+            $slip->book_id = $newSlip['book_id'];
+            $slip->slip_outline = $newSlip['slip_outline'];
+            $slip->slip_memo = $newSlip['slip_memo'];
+            $slip->date = $newSlip['date'];
+            $slip->is_draft = $newSlip['is_draft'];
+            $slip->display_order = $newSlip['display_order'];
+            $slip->touch();
+            $slip->save();
+            $slip->refresh();
+            if ($slip->trashed()) {
+                if (! $newSlip['deleted']) {
+                    $slip->restore();
+                }
+            } else {
+                if ($newSlip['deleted']) {
+                    $slip->delete();
+                }
+            }
         }
     }
 }

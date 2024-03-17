@@ -355,12 +355,12 @@ class BookKeepingService
             $id = $book['book_id'];
             $owner = $this->book->retrieveOwnerNameOf($id);
             $books[] = [
-                'id'         => $id,
-                'name'       => $book['book_name'],
+                'id' => $id,
+                'name' => $book['book_name'],
                 'is_default' => $book['is_default'],
-                'is_owner'   => $book['is_owner'],
+                'is_owner' => $book['is_owner'],
                 'modifiable' => $book['modifiable'],
-                'owner'      => strval($owner),
+                'owner' => strval($owner),
             ];
         }
 
@@ -388,12 +388,12 @@ class BookKeepingService
         if (isset($bookItem)) {
             $owner = $this->book->retrieveOwnerNameOf($bookId);
             $book = [
-                'id'         => $bookId,
-                'name'       => $bookItem['book_name'],
+                'id' => $bookId,
+                'name' => $bookItem['book_name'],
                 'is_default' => $bookItem['is_default'],
-                'is_owner'   => $bookItem['is_owner'],
+                'is_owner' => $bookItem['is_owner'],
                 'modifiable' => $bookItem['modifiable'],
-                'owner'      => strval($owner),
+                'owner' => strval($owner),
             ];
         }
 
@@ -456,39 +456,39 @@ class BookKeepingService
         $accounts = $this->account->retrieveAccounts($bookId);
         $accountGroups = $this->account->retrieveAccountGroups($bookId);
         $accounts_menu = [
-            AccountService::ACCOUNT_TYPE_ASSET     => ['groups' => []],
+            AccountService::ACCOUNT_TYPE_ASSET => ['groups' => []],
             AccountService::ACCOUNT_TYPE_LIABILITY => ['groups' => []],
-            AccountService::ACCOUNT_TYPE_EXPENSE   => ['groups' => []],
-            AccountService::ACCOUNT_TYPE_REVENUE   => ['groups' => []],
+            AccountService::ACCOUNT_TYPE_EXPENSE => ['groups' => []],
+            AccountService::ACCOUNT_TYPE_REVENUE => ['groups' => []],
         ];
         foreach ($accounts as $accountsKey => $accountsItem) {
             if ((! $selectableOnly) || ($accountsItem['selectable'] == true)) {
                 if (! array_key_exists($accountsItem['account_group_id'], $accounts_menu[$accountsItem['account_type']]['groups'])) {
                     $accounts_menu[$accountsItem['account_type']]['groups'][$accountsItem['account_group_id']] = [
-                        'title'        => $accountsItem['account_group_title'],
-                        'isCurrent'    => $accountsItem['is_current'],
-                        'bk_code'      => $accountsItem['account_group_bk_code'],
-                        'createdAt'    => $accountsItem['account_group_created_at'],
-                        'items'        => [],
+                        'title' => $accountsItem['account_group_title'],
+                        'isCurrent' => $accountsItem['is_current'],
+                        'bk_code' => $accountsItem['account_group_bk_code'],
+                        'createdAt' => $accountsItem['account_group_created_at'],
+                        'items' => [],
                     ];
                 }
                 $accounts_menu[$accountsItem['account_type']]['groups'][$accountsItem['account_group_id']]['items'][$accountsKey] = [
-                    'title'       => $accountsItem['account_title'],
+                    'title' => $accountsItem['account_title'],
                     'description' => $accountsItem['description'],
-                    'selectable'  => $accountsItem['selectable'],
-                    'bk_code'     => $accountsItem['account_bk_code'],
-                    'createdAt'   => $accountsItem['created_at'],
+                    'selectable' => $accountsItem['selectable'],
+                    'bk_code' => $accountsItem['account_bk_code'],
+                    'createdAt' => $accountsItem['created_at'],
                 ];
             }
         }
         foreach ($accountGroups as $accountGroupsKey => $accountGroup) {
             if (! array_key_exists($accountGroupsKey, $accounts_menu[$accountGroup['account_type']]['groups'])) {
                 $accounts_menu[$accountGroup['account_type']]['groups'][$accountGroupsKey] = [
-                    'title'        => $accountGroup['account_group_title'],
-                    'isCurrent'    => $accountGroup['is_current'],
-                    'bk_code'      => $accountGroup['account_group_bk_code'],
-                    'createdAt'    => $accountGroup['created_at'],
-                    'items'        => [],
+                    'title' => $accountGroup['account_group_title'],
+                    'isCurrent' => $accountGroup['is_current'],
+                    'bk_code' => $accountGroup['account_group_bk_code'],
+                    'createdAt' => $accountGroup['created_at'],
+                    'items' => [],
                 ];
             }
         }
@@ -550,24 +550,24 @@ class BookKeepingService
         $slips = [];
         foreach ($slipsList as $slipItem) {
             $slips[$slipItem['slip_id']] = [
-                'date'         => $slipItem['date'],
+                'date' => $slipItem['date'],
                 'slip_outline' => $slipItem['slip_outline'],
-                'slip_memo'    => $slipItem['slip_memo'],
-                'items'        => [],
+                'slip_memo' => $slipItem['slip_memo'],
+                'items' => [],
             ];
             $slipEntriesList = $this->slip->retrieveSlipEntriesBoundTo($slipItem['slip_id']);
             foreach ($slipEntriesList as $slipEntryItem) {
                 $slips[$slipItem['slip_id']]['items'][$slipEntryItem['slip_entry_id']] = [
-                    'debit'   => [
-                        'account_id'    => $slipEntryItem['debit'],
+                    'debit' => [
+                        'account_id' => $slipEntryItem['debit'],
                         'account_title' => $accounts[$slipEntryItem['debit']]['account_title'],
                     ],
-                    'credit'  => [
-                        'account_id'    => $slipEntryItem['credit'],
+                    'credit' => [
+                        'account_id' => $slipEntryItem['credit'],
                         'account_title' => $accounts[$slipEntryItem['credit']]['account_title'],
                     ],
-                    'amount'  => $slipEntryItem['amount'],
-                    'client'  => $slipEntryItem['client'],
+                    'amount' => $slipEntryItem['amount'],
+                    'client' => $slipEntryItem['client'],
                     'outline' => $slipEntryItem['outline'],
                 ];
             }
@@ -972,24 +972,24 @@ class BookKeepingService
             $status = self::STATUS_NORMAL;
             $accounts = $this->account->retrieveAccounts($bookId);
             $slips[$slipId] = [
-                'date'         => $slip_head['date'],
+                'date' => $slip_head['date'],
                 'slip_outline' => $slip_head['slip_outline'],
-                'slip_memo'    => $slip_head['slip_memo'],
-                'items'        => [],
+                'slip_memo' => $slip_head['slip_memo'],
+                'items' => [],
             ];
             $slipEntriesList = $this->slip->retrieveSlipEntriesBoundTo($slipId);
             foreach ($slipEntriesList as $slipEntryItem) {
                 $slips[$slipId]['items'][$slipEntryItem['slip_entry_id']] = [
-                    'debit'   => [
-                        'account_id'    => $slipEntryItem['debit'],
+                    'debit' => [
+                        'account_id' => $slipEntryItem['debit'],
                         'account_title' => $accounts[$slipEntryItem['debit']]['account_title'],
                     ],
-                    'credit'  => [
-                        'account_id'    => $slipEntryItem['credit'],
+                    'credit' => [
+                        'account_id' => $slipEntryItem['credit'],
                         'account_title' => $accounts[$slipEntryItem['credit']]['account_title'],
                     ],
-                    'amount'  => $slipEntryItem['amount'],
-                    'client'  => $slipEntryItem['client'],
+                    'amount' => $slipEntryItem['amount'],
+                    'client' => $slipEntryItem['client'],
                     'outline' => $slipEntryItem['outline'],
                 ];
             }
@@ -1032,21 +1032,21 @@ class BookKeepingService
         if (isset($slipEntry)) {
             $status = self::STATUS_NORMAL;
             $slips[$slipEntry['slip_id']] = [
-                'date'         => $slipEntry['date'],
+                'date' => $slipEntry['date'],
                 'slip_outline' => $slipEntry['slip_outline'],
-                'slip_memo'    => $slipEntry['slip_memo'],
-                'items'        => [
+                'slip_memo' => $slipEntry['slip_memo'],
+                'items' => [
                     $slipEntry['slip_entry_id'] => [
-                        'debit'   => [
-                            'account_id'    => $slipEntry['debit'],
+                        'debit' => [
+                            'account_id' => $slipEntry['debit'],
                             'account_title' => $accounts[$slipEntry['debit']]['account_title'],
                         ],
-                        'credit'  => [
-                            'account_id'    => $slipEntry['credit'],
+                        'credit' => [
+                            'account_id' => $slipEntry['credit'],
                             'account_title' => $accounts[$slipEntry['credit']]['account_title'],
                         ],
-                        'amount'  => $slipEntry['amount'],
-                        'client'  => $slipEntry['client'],
+                        'amount' => $slipEntry['amount'],
+                        'client' => $slipEntry['client'],
                         'outline' => $slipEntry['outline'],
                     ],
                 ],
@@ -1101,16 +1101,154 @@ class BookKeepingService
             $fromDate,
             $toDate,
             [
-                'debit'    => $debit,
-                'credit'   => $credit,
-                'and_or'   => $and_or,
-                'keyword'  => $keyword,
+                'debit' => $debit,
+                'credit' => $credit,
+                'and_or' => $and_or,
+                'keyword' => $keyword,
             ],
             $bookId
         );
         $slips = $this->translateSlipEntriesToSlips($accounts, $slipEntries);
 
         return [self::STATUS_NORMAL, $slips];
+    }
+
+    /**
+     * Retrieve the statement over the specified period.
+     *
+     * @param  string  $fromDate
+     * @param  string  $toDate
+     * @param  string|null  $bookId
+     * @return array{
+     *   asset: array{
+     *     amount: int,
+     *     groups: array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       amount: int,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>|array{}
+     *   },
+     *   liability: array{
+     *     amount: int,
+     *     groups: array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       amount: int,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>|array{}
+     *   },
+     *   expense: array{
+     *     amount: int,
+     *     groups: array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       amount: int,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>|array{}
+     *   },
+     *   revenue: array{
+     *     amount: int,
+     *     groups: array<string, array{
+     *       title: string,
+     *       isCurrent: bool,
+     *       amount: int,
+     *       bk_code: int,
+     *       createdAt: string,
+     *       items: array<string, array{
+     *         title: string,
+     *         amount: int,
+     *         bk_code: int,
+     *         createdAt: string,
+     *       }>
+     *     }>|array{}
+     *   },
+     *   current_net_asset: array{amount: int},
+     *   net_income: array{amount: int},
+     *   net_asset: array{amount: int},
+     * }
+     */
+    public function retrieveStatement($fromDate, $toDate, $bookId = null): array
+    {
+        if (is_null($bookId)) {
+            $bookId = $this->book->retrieveDefaultBook(intval(Auth::id()));
+        }
+        $bookId = strval($bookId); // FIXME: in case default book is not setting
+        $accounts = $this->account->retrieveAccounts($bookId);
+        $amountFlows = $this->slip->retrieveAmountFlows($fromDate, $toDate, $bookId);
+        $statements = [
+            AccountService::ACCOUNT_TYPE_ASSET => ['amount' => 0, 'groups' => []],
+            AccountService::ACCOUNT_TYPE_LIABILITY => ['amount' => 0, 'groups' => []],
+            AccountService::ACCOUNT_TYPE_EXPENSE => ['amount' => 0, 'groups' => []],
+            AccountService::ACCOUNT_TYPE_REVENUE => ['amount' => 0, 'groups' => []],
+            'current_net_asset' => ['amount' => 0],
+            'net_income' => ['amount' => 0],
+            'net_asset' => ['amount' => 0],
+        ];
+
+        foreach ($amountFlows as $accountId => $sumValue) {
+            if (($sumValue['debit'] - $sumValue['credit']) != 0) {
+                /** @var 'asset'|'liability'|'expense'|'revenue' $accountType */
+                $accountType = $accounts[$accountId]['account_type'];
+                if (($accountType == AccountService::ACCOUNT_TYPE_ASSET) || ($accountType == AccountService::ACCOUNT_TYPE_EXPENSE)) {
+                    $amount = $sumValue['debit'] - $sumValue['credit'];
+                } else {
+                    $amount = $sumValue['credit'] - $sumValue['debit'];
+                }
+                $accountGroupId = $accounts[$accountId]['account_group_id'];
+                $statements[$accountType]['amount'] += $amount;
+                if (! array_key_exists($accountGroupId, $statements[$accountType]['groups'])) {  /* This is the first time that the account which belongs to the group appears. */
+                    $statements[$accountType]['groups'][$accountGroupId] = [
+                        'title' => $accounts[$accountId]['account_group_title'],
+                        'isCurrent' => $accounts[$accountId]['is_current'],
+                        'amount' => 0,
+                        'bk_code' => $accounts[$accountId]['account_group_bk_code'],
+                        'createdAt' => $accounts[$accountId]['account_group_created_at'],
+                        'items' => [],
+                    ];
+                }
+                $statements[$accountType]['groups'][$accountGroupId]['amount'] += $amount;
+                if ($accounts[$accountId]['is_current']) {
+                    if ($accountType == AccountService::ACCOUNT_TYPE_ASSET) {
+                        $statements['current_net_asset']['amount'] += $amount;
+                    } elseif ($accountType == AccountService::ACCOUNT_TYPE_LIABILITY) {
+                        $statements['current_net_asset']['amount'] -= $amount;
+                    } else {
+                    }
+                }
+                $statements[$accountType]['groups'][$accountGroupId]['items'][$accountId] = [
+                    'title' => $accounts[$accountId]['account_title'],
+                    'amount' => $amount,
+                    'bk_code' => $accounts[$accountId]['account_bk_code'],
+                    'createdAt' => $accounts[$accountId]['created_at'],
+                ];
+            }
+        }
+        $statements['net_income']['amount'] = $statements[AccountService::ACCOUNT_TYPE_REVENUE]['amount'] - $statements[AccountService::ACCOUNT_TYPE_EXPENSE]['amount'];
+        $statements['net_asset']['amount'] = $statements[AccountService::ACCOUNT_TYPE_ASSET]['amount'] - $statements[AccountService::ACCOUNT_TYPE_LIABILITY]['amount'];
+
+        return $statements;
     }
 
     /**

@@ -53,9 +53,9 @@ class UpdateAccessTokenViewResponder
         }
         $this->response->setContent($this->view->make('settings.accesstokens', [
             'message_for_new_token' => $message_for_new_token,
-            'message_for_no_token'  => $message_for_no_token,
-            'token'                 => $context['token'],
-            'timestamp'             => strval(__('The token was generated at ')).strval($context['timestamp']),
+            'message_for_no_token' => $message_for_no_token,
+            'token' => $context['token'],
+            'timestamp' => strval(__('The token was generated at ')).strval($context['timestamp']),
         ]));
         $this->response->setStatusCode(Response::HTTP_OK);
 

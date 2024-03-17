@@ -30,10 +30,10 @@ class FindDefaultBookTest extends TestCase
         ])->book_id;
         $permissionId = Permission::factory()->create([
             'permitted_user' => $userId,
-            'readable_book'  => $bookId_expected,
-            'modifiable'     => true,
-            'is_owner'       => true,
-            'is_default'     => true,
+            'readable_book' => $bookId_expected,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => true,
         ])->permission_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 

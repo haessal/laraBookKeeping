@@ -27,20 +27,20 @@ class SearchBookTest extends TestCase
         $bookId = (string) Str::uuid();
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $accountGroupId = AccountGroup::factory()->create([
-            'book_id'               => $bookId,
-            'account_type'          => 'asset',
-            'account_group_title'   => 'dummy group title',
-            'bk_uid'                => 32,
+            'book_id' => $bookId,
+            'account_type' => 'asset',
+            'account_group_title' => 'dummy group title',
+            'bk_uid' => 32,
             'account_group_bk_code' => 1200,
-            'is_current'            => true,
+            'is_current' => true,
         ])->account_group_id;
         $accountId = Account::factory()->create([
-            'account_group_id'       => $accountGroupId,
-            'account_title'          => 'dummy title',
-            'description'            => 'description',
-            'selectable'             => true,
-            'bk_uid'                 => 32,
-            'account_bk_code'        => 1201,
+            'account_group_id' => $accountGroupId,
+            'account_title' => 'dummy title',
+            'description' => 'description',
+            'selectable' => true,
+            'bk_uid' => 32,
+            'account_bk_code' => 1201,
         ])->account_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 

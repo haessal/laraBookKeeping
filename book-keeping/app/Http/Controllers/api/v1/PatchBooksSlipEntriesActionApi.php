@@ -177,12 +177,12 @@ class PatchBooksSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
         }
 
         return [
-            'success'           => $success,
+            'success' => $success,
             'slipEntryContents' => [
-                'debit'   => array_key_exists('debit', $trimmed) ? strval($trimmed['debit']) : '',
-                'credit'  => array_key_exists('credit', $trimmed) ? strval($trimmed['credit']) : '',
-                'amount'  => array_key_exists('amount', $trimmed) ? intval($trimmed['amount']) : 0,
-                'client'  => array_key_exists('client', $trimmed) ? strval($trimmed['client']) : '',
+                'debit' => array_key_exists('debit', $trimmed) ? strval($trimmed['debit']) : '',
+                'credit' => array_key_exists('credit', $trimmed) ? strval($trimmed['credit']) : '',
+                'amount' => array_key_exists('amount', $trimmed) ? intval($trimmed['amount']) : 0,
+                'client' => array_key_exists('client', $trimmed) ? strval($trimmed['client']) : '',
                 'outline' => array_key_exists('outline', $trimmed) ? strval($trimmed['outline']) : '',
             ],
         ];
