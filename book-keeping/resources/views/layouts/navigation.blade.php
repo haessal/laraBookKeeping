@@ -2,7 +2,7 @@
     <!-- Logo -->
     <a href="{{ url('/') }}" class="flex items-end">
         <img src="{{ asset('/bookkeeping-logo.svg') }}" class="h-10 w-10" alt="BookKeeping Logo" />
-        <span class="px-1 text-xl text-gray-900 dark:text-gray-400 md:text-3xl">BookKeeping</span>
+        <span class="px-1 text-2xl text-gray-900 dark:text-gray-400 md:text-3xl">BookKeeping</span>
     </a>
     <!-- Primary Navigation Menu -->
     <div class="text-sm md:text-base">
@@ -25,8 +25,10 @@
                     </button>
                 </x-slot>
                 <x-slot name="content">
-                    <x-dropdown-link :href="route('profile.edit')">{{ __('Profile') }}</x-dropdown-link>
+                    <x-dropdown-link :href="route('dashboard')">{{ __('Dashboard') }}</x-dropdown-link>
+                    <x-dropdown-link :href="route('v1_top')">{{ __('Switch to Previous version') }}</x-dropdown-link>
                     <x-dropdown-link :href="route('settings_tokens')">{{ __('Settings') }}</x-dropdown-link>
+                    <x-dropdown-link :href="route('profile.edit')">{{ __('Profile') }}</x-dropdown-link>
                     <!-- Authentication -->
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf

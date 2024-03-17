@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers;
 
 use App\Service\BookKeepingService;
 
-class AuthenticatedBookKeepingActionApi extends AuthenticatedActionApi
+class AuthenticatedBookKeepingAction extends AuthenticatedAction
 {
     /**
      * BookKeeping service instance.
@@ -14,7 +14,7 @@ class AuthenticatedBookKeepingActionApi extends AuthenticatedActionApi
     protected $BookKeeping;
 
     /**
-     * Create a new AuthenticatedBookKeepingActionApi instance.
+     * Create a new AuthenticatedBookKeepingAction instance.
      *
      * @param  \App\Service\BookKeepingService  $BookKeeping
      * @return void
