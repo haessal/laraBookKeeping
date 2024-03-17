@@ -109,7 +109,7 @@ class BookKeepingService
      * @param  string  $bookId
      * @return array{0:int, 1:string|null}
      */
-    public function createAccount($accountGroupId, $title, $description, $bookId)
+    public function createAccount($accountGroupId, $title, $description, $bookId): array
     {
         [$authorizedStatus, $bookId]
             = $this->book->retrieveDefaultBookOrCheckWritable($bookId, intval(Auth::id()));
@@ -135,7 +135,7 @@ class BookKeepingService
      * @param  string  $bookId
      * @return array{0:int, 1:string|null}
      */
-    public function createAccountGroup($accountType, $title, $bookId)
+    public function createAccountGroup($accountType, $title, $bookId): array
     {
         [$authorizedStatus, $bookId]
             = $this->book->retrieveDefaultBookOrCheckWritable($bookId, intval(Auth::id()));
@@ -178,7 +178,7 @@ class BookKeepingService
      * @param  string|null  $bookId
      * @return array{0:int, 1:string|null}
      */
-    public function createSlip($outline, $date, array $entries, $memo, $bookId = null)
+    public function createSlip($outline, $date, array $entries, $memo, $bookId = null): array
     {
         [$authorizedStatus, $bookId]
             = $this->book->retrieveDefaultBookOrCheckWritable($bookId, intval(Auth::id()));
@@ -247,7 +247,7 @@ class BookKeepingService
      * @param  string|null  $bookId
      * @return array{0:int, 1:null}
      */
-    public function deleteSlipEntryAndEmptySlip($slipEntryId, $bookId = null)
+    public function deleteSlipEntryAndEmptySlip($slipEntryId, $bookId = null): array
     {
         [$authorizedStatus, $bookId]
             = $this->book->retrieveDefaultBookOrCheckWritable($bookId, intval(Auth::id()));
@@ -1288,7 +1288,7 @@ class BookKeepingService
      * @param  string|null  $bookId
      * @return array{0:int, 1:null}
      */
-    public function submitDraftSlip($date, $bookId = null)
+    public function submitDraftSlip($date, $bookId = null): array
     {
         [$authorizedStatus, $bookId]
             = $this->book->retrieveDefaultBookOrCheckWritable($bookId, intval(Auth::id()));
@@ -1344,7 +1344,7 @@ class BookKeepingService
      * @param  string  $bookId
      * @return array{0:int, 1:null}
      */
-    public function updateAccount($accountId, array $newData, $bookId)
+    public function updateAccount($accountId, array $newData, $bookId): array
     {
         [$authorizedStatus, $bookId]
             = $this->book->retrieveDefaultBookOrCheckWritable($bookId, intval(Auth::id()));
@@ -1380,7 +1380,7 @@ class BookKeepingService
      * @param  string  $bookId
      * @return array{0:int, 1:null}
      */
-    public function updateAccountGroup($accountGroupId, array $newData, $bookId)
+    public function updateAccountGroup($accountGroupId, array $newData, $bookId): array
     {
         [$authorizedStatus, $bookId]
             = $this->book->retrieveDefaultBookOrCheckWritable($bookId, intval(Auth::id()));
@@ -1429,7 +1429,7 @@ class BookKeepingService
      * @param  string|null  $bookId
      * @return array{0:int, 1:null}
      */
-    public function updateSlip($slipId, array $newData, $bookId = null)
+    public function updateSlip($slipId, array $newData, $bookId = null): array
     {
         [$authorizedStatus, $bookId]
             = $this->book->retrieveDefaultBookOrCheckWritable($bookId, intval(Auth::id()));
@@ -1461,7 +1461,7 @@ class BookKeepingService
      * @param  string|null  $bookId
      * @return array{0:int, 1:null}
      */
-    public function updateSlipEntry($slipEntryId, array $newData, $bookId = null)
+    public function updateSlipEntry($slipEntryId, array $newData, $bookId = null): array
     {
         [$authorizedStatus, $bookId]
             = $this->book->retrieveDefaultBookOrCheckWritable($bookId, intval(Auth::id()));
