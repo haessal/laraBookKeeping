@@ -22,7 +22,7 @@
     <body class="bg-white dark:bg-black">
         <div class="min-h-screen">
             <!-- Page Heading -->
-            <header class="bg-gray-50 p-4 dark:bg-gray-900">
+            <header class="bg-gray-50 p-3 dark:bg-gray-900 md:p-4">
                 <div>@include('layouts.navigation')</div>
                 @if (isset($header))
                 <div>{{ $header }}</div>
