@@ -148,6 +148,9 @@ class AccountRepository implements AccountRepositoryInterface
             if (array_key_exists('selectable', $newData)) {
                 $account->selectable = boolval($newData['selectable']);
             }
+            if (array_key_exists('is_credit_card', $newData)) {
+                $account->is_credit_card = boolval($newData['is_credit_card']);
+            }
             $account->save();
         }
     }

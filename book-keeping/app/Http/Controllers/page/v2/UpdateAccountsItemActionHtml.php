@@ -75,9 +75,20 @@ class UpdateAccountsItemActionHtml extends AuthenticatedBookKeepingAction
             } else {
                 $selectable = false;
             }
+            if (array_key_exists('attribute_creditcard', $request->all())) {
+                $isCreditCard = true;
+            } else {
+                $isCreditCard = false;
+            }
             if (($group != '') && $this->BookKeeping->validateUuid($group)
                     && ($title != '') && ($description != '')) {
-                $newData = ['group' => $group, 'title' => $title, 'description' => $description, 'selectable' => $selectable];
+                $newData = [
+                    'group' => $group,
+                    'title' => $title,
+                    'description' => $description,
+                    'selectable' => $selectable,
+                    'is_credit_card' => $isCreditCard,
+                ];
                 [$status, $_] = $this->BookKeeping->updateAccount($accountsItemId, $newData, $bookId);
                 switch ($status) {
                     case BookKeepingService::STATUS_NORMAL:

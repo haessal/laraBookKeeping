@@ -1204,6 +1204,7 @@ class BookKeepingService
      *   title?: string,
      *   description?: string,
      *   selectable?: bool,
+     *   is_credit_card?: bool,
      * }  $newData
      * @param  string  $bookId
      * @return array{0:int, 1:null}

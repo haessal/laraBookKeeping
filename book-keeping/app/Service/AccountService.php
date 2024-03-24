@@ -183,6 +183,7 @@ class AccountService
      *   title?: string,
      *   description?: string,
      *   selectable?: bool,
+     *   is_credit_card?: bool,
      * }  $newData
      * @return void
      */
