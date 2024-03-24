@@ -73,6 +73,7 @@ class BookKeepingMigrationValidator
     /**
      * Validate the account item.
      *
+     * @param  \App\Service\BookKeepingMigrationVersion  $version
      * @param  array<string, mixed>  $accountItem
      * @return array{
      *   account_id: string,
@@ -80,6 +81,7 @@ class BookKeepingMigrationValidator
      *   account_title: string,
      *   description: string,
      *   selectable: bool,
+     *   is_credit_card: bool|null,
      *   bk_uid: int|null,
      *   account_bk_code: int|null,
      *   display_order: int|null,
@@ -87,7 +89,7 @@ class BookKeepingMigrationValidator
      *   deleted: bool,
      * }|null
      */
-    public function validateAccountItem(array $accountItem): ?array
+    public function validateAccountItem(BookKeepingMigrationVersion $version, array $accountItem): ?array
     {
         if (! key_exists('account_id', $accountItem) || ! $this->validateUuid($accountItem['account_id'])) {
             return null;
@@ -103,6 +105,14 @@ class BookKeepingMigrationValidator
         }
         if (! key_exists('selectable', $accountItem) || ! is_int($accountItem['selectable'])) {
             return null;
+        }
+        if ($version->isSupported(BookKeepingMigrationVersion::CREDIT_CARD_STATEMENT)) {
+            if (! key_exists('is_credit_card', $accountItem) || ! is_int($accountItem['is_credit_card'])) {
+                return null;
+            }
+            $isCreditCard = $accountItem['is_credit_card'];
+        } else {
+            $isCreditCard = null;
         }
         if (! key_exists('bk_uid', $accountItem) || ! $this->isIntOrNull($accountItem['bk_uid'])) {
             return null;
@@ -126,6 +136,7 @@ class BookKeepingMigrationValidator
             'account_title' => $accountItem['account_title'],
             'description' => $accountItem['description'],
             'selectable' => boolval($accountItem['selectable']),
+            'is_credit_card' => is_null($isCreditCard) ? null : boolval($isCreditCard),
             'bk_uid' => is_null($accountItem['bk_uid']) ? null : intval($accountItem['bk_uid']),
             'account_bk_code' => is_null($accountItem['account_bk_code']) ? null : intval($accountItem['account_bk_code']),
             'display_order' => is_null($accountItem['display_order']) ? null : intval($accountItem['display_order']),

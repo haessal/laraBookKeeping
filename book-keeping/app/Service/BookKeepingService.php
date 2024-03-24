@@ -439,6 +439,7 @@ class BookKeepingService
      *       title: string,
      *       description: string,
      *       selectable: bool,
+     *       isCreditCard: bool,
      *       bk_code: int,
      *       createdAt: string,
      *     }>
@@ -476,6 +477,7 @@ class BookKeepingService
                     'title' => $accountsItem['account_title'],
                     'description' => $accountsItem['description'],
                     'selectable' => $accountsItem['selectable'],
+                    'isCreditCard' => $accountsItem['is_credit_card'],
                     'bk_code' => $accountsItem['account_bk_code'],
                     'createdAt' => $accountsItem['created_at'],
                 ];
@@ -1202,6 +1204,7 @@ class BookKeepingService
      *   title?: string,
      *   description?: string,
      *   selectable?: bool,
+     *   is_credit_card?: bool,
      * }  $newData
      * @param  string  $bookId
      * @return array{0:int, 1:null}
