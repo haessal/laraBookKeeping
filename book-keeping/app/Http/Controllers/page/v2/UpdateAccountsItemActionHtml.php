@@ -75,9 +75,20 @@ class UpdateAccountsItemActionHtml extends AuthenticatedBookKeepingAction
             } else {
                 $selectable = false;
             }
+            if (array_key_exists('attribute_creditcard', $request->all())) {
+                $isCreditCard = true;
+            } else {
+                $isCreditCard = false;
+            }
             if (($group != '') && $this->BookKeeping->validateUuid($group)
                     && ($title != '') && ($description != '')) {
-                $newData = ['group' => $group, 'title' => $title, 'description' => $description, 'selectable' => $selectable];
+                $newData = [
+                    'group' => $group,
+                    'title' => $title,
+                    'description' => $description,
+                    'selectable' => $selectable,
+                    'is_credit_card' => $isCreditCard,
+                ];
                 [$status, $_] = $this->BookKeeping->updateAccount($accountsItemId, $newData, $bookId);
                 switch ($status) {
                     case BookKeepingService::STATUS_NORMAL:
@@ -128,6 +139,7 @@ class UpdateAccountsItemActionHtml extends AuthenticatedBookKeepingAction
                     $context['accountsitem']['title'] = $accountItem['title'];
                     $context['accountsitem']['description'] = $accountItem['description'];
                     $context['accountsitem']['attribute_selectable'] = $accountItem['selectable'] ? 'checked' : null;
+                    $context['accountsitem']['attribute_creditcard'] = $accountItem['isCreditCard'] ? 'checked' : null;
                     $context['accountsitem']['bk_code'] = $accountItem['bk_code'];
                 }
             }

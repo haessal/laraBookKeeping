@@ -84,6 +84,7 @@ class AccountMigrationLoaderService extends AccountMigrationService
     /**
      * Load the account item.
      *
+     * @param  \App\Service\BookKeepingMigrationVersion  $version
      * @param  array<string, mixed>  $accountItem
      * @param array<string, array{
      *   account_id: string,
@@ -91,13 +92,13 @@ class AccountMigrationLoaderService extends AccountMigrationService
      * }>  $destinationAccountItems
      * @return array{0: array<string, mixed>, 1: string|null}
      */
-    public function loadAccountItem(array $accountItem, array $destinationAccountItems): array
+    public function loadAccountItem(BookKeepingMigrationVersion $version, array $accountItem, array $destinationAccountItems): array
     {
         $mode = null;
         $result = null;
         $error = null;
 
-        $newAccountItem = $this->validator->validateAccountItem($accountItem);
+        $newAccountItem = $this->validator->validateAccountItem($version, $accountItem);
         if (is_null($newAccountItem)) {
             $error = 'invalid data format: account item';
 
@@ -136,12 +137,13 @@ class AccountMigrationLoaderService extends AccountMigrationService
     /**
      * Load the account items belonging to the account group.
      *
+     * @param  \App\Service\BookKeepingMigrationVersion  $version
      * @param  string  $bookId
      * @param  string  $accountGroupId
      * @param  array<string, array<string, mixed>>  $accountItems
      * @return array{0: array<string, mixed>, 1: string|null}
      */
-    public function loadAccountItems($bookId, $accountGroupId, array $accountItems): array
+    public function loadAccountItems(BookKeepingMigrationVersion $version, $bookId, $accountGroupId, array $accountItems): array
     {
         $result = [];
         $error = null;
@@ -163,7 +165,7 @@ class AccountMigrationLoaderService extends AccountMigrationService
             }
             if (key_exists('account', $accountItem) && is_array($accountItem['account'])) {
                 [$result[$accountIndex], $error] = $this->loadAccountItem(
-                    $accountItem['account'], $destinationAccountItems[$accountGroupId]['items']
+                    $version, $accountItem['account'], $destinationAccountItems[$accountGroupId]['items']
                 );
                 if (isset($error)) {
                     break;
@@ -179,11 +181,12 @@ class AccountMigrationLoaderService extends AccountMigrationService
     /**
      * Load the accounts of the book.
      *
+     * @param  \App\Service\BookKeepingMigrationVersion  $version
      * @param  string  $bookId
      * @param  array<string, array<string, mixed>>  $accounts
      * @return array{0: array<string, mixed>, 1: string|null}
      */
-    public function loadAccounts($bookId, array $accounts): array
+    public function loadAccounts(BookKeepingMigrationVersion $version, $bookId, array $accounts): array
     {
         $result = [];
         $error = null;
@@ -211,7 +214,7 @@ class AccountMigrationLoaderService extends AccountMigrationService
             if (key_exists('items', $accountGroup)) {
                 if (is_array($accountGroup['items'])) {
                     [$result[$accountGroupIndex]['items'], $error] = $this->loadAccountItems(
-                        $bookId, $accountGroupId, $accountGroup['items']
+                        $version, $bookId, $accountGroupId, $accountGroup['items']
                     );
                     if (isset($error)) {
                         break;

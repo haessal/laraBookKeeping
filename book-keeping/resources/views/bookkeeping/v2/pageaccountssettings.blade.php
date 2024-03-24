@@ -132,6 +132,12 @@
                                 checked="{{ $accountsitem['attribute_selectable'] }}">
                                 {{ __('Selectable') }}
                             </x-bookkeeping.accounts-form-checkbox>
+                            <x-bookkeeping.accounts-form-checkbox
+                                id="id-accounts-settings-checkbox-creditcard"
+                                name="attribute_creditcard"
+                                checked="{{ $accountsitem['attribute_creditcard'] }}">
+                                {{ __('Credit Card') }}
+                            </x-bookkeeping.accounts-form-checkbox>
                         </x-bookkeeping.accounts-form-checkboxes>
                         <x-bookkeeping.accounts-form-display title="{{ __('Code for Previous version') }}">
                             {{{ $accountsitem['bk_code'] }}}
