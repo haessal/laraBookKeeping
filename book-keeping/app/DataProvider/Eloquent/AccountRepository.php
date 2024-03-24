@@ -24,6 +24,7 @@ class AccountRepository implements AccountRepositoryInterface
         $account->account_title = $title;
         $account->description = $description;
         $account->selectable = true;
+        $account->is_credit_card = false;
         $account->bk_uid = $bk_uid;
         $account->account_bk_code = $bk_code;
         $account->save();
