@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('account_title', 40);
             $table->string('description', 200);
             $table->boolean('selectable');
+            $table->boolean('is_credit_card');
             $table->unsignedBigInteger('bk_uid')->nullable();
             $table->unsignedBigInteger('account_bk_code')->nullable();
             $table->bigInteger('display_order')->nullable();
