@@ -107,6 +107,7 @@ class AccountRepository implements AccountRepositoryInterface
             'account_title',
             'description',
             'selectable',
+            'is_credit_card',
             'account_bk_code',
             'bk2_0_accounts.created_at',
             'account_group_bk_code',

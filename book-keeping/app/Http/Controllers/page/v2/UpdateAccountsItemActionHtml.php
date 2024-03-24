@@ -128,6 +128,7 @@ class UpdateAccountsItemActionHtml extends AuthenticatedBookKeepingAction
                     $context['accountsitem']['title'] = $accountItem['title'];
                     $context['accountsitem']['description'] = $accountItem['description'];
                     $context['accountsitem']['attribute_selectable'] = $accountItem['selectable'] ? 'checked' : null;
+                    $context['accountsitem']['attribute_creditcard'] = $accountItem['isCreditCard'] ? 'checked' : null;
                     $context['accountsitem']['bk_code'] = $accountItem['bk_code'];
                 }
             }
