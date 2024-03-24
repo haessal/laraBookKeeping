@@ -109,6 +109,7 @@ class AccountService
      *   account_title: string,
      *   description: string,
      *   selectable: bool,
+     *   is_credit_card: bool,
      *   account_bk_code: int,
      *   created_at: string,
      *   account_group_bk_code: int,
@@ -130,6 +131,7 @@ class AccountService
                 'account_title' => strval($accountItem['account_title']),
                 'description' => strval($accountItem['description']),
                 'selectable' => boolval($accountItem['selectable']),
+                'is_credit_card' => boolval($accountItem['is_credit_card']),
                 'account_bk_code' => intval($accountItem['account_bk_code']),
                 'created_at' => strval($accountItem['created_at']),
                 'account_group_bk_code' => intval($accountItem['account_group_bk_code']),
@@ -181,6 +183,7 @@ class AccountService
      *   title?: string,
      *   description?: string,
      *   selectable?: bool,
+     *   is_credit_card?: bool,
      * }  $newData
      * @return void
      */
