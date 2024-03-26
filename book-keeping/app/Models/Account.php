@@ -10,6 +10,7 @@ namespace App\Models;
  * @property string $account_title
  * @property string $description
  * @property bool $selectable
+ * @property bool $is_credit_card
  * @property int|null $bk_uid
  * @property int|null $account_bk_code
  * @property int|null $display_order
