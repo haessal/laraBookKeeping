@@ -55,6 +55,7 @@ class BookKeepingMigrationLoader
         $errorMessage = null;
 
         if (key_exists('version', $contents) && is_string($contents['version'])) {
+            $version = new BookKeepingMigrationVersion($contents['version']);
             $importResult['version'] = $contents['version'];
         } else {
             $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;
