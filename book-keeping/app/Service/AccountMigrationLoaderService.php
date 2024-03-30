@@ -92,7 +92,7 @@ class AccountMigrationLoaderService extends AccountMigrationService
      * }>  $destinationAccountItems
      * @return array{0: array<string, mixed>, 1: string|null}
      */
-    public function loadAccountItem(BookKeepingMigrationVersion  $version, array $accountItem, array $destinationAccountItems): array
+    public function loadAccountItem(BookKeepingMigrationVersion $version, array $accountItem, array $destinationAccountItems): array
     {
         $mode = null;
         $result = null;
