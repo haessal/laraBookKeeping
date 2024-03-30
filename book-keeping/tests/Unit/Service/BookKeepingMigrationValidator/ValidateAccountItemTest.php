@@ -3,6 +3,7 @@
 namespace Tests\Unit\Service\BookKeepingMigrationValidator;
 
 use App\Service\BookKeepingMigrationValidator;
+use App\Service\BookKeepingMigrationVersion;
 use Illuminate\Support\Str;
 use Mockery;
 use Tests\TestCase;
@@ -19,8 +20,10 @@ class ValidateAccountItemTest extends TestCase
      */
     public function test_it_validates_the_format_of_the_account_item($accountItem, $accountItem_expected): void
     {
+        $version = new BookKeepingMigrationVersion('2.0');
+
         $service = new BookKeepingMigrationValidator();
-        $accountItem_actual = $service->validateAccountItem($accountItem);
+        $accountItem_actual = $service->validateAccountItem($version, $accountItem);
 
         $this->assertSame($accountItem_expected, $accountItem_actual);
     }
@@ -56,6 +59,7 @@ class ValidateAccountItemTest extends TestCase
                     'account_title' => $accountTitle,
                     'description' => $accountDescription,
                     'selectable' => true,
+                    'is_credit_card' => null,
                     'bk_uid' => $bk_uid,
                     'account_bk_code' => $bk_code,
                     'display_order' => $displayOrder,
@@ -82,6 +86,7 @@ class ValidateAccountItemTest extends TestCase
                     'account_title' => $accountTitle,
                     'description' => $accountDescription,
                     'selectable' => true,
+                    'is_credit_card' => null,
                     'bk_uid' => null,
                     'account_bk_code' => null,
                     'display_order' => null,
