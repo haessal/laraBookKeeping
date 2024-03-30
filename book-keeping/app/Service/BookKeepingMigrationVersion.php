@@ -47,4 +47,14 @@ class BookKeepingMigrationVersion
     {
         return Comparator::greaterThanOrEqualTo($this->version, $feature);
     }
+
+    /**
+     * Return a string representation.
+     *
+     * @return string
+     */
+    public function toString()
+    {
+        return $this->version;
+    }
 }
