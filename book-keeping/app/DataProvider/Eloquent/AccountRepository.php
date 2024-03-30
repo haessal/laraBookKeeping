@@ -41,6 +41,7 @@ class AccountRepository implements AccountRepositoryInterface
      *   account_title: string,
      *   description: string,
      *   selectable: bool,
+     *   is_credit_card: bool|null,
      *   bk_uid: int|null,
      *   account_bk_code: int|null,
      *   display_order: int|null,
@@ -57,6 +58,11 @@ class AccountRepository implements AccountRepositoryInterface
         $account->account_title = $newAccount['account_title'];
         $account->description = $newAccount['description'];
         $account->selectable = $newAccount['selectable'];
+        if (isset($newAccount['is_credit_card'])) {
+            $account->is_credit_card = $newAccount['is_credit_card'];
+        } else {
+            $account->is_credit_card = false;
+        }
         $account->bk_uid = $newAccount['bk_uid'];
         $account->account_bk_code = $newAccount['account_bk_code'];
         $account->display_order = $newAccount['display_order'];
@@ -164,6 +170,7 @@ class AccountRepository implements AccountRepositoryInterface
      *   account_title: string,
      *   description: string,
      *   selectable: bool,
+     *   is_credit_card: bool|null,
      *   bk_uid: int|null,
      *   account_bk_code: int|null,
      *   display_order: int|null,
@@ -181,6 +188,9 @@ class AccountRepository implements AccountRepositoryInterface
             $account->account_title = $newAccount['account_title'];
             $account->description = $newAccount['description'];
             $account->selectable = $newAccount['selectable'];
+            if (isset($newAccount['is_credit_card'])) {
+                $account->is_credit_card = $newAccount['is_credit_card'];
+            }
             $account->bk_uid = $newAccount['bk_uid'];
             $account->account_bk_code = $newAccount['account_bk_code'];
             $account->display_order = $newAccount['display_order'];

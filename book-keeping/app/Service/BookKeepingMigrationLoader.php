@@ -94,7 +94,7 @@ class BookKeepingMigrationLoader
                     $booksCount++;
                     // accounts
                     if (key_exists('accounts', $book)) {
-                        [$resultOfImportAccounts, $errorMessage] = $this->account->loadAccounts($bookId, $book['accounts']);
+                        [$resultOfImportAccounts, $errorMessage] = $this->account->loadAccounts($version, $bookId, $book['accounts']);
                         $importResult['books'][$bookIndex]['accounts'] = $resultOfImportAccounts;
                         if (isset($errorMessage)) {
                             $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;

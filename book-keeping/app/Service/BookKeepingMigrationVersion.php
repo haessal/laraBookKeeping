@@ -21,7 +21,7 @@ class BookKeepingMigrationVersion
     const CREDIT_CARD_STATEMENT = '2.1.0';
 
     /**
-     * Format version of books json for migration. 
+     * Format version of books json for migration.
      *
      * @var string
      */
@@ -32,8 +32,19 @@ class BookKeepingMigrationVersion
      *
      * @param  string  $version
      */
-    public function __construct($version = '0.0.0')
+    public function __construct($version)
     {
         $this->version = $version;
+    }
+
+    /**
+     * Indicate whether the specified feature is supported in this version.
+     *
+     * @param  string  $feature
+     * @return bool
+     */
+    public function isSupported($feature)
+    {
+        return Comparator::greaterThanOrEqualTo($this->version, $feature);
     }
 }
