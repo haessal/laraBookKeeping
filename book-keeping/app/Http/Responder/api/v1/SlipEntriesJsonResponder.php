@@ -21,6 +21,7 @@ class SlipEntriesJsonResponder extends BaseJsonResponder
      *       amount: int,
      *       client: string,
      *       outline: string,
+     *       credit_card_statement_id: string,
      *     }>
      *   }>|array{}
      * }  $context
@@ -47,6 +48,7 @@ class SlipEntriesJsonResponder extends BaseJsonResponder
      *     amount: int,
      *     client: string,
      *     outline: string,
+     *     credit_card_statement_id: string,
      *   }>
      * }>|array{}  $slips
      * @return array{
@@ -56,6 +58,7 @@ class SlipEntriesJsonResponder extends BaseJsonResponder
      *   amount: int,
      *   client: string,
      *   outline: string,
+     *   credit_card_statement: string,
      *   slip: array{
      *     id: string,
      *     date: string,
@@ -77,6 +80,7 @@ class SlipEntriesJsonResponder extends BaseJsonResponder
                     'amount' => $slipEntry['amount'],
                     'client' => $slipEntry['client'],
                     'outline' => $slipEntry['outline'],
+                    'credit_card_statement' => $slipEntry['credit_card_statement_id'],
                     'slip' => [
                         'id' => $slipId,
                         'date' => $slip['date'],

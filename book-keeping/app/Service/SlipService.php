@@ -212,6 +212,7 @@ class SlipService
      *   amount: int,
      *   client: string,
      *   outline: string,
+     *   credit_card_statement_id: string,
      * }[]
      */
     public function retrieveSlipEntries($fromDate, $toDate, array $condition, $bookId): array
@@ -231,6 +232,7 @@ class SlipService
                 'amount' => intval($slipEntry['amount']),
                 'client' => strval($slipEntry['client']),
                 'outline' => strval($slipEntry['outline']),
+                'credit_card_statement_id' => strval($slipEntry['credit_card_statement_id']),
             ];
         }
 
@@ -249,6 +251,7 @@ class SlipService
      *   amount: int,
      *   client: string,
      *   outline: string,
+     *   credit_card_statement_id: string,
      * }[]
      */
     public function retrieveSlipEntriesBoundTo($slipId): array
@@ -265,6 +268,7 @@ class SlipService
                 'amount' => intval($slipEntry['amount']),
                 'client' => strval($slipEntry['client']),
                 'outline' => strval($slipEntry['outline']),
+                'credit_card_statement_id' => strval($slipEntry['credit_card_statement_id']),
             ];
         }
 
@@ -288,6 +292,7 @@ class SlipService
      *   amount: int,
      *   client: string,
      *   outline: string,
+     *   credit_card_statement_id: string,
      * }|null
      */
     public function retrieveSlipEntry($slipEntryId, $bookId, $draftInclude): ?array
@@ -305,6 +310,7 @@ class SlipService
             'amount' => intval($slipEntry['amount']),
             'client' => strval($slipEntry['client']),
             'outline' => strval($slipEntry['outline']),
+            'credit_card_statement_id' => strval($slipEntry['credit_card_statement_id']),
         ];
     }
 
@@ -357,6 +363,7 @@ class SlipService
      *   amount?: int,
      *   client?: string,
      *   outline?: string,
+     *   credit_card_statement?: string,
      * }  $newData
      * @return void
      */

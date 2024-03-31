@@ -882,6 +882,7 @@ class BookKeepingService
      *       amount: int,
      *       client: string,
      *       outline: string,
+     *       credit_card_statement_id: string,
      *     }>
      *   }>|array{}
      * }|null}
@@ -957,6 +958,7 @@ class BookKeepingService
      *     amount: int,
      *     client: string,
      *     outline: string,
+     *     credit_card_statement_id: string,
      *   }>
      * }>|null}
      */
@@ -993,6 +995,7 @@ class BookKeepingService
                     'amount' => $slipEntryItem['amount'],
                     'client' => $slipEntryItem['client'],
                     'outline' => $slipEntryItem['outline'],
+                    'credit_card_statement_id' => $slipEntryItem['credit_card_statement_id'],
                 ];
             }
         } else {
@@ -1017,6 +1020,7 @@ class BookKeepingService
      *     amount: int,
      *     client: string,
      *     outline: string,
+     *     credit_card_statement_id: string,
      *   }>
      * }>|null}
      */
@@ -1050,6 +1054,7 @@ class BookKeepingService
                         'amount' => $slipEntry['amount'],
                         'client' => $slipEntry['client'],
                         'outline' => $slipEntry['outline'],
+                        'credit_card_statement_id' => $slipEntry['credit_card_statement_id'],
                     ],
                 ],
             ];
@@ -1080,6 +1085,7 @@ class BookKeepingService
      *     amount: int,
      *     client: string,
      *     outline: string,
+     *     credit_card_statement_id: string,
      *   }>
      * }>|null}
      */
@@ -1322,6 +1328,7 @@ class BookKeepingService
      *   amount?: int,
      *   client?: string,
      *   outline?: string,
+     *   credit_card_statement?: string,
      * }  $newData
      * @param  string|null  $bookId
      * @return array{0:int, 1:null}
@@ -1338,7 +1345,6 @@ class BookKeepingService
         if (is_null($slipEntry)) {
             return [self::STATUS_ERROR_AUTH_NOTAVAILABLE, null];
         }
-
         $accounts = $this->account->retrieveAccounts($bookId);
         if (array_key_exists('debit', $newData) && (! array_key_exists($newData['debit'], $accounts))) {
             return [self::STATUS_ERROR_BAD_CONDITION, null];
@@ -1346,6 +1352,10 @@ class BookKeepingService
         if (array_key_exists('credit', $newData) && (! array_key_exists($newData['credit'], $accounts))) {
             return [self::STATUS_ERROR_BAD_CONDITION, null];
         }
+        //$creditCardStatements = $this->creditCardStatement->retrieveCreditCardStatements($bookId, null);
+        //if (array_key_exists('credit_card_statement', $newData) && (! array_key_exists($newData['credit_card_statement'], $creditCardStatements))) {
+        //    return [self::STATUS_ERROR_BAD_CONDITION, null];
+        //}
 
         $this->slip->updateSlipEntry($slipEntryId, $newData);
 
@@ -1620,6 +1630,7 @@ class BookKeepingService
      *   amount: int,
      *   client: string,
      *   outline: string,
+     *   credit_card_statement_id: string,
      * }[]  $slipEntries
      * @return array<string, array{
      *   date: string,
@@ -1631,6 +1642,7 @@ class BookKeepingService
      *     amount: int,
      *     client: string,
      *     outline: string,
+     *     credit_card_statement_id: string,
      *   }>
      * }>
      */
@@ -1660,6 +1672,7 @@ class BookKeepingService
                 'amount' => $entry['amount'],
                 'client' => $entry['client'],
                 'outline' => $entry['outline'],
+                'credit_card_statement_id' => $entry['credit_card_statement_id'],
             ];
         }
 
