@@ -24,6 +24,8 @@ return new class extends Migration
             $table->bigInteger('amount');
             $table->string('client', 40);
             $table->string('outline', 200);
+            $table->uuid('credit_card_statement_id')->nullable();
+            $table->foreign('credit_card_statement_id')->references('credit_card_statement_id')->on('bk2_0_credit_card_statements');
             $table->bigInteger('display_order')->nullable();
             $table->timestamps();
             $table->softDeletes();
