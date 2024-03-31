@@ -12,8 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('bk2_0_credit_card_statements', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('credit_card_statement_id')->primary();
+            $table->uuid('book_id');
+            $table->foreign('book_id')->references('book_id')->on('bk2_0_books');
+            $table->string('credit_card_statement_outline', 200);
+            $table->string('credit_card_statement_memo', 500)->nullable();
+            $table->date('date');
+            $table->bigInteger('display_order')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
