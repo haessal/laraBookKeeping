@@ -69,6 +69,9 @@ class PatchBooksSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
         if (array_key_exists('outline', $request->all())) {
             $slipEntryContents['outline'] = $result['slipEntryContents']['outline'];
         }
+        if (array_key_exists('credit_card_statement', $request->all())) {
+            $slipEntryContents['credit_card_statement'] = $result['slipEntryContents']['credit_card_statement'];
+        }
         [$status, $_] = $this->BookKeeping->updateSlipEntry($slipEntryId, $slipEntryContents, $bookId);
         switch ($status) {
             case BookKeepingService::STATUS_NORMAL:
@@ -109,6 +112,7 @@ class PatchBooksSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
      *   amount: int,
      *   client: string,
      *   outline: string,
+     *   credit_card_statement: string,
      * }}
      */
     private function validateAndTrimSlipEntryContents(array $slipEntryContents): array
@@ -132,6 +136,9 @@ class PatchBooksSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
                     break;
                 case 'outline':
                     $trimmed['outline'] = trim(strval($contentsItem));
+                    break;
+                case 'credit_card_statement':
+                    $trimmed['credit_card_statement'] = trim(strval($contentsItem));
                     break;
                 default:
                     $success = false;
@@ -175,6 +182,11 @@ class PatchBooksSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
                 $success = false;
             }
         }
+        if (array_key_exists('credit_card_statement', $trimmed)) {
+            if (! $this->BookKeeping->validateUuid(strval($trimmed['credit_card_statement']))) {
+                $success = false;
+            }
+        }
 
         return [
             'success' => $success,
@@ -184,6 +196,7 @@ class PatchBooksSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
                 'amount' => array_key_exists('amount', $trimmed) ? intval($trimmed['amount']) : 0,
                 'client' => array_key_exists('client', $trimmed) ? strval($trimmed['client']) : '',
                 'outline' => array_key_exists('outline', $trimmed) ? strval($trimmed['outline']) : '',
+                'credit_card_statement' => array_key_exists('credit_card_statement', $trimmed) ? strval($trimmed['credit_card_statement']) : '',
             ],
         ];
     }

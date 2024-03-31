@@ -107,7 +107,8 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
                 'credit',
                 'amount',
                 'client',
-                'outline'
+                'outline',
+                'credit_card_statement_id',
             )
             ->where('slip_entry_id', $slipEntryId)
             ->where('book_id', $bookId)
@@ -145,7 +146,8 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
                 'credit',
                 'amount',
                 'client',
-                'outline'
+                'outline',
+                'credit_card_statement_id',
             )
             ->orderBy('date')
             ->orderBy('bk2_0_slip_entries.created_at')
@@ -207,7 +209,16 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     {
         /** @var array<int, array<string, mixed>> $list */
         $list = SlipEntry::query()
-            ->select('slip_entry_id', 'slip_id', 'debit', 'credit', 'amount', 'client', 'outline')
+            ->select(
+                'slip_entry_id',
+                'slip_id',
+                'debit',
+                'credit',
+                'amount',
+                'client',
+                'outline',
+                'credit_card_statement_id',
+            )
             ->where('slip_id', $slipId)
             ->orderBy('created_at')
             ->orderBy('display_order')
@@ -264,6 +275,9 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
             }
             if (array_key_exists('outline', $newData)) {
                 $slipEntry->outline = strval($newData['outline']);
+            }
+            if (array_key_exists('credit_card_statement', $newData)) {
+                $slipEntry->credit_card_statement_id = strval($newData['credit_card_statement']);
             }
             $slipEntry->save();
         }
