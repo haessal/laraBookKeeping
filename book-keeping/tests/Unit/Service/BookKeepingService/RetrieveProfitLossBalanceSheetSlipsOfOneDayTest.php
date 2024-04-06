@@ -6,6 +6,7 @@ use App\Service\AccountService;
 use App\Service\BookKeepingService;
 use App\Service\BookService;
 use App\Service\BudgetService;
+use App\Service\CreditCardStatementService;
 use App\Service\SlipService;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Str;
@@ -318,8 +319,10 @@ class RetrieveProfitLossBalanceSheetSlipsOfOneDayTest extends TestCase
             ->once()
             ->with($date, $date, ['debit' => null, 'credit' => null, 'and_or' => null, 'keyword' => null], $bookId)
             ->andReturn($slipEntries);
+        /** @var \App\Service\CreditCardStatementService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementService::class);
 
-        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock, $creditCardStatementMock);
         $result_actual = $BookKeeping->retrieveProfitLossBalanceSheetSlipsOfOneDay($date);
 
         $this->assertSame($result_expected, $result_actual);
@@ -349,8 +352,10 @@ class RetrieveProfitLossBalanceSheetSlipsOfOneDayTest extends TestCase
         $slipMock = Mockery::mock(SlipService::class);
         $slipMock->shouldNotReceive('retrieveAmountFlows');
         $slipMock->shouldNotReceive('retrieveSlipEntries');
+        /** @var \App\Service\CreditCardStatementService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementService::class);
 
-        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock, $creditCardStatementMock);
         $result_actual = $BookKeeping->retrieveProfitLossBalanceSheetSlipsOfOneDay($date, $bookId);
 
         $this->assertSame($result_expected, $result_actual);

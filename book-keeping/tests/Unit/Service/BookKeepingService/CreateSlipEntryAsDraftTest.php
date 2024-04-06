@@ -6,6 +6,7 @@ use App\Service\AccountService;
 use App\Service\BookKeepingService;
 use App\Service\BookService;
 use App\Service\BudgetService;
+use App\Service\CreditCardStatementService;
 use App\Service\SlipService;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Carbon;
@@ -56,9 +57,11 @@ class CreateSlipEntryAsDraftTest extends TestCase
                 ['debit' => $debit, 'client' => $client, 'outline' => $outline, 'credit' => $credit, 'amount' => $amount],
             ]);
         $slipMock->shouldNotReceive('createSlipEntry');
+        /** @var \App\Service\CreditCardStatementService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementService::class);
         Carbon::setTestNow(new Carbon('2019-12-02 09:59:59'));
 
-        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock, $creditCardStatementMock);
         $result_actual = $BookKeeping->createSlipEntryAsDraft($debit, $client, $outline, $credit, $amount);
 
         $this->assertSame($result_expected, $result_actual);
@@ -98,8 +101,10 @@ class CreateSlipEntryAsDraftTest extends TestCase
         $slipMock->shouldReceive('createSlipEntry')
             ->once()
             ->with($slipId, $debit, $credit, $amount, $client, $outline);
+        /** @var \App\Service\CreditCardStatementService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementService::class);
 
-        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock, $creditCardStatementMock);
         $result_actual = $BookKeeping->createSlipEntryAsDraft($debit, $client, $outline, $credit, $amount, $bookId);
 
         $this->assertSame($result_expected, $result_actual);
@@ -133,8 +138,10 @@ class CreateSlipEntryAsDraftTest extends TestCase
         $slipMock->shouldNotReceive('retrieveDraftSlips');
         $slipMock->shouldNotReceive('createSlipAsDraft');
         $slipMock->shouldNotReceive('createSlipEntry');
+        /** @var \App\Service\CreditCardStatementService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementService::class);
 
-        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock, $creditCardStatementMock);
         $result_actual = $BookKeeping->createSlipEntryAsDraft($debit, $client, $outline, $credit, $amount, $bookId);
 
         $this->assertSame($result_expected, $result_actual);
