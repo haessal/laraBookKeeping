@@ -9,6 +9,7 @@ use App\Http\Controllers\api\v1\GetAccountsActionApi;
 use App\Http\Controllers\api\v1\GetBooksAccountsActionApi;
 use App\Http\Controllers\api\v1\GetBooksActionApi;
 use App\Http\Controllers\api\v1\GetBooksBookIdActionApi;
+use App\Http\Controllers\api\v1\GetBooksCreditCardStatementsActionApi;
 use App\Http\Controllers\api\v1\GetBooksDefaultActionApi;
 use App\Http\Controllers\api\v1\GetBooksPermissionsActionApi;
 use App\Http\Controllers\api\v1\GetBooksSlipEntriesActionApi;
@@ -24,6 +25,7 @@ use App\Http\Controllers\api\v1\PatchSlipEntriesActionApi;
 use App\Http\Controllers\api\v1\PatchSlipsActionApi;
 use App\Http\Controllers\api\v1\PostBooksActionApi;
 use App\Http\Controllers\api\v1\PostBooksSlipsActionApi;
+use App\Http\Controllers\api\v1\PostBooksCreditCardStatementsActionApi;
 use App\Http\Controllers\api\v1\PostSlipsActionApi;
 use App\Http\Controllers\api\v1\PutBooksDefaultActionApi;
 use App\Http\Controllers\api\v1\PutBooksPermissionsActionApi;
@@ -79,6 +81,9 @@ Route::prefix('v1')->group(function () {
         Route::get('/slipentries/{slipEntryId}', GetBooksSlipEntriesSlipEntryIdActionApi::class);
         Route::patch('/slipentries/{slipEntryId}', PatchBooksSlipEntriesActionApi::class);
         Route::delete('/slipentries/{slipEntryId}', DeleteBooksSlipEntriesActionApi::class);
+
+        Route::get('/creditcardstatements', GetBooksCreditCardStatementsActionApi::class);
+        Route::post('/creditcardstatements', PostBooksCreditCardStatementsActionApi::class);
     });
 
     Route::get('/export/books', ExportBooksActionApi::class);
