@@ -129,6 +129,7 @@ class DefaultBookSlipEntryListRetrievalTest extends TestCase
                     'amount' => $this->slipEntry->amount,
                     'client' => $this->slipEntry->client,
                     'outline' => $this->slipEntry->outline,
+                    'credit_card_statement' => '',
                     'slip' => [
                         'id' => $this->slip->slip_id,
                         'date' => $this->slip->date,

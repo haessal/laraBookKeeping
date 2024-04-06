@@ -146,6 +146,7 @@ class SlipEntryUpdateTest extends TestCase
                     'amount' => $newAmount,
                     'client' => $newClient,
                     'outline' => $newOutline,
+                    'credit_card_statement' => '',
                     'slip' => [
                         'id' => $this->slip->slip_id,
                         'date' => $this->slip->date,

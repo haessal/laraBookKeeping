@@ -34,6 +34,7 @@ class RetrieveSlipEntryTest extends TestCase
             'amount' => 341,
             'client' => 'client342',
             'outline' => 'outline343',
+            'credit_card_statement_id' => '',
         ];
         $draftInclude = true;
         /** @var \App\DataProvider\SlipRepositoryInterface|\Mockery\MockInterface $slipMock */

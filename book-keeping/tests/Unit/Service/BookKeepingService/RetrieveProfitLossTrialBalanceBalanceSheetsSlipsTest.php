@@ -161,6 +161,7 @@ class RetrieveProfitLossTrialBalanceBalanceSheetsSlipsTest extends TestCase
             'amount' => $amount,
             'client' => $client,
             'outline' => $outline,
+            'credit_card_statement_id' => '',
         ]];
         $profitLoss = [
             AccountService::ACCOUNT_TYPE_EXPENSE => ['amount' => 400, 'groups' => [
@@ -283,6 +284,7 @@ class RetrieveProfitLossTrialBalanceBalanceSheetsSlipsTest extends TestCase
                 'amount' => $amount,
                 'client' => $client,
                 'outline' => $outline,
+                'credit_card_statement_id' => '',
             ]],
         ]];
         $result_expected = [BookKeepingService::STATUS_NORMAL, [
