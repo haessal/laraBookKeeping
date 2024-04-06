@@ -12,6 +12,7 @@ namespace App\Models;
  * @property int $amount
  * @property string $client
  * @property string $outline
+ * @property int|null $credit_card_statement_id
  * @property int|null $display_order
  */
 class SlipEntry extends BookKeepingBasicModel
