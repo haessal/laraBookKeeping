@@ -39,6 +39,10 @@ class AppServiceProvider extends ServiceProvider
             \App\DataProvider\SlipRepositoryInterface::class,
             \App\DataProvider\Eloquent\SlipRepository::class
         );
+        $this->app->bind(
+            \App\DataProvider\CreditCardStatementRepositoryInterface::class,
+            \App\DataProvider\Eloquent\CreditCardStatementRepository::class
+        );
     }
 
     /**
