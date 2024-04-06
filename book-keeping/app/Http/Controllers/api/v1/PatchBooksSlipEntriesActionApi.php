@@ -183,7 +183,8 @@ class PatchBooksSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
             }
         }
         if (array_key_exists('credit_card_statement', $trimmed)) {
-            if (! $this->BookKeeping->validateUuid(strval($trimmed['credit_card_statement']))) {
+            if ((! empty($trimmed['credit_card_statement'])) &&
+                (! $this->BookKeeping->validateUuid(strval($trimmed['credit_card_statement'])))) {
                 $success = false;
             }
         }

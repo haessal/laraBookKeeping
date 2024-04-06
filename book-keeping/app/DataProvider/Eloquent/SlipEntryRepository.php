@@ -277,7 +277,11 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
                 $slipEntry->outline = strval($newData['outline']);
             }
             if (array_key_exists('credit_card_statement', $newData)) {
-                $slipEntry->credit_card_statement_id = strval($newData['credit_card_statement']);
+                if (empty($newData['credit_card_statement'])) {
+                    $slipEntry->credit_card_statement_id = null;
+                } else {
+                    $slipEntry->credit_card_statement_id = strval($newData['credit_card_statement']);
+                }
             }
             $slipEntry->save();
         }
