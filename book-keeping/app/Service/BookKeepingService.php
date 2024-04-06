@@ -1432,9 +1432,14 @@ class BookKeepingService
         if (array_key_exists('credit', $newData) && (! array_key_exists($newData['credit'], $accounts))) {
             return [self::STATUS_ERROR_BAD_CONDITION, null];
         }
-        $creditCardStatements = $this->creditCardStatement->retrieveCreditCardStatements($bookId, null);
-        if (array_key_exists('credit_card_statement', $newData) && (! array_key_exists($newData['credit_card_statement'], $creditCardStatements))) {
-            return [self::STATUS_ERROR_BAD_CONDITION, null];
+        if (array_key_exists('credit_card_statement', $newData) && (! empty($newData['credit_card_statement']))) {
+            $creditCardStatements = $this->creditCardStatement->retrieveCreditCardStatements(
+                $bookId,
+                $newData['credit_card_statement']
+            );
+            if (! array_key_exists($newData['credit_card_statement'], $creditCardStatements)) {
+                return [self::STATUS_ERROR_BAD_CONDITION, null];
+            }
         }
 
         $this->slip->updateSlipEntry($slipEntryId, $newData);
