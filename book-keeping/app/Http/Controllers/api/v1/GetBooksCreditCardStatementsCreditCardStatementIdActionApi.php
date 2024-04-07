@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\api\AuthenticatedBookKeepingActionApi;
-use App\Http\Responder\api\v1\CreditCardStatementsJsonResponder;
+use App\Http\Responder\api\v1\CreditCardStatementJsonResponder;
 use App\Service\BookKeepingService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class GetBooksCreditCardStatementsActionApi extends AuthenticatedBookKeepingActionApi
+class GetBooksCreditCardStatementsCreditCardStatementIdActionApi extends AuthenticatedBookKeepingActionApi
 {
     /**
-     * CreditCardStatementsJson responder instance.
+     * CreditCardStatementJson responder instance.
      *
-     * @var \App\Http\Responder\api\v1\CreditCardStatementsJsonResponder
+     * @var \App\Http\Responder\api\v1\CreditCardStatementJsonResponder
      */
     private $responder;
 
@@ -21,10 +21,10 @@ class GetBooksCreditCardStatementsActionApi extends AuthenticatedBookKeepingActi
      * Create a new controller instance.
      *
      * @param  \App\Service\BookKeepingService  $BookKeeping
-     * @param  \App\Http\Responder\api\v1\CreditCardStatementsJsonResponder  $responder
+     * @param  \App\Http\Responder\api\v1\CreditCardStatementJsonResponder  $responder
      * @return void
      */
-    public function __construct(BookKeepingService $BookKeeping, CreditCardStatementsJsonResponder $responder)
+    public function __construct(BookKeepingService $BookKeeping, CreditCardStatementJsonResponder $responder)
     {
         parent::__construct($BookKeeping);
         $this->responder = $responder;
@@ -35,9 +35,10 @@ class GetBooksCreditCardStatementsActionApi extends AuthenticatedBookKeepingActi
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  string  $bookId
+     * @param  string  $creditCardStatementId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function __invoke(Request $request, string $bookId): JsonResponse
+    public function __invoke(Request $request, string $bookId, string $creditCardStatementId): JsonResponse
     {
         $context = [];
         $response = null;
@@ -45,12 +46,15 @@ class GetBooksCreditCardStatementsActionApi extends AuthenticatedBookKeepingActi
         if (! $this->BookKeeping->validateUuid($bookId)) {
             return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
         }
+        if (! $this->BookKeeping->validateUuid($creditCardStatementId)) {
+            return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
+        }
 
-        [$status, $creditCardStatements] = $this->BookKeeping->retrieveCreditCardStatements($bookId);
+        [$status, $creditCardStatement] = $this->BookKeeping->retrieveCreditCardStatement($creditCardStatementId, $bookId);
         switch ($status) {
             case BookKeepingService::STATUS_NORMAL:
-                if (isset($creditCardStatements)) {
-                    $context['creditCardStatements'] = $creditCardStatements;
+                if (isset($creditCardStatement)) {
+                    $context['creditCardStatement'] = $creditCardStatement;
                     $response = $this->responder->response($context);
                 }
                 break;

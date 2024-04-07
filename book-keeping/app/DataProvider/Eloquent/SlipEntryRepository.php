@@ -347,6 +347,8 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
         $and_or = array_key_exists('and_or', $condition) ? $condition['and_or'] : null;
         /** @var string|null $keyword */
         $keyword = array_key_exists('keyword', $condition) ? $condition['keyword'] : null;
+        /** @var string[]|null $creditCardAccountIds */
+        $creditCardAccountIds = array_key_exists('credit_card_account_ids', $condition) ? $condition['credit_card_account_ids'] : null;
 
         /** @var \Illuminate\Database\Eloquent\Builder $query */
         $query = SlipEntry::query()
@@ -383,6 +385,18 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
                     $subquery->where('client', 'like binary', "%$keyword%")
                              ->orWhere('outline', 'like binary', "%$keyword%");
                 });
+        }
+        if (empty($debit) && empty($credit) && empty($and_or) && ! empty($creditCardAccountIds)) {
+            $query = $query
+                ->where(function ($subquery) use ($creditCardAccountIds) {
+                    foreach ($creditCardAccountIds as $accountId) {
+                        $subquery = $subquery->orWhere('debit', $accountId)->orWhere('credit', $accountId);
+                    }
+                });
+        }
+        if (array_key_exists('credit_card_statement_id', $condition)) {
+            $creditCardStatementId = $condition['credit_card_statement_id'];
+            $query = $query->where('credit_card_statement_id', $creditCardStatementId);
         }
 
         return $query;
