@@ -10,6 +10,7 @@ use App\Http\Controllers\api\v1\GetBooksAccountsActionApi;
 use App\Http\Controllers\api\v1\GetBooksActionApi;
 use App\Http\Controllers\api\v1\GetBooksBookIdActionApi;
 use App\Http\Controllers\api\v1\GetBooksCreditCardStatementsActionApi;
+use App\Http\Controllers\api\v1\GetBooksCreditCardStatementsCreditCardStatementIdActionApi;
 use App\Http\Controllers\api\v1\GetBooksDefaultActionApi;
 use App\Http\Controllers\api\v1\GetBooksPermissionsActionApi;
 use App\Http\Controllers\api\v1\GetBooksSlipEntriesActionApi;
@@ -83,6 +84,7 @@ Route::prefix('v1')->group(function () {
         Route::delete('/slipentries/{slipEntryId}', DeleteBooksSlipEntriesActionApi::class);
 
         Route::get('/creditcardstatements', GetBooksCreditCardStatementsActionApi::class);
+        Route::get('/creditcardstatements/{creditCardStatementId}', GetBooksCreditCardStatementsCreditCardStatementIdActionApi::class);
         Route::post('/creditcardstatements', PostBooksCreditCardStatementsActionApi::class);
     });
 
