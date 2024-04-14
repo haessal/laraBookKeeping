@@ -31,37 +31,33 @@ class CreditCardStatementRepository implements CreditCardStatementRepositoryInte
     }
 
     /**
-     * Create a new account group to import.
+     * Create a new credit card statement to import.
      *
      * @param  array{
-     *   account_group_id: string,
+     *   credit_card_statement_id: string,
      *   book_id: string,
-     *   account_type: string,
-     *   account_group_title: string,
-     *   bk_uid: int|null,
-     *   account_group_bk_code: int|null,
-     *   is_current: bool,
+     *   credit_card_statement_outline: string,
+     *   credit_card_statement_memo: string|null,
+     *   date: string,
      *   display_order: int|null,
      *   updated_at: string|null,
      *   deleted: bool,
-     * }  $newAccountGroup
+     * }  $newCreditCardStatement
      * @return void
      */
-    public function createForImporting(array $newAccountGroup)
+    public function createForImporting(array $newCreditCardStatement)
     {
-        $accountGroup = new CreditCardStatement();
-        $accountGroup->account_group_id = $newAccountGroup['account_group_id'];
-        $accountGroup->book_id = $newAccountGroup['book_id'];
-        $accountGroup->account_type = $newAccountGroup['account_type'];
-        $accountGroup->account_group_title = $newAccountGroup['account_group_title'];
-        $accountGroup->bk_uid = $newAccountGroup['bk_uid'];
-        $accountGroup->account_group_bk_code = $newAccountGroup['account_group_bk_code'];
-        $accountGroup->is_current = $newAccountGroup['is_current'];
-        $accountGroup->display_order = $newAccountGroup['display_order'];
-        $accountGroup->save();
-        $accountGroup->refresh();
-        if ($newAccountGroup['deleted']) {
-            $accountGroup->delete();
+        $creditCardStatement = new CreditCardStatement();
+        $creditCardStatement->credit_card_statement_id = $newCreditCardStatement['credit_card_statement_id'];
+        $creditCardStatement->book_id = $newCreditCardStatement['book_id'];
+        $creditCardStatement->credit_card_statement_outline = $newCreditCardStatement['credit_card_statement_outline'];
+        $creditCardStatement->credit_card_statement_memo = $newCreditCardStatement['credit_card_statement_memo'];
+        $creditCardStatement->date = $newCreditCardStatement['date'];
+        $creditCardStatement->display_order = $newCreditCardStatement['display_order'];
+        $creditCardStatement->save();
+        $creditCardStatement->refresh();
+        if ($creditCardStatement['deleted']) {
+            $creditCardStatement->delete();
         }
     }
 
@@ -94,20 +90,20 @@ class CreditCardStatementRepository implements CreditCardStatementRepositoryInte
     }
 
     /**
-     * Search the book for account groups to export.
+     * Search the book for credit card statements to export.
      *
      * @param  string  $bookId
-     * @param  string|null  $accountGroupId
+     * @param  string|null  $creditCardStatementId
      * @return array<int, array<string, mixed>>
      */
-    public function searchBookForExporting($bookId, $accountGroupId = null): array
+    public function searchBookForExporting($bookId, $creditCardStatementId = null): array
     {
         /** @var \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder $query */
         $query = CreditCardStatement::withTrashed()
             ->select('*')
             ->where('book_id', $bookId);
-        if (isset($accountGroupId)) {
-            $query = $query->where('account_group_id', $accountGroupId);
+        if (isset($creditCardStatementId)) {
+            $query = $query->where('credit_card_statement_id', $creditCardStatementId);
         }
         /** @var array<int, array<string, mixed>> $list */
         $list = $query->get()->toArray();
@@ -138,44 +134,40 @@ class CreditCardStatementRepository implements CreditCardStatementRepositoryInte
     }
 
     /**
-     * Update the account group to import.
+     * Update the credit card statement to import.
      *
      * @param  array{
-     *   account_group_id: string,
+     *   credit_card_statement_id: string,
      *   book_id: string,
-     *   account_type: string,
-     *   account_group_title: string,
-     *   bk_uid: int|null,
-     *   account_group_bk_code: int|null,
-     *   is_current: bool,
+     *   credit_card_statement_outline: string,
+     *   credit_card_statement_memo: string|null,
+     *   date: string,
      *   display_order: int|null,
      *   updated_at: string|null,
      *   deleted: bool,
-     * }  $newAccountGroup
+     * }  $newCreditCardStatement
      * @return void
      */
-    public function updateForImporting(array $newAccountGroup)
+    public function updateForImporting(array $newCreditCardStatement)
     {
-        /** @var \App\Models\CreditCardStatement|null $accountGroup */
-        $accountGroup = CreditCardStatement::withTrashed()->find($newAccountGroup['account_group_id']);
-        if (! is_null($accountGroup)) {
-            $accountGroup->book_id = $newAccountGroup['book_id'];
-            $accountGroup->account_type = $newAccountGroup['account_type'];
-            $accountGroup->account_group_title = $newAccountGroup['account_group_title'];
-            $accountGroup->bk_uid = $newAccountGroup['bk_uid'];
-            $accountGroup->account_group_bk_code = $newAccountGroup['account_group_bk_code'];
-            $accountGroup->is_current = $newAccountGroup['is_current'];
-            $accountGroup->display_order = $newAccountGroup['display_order'];
-            $accountGroup->touch();
-            $accountGroup->save();
-            $accountGroup->refresh();
-            if ($accountGroup->trashed()) {
-                if (! $newAccountGroup['deleted']) {
-                    $accountGroup->restore();
+        /** @var \App\Models\CreditCardStatement|null $creditCardStatement */
+        $creditCardStatement = CreditCardStatement::withTrashed()->find($newCreditCardStatement['credit_card_statement_id']);
+        if (! is_null($creditCardStatement)) {
+            $creditCardStatement->book_id = $newCreditCardStatement['book_id'];
+            $creditCardStatement->credit_card_statement_outline = $newCreditCardStatement['credit_card_statement_outline'];
+            $creditCardStatement->credit_card_statement_memo = $newCreditCardStatement['credit_card_statement_memo'];
+            $creditCardStatement->date = $newCreditCardStatement['date'];
+            $creditCardStatement->display_order = $newCreditCardStatement['display_order'];
+            $creditCardStatement->touch();
+            $creditCardStatement->save();
+            $creditCardStatement->refresh();
+            if ($creditCardStatement->trashed()) {
+                if (! $newCreditCardStatement['deleted']) {
+                    $creditCardStatement->restore();
                 }
             } else {
-                if ($newAccountGroup['deleted']) {
-                    $accountGroup->delete();
+                if ($newCreditCardStatement['deleted']) {
+                    $creditCardStatement->delete();
                 }
             }
         }

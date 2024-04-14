@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Models\CreditCardStatement;
 use Illuminate\Support\Carbon;
 
 class BookKeepingMigrationValidator
@@ -181,6 +182,60 @@ class BookKeepingMigrationValidator
             'display_order' => is_null($bookInformation['display_order']) ? null : intval($bookInformation['display_order']),
             'updated_at' => is_null($bookInformation['updated_at']) ? null : strval($bookInformation['updated_at']),
             'deleted' => $bookInformation['deleted'],
+        ];
+    }
+
+    /**
+     * Validate the credit card statement.
+     *
+     * @param  array<string, mixed>  $creditCardStatement
+     * @return array{
+     *   credit_card_statement_id: string,
+     *   book_id: string,
+     *   credit_card_statement_outline: string,
+     *   credit_card_statement_memo: string|null,
+     *   date: string,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }|null
+     */
+    public function validateCreditCardStatement(array $creditCardStatement): ?array
+    {
+        if (! key_exists('credit_card_statement_id', $creditCardStatement) || ! $this->validateUuid($creditCardStatement['credit_card_statement_id'])) {
+            return null;
+        }
+        if (! key_exists('book_id', $creditCardStatement) || ! $this->validateUuid($creditCardStatement['book_id'])) {
+            return null;
+        }
+        if (! key_exists('credit_card_statement_outline', $creditCardStatement) || ! is_string($creditCardStatement['credit_card_statement_outline'])) {
+            return null;
+        }
+        if (! key_exists('credit_card_statement_memo', $creditCardStatement) || ! $this->isStringOrNull($creditCardStatement['credit_card_statement_memo'])) {
+            return null;
+        }
+        if (! key_exists('date', $creditCardStatement) || ! $this->validateDateFormat($creditCardStatement['date'])) {
+            return null;
+        }
+        if (! key_exists('display_order', $creditCardStatement) || ! $this->isIntOrNull($creditCardStatement['display_order'])) {
+            return null;
+        }
+        if (! key_exists('updated_at', $creditCardStatement) || ! $this->validateUpdatedAt($creditCardStatement['updated_at'])) {
+            return null;
+        }
+        if (! key_exists('deleted', $creditCardStatement) || ! is_bool($creditCardStatement['deleted'])) {
+            return null;
+        }
+
+        return [
+            'credit_card_statement_id' => strval($creditCardStatement['credit_card_statement_id']),
+            'book_id' => strval($creditCardStatement['book_id']),
+            'credit_card_statement_outline' => $creditCardStatement['credit_card_statement_outline'],
+            'credit_card_statement_memo' => is_null($creditCardStatement['credit_card_statement_memo']) ? null : strval($creditCardStatement['credit_card_statement_memo']),
+            'date' => strval($creditCardStatement['date']),
+            'display_order' => is_null($creditCardStatement['display_order']) ? null : intval($creditCardStatement['display_order']),
+            'updated_at' => is_null($creditCardStatement['updated_at']) ? null : strval($creditCardStatement['updated_at']),
+            'deleted' => $creditCardStatement['deleted'],
         ];
     }
 
