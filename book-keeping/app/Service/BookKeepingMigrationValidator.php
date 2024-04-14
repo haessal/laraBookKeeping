@@ -301,6 +301,7 @@ class BookKeepingMigrationValidator
     /**
      * Validate the slip entry.
      *
+     * @param  \App\Service\BookKeepingMigrationVersion  $version
      * @param  array<string, mixed>  $slipEntry
      * @return array{
      *   slip_entry_id: string,
@@ -310,12 +311,13 @@ class BookKeepingMigrationValidator
      *   amount: int,
      *   client: string,
      *   outline: string,
+     *   credit_card_statement_id: string|null,
      *   display_order: int|null,
      *   updated_at: string|null,
      *   deleted: bool,
      * }|null
      */
-    public function validateSlipEntry(array $slipEntry): ?array
+    public function validateSlipEntry($version, array $slipEntry): ?array
     {
         if (! key_exists('slip_entry_id', $slipEntry) || ! $this->validateUuid($slipEntry['slip_entry_id'])) {
             return null;
@@ -338,6 +340,23 @@ class BookKeepingMigrationValidator
         if (! key_exists('outline', $slipEntry) || ! is_string($slipEntry['outline'])) {
             return null;
         }
+        if ($version->isSupported(BookKeepingMigrationVersion::CREDIT_CARD_STATEMENT)) {
+            if (key_exists('credit_card_statement_id', $slipEntry)) {
+                if (is_null($slipEntry['credit_card_statement_id'])) {
+                    $creditCardStatementId = null;
+                } else {
+                    if ($this->validateUuid($slipEntry['credit_card_statement_id'])) {
+                        $creditCardStatementId = $slipEntry['credit_card_statement_id'];
+                    } else {
+                        return null;
+                    }
+                }
+            } else {
+                return null;
+            }
+        } else {
+            $creditCardStatementId = null;
+        }
         if (! key_exists('display_order', $slipEntry) || ! $this->isIntOrNull($slipEntry['display_order'])) {
             return null;
         }
@@ -356,6 +375,7 @@ class BookKeepingMigrationValidator
             'amount' => $slipEntry['amount'],
             'client' => $slipEntry['client'],
             'outline' => $slipEntry['outline'],
+            'credit_card_statement_id' => is_null($creditCardStatementId) ? null : strval($creditCardStatementId),
             'display_order' => is_null($slipEntry['display_order']) ? null : intval($slipEntry['display_order']),
             'updated_at' => is_null($slipEntry['updated_at']) ? null : strval($slipEntry['updated_at']),
             'deleted' => $slipEntry['deleted'],
