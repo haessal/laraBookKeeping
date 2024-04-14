@@ -121,7 +121,7 @@ class BookKeepingMigrationLoader
                     }
                     // slips
                     if (key_exists('slips', $book)) {
-                        [$resultOfImportSlips, $errorMessage] = $this->slip->loadSlips($bookId, $book['slips']);
+                        [$resultOfImportSlips, $errorMessage] = $this->slip->loadSlips($version, $bookId, $book['slips']);
                         $importResult['books'][$bookIndex]['slips'] = $resultOfImportSlips;
                         if (isset($errorMessage)) {
                             $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;
