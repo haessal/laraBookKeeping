@@ -29,17 +29,26 @@ class BookKeepingMigrationLoader
     private $slip;
 
     /**
+     * Credit card statement migration service instance.
+     *
+     * @var \App\Service\CreditCardStatementMigrationLoaderService
+     */
+    private $creditCardStatement;
+
+    /**
      * Create a new BookKeepingMigration instance.
      *
      * @param  \App\Service\BookMigrationLoaderService  $book
      * @param  \App\Service\AccountMigrationLoaderService  $account
      * @param  \App\Service\SlipMigrationLoaderService  $slip
+     * @param  \App\Service\CreditCardStatementMigrationLoaderService  $creditCardStatement
      */
-    public function __construct(BookMigrationLoaderService $book, AccountMigrationLoaderService $account, SlipMigrationLoaderService $slip)
+    public function __construct(BookMigrationLoaderService $book, AccountMigrationLoaderService $account, SlipMigrationLoaderService $slip, CreditCardStatementMigrationLoaderService  $creditCardStatement)
     {
         $this->book = $book;
         $this->account = $account;
         $this->slip = $slip;
+        $this->creditCardStatement = $creditCardStatement;
     }
 
     /**
@@ -96,6 +105,15 @@ class BookKeepingMigrationLoader
                     if (key_exists('accounts', $book)) {
                         [$resultOfImportAccounts, $errorMessage] = $this->account->loadAccounts($version, $bookId, $book['accounts']);
                         $importResult['books'][$bookIndex]['accounts'] = $resultOfImportAccounts;
+                        if (isset($errorMessage)) {
+                            $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;
+                            break;
+                        }
+                    }
+                    // credit card statements
+                    if (key_exists('creditCardStatements', $book)) {
+                        [$resultOfImportCreditCardStatements, $errorMessage] = $this->creditCardStatement->loadCreditCardStatements($bookId, $book['creditCardStatements']);
+                        $importResult['books'][$bookIndex]['creditCardStatements'] = $resultOfImportCreditCardStatements;
                         if (isset($errorMessage)) {
                             $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;
                             break;

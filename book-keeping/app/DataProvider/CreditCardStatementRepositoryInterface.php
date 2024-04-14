@@ -17,23 +17,21 @@ interface CreditCardStatementRepositoryInterface
     public function create($bookId, $outline, $memo, $date, $displayOrder);
 
     /**
-     * Create a new account group to import.
+     * Create a new credit card statement to import.
      *
      * @param  array{
-     *   account_group_id: string,
+     *   credit_card_statement_id: string,
      *   book_id: string,
-     *   account_type: string,
-     *   account_group_title: string,
-     *   bk_uid: int|null,
-     *   account_group_bk_code: int|null,
-     *   is_current: bool,
+     *   credit_card_statement_outline: string,
+     *   credit_card_statement_memo: string|null,
+     *   date: string,
      *   display_order: int|null,
      *   updated_at: string|null,
      *   deleted: bool,
-     * }  $newAccountGroup
+     * }  $newCreditCardStatement
      * @return void
      */
-    public function createForImporting(array $newAccountGroup);
+    public function createForImporting(array $newCreditCardStatement);
 
     /**
      * Search the book for credit card statement.
@@ -45,13 +43,13 @@ interface CreditCardStatementRepositoryInterface
     public function searchBook($bookId, $creditCardStatementId): array;
 
     /**
-     * Search the book for account groups to export.
+     * Search the book for credit card statements to export.
      *
      * @param  string  $bookId
-     * @param  string|null  $accountGroupId
+     * @param  string|null  $creditCardStatementId
      * @return array<int, array<string, mixed>>
      */
-    public function searchBookForExporting($bookId, $accountGroupId = null): array;
+    public function searchBookForExporting($bookId, $creditCardStatementId = null): array;
 
     /**
      * Update the account group.
@@ -63,21 +61,19 @@ interface CreditCardStatementRepositoryInterface
     public function update($accountGroupId, array $newData);
 
     /**
-     * Update the account group to import.
+     * Update the credit card statement to import.
      *
      * @param  array{
-     *   account_group_id: string,
+     *   credit_card_statement_id: string,
      *   book_id: string,
-     *   account_type: string,
-     *   account_group_title: string,
-     *   bk_uid: int|null,
-     *   account_group_bk_code: int|null,
-     *   is_current: bool,
+     *   credit_card_statement_outline: string,
+     *   credit_card_statement_memo: string|null,
+     *   date: string,
      *   display_order: int|null,
      *   updated_at: string|null,
      *   deleted: bool,
-     * }  $newAccountGroup
+     * }  $newCreditCardStatement
      * @return void
      */
-    public function updateForImporting(array $newAccountGroup);
+    public function updateForImporting(array $newCreditCardStatement);
 }

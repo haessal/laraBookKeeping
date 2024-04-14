@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\DataProvider\CreditCardStatementRepositoryInterface;
-use PhpParser\Node\Expr\FuncCall;
 
 class CreditCardStatementService
 {
@@ -12,7 +11,7 @@ class CreditCardStatementService
      *
      * @var \App\DataProvider\CreditCardStatementRepositoryInterface
      */
-    private $creditCardStatement;
+    protected $creditCardStatement;
 
     /**
      * Create a new CreditCardStatementService instance.
