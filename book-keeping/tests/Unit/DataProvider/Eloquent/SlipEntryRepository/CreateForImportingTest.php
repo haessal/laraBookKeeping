@@ -29,6 +29,7 @@ class CreateForImportingTest extends TestCase
         $amount = 29;
         $client = 'client30';
         $outline = 'outline31';
+        $creditCardStatementId = (string) Str::uuid();
         $displayOrder = 1;
         $deleted = false;
         $newSlipEntry = [
@@ -39,6 +40,7 @@ class CreateForImportingTest extends TestCase
             'amount' => $amount,
             'client' => $client,
             'outline' => $outline,
+            'credit_card_statement_id' => $creditCardStatementId,
             'display_order' => $displayOrder,
             'deleted' => $deleted,
         ];
@@ -55,6 +57,7 @@ class CreateForImportingTest extends TestCase
             'amount' => $amount,
             'client' => $client,
             'outline' => $outline,
+            'credit_card_statement_id' => $creditCardStatementId,
             'display_order' => $displayOrder,
             'deleted_at' => null,
         ]);
@@ -69,6 +72,7 @@ class CreateForImportingTest extends TestCase
         $amount = 69;
         $client = 'client70';
         $outline = 'outline71';
+        $creditCardStatementId = (string) Str::uuid();
         $displayOrder = 2;
         $deleted = true;
         $newSlipEntry = [
@@ -79,6 +83,7 @@ class CreateForImportingTest extends TestCase
             'amount' => $amount,
             'client' => $client,
             'outline' => $outline,
+            'credit_card_statement_id' => $creditCardStatementId,
             'display_order' => $displayOrder,
             'deleted' => $deleted,
         ];
@@ -95,6 +100,7 @@ class CreateForImportingTest extends TestCase
             'amount' => $amount,
             'client' => $client,
             'outline' => $outline,
+            'credit_card_statement_id' => $creditCardStatementId,
             'display_order' => $displayOrder,
         ]);
     }

@@ -147,7 +147,9 @@ class LoadBooksTest extends TestCase
         $slipMock = Mockery::mock(SlipMigrationLoaderService::class);
         $slipMock->shouldReceive('loadSlips')
             ->once()
-            ->with($bookId, $slips)
+            ->with(Mockery::on(function ($version) {
+                return $version->toString() == '2.0';
+            }), $bookId, $slips)
             ->andReturn([$slipsResult, null]);
         /** @var \App\Service\CreditCardStatementMigrationLoaderService|\Mockery\MockInterface $creditCardStatementMock */
         $creditCardStatementMock = Mockery::mock(CreditCardStatementMigrationLoaderService::class);
@@ -288,7 +290,9 @@ class LoadBooksTest extends TestCase
         $slipMock = Mockery::mock(SlipMigrationLoaderService::class);
         $slipMock->shouldReceive('loadSlips')
             ->once()
-            ->with($bookId, $slips)
+            ->with(Mockery::on(function ($version) {
+                return $version->toString() == '2.0';
+            }), $bookId, $slips)
             ->andReturn([$slipsResult, null]);
         /** @var \App\Service\CreditCardStatementMigrationLoaderService|\Mockery\MockInterface $creditCardStatementMock */
         $creditCardStatementMock = Mockery::mock(CreditCardStatementMigrationLoaderService::class);
@@ -828,7 +832,9 @@ class LoadBooksTest extends TestCase
         $slipMock = Mockery::mock(SlipMigrationLoaderService::class);
         $slipMock->shouldReceive('loadSlips')
             ->once()
-            ->with($bookId, $slips)
+            ->with(Mockery::on(function ($version) {
+                return $version->toString() == '2.0';
+            }), $bookId, $slips)
             ->andReturn([[], 'invalid data format: slip_id']);
         /** @var \App\Service\CreditCardStatementMigrationLoaderService|\Mockery\MockInterface $creditCardStatementMock */
         $creditCardStatementMock = Mockery::mock(CreditCardStatementMigrationLoaderService::class);

@@ -6,6 +6,7 @@ use App\DataProvider\SlipEntryRepositoryInterface;
 use App\DataProvider\SlipRepositoryInterface;
 use App\Service\BookKeepingMigrationTools;
 use App\Service\BookKeepingMigrationValidator;
+use App\Service\BookKeepingMigrationVersion;
 use App\Service\SlipMigrationLoaderService;
 use Illuminate\Support\Str;
 use Mockery;
@@ -20,6 +21,7 @@ class LoadSlipEntryTest extends TestCase
 
     public function test_it_calls_repository_to_create_the_slip_entry(): void
     {
+        $version = new BookKeepingMigrationVersion('2.0');
         $slipId_1 = (string) Str::uuid();
         $slipEntryId_1 = (string) Str::uuid();
         $debit_1 = (string) Str::uuid();
@@ -53,7 +55,7 @@ class LoadSlipEntryTest extends TestCase
         $validatorMock = Mockery::mock(BookKeepingMigrationValidator::class);
         $validatorMock->shouldReceive('validateSlipEntry')
             ->once()
-            ->with($slipEntry_1)
+            ->with($version, $slipEntry_1)
             ->andReturn($slipEntry_1);
         /** @var \App\DataProvider\SlipRepositoryInterface|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipRepositoryInterface::class);
@@ -65,13 +67,14 @@ class LoadSlipEntryTest extends TestCase
             ->with($slipEntry_1);
 
         $service = new SlipMigrationLoaderService($slipMock, $slipEntryMock, $toolsMock, $validatorMock);
-        $result_actual = $service->loadSlipEntry($slipEntry_1, []);
+        $result_actual = $service->loadSlipEntry($version, $slipEntry_1, []);
 
         $this->assertSame($result_expected, $result_actual);
     }
 
     public function test_it_calls_repository_to_update_the_slip_entry(): void
     {
+        $version = new BookKeepingMigrationVersion('2.0');
         $slipId_1 = (string) Str::uuid();
         $slipEntryId_1 = (string) Str::uuid();
         $debit_1 = (string) Str::uuid();
@@ -115,7 +118,7 @@ class LoadSlipEntryTest extends TestCase
         $validatorMock = Mockery::mock(BookKeepingMigrationValidator::class);
         $validatorMock->shouldReceive('validateSlipEntry')
             ->once()
-            ->with($slipEntry_1)
+            ->with($version, $slipEntry_1)
             ->andReturn($slipEntry_1);
         /** @var \App\DataProvider\SlipRepositoryInterface|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipRepositoryInterface::class);
@@ -123,17 +126,18 @@ class LoadSlipEntryTest extends TestCase
         $slipEntryMock = Mockery::mock(SlipEntryRepositoryInterface::class);
         $slipEntryMock->shouldReceive('updateForImporting')
             ->once()
-            ->with($slipEntry_1);
+            ->with($version, $slipEntry_1);
         $slipEntryMock->shouldNotReceive('createForImporting');
 
         $service = new SlipMigrationLoaderService($slipMock, $slipEntryMock, $toolsMock, $validatorMock);
-        $result_actual = $service->loadSlipEntry($slipEntry_1, $destinationSlipEntries_1);
+        $result_actual = $service->loadSlipEntry($version, $slipEntry_1, $destinationSlipEntries_1);
 
         $this->assertSame($result_expected, $result_actual);
     }
 
     public function test_it_does_nothing_because_the_slip_entry_is_already_up_to_date(): void
     {
+        $version = new BookKeepingMigrationVersion('2.0');
         $slipId_1 = (string) Str::uuid();
         $slipEntryId_1 = (string) Str::uuid();
         $debit_1 = (string) Str::uuid();
@@ -177,7 +181,7 @@ class LoadSlipEntryTest extends TestCase
         $validatorMock = Mockery::mock(BookKeepingMigrationValidator::class);
         $validatorMock->shouldReceive('validateSlipEntry')
             ->once()
-            ->with($slipEntry_1)
+            ->with($version, $slipEntry_1)
             ->andReturn($slipEntry_1);
         /** @var \App\DataProvider\SlipRepositoryInterface|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipRepositoryInterface::class);
@@ -187,13 +191,14 @@ class LoadSlipEntryTest extends TestCase
         $slipEntryMock->shouldNotReceive('createForImporting');
 
         $service = new SlipMigrationLoaderService($slipMock, $slipEntryMock, $toolsMock, $validatorMock);
-        $result_actual = $service->loadSlipEntry($slipEntry_1, $destinationSlipEntries_1);
+        $result_actual = $service->loadSlipEntry($version, $slipEntry_1, $destinationSlipEntries_1);
 
         $this->assertSame($result_expected, $result_actual);
     }
 
     public function test_it_does_nothing_because_the_slip_entry_is_not_valid(): void
     {
+        $version = new BookKeepingMigrationVersion('2.0');
         $result_expected = [
             ['slip_entry_id' => null, 'result' => null],
             'invalid data format: slip entry',
@@ -205,7 +210,7 @@ class LoadSlipEntryTest extends TestCase
         $validatorMock = Mockery::mock(BookKeepingMigrationValidator::class);
         $validatorMock->shouldReceive('validateSlipEntry')
             ->once()
-            ->with([])
+            ->with($version, [])
             ->andReturn(null);
         /** @var \App\DataProvider\SlipRepositoryInterface|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipRepositoryInterface::class);
@@ -215,7 +220,7 @@ class LoadSlipEntryTest extends TestCase
         $slipEntryMock->shouldNotReceive('createForImporting');
 
         $service = new SlipMigrationLoaderService($slipMock, $slipEntryMock, $toolsMock, $validatorMock);
-        $result_actual = $service->loadSlipEntry([], []);
+        $result_actual = $service->loadSlipEntry($version, [], []);
 
         $this->assertSame($result_expected, $result_actual);
     }
