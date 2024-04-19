@@ -8,6 +8,7 @@ use App\Service\BookKeepingMigrationTools;
 use App\Service\BookKeepingMigrationValidator;
 use App\Service\BookKeepingMigrationVersion;
 use App\Service\SlipMigrationLoaderService;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Mockery;
 use Tests\TestCase;
@@ -27,6 +28,7 @@ class LoadSlipsTest extends TestCase
         $slipEntryId_1 = (string) Str::uuid();
         $slipUpdatedAt_1 = '2024-03-10T16:00:26+09:00';
         $slipEntryUpdatedAt_1 = '2024-03-10T16:00:25+09:00';
+        $convertedSlipEntryUpdatedAt_1 = Carbon::parse($slipEntryUpdatedAt_1)->timezone('UTC')->toAtomString();
         $slip_1 = [
             'slip_id' => $slipId_1,
             'updated_at' => $slipUpdatedAt_1,
@@ -64,9 +66,13 @@ class LoadSlipsTest extends TestCase
         ];
         /** @var \App\Service\BookKeepingMigrationTools|\Mockery\MockInterface $toolsMock */
         $toolsMock = Mockery::mock(BookKeepingMigrationTools::class);
+        $toolsMock->shouldNotReceive('convertExportedTimestamp')  // call from exportSlipEntries form loadSlipEntries
+            ->once()
+            ->with($slipEntryUpdatedAt_1)
+            ->andReturn($convertedSlipEntryUpdatedAt_1);
         $toolsMock->shouldReceive('isSourceLater')  // call from loadSlipEntry from loadSlipEntries
             ->once()
-            ->with($slipEntryUpdatedAt_1, $slipEntryUpdatedAt_1)
+            ->with($slipEntryUpdatedAt_1, $convertedSlipEntryUpdatedAt_1)
             ->andReturn(false);
         /** @var \App\Service\BookKeepingMigrationValidator|\Mockery\MockInterface $validatorMock */
         $validatorMock = Mockery::mock(BookKeepingMigrationValidator::class);

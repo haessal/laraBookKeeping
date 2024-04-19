@@ -42,6 +42,10 @@ class ExportAccountItemsTest extends TestCase
         ];
         /** @var \App\Service\BookKeepingMigrationTools|\Mockery\MockInterface $toolsMock */
         $toolsMock = Mockery::mock(BookKeepingMigrationTools::class);
+        $toolsMock->shouldReceive('convertExportedTimestamp')
+            ->once()
+            ->with($accountUpdatedAt_1)
+            ->andReturn($accountUpdatedAt_1);
         /** @var \App\DataProvider\AccountGroupRepositoryInterface|\Mockery\MockInterface $accountGroupMock */
         $accountGroupMock = Mockery::mock(AccountGroupRepositoryInterface::class);
         $accountGroupMock->shouldReceive('searchBookForExporting')
