@@ -7,6 +7,17 @@ use Illuminate\Support\Carbon;
 class BookKeepingMigrationTools
 {
     /**
+     * Convert a exported timestamp.
+     *
+     * @param  string|null  $timestamp
+     * @return string|null
+     */
+    public function convertExportedTimestamp($timestamp)
+    {
+        return is_null($timestamp) ? null : Carbon::parse($timestamp)->timezone('UTC')->toAtomString();
+    }
+
+     /**
      * Convert exported timestamps.
      *
      * @param  array<string, mixed>  $exported
@@ -18,6 +29,9 @@ class BookKeepingMigrationTools
         foreach ($exported as $key => $value) {
             switch ($key) {
                 case 'created_at':
+                    break;
+                case 'updated_at':
+                    $converted['updated_at'] = Carbon::parse(strval($value))->timezone('UTC')->toAtomString();
                     break;
                 case 'deleted_at':
                     $converted['deleted'] = ! is_null($value);

@@ -106,7 +106,7 @@ class CreditCardStatementMigrationService extends CreditCardStatementService
             $creditCardStatementId = $creditCardStatement['credit_card_statement_id'];
             $creditCardStatements[$creditCardStatementId] = [
                 'credit_card_statement_id' => $creditCardStatement['credit_card_statement_id'],
-                'updated_at' => $creditCardStatement['updated_at'],
+                'updated_at' => $this->tools->convertExportedTimestamp($creditCardStatement['updated_at']),
             ];
         }
 
