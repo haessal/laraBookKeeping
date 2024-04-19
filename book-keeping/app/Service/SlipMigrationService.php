@@ -190,7 +190,7 @@ class SlipMigrationService extends SlipService
             foreach ($slipEntryList as $slipEntry) {
                 $entries[$slipEntry['slip_entry_id']] = [
                     'slip_entry_id' => $slipEntry['slip_entry_id'],
-                    'updated_at' => $slipEntry['updated_at'],
+                    'updated_at' => $this->tools->convertExportedTimestamp($slipEntry['updated_at']),
                 ];
             }
             $slips[$slip['slip_id']] = ['entries' => $entries];
@@ -230,7 +230,7 @@ class SlipMigrationService extends SlipService
             $slipId = $slip['slip_id'];
             $slips[$slipId] = [
                 'slip_id' => $slip['slip_id'],
-                'updated_at' => $slip['updated_at'],
+                'updated_at' => $this->tools->convertExportedTimestamp($slip['updated_at']),
             ];
         }
 
