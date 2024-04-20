@@ -3,8 +3,8 @@
 namespace Tests\Unit\DataProvider\Eloquent\SlipEntryRepository;
 
 use App\DataProvider\Eloquent\SlipEntryRepository;
-use App\Service\BookKeepingMigrationVersion;
 use App\Models\SlipEntry;
+use App\Service\BookKeepingMigrationVersion;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
