@@ -68,4 +68,20 @@ class CreditCardStatementService
 
         return $creditCardStatements;
     }
+
+    /**
+     * Update the credit card statement.
+     *
+     * @param  string  $creditCardStatementId
+     * @param  array{
+     *   outline?: string,
+     *   memo?: string,
+     *   date?: string,
+     * }  $newData
+     * @return void
+     */
+    public function updateCreditCardStatement($creditCardStatementId, array $newData)
+    {
+        $this->creditCardStatement->update($creditCardStatementId, $newData);
+    }
 }

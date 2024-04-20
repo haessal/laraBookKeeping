@@ -20,13 +20,14 @@ use App\Http\Controllers\api\v1\GetSlipEntriesActionApi;
 use App\Http\Controllers\api\v1\GetSlipEntriesSlipEntryIdActionApi;
 use App\Http\Controllers\api\v1\GetSlipsSlipIdActionApi;
 use App\Http\Controllers\api\v1\PatchBooksActionApi;
+use App\Http\Controllers\api\v1\PatchBooksCreditCardStatementsActionApi;
 use App\Http\Controllers\api\v1\PatchBooksSlipEntriesActionApi;
 use App\Http\Controllers\api\v1\PatchBooksSlipsActionApi;
 use App\Http\Controllers\api\v1\PatchSlipEntriesActionApi;
 use App\Http\Controllers\api\v1\PatchSlipsActionApi;
 use App\Http\Controllers\api\v1\PostBooksActionApi;
-use App\Http\Controllers\api\v1\PostBooksSlipsActionApi;
 use App\Http\Controllers\api\v1\PostBooksCreditCardStatementsActionApi;
+use App\Http\Controllers\api\v1\PostBooksSlipsActionApi;
 use App\Http\Controllers\api\v1\PostSlipsActionApi;
 use App\Http\Controllers\api\v1\PutBooksDefaultActionApi;
 use App\Http\Controllers\api\v1\PutBooksPermissionsActionApi;
@@ -86,6 +87,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/creditcardstatements', GetBooksCreditCardStatementsActionApi::class);
         Route::get('/creditcardstatements/{creditCardStatementId}', GetBooksCreditCardStatementsCreditCardStatementIdActionApi::class);
         Route::post('/creditcardstatements', PostBooksCreditCardStatementsActionApi::class);
+        Route::patch('/creditcardstatements/{creditCardStatementId}', PatchBooksCreditCardStatementsActionApi::class);
     });
 
     Route::get('/export/books', ExportBooksActionApi::class);

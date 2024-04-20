@@ -43,7 +43,7 @@ class BookKeepingMigrationLoader
      * @param  \App\Service\SlipMigrationLoaderService  $slip
      * @param  \App\Service\CreditCardStatementMigrationLoaderService  $creditCardStatement
      */
-    public function __construct(BookMigrationLoaderService $book, AccountMigrationLoaderService $account, SlipMigrationLoaderService $slip, CreditCardStatementMigrationLoaderService  $creditCardStatement)
+    public function __construct(BookMigrationLoaderService $book, AccountMigrationLoaderService $account, SlipMigrationLoaderService $slip, CreditCardStatementMigrationLoaderService $creditCardStatement)
     {
         $this->book = $book;
         $this->account = $account;

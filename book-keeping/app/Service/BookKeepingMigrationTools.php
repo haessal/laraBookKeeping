@@ -17,7 +17,7 @@ class BookKeepingMigrationTools
         return is_null($timestamp) ? null : Carbon::parse($timestamp)->timezone('UTC')->toAtomString();
     }
 
-     /**
+    /**
      * Convert exported timestamps.
      *
      * @param  array<string, mixed>  $exported

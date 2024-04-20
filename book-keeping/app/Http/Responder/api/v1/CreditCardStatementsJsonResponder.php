@@ -8,7 +8,7 @@ use Illuminate\Http\JsonResponse;
 class CreditCardStatementsJsonResponder extends BaseJsonResponder
 {
     /**
-     * Setup a new JSON response. 
+     * Setup a new JSON response.
      *
      * @param  array{
      *   creditCardStatements: array<string, array{
