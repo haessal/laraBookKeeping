@@ -310,11 +310,11 @@ class SlipService
                 'outline' => strval($item['outline']),
                 'credit_card_statement_id' => strval($item['credit_card_statement_id']),
             ];
-            if(in_array($debit, $creditCardAccountIds)) {
+            if (in_array($debit, $creditCardAccountIds)) {
                 $slipEntriesOfPayment[] = $slipEntry;
                 $totalAmountOfPayment += $amount;
             }
-            if(in_array($credit, $creditCardAccountIds)) {
+            if (in_array($credit, $creditCardAccountIds)) {
                 $slipEntriesOfStatement[] = $slipEntry;
                 $totalAmountOfStatement += $amount;
             }
@@ -322,10 +322,10 @@ class SlipService
 
         return [
             'statement' => [
-                'slip_entries' => $slipEntriesOfStatement, 'total_amount' => $totalAmountOfStatement
+                'slip_entries' => $slipEntriesOfStatement, 'total_amount' => $totalAmountOfStatement,
             ],
             'payment' => [
-                'slip_entries' => $slipEntriesOfPayment, 'total_amount' => $totalAmountOfPayment
+                'slip_entries' => $slipEntriesOfPayment, 'total_amount' => $totalAmountOfPayment,
             ],
         ];
     }

@@ -112,24 +112,27 @@ class CreditCardStatementRepository implements CreditCardStatementRepositoryInte
     }
 
     /**
-     * Update the account group.
+     * Update the credit card statement.
      *
-     * @param  string  $accountGroupId
-     * @param  array<string, mixed>  $newData
+     * @param  string  $creditCardStatementId
+     * @param  array<string, string>  $newData
      * @return void
      */
-    public function update($accountGroupId, array $newData)
+    public function update($creditCardStatementId, array $newData)
     {
-        /** @var \App\Models\CreditCardStatement|null $accountGroup */
-        $accountGroup = CreditCardStatement::query()->find($accountGroupId);
-        if (! is_null($accountGroup)) {
-            if (array_key_exists('title', $newData)) {
-                $accountGroup->account_group_title = strval($newData['title']);
+        /** @var \App\Models\CreditCardStatement|null $creditCardStatement */
+        $creditCardStatement = CreditCardStatement::query()->find($creditCardStatementId);
+        if (! is_null($creditCardStatement)) {
+            if (array_key_exists('outline', $newData)) {
+                $creditCardStatement->credit_card_statement_outline = $newData['outline'];
             }
-            if (array_key_exists('is_current', $newData)) {
-                $accountGroup->is_current = boolval($newData['is_current']);
+            if (array_key_exists('memo', $newData)) {
+                $creditCardStatement->credit_card_statement_memo = $newData['memo'];
             }
-            $accountGroup->save();
+            if (array_key_exists('date', $newData)) {
+                $creditCardStatement->date = $newData['date'];
+            }
+            $creditCardStatement->save();
         }
     }
 

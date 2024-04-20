@@ -60,7 +60,7 @@ class PostBooksCreditCardStatementsActionApi extends AuthenticatedBookKeepingAct
         switch ($status) {
             case BookKeepingService::STATUS_NORMAL:
                 if (isset($creditCardStatementId)) {
-                    [$retrievalStatus, $creditCardStatements]= $this->BookKeeping->retrieveCreditCardStatements(
+                    [$retrievalStatus, $creditCardStatements] = $this->BookKeeping->retrieveCreditCardStatements(
                         $bookId,
                         $creditCardStatementId,
                     );
@@ -89,7 +89,7 @@ class PostBooksCreditCardStatementsActionApi extends AuthenticatedBookKeepingAct
     }
 
     /**
-     * Validate the slip and trim string data.TODO
+     * Validate the credit card statement and trim string data.
      *
      * @param  array<string, mixed>  $creditCardStatement
      * @return array{success: bool, creditCardStatement: array{

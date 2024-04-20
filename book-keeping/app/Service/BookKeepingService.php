@@ -531,7 +531,7 @@ class BookKeepingService
     }
 
     /**
-     * Retrieve the slip. TODO
+     * Retrieve the credit card statement.
      *
      * @param  string  $creditCardStatementId
      * @param  string  $bookId
@@ -1422,6 +1422,36 @@ class BookKeepingService
         }
 
         $this->book->updateNameOf($bookId, $newName);
+
+        return [self::STATUS_NORMAL, null];
+    }
+
+    /**
+     * Update the credit card statement.
+     *
+     * @param  string  $creditCardStatementId
+     * @param  array{
+     *   outline?: string,
+     *   memo?: string,
+     *   date?: string,
+     * }  $newData
+     * @param  string  $bookId
+     * @return array{0:int, 1:null}
+     */
+    public function updateCreditCardStatement($creditCardStatementId, array $newData, $bookId): array
+    {
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckWritable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
+        }
+
+        $creditCardStatements = $this->creditCardStatement->retrieveCreditCardStatements($bookId, $creditCardStatementId);
+        if (empty($creditCardStatements)) {
+            return [self::STATUS_ERROR_AUTH_NOTAVAILABLE, null];
+        }
+
+        $this->creditCardStatement->updateCreditCardStatement($creditCardStatementId, $newData);
 
         return [self::STATUS_NORMAL, null];
     }
