@@ -34,6 +34,14 @@ interface CreditCardStatementRepositoryInterface
     public function createForImporting(array $newCreditCardStatement);
 
     /**
+     * Delete the credit card statement.
+     *
+     * @param  string  $creditCardStatementId
+     * @return void
+     */
+    public function delete($creditCardStatementId);
+
+    /**
      * Search the book for credit card statement.
      *
      * @param  string  $bookId

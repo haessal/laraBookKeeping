@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\v1\DeleteBooksCreditCardStatementsActionApi;
 use App\Http\Controllers\api\v1\DeleteBooksDefaultActionApi;
 use App\Http\Controllers\api\v1\DeleteBooksPermissionsActionApi;
 use App\Http\Controllers\api\v1\DeleteBooksSlipEntriesActionApi;
@@ -88,6 +89,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/creditcardstatements/{creditCardStatementId}', GetBooksCreditCardStatementsCreditCardStatementIdActionApi::class);
         Route::post('/creditcardstatements', PostBooksCreditCardStatementsActionApi::class);
         Route::patch('/creditcardstatements/{creditCardStatementId}', PatchBooksCreditCardStatementsActionApi::class);
+        Route::delete('/creditcardstatements/{creditCardStatementId}', DeleteBooksCreditCardStatementsActionApi::class);
     });
 
     Route::get('/export/books', ExportBooksActionApi::class);

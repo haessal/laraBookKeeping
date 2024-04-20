@@ -203,6 +203,37 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     }
 
     /**
+     * Search the book for slip entries registered in the credit card statement.
+     *
+     * @param  string  $bookId
+     * @param  string  $creditCardStatementId
+     * @return array<int, array<string, mixed>>
+     */
+    public function searchBookWithCreditCardStatement($bookId, $creditCardStatementId): array
+    {
+        /** @var array<int, array<string, mixed>> $list */
+        $list = SlipEntry::query()
+            ->join('bk2_0_slips', 'bk2_0_slips.slip_id', '=', 'bk2_0_slip_entries.slip_id')
+            ->select(
+                'slip_entry_id',
+                'bk2_0_slip_entries.slip_id',
+                'debit',
+                'credit',
+                'amount',
+                'client',
+                'outline',
+                'credit_card_statement_id',
+            )
+            ->where('book_id', $bookId)
+            ->where('credit_card_statement_id', $creditCardStatementId)
+            ->orderBy('bk2_0_slip_entries.created_at')
+            ->orderBy('bk2_0_slip_entries.display_order')
+            ->get()->toArray();
+
+        return $list;
+    }
+
+    /**
      * Search the slip for its entries.
      *
      * @param  string  $slipId

@@ -273,6 +273,36 @@ class BookKeepingService
     }
 
     /**
+     * Delete the credit card statement.
+     *
+     * @param  string  $creditCardStatementId
+     * @param  string  $bookId
+     * @return array{0:int, 1:null}
+     */
+    public function deleteCreditCardstatement($creditCardStatementId, $bookId): array
+    {
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckWritable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
+        }
+
+        $creditCardStatements = $this->creditCardStatement->retrieveCreditCardStatements($bookId, $creditCardStatementId);
+        if (! empty($creditCardStatements)) {
+            $slipEntries = $this->slip->retrieveSlipEntriesRegisteredInCreditCardStatement($bookId, $creditCardStatementId);
+            if (empty($slipEntries)) {
+                $this->creditCardStatement->deleteCreditCardstatement($creditCardStatementId);
+
+                return [self::STATUS_NORMAL, null];
+            } else {
+                return [self::STATUS_ERROR_BAD_CONDITION, null];
+            }
+        } else {
+            return [self::STATUS_ERROR_AUTH_NOTAVAILABLE, null];
+        }
+    }
+
+    /**
      * Delete the slip entry and the slip that no longer have a entry.
      *
      * @param  string  $slipEntryId

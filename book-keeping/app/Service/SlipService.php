@@ -331,6 +331,43 @@ class SlipService
     }
 
     /**
+     * Retrieve a list of slip entries that registered in the credit card statement.
+     *
+     * @param  string  $bookId
+     * @param  string  $creditCardStatementId
+     * @return array{
+     *   slip_entry_id: string,
+     *   slip_id: string,
+     *   debit: string,
+     *   credit: string,
+     *   amount: int,
+     *   client: string,
+     *   outline: string,
+     *   credit_card_statement_id: string,
+     * }[]
+     */
+    public function retrieveSlipEntriesRegisteredInCreditCardStatement($bookId, $creditCardStatementId): array
+    {
+        $slipEntries = [];
+
+        $list = $this->slipEntry->searchBookWithCreditCardStatement($bookId, $creditCardStatementId);
+        foreach ($list as $slipEntry) {
+            $slipEntries[] = [
+                'slip_entry_id' => strval($slipEntry['slip_entry_id']),
+                'slip_id' => strval($slipEntry['slip_id']),
+                'debit' => strval($slipEntry['debit']),
+                'credit' => strval($slipEntry['credit']),
+                'amount' => intval($slipEntry['amount']),
+                'client' => strval($slipEntry['client']),
+                'outline' => strval($slipEntry['outline']),
+                'credit_card_statement_id' => strval($slipEntry['credit_card_statement_id']),
+            ];
+        }
+
+        return $slipEntries;
+    }
+
+    /**
      * Retrieve a list of slip entries that are bound to the slip.
      *
      * @param  string  $slipId
