@@ -41,6 +41,17 @@ class CreditCardStatementService
     }
 
     /**
+     * Delete the credit card statement.
+     *
+     * @param  string  $creditCardStatementId
+     * @return void
+     */
+    public function deleteCreditCardstatement($creditCardStatementId)
+    {
+        $this->creditCardStatement->delete($creditCardStatementId);
+    }
+
+    /**
      * Retrieve a list of credit card statements of the book.
      *
      * @param  string  $bookId

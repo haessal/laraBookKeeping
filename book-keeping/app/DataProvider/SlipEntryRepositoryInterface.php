@@ -81,6 +81,15 @@ interface SlipEntryRepositoryInterface
     public function searchBookAndCalculateSum($bookId, $fromDate, $toDate): array;
 
     /**
+     * Search the book for slip entries registered in the credit card statement.
+     *
+     * @param  string  $bookId
+     * @param  string  $creditCardStatementId
+     * @return array<int, array<string, mixed>>
+     */
+    public function searchBookWithCreditCardStatement($bookId, $creditCardStatementId): array;
+
+    /**
      * Search the slip for its entries.
      *
      * @param  string  $slipId

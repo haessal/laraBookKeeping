@@ -62,6 +62,21 @@ class CreditCardStatementRepository implements CreditCardStatementRepositoryInte
     }
 
     /**
+     * Delete the credit card statement.
+     *
+     * @param  string  $creditCardStatementId
+     * @return void
+     */
+    public function delete($creditCardStatementId)
+    {
+        /** @var \App\Models\CreditCardStatement|null $creditCardStatement */
+        $creditCardStatement = CreditCardStatement::query()->find($creditCardStatementId);
+        if (! is_null($creditCardStatement)) {
+            $creditCardStatement->delete();
+        }
+    }
+
+    /**
      * Search the book for credit card statement.
      *
      * @param  string  $bookId
