@@ -1243,6 +1243,7 @@ class BookKeepingService
      * @param  string|null  $and_or
      * @param  string|null  $keyword
      * @param  string|null  $bookId
+     * @param  string|null  $creditCardStatementId
      * @return array{0:int, 1:array<string, array{
      *   date: string,
      *   slip_outline: string,
@@ -1257,7 +1258,7 @@ class BookKeepingService
      *   }>
      * }>|null}
      */
-    public function retrieveSlips($fromDate, $toDate, $debit, $credit, $and_or, $keyword, $bookId = null): array
+    public function retrieveSlips($fromDate, $toDate, $debit, $credit, $and_or, $keyword, $bookId = null, $creditCardStatementId = null): array
     {
         [$authorizedStatus, $bookId]
             = $this->book->retrieveDefaultBookOrCheckReadable($bookId, intval(Auth::id()));
@@ -1273,15 +1274,19 @@ class BookKeepingService
             $date = new Carbon();
             $toDate = $date->format('Y-m-d');
         }
+        $condition = [
+            'debit' => $debit,
+            'credit' => $credit,
+            'and_or' => $and_or,
+            'keyword' => $keyword,
+        ];
+        if (isset($creditCardStatementId)) {
+            $condition['credit_card_statement_id'] = $creditCardStatementId;
+        }
         $slipEntries = $this->slip->retrieveSlipEntries(
             $fromDate,
             $toDate,
-            [
-                'debit' => $debit,
-                'credit' => $credit,
-                'and_or' => $and_or,
-                'keyword' => $keyword,
-            ],
+            $condition,
             $bookId
         );
         $slips = $this->translateSlipEntriesToSlips($accounts, $slipEntries);
