@@ -34,7 +34,7 @@ class InvokeTest extends TestCase
             ->andReturn(true);
         $serviceMock->shouldReceive('retrieveSlips')
             ->once()
-            ->with($from, null, null, null, null, null, $bookId)
+            ->with($from, null, null, null, null, null, $bookId, null)
             ->andReturn([-1, null]);
         /** @var \App\Http\Responder\api\v1\SlipEntriesJsonResponder |\Mockery\MockInterface $responderMock */
         $responderMock = Mockery::mock(SlipEntriesJsonResponder::class);
@@ -67,7 +67,7 @@ class InvokeTest extends TestCase
             ->andReturn(true);
         $serviceMock->shouldReceive('retrieveSlips')
             ->once()
-            ->with($from, null, null, null, null, null, $bookId)
+            ->with($from, null, null, null, null, null, $bookId, null)
             ->andReturn([BookKeepingService::STATUS_NORMAL, null]);
         /** @var \App\Http\Responder\api\v1\SlipEntriesJsonResponder |\Mockery\MockInterface $responderMock */
         $responderMock = Mockery::mock(SlipEntriesJsonResponder::class);
