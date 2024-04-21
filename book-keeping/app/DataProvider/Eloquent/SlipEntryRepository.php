@@ -434,7 +434,11 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
                 });
         }
         if (array_key_exists('credit_card_statement_id', $condition)) {
-            $creditCardStatementId = $condition['credit_card_statement_id'];
+            if (strval($condition['credit_card_statement_id']) == '') {
+                $creditCardStatementId = null;
+            } else {
+                $creditCardStatementId = strval($condition['credit_card_statement_id']);
+            }
             $query = $query->where('credit_card_statement_id', $creditCardStatementId);
         }
 

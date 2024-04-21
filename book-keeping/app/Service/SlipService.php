@@ -199,6 +199,7 @@ class SlipService
      *   credit?: string|null,
      *   and_or?: string|null,
      *   keyword?: string|null,
+     *   credit_card_statement_id? : string,
      * }  $condition
      * @param  string  $bookId
      * @return array{
