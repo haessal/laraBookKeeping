@@ -26,13 +26,16 @@ class DisplayAccountsListPageTest extends TestCase
     private $book;
 
     /** @var \App\Models\AccountGroup */
-    private $accountGroup;
+    private $accountGroup_1100;
+
+    /** @var \App\Models\AccountGroup */
+    private $accountGroup_0;
+
+    /** @var \App\Models\Account */
+    private $account_1101;
 
     /** @var \App\Models\Account */
     private $account_0;
-
-    /** @var \App\Models\Account */
-    private $account_1;
 
     public function setup(): void
     {
@@ -48,20 +51,27 @@ class DisplayAccountsListPageTest extends TestCase
             'is_owner' => true,
             'is_default' => true,
         ]);
-        $this->accountGroup = AccountGroup::factory()->create([
+        $this->accountGroup_1100 = AccountGroup::factory()->create([
             'book_id' => $this->book->book_id,
             'account_type' => AccountService::ACCOUNT_TYPE_ASSET,
             'is_current' => true,
+            'account_group_bk_code' => 1100,
+        ]);
+        $this->accountGroup_0 = AccountGroup::factory()->create([
+            'book_id' => $this->book->book_id,
+            'account_type' => AccountService::ACCOUNT_TYPE_ASSET,
+            'is_current' => true,
+            'account_group_bk_code' => 0,
+        ]);
+        $this->account_1101 = Account::factory()->create([
+            'account_group_id' => $this->accountGroup_1100->account_group_id,
+            'selectable' => true,
+            'account_bk_code' => 1101,
         ]);
         $this->account_0 = Account::factory()->create([
-            'account_group_id' => $this->accountGroup->account_group_id,
+            'account_group_id' => $this->accountGroup_0->account_group_id,
             'selectable' => true,
             'account_bk_code' => 0,
-        ]);
-        $this->account_1 = Account::factory()->create([
-            'account_group_id' => $this->accountGroup->account_group_id,
-            'selectable' => true,
-            'account_bk_code' => 1,
         ]);
         $this->userWhoDoesNotHaveBook = User::factory()->create();
     }
