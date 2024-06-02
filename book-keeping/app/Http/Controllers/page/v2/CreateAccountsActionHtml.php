@@ -4,6 +4,7 @@ namespace App\Http\Controllers\page\v2;
 
 use App\Http\Controllers\AuthenticatedBookKeepingAction;
 use App\Http\Responder\page\v2\CreateAccountsViewResponder;
+use App\Service\AccountService;
 use App\Service\BookKeepingService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -165,28 +166,46 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
     private function validateAndTrimForCreateAccount(array $account_in): array
     {
         $success = true;
-        $trimmed_account = [];
+        $accountGroupId = '';
+        $title = '';
+        $description = '';
 
-        $accountGroupId = trim(strval($account_in['accountgroup']));
-        if (! empty($accountGroupId)) {
-            $trimmed_account['accountgroup'] = $accountGroupId;
+        if (array_key_exists('accountgroup', $account_in)) {
+            $accountGroupId = trim(strval($account_in['accountgroup']));
+            if (empty($accountGroupId)) {
+                $success = false;
+            }
         } else {
             $success = false;
-            $trimmed_account['accountgroup'] = '';
         }
-        $title = trim(strval($account_in['title']));
-        if (! empty($title)) {
-            $trimmed_account['title'] = $title;
+        if (array_key_exists('title', $account_in)) {
+            $title = trim(strval($account_in['title']));
+            if (empty($title)) {
+                $success = false;
+            }
         } else {
             $success = false;
-            $trimmed_account['title'] = '';
         }
-        $description = trim(strval($account_in['description']));
-        if (! empty($description)) {
-            $trimmed_account['description'] = $description;
+        if (array_key_exists('description', $account_in)) {
+            $description = trim(strval($account_in['description']));
+            if (empty($description)) {
+                $success = false;
+            }
         } else {
             $success = false;
-            $trimmed_account['description'] = '';
+        }
+        if ($success) {
+            $trimmed_account = [
+                'accountgroup' => $accountGroupId,
+                'title' => $title,
+                'description' => $description,
+            ];
+        } else {
+            $trimmed_account = [
+                'accountgroup' => '',
+                'title' => '',
+                'description' => '',
+            ];
         }
 
         return ['success' => $success, 'account' => $trimmed_account];
@@ -204,32 +223,42 @@ class CreateAccountsActionHtml extends AuthenticatedBookKeepingAction
     private function validateAndTrimForCreateAccountGroup(array $accountGroup_in): array
     {
         $success = true;
-        $trimmed_accountGroup = [];
+        $accountType = '';
+        $title = '';
 
         if (array_key_exists('accounttype', $accountGroup_in)) {
             $accountType = trim(strval($accountGroup_in['accounttype']));
             switch ($accountType) {
-                case 'asset':
-                case 'liability':
-                case 'expense':
-                case 'revenue':
-                    $trimmed_accountGroup['accounttype'] = $accountType;
+                case AccountService::ACCOUNT_TYPE_ASSET:
+                case AccountService::ACCOUNT_TYPE_LIABILITY:
+                case AccountService::ACCOUNT_TYPE_EXPENSE:
+                case AccountService::ACCOUNT_TYPE_REVENUE:
                     break;
                 default:
                     $success = false;
-                    $trimmed_accountGroup['accounttype'] = '';
                     break;
             }
         } else {
             $success = false;
-            $trimmed_accountGroup['accounttype'] = '';
         }
-        $title = trim(strval($accountGroup_in['title']));
-        if (! empty($title)) {
-            $trimmed_accountGroup['title'] = $title;
+        if (array_key_exists('title', $accountGroup_in)) {
+            $title = trim(strval($accountGroup_in['title']));
+            if (empty($title)) {
+                $success = false;
+            }
         } else {
             $success = false;
-            $trimmed_accountGroup['title'] = '';
+        }
+        if ($success) {
+            $trimmed_accountGroup = [
+                'accounttype' => $accountType,
+                'title' => $title,
+            ];
+        } else {
+            $trimmed_accountGroup = [
+                'accounttype' => '',
+                'title' => '',
+            ];
         }
 
         return ['success' => $success, 'accountGroup' => $trimmed_accountGroup];
