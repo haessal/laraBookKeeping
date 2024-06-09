@@ -9,6 +9,7 @@ use App\Models\Permission;
 use App\Models\Slip;
 use App\Models\SlipEntry;
 use App\Models\User;
+use App\Service\BookKeepingMigrationVersion;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -74,7 +75,7 @@ class BooksExportingTest extends TestCase
         $bookUpdatedAt = $this->book->updated_at->toJSON();
         $response->assertOk()
             ->assertJson([
-                'version' => '2.0',
+                'version' => BookKeepingMigrationVersion::CURRENT,
                 'books' => [
                     [
                         'book_id' => $this->book->book_id,
@@ -99,7 +100,7 @@ class BooksExportingTest extends TestCase
         $slipEntryUpdatedAt = $this->slipEntry->updated_at->toJSON();
         $response->assertOk()
             ->assertJson([
-                'version' => '2.0',
+                'version' => BookKeepingMigrationVersion::CURRENT,
                 'books' => [
                     [
                         'book_id' => $this->book->book_id,

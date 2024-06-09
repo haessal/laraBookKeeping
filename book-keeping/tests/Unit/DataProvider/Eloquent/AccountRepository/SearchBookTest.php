@@ -39,6 +39,7 @@ class SearchBookTest extends TestCase
             'account_title' => 'dummy title',
             'description' => 'description',
             'selectable' => true,
+            'is_credit_card' => false,
             'bk_uid' => 32,
             'account_bk_code' => 1201,
         ])->account_id;
@@ -57,6 +58,7 @@ class SearchBookTest extends TestCase
                 'account_title',
                 'description',
                 'selectable',
+                'is_credit_card',
                 'account_bk_code',
                 'created_at',
                 'account_group_bk_code',

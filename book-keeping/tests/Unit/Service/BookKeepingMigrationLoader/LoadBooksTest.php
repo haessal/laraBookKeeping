@@ -138,7 +138,9 @@ class LoadBooksTest extends TestCase
         $accountMock = Mockery::mock(AccountMigrationLoaderService::class);
         $accountMock->shouldReceive('loadAccounts')
             ->once()
-            ->with($bookId, $accounts)
+            ->with(Mockery::on(function ($version) {
+                return $version->toString() == '2.0';
+            }), $bookId, $accounts)
             ->andReturn([$accountsResult, null]);
         /** @var \App\Service\SlipMigrationLoaderService|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipMigrationLoaderService::class);
@@ -275,7 +277,9 @@ class LoadBooksTest extends TestCase
         $accountMock = Mockery::mock(AccountMigrationLoaderService::class);
         $accountMock->shouldReceive('loadAccounts')
             ->once()
-            ->with($bookId, $accounts)
+            ->with(Mockery::on(function ($version) {
+                return $version->toString() == '2.0';
+            }), $bookId, $accounts)
             ->andReturn([$accountsResult, null]);
         /** @var \App\Service\SlipMigrationLoaderService|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipMigrationLoaderService::class);
@@ -673,7 +677,9 @@ class LoadBooksTest extends TestCase
         $accountMock = Mockery::mock(AccountMigrationLoaderService::class);
         $accountMock->shouldReceive('loadAccounts')
             ->once()
-            ->with($bookId, $accounts)
+            ->with(Mockery::on(function ($version) {
+                return $version->toString() == '2.0';
+            }), $bookId, $accounts)
             ->andReturn([[], 'invalid data format: account_group_id']);
         /** @var \App\Service\SlipMigrationLoaderService|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipMigrationLoaderService::class);
@@ -795,7 +801,9 @@ class LoadBooksTest extends TestCase
         $accountMock = Mockery::mock(AccountMigrationLoaderService::class);
         $accountMock->shouldReceive('loadAccounts')
             ->once()
-            ->with($bookId, $accounts)
+            ->with(Mockery::on(function ($version) {
+                return $version->toString() == '2.0';
+            }), $bookId, $accounts)
             ->andReturn([$accountsResult, null]);
         /** @var \App\Service\SlipMigrationLoaderService|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipMigrationLoaderService::class);
