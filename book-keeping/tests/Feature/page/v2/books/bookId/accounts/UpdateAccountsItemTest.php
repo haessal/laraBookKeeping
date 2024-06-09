@@ -112,6 +112,7 @@ class UpdateAccountsItemTest extends TestCase
                 'title' => $this->faker->word(),
                 'description' => $this->faker->word(),
                 'attribute_selectable' => 1,
+                'attribute_creditcard' => 1,
             ]);
 
         $response->assertOk();

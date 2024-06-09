@@ -27,6 +27,7 @@ class SearchAccountGropupForExportingTest extends TestCase
         $accountTitle = 'title28';
         $description = 'description29';
         $selectable = true;
+        $isCreditCard = false;
         $bk_uid = 31;
         $bk_code = 1132;
         $displayOrder = 1;
@@ -36,6 +37,7 @@ class SearchAccountGropupForExportingTest extends TestCase
             'account_title' => $accountTitle,
             'description' => $description,
             'selectable' => $selectable,
+            'is_credit_card' => $isCreditCard,
             'bk_uid' => $bk_uid,
             'account_bk_code' => $bk_code,
             'display_order' => $displayOrder,
@@ -52,6 +54,7 @@ class SearchAccountGropupForExportingTest extends TestCase
                 'account_title',
                 'description',
                 'selectable',
+                'is_credit_card',
                 'bk_uid',
                 'account_bk_code',
                 'display_order',
@@ -69,6 +72,7 @@ class SearchAccountGropupForExportingTest extends TestCase
         $accountTitle = 'title71';
         $description = 'description72';
         $selectable = true;
+        $isCreditCard = false;
         $bk_uid = 74;
         $bk_code = 1175;
         $displayOrder = 1;
@@ -78,6 +82,7 @@ class SearchAccountGropupForExportingTest extends TestCase
             'account_title' => $accountTitle,
             'description' => $description,
             'selectable' => $selectable,
+            'is_credit_card' => $isCreditCard,
             'bk_uid' => $bk_uid,
             'account_bk_code' => $bk_code,
             'display_order' => $displayOrder,
@@ -94,6 +99,7 @@ class SearchAccountGropupForExportingTest extends TestCase
                 'account_title',
                 'description',
                 'selectable',
+                'is_credit_card',
                 'bk_uid',
                 'account_bk_code',
                 'display_order',

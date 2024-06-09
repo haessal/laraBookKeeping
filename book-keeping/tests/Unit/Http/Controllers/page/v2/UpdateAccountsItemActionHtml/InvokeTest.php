@@ -4,7 +4,6 @@ namespace Tests\Unit\Http\Controllers\page\v2\UpdateAccountsItemActionHtml;
 
 use App\Http\Controllers\page\v2\UpdateAccountsItemActionHtml;
 use App\Http\Responder\page\v2\UpdateAccountsItemViewResponder;
-use App\Service\AccountService;
 use App\Service\BookKeepingService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -123,7 +122,7 @@ class InvokeTest extends TestCase
             ->andReturn([BookKeepingService::STATUS_NORMAL, []]);
         $serviceMock->shouldReceive('updateAccount')
             ->once()
-            ->with($accountsItemId, ['group' => $accountsGroupId, 'title' => $title, 'description' => $description, 'selectable' => false], $bookId)
+            ->with($accountsItemId, ['group' => $accountsGroupId, 'title' => $title, 'description' => $description, 'selectable' => false, 'is_credit_card' => false], $bookId)
             ->andReturn([-1, null]);
         $serviceMock->shouldNotReceive('retrieveCategorizedAccounts');
         /** @var \App\Http\Responder\page\v2\UpdateAccountsItemViewResponder|\Mockery\MockInterface $responderMock */
@@ -148,7 +147,7 @@ class InvokeTest extends TestCase
             ->with('description')
             ->andReturn($description);
         $requestMock->shouldReceive('all')
-            ->once()
+            ->twice()
             ->andReturn([]);
 
         $controller = new UpdateAccountsItemActionHtml($serviceMock, $responderMock);
