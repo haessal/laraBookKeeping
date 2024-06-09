@@ -71,6 +71,59 @@ class UpdateForImportingTest extends TestCase
         ]);
     }
 
+    public function test_one_record_with_is_credit_card_is_updated(): void
+    {
+        $accountGroupId = (string) Str::uuid();
+        $accountTitle = 'title28';
+        $description = 'description29';
+        $selectable = true;
+        $isCreditCard = true;
+        $bk_uid = 31;
+        $bk_code = 1132;
+        $displayOrder = 1;
+        $deleted = false;
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $accountId = Account::factory()->create([
+            'account_group_id' => (string) Str::uuid(),
+            'account_title' => 'title38',
+            'description' => 'description39',
+            'selectable' => false,
+            'bk_uid' => 41,
+            'account_bk_code' => 42,
+            'display_order' => 2,
+        ])->account_id;
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        $newAccount = [
+            'account_id' => $accountId,
+            'account_group_id' => $accountGroupId,
+            'account_title' => $accountTitle,
+            'description' => $description,
+            'selectable' => $selectable,
+            'is_credit_card' => $isCreditCard,
+            'bk_uid' => $bk_uid,
+            'account_bk_code' => $bk_code,
+            'display_order' => $displayOrder,
+            'deleted' => $deleted,
+        ];
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $this->account->updateForImporting($newAccount);
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        $this->assertDatabaseHas('bk2_0_accounts', [
+            'account_id' => $accountId,
+            'account_group_id' => $accountGroupId,
+            'account_title' => $accountTitle,
+            'description' => $description,
+            'selectable' => $selectable,
+            'is_credit_card' => $isCreditCard,
+            'bk_uid' => $bk_uid,
+            'account_bk_code' => $bk_code,
+            'display_order' => $displayOrder,
+            'deleted_at' => null,
+        ]);
+    }
+
     public function test_one_record_is_updated_and_then_deleted(): void
     {
         $accountGroupId = (string) Str::uuid();

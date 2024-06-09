@@ -3,6 +3,7 @@
 namespace Tests\Unit\Service\BookKeepingMigrationValidator;
 
 use App\Service\BookKeepingMigrationValidator;
+use App\Service\BookKeepingMigrationVersion;
 use Illuminate\Support\Str;
 use Mockery;
 use Tests\TestCase;
@@ -17,10 +18,12 @@ class ValidateAccountItemTest extends TestCase
     /**
      * @dataProvider forTestValidateAccountItem
      */
-    public function test_it_validates_the_format_of_the_account_item($accountItem, $accountItem_expected): void
+    public function test_it_validates_the_format_of_the_account_item($versionString, $accountItem, $accountItem_expected): void
     {
+        $version = new BookKeepingMigrationVersion($versionString);
+
         $service = new BookKeepingMigrationValidator();
-        $accountItem_actual = $service->validateAccountItem($accountItem);
+        $accountItem_actual = $service->validateAccountItem($version, $accountItem);
 
         $this->assertSame($accountItem_expected, $accountItem_actual);
     }
@@ -38,6 +41,7 @@ class ValidateAccountItemTest extends TestCase
 
         return [
             [
+                '2.0',
                 [
                     'account_id' => $accountId,
                     'account_group_id' => $accountGroupId,
@@ -56,6 +60,7 @@ class ValidateAccountItemTest extends TestCase
                     'account_title' => $accountTitle,
                     'description' => $accountDescription,
                     'selectable' => true,
+                    'is_credit_card' => null,
                     'bk_uid' => $bk_uid,
                     'account_bk_code' => $bk_code,
                     'display_order' => $displayOrder,
@@ -64,6 +69,7 @@ class ValidateAccountItemTest extends TestCase
                 ],
             ],
             [
+                '2.0',
                 [
                     'account_id' => $accountId,
                     'account_group_id' => $accountGroupId,
@@ -82,6 +88,7 @@ class ValidateAccountItemTest extends TestCase
                     'account_title' => $accountTitle,
                     'description' => $accountDescription,
                     'selectable' => true,
+                    'is_credit_card' => null,
                     'bk_uid' => null,
                     'account_bk_code' => null,
                     'display_order' => null,
@@ -90,6 +97,7 @@ class ValidateAccountItemTest extends TestCase
                 ],
             ],
             [
+                '2.0',
                 [
                     // 'account_id' => $accountId, key missing
                     'account_group_id' => $accountGroupId,
@@ -105,6 +113,7 @@ class ValidateAccountItemTest extends TestCase
                 null,
             ],
             [
+                '2.0',
                 [
                     'account_id' => 123, // invalid uuid (not string)
                     'account_group_id' => $accountGroupId,
@@ -120,6 +129,7 @@ class ValidateAccountItemTest extends TestCase
                 null,
             ],
             [
+                '2.0',
                 [
                     'account_id' => $accountId,
                     'account_group_id' => 'aaaa', // invalid uuid
@@ -135,6 +145,7 @@ class ValidateAccountItemTest extends TestCase
                 null,
             ],
             [
+                '2.0',
                 [
                     'account_id' => $accountId,
                     'account_group_id' => $accountGroupId,
@@ -150,6 +161,7 @@ class ValidateAccountItemTest extends TestCase
                 null,
             ],
             [
+                '2.0',
                 [
                     'account_id' => $accountId,
                     'account_group_id' => $accountGroupId,
@@ -165,6 +177,7 @@ class ValidateAccountItemTest extends TestCase
                 null,
             ],
             [
+                '2.0',
                 [
                     'account_id' => $accountId,
                     'account_group_id' => $accountGroupId,
@@ -180,6 +193,7 @@ class ValidateAccountItemTest extends TestCase
                 null,
             ],
             [
+                '2.0',
                 [
                     'account_id' => $accountId,
                     'account_group_id' => $accountGroupId,
@@ -195,6 +209,7 @@ class ValidateAccountItemTest extends TestCase
                 null,
             ],
             [
+                '2.0',
                 [
                     'account_id' => $accountId,
                     'account_group_id' => $accountGroupId,
@@ -210,6 +225,7 @@ class ValidateAccountItemTest extends TestCase
                 null,
             ],
             [
+                '2.0',
                 [
                     'account_id' => $accountId,
                     'account_group_id' => $accountGroupId,
@@ -225,6 +241,7 @@ class ValidateAccountItemTest extends TestCase
                 null,
             ],
             [
+                '2.0',
                 [
                     'account_id' => $accountId,
                     'account_group_id' => $accountGroupId,
@@ -240,6 +257,7 @@ class ValidateAccountItemTest extends TestCase
                 null,
             ],
             [
+                '2.0',
                 [
                     'account_id' => $accountId,
                     'account_group_id' => $accountGroupId,
@@ -251,6 +269,52 @@ class ValidateAccountItemTest extends TestCase
                     'display_order' => $displayOrder,
                     'updated_at' => $updatedAt,
                     'deleted' => 0, // invalid (not bool)
+                ],
+                null,
+            ],
+            [
+                '2.1.0',
+                [
+                    'account_id' => $accountId,
+                    'account_group_id' => $accountGroupId,
+                    'account_title' => $accountTitle,
+                    'description' => $accountDescription,
+                    'selectable' => 1,
+                    'is_credit_card' => 1,
+                    'bk_uid' => $bk_uid,
+                    'account_bk_code' => $bk_code,
+                    'display_order' => $displayOrder,
+                    'updated_at' => $updatedAt,
+                    'deleted' => false,
+                ],
+                [
+                    'account_id' => $accountId,
+                    'account_group_id' => $accountGroupId,
+                    'account_title' => $accountTitle,
+                    'description' => $accountDescription,
+                    'selectable' => true,
+                    'is_credit_card' => true,
+                    'bk_uid' => $bk_uid,
+                    'account_bk_code' => $bk_code,
+                    'display_order' => $displayOrder,
+                    'updated_at' => $updatedAt,
+                    'deleted' => false,
+                ],
+            ],
+            [
+                '2.1.0',
+                [
+                    'account_id' => $accountId,
+                    'account_group_id' => $accountGroupId,
+                    'account_title' => $accountTitle,
+                    'description' => $accountDescription,
+                    'selectable' => 1,
+                    'is_credit_card' => true, // invalid (not int)
+                    'bk_uid' => $bk_uid,
+                    'account_bk_code' => $bk_code,
+                    'display_order' => $displayOrder,
+                    'updated_at' => $updatedAt,
+                    'deleted' => false,
                 ],
                 null,
             ],

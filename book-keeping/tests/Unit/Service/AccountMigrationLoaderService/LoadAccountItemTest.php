@@ -7,6 +7,7 @@ use App\DataProvider\AccountRepositoryInterface;
 use App\Service\AccountMigrationLoaderService;
 use App\Service\BookKeepingMigrationTools;
 use App\Service\BookKeepingMigrationValidator;
+use App\Service\BookKeepingMigrationVersion;
 use Illuminate\Support\Str;
 use Mockery;
 use Tests\TestCase;
@@ -20,6 +21,7 @@ class LoadAccountItemTest extends TestCase
 
     public function test_it_calls_repository_to_create_the_account_item(): void
     {
+        $version = new BookKeepingMigrationVersion('2.0');
         $accountGroupId_1 = (string) Str::uuid();
         $accountItemId_1 = (string) Str::uuid();
         $accountItemTitle_1 = 'item_title25';
@@ -53,7 +55,7 @@ class LoadAccountItemTest extends TestCase
         $validatorMock = Mockery::mock(BookKeepingMigrationValidator::class);
         $validatorMock->shouldReceive('validateAccountItem')
             ->once()
-            ->with($accountItem_1)
+            ->with($version, $accountItem_1)
             ->andReturn($accountItem_1);
         /** @var \App\DataProvider\AccountGroupRepositoryInterface|\Mockery\MockInterface $accountGroupMock */
         $accountGroupMock = Mockery::mock(AccountGroupRepositoryInterface::class);
@@ -65,13 +67,14 @@ class LoadAccountItemTest extends TestCase
             ->with($accountItem_1);
 
         $service = new AccountMigrationLoaderService($accountMock, $accountGroupMock, $toolsMock, $validatorMock);
-        $result_actual = $service->loadAccountItem($accountItem_1, []);
+        $result_actual = $service->loadAccountItem($version, $accountItem_1, []);
 
         $this->assertSame($result_expected, $result_actual);
     }
 
     public function test_it_calls_repository_to_update_the_account_item(): void
     {
+        $version = new BookKeepingMigrationVersion('2.0');
         $accountGroupId_1 = (string) Str::uuid();
         $accountItemId_1 = (string) Str::uuid();
         $accountItemTitle_1 = 'item_title76';
@@ -115,7 +118,7 @@ class LoadAccountItemTest extends TestCase
         $validatorMock = Mockery::mock(BookKeepingMigrationValidator::class);
         $validatorMock->shouldReceive('validateAccountItem')
             ->once()
-            ->with($accountItem_1)
+            ->with($version, $accountItem_1)
             ->andReturn($accountItem_1);
         /** @var \App\DataProvider\AccountGroupRepositoryInterface|\Mockery\MockInterface $accountGroupMock */
         $accountGroupMock = Mockery::mock(AccountGroupRepositoryInterface::class);
@@ -127,13 +130,14 @@ class LoadAccountItemTest extends TestCase
         $accountMock->shouldNotReceive('createForImporting');
 
         $service = new AccountMigrationLoaderService($accountMock, $accountGroupMock, $toolsMock, $validatorMock);
-        $result_actual = $service->loadAccountItem($accountItem_1, $destinationAccountItems_1);
+        $result_actual = $service->loadAccountItem($version, $accountItem_1, $destinationAccountItems_1);
 
         $this->assertSame($result_expected, $result_actual);
     }
 
     public function test_it_does_nothing_because_the_account_item_is_already_up_to_date(): void
     {
+        $version = new BookKeepingMigrationVersion('2.0');
         $accountGroupId_1 = (string) Str::uuid();
         $accountItemId_1 = (string) Str::uuid();
         $accountItemTitle_1 = 'item_title137';
@@ -177,7 +181,7 @@ class LoadAccountItemTest extends TestCase
         $validatorMock = Mockery::mock(BookKeepingMigrationValidator::class);
         $validatorMock->shouldReceive('validateAccountItem')
             ->once()
-            ->with($accountItem_1)
+            ->with($version, $accountItem_1)
             ->andReturn($accountItem_1);
         /** @var \App\DataProvider\AccountGroupRepositoryInterface|\Mockery\MockInterface $accountGroupMock */
         $accountGroupMock = Mockery::mock(AccountGroupRepositoryInterface::class);
@@ -187,13 +191,14 @@ class LoadAccountItemTest extends TestCase
         $accountMock->shouldNotReceive('createForImporting');
 
         $service = new AccountMigrationLoaderService($accountMock, $accountGroupMock, $toolsMock, $validatorMock);
-        $result_actual = $service->loadAccountItem($accountItem_1, $destinationAccountItems_1);
+        $result_actual = $service->loadAccountItem($version, $accountItem_1, $destinationAccountItems_1);
 
         $this->assertSame($result_expected, $result_actual);
     }
 
     public function test_it_does_nothing_because_the_account_item_is_not_valid(): void
     {
+        $version = new BookKeepingMigrationVersion('2.0');
         $result_expected = [
             ['account_id' => null, 'result' => null],
             'invalid data format: account item',
@@ -205,7 +210,7 @@ class LoadAccountItemTest extends TestCase
         $validatorMock = Mockery::mock(BookKeepingMigrationValidator::class);
         $validatorMock->shouldReceive('validateAccountItem')
             ->once()
-            ->with([])
+            ->with($version, [])
             ->andReturn(null);
         /** @var \App\DataProvider\AccountGroupRepositoryInterface|\Mockery\MockInterface $accountGroupMock */
         $accountGroupMock = Mockery::mock(AccountGroupRepositoryInterface::class);
@@ -215,7 +220,7 @@ class LoadAccountItemTest extends TestCase
         $accountMock->shouldNotReceive('createForImporting');
 
         $service = new AccountMigrationLoaderService($accountMock, $accountGroupMock, $toolsMock, $validatorMock);
-        $result_actual = $service->loadAccountItem([], []);
+        $result_actual = $service->loadAccountItem($version, [], []);
 
         $this->assertSame($result_expected, $result_actual);
     }

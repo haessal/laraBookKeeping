@@ -29,10 +29,12 @@ class UpdateTest extends TestCase
         $title = 'title109';
         $description = 'description110';
         $selectable = true;
+        $isCreditCard = false;
         //$accountGroupId_updated = (string) Str::uuid();
         $title_updated = 'title113';
         $description_updated = 'description114';
         $selectable_updated = false;
+        $isCreditCard_updated = true;
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $accountGroupId_updated = AccountGroup::factory()->create([
             'book_id' => $bookId,
@@ -47,6 +49,7 @@ class UpdateTest extends TestCase
             'account_title' => $title,
             'description' => $description,
             'selectable' => $selectable,
+            'is_credit_card' => $isCreditCard,
             'bk_uid' => null,
             'account_bk_code' => null,
         ])->account_id;
@@ -57,6 +60,7 @@ class UpdateTest extends TestCase
             'title' => $title_updated,
             'description' => $description_updated,
             'selectable' => $selectable_updated,
+            'is_credit_card' => $isCreditCard_updated,
         ]);
 
         $this->assertDatabaseHas('bk2_0_accounts', [
@@ -65,6 +69,7 @@ class UpdateTest extends TestCase
             'account_title' => $title_updated,
             'description' => $description_updated,
             'selectable' => $selectable_updated,
+            'is_credit_card' => $isCreditCard_updated,
             'bk_uid' => null,
             'account_bk_code' => null,
         ]);
