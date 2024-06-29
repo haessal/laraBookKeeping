@@ -38,6 +38,7 @@ class RetrieveSlipEntriesTest extends TestCase
                 'amount' => 100,
                 'client' => 'client3',
                 'outline' => 'outline3',
+                'credit_card_statement_id' => '',
             ],
         ];
         /** @var \App\DataProvider\SlipRepositoryInterface|\Mockery\MockInterface $slipMock */
