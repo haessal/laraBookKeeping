@@ -88,7 +88,7 @@ class DisplaySlipPageTest extends TestCase
         $this->userWhoDoesNotHaveBook = User::factory()->create();
     }
 
-    public function test_slip_page_can_be_diplayed(): void
+    public function test_slip_page_can_be_displayed(): void
     {
         $response = $this->actingAs($this->user)
             ->get('/page/v1/slip');

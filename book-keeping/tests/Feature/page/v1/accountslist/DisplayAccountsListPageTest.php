@@ -76,7 +76,7 @@ class DisplayAccountsListPageTest extends TestCase
         $this->userWhoDoesNotHaveBook = User::factory()->create();
     }
 
-    public function test_accountslist_page_can_be_diplayed(): void
+    public function test_accountslist_page_can_be_displayed(): void
     {
         $response = $this->actingAs($this->user)
             ->get('/page/v1/accountslist');

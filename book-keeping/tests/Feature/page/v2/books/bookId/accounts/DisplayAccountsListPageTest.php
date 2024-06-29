@@ -39,7 +39,7 @@ class DisplayAccountsListPageTest extends TestCase
         $this->userWhoDoesNotHaveBook = User::factory()->create();
     }
 
-    public function test_accounts_list_page_can_be_diplayed(): void
+    public function test_accounts_list_page_can_be_displayed(): void
     {
         $response = $this->actingAs($this->user)
             ->get('/page/v2/books/'.$this->book->book_id.'/accounts');
@@ -47,7 +47,7 @@ class DisplayAccountsListPageTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_accounts_list_page_cannot_be_diplayed_because_the_uuid_is_invalid(): void
+    public function test_accounts_list_page_cannot_be_displayed_because_the_uuid_is_invalid(): void
     {
         $response = $this->actingAs($this->user)
             ->get('/page/v2/books/0/accounts');

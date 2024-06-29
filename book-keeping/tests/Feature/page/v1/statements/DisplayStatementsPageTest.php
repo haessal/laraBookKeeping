@@ -92,7 +92,7 @@ class DisplayStatementsPageTest extends TestCase
         $this->userWhoDoesNotHaveBook = User::factory()->create();
     }
 
-    public function test_statements_page_can_be_diplayed(): void
+    public function test_statements_page_can_be_displayed(): void
     {
         $response = $this->actingAs($this->user)
             ->get('/page/v1/statements');
@@ -100,7 +100,7 @@ class DisplayStatementsPageTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_statements_page_can_be_diplayed_with_specified_date(): void
+    public function test_statements_page_can_be_displayed_with_specified_date(): void
     {
         $response = $this->actingAs($this->user)
             ->post('/page/v1/statements', [
@@ -111,7 +111,7 @@ class DisplayStatementsPageTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_statements_page_can_be_diplayed_invalid_parameter(): void
+    public function test_statements_page_can_be_displayed_invalid_parameter(): void
     {
         $response = $this->actingAs($this->user)
             ->post('/page/v1/statements', [
