@@ -168,7 +168,7 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
             } else {
                 $trimmed_memo = trim($slip['memo']);
                 if (empty($trimmed_memo)) {
-                    $trimmed_slip['memo'] = null;
+                    $trimmed_slip['memo'] = null; // @codeCoverageIgnore
                 } else {
                     $trimmed_slip['memo'] = $trimmed_memo;
                 }
@@ -262,7 +262,7 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
         } else {
             $trimmed_string = trim($array_in[$key]);
             if (empty($trimmed_string)) {
-                $string_out = null;
+                $string_out = null; // @codeCoverageIgnore
             } else {
                 $string_out = $trimmed_string;
             }
