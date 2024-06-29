@@ -5,6 +5,7 @@ namespace Tests\Feature\api\v1\SlipEntries;
 use App\Models\Account;
 use App\Models\AccountGroup;
 use App\Models\Book;
+use App\Models\CreditCardStatement;
 use App\Models\Permission;
 use App\Models\Slip;
 use App\Models\SlipEntry;
@@ -44,6 +45,9 @@ class SlipEntryUpdateTest extends TestCase
 
     /** @var \App\Models\SlipEntry */
     private $slipEntry;
+
+    /** @var \App\Models\CreditCardStatement */
+    private $creditCardStatement;
 
     /** @var \App\Models\Slip */
     private $unavailableSlip;
@@ -105,6 +109,9 @@ class SlipEntryUpdateTest extends TestCase
             'debit' => $this->debit->account_id,
             'credit' => $this->credit->account_id,
         ]);
+        $this->creditCardStatement = CreditCardStatement::factory()->create([
+            'book_id' => $this->book->book_id,
+        ]);
         $this->unavailableSlip = Slip::factory()->create([
             'book_id' => $this->unavailableBook->book_id,
             'is_draft' => false,
@@ -129,6 +136,7 @@ class SlipEntryUpdateTest extends TestCase
                 'amount' => $newAmount,
                 'client' => $newClient,
                 'outline' => $newOutline,
+                'credit_card_statement' => $this->creditCardStatement->credit_card_statement_id,
             ]);
 
         $response->assertOk()
@@ -146,7 +154,7 @@ class SlipEntryUpdateTest extends TestCase
                     'amount' => $newAmount,
                     'client' => $newClient,
                     'outline' => $newOutline,
-                    'credit_card_statement' => '',
+                    'credit_card_statement' => $this->creditCardStatement->credit_card_statement_id,
                     'slip' => [
                         'id' => $this->slip->slip_id,
                         'date' => $this->slip->date,
@@ -163,6 +171,7 @@ class SlipEntryUpdateTest extends TestCase
             'amount' => $newAmount,
             'client' => $newClient,
             'outline' => $newOutline,
+            'credit_card_statement_id' => $this->creditCardStatement->credit_card_statement_id,
         ]);
     }
 
@@ -241,6 +250,16 @@ class SlipEntryUpdateTest extends TestCase
         $response = $this->actingAs($this->user)
             ->patch('/api/v1/books/'.$this->book->book_id.'/slipentries/'.$this->slipEntry->slip_entry_id, [
                 'credit' => 'credit',
+            ]);
+
+        $response->assertBadRequest();
+    }
+
+    public function test_slip_entry_is_not_updated_with_invalid_request_body_5(): void
+    {
+        $response = $this->actingAs($this->user)
+            ->patch('/api/v1/books/'.$this->book->book_id.'/slipentries/'.$this->slipEntry->slip_entry_id, [
+                'credit_card_statement' => 'credit_card_statement',
             ]);
 
         $response->assertBadRequest();
