@@ -32,6 +32,7 @@ class FindByIdTest extends TestCase
         $amount = 36912;
         $client = 'client7';
         $outline = 'outline7';
+        $creditCardStatementId = (string) Str::uuid();
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $slipId = Slip::factory()->create([
             'book_id' => $bookId,
@@ -47,6 +48,7 @@ class FindByIdTest extends TestCase
             'amount' => $amount,
             'client' => $client,
             'outline' => $outline,
+            'credit_card_statement_id' => $creditCardStatementId,
         ])->slip_entry_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $slipEntry_expected = [
@@ -60,6 +62,7 @@ class FindByIdTest extends TestCase
             'amount' => $amount,
             'client' => $client,
             'outline' => $outline,
+            'credit_card_statement_id' => $creditCardStatementId,
         ];
 
         $slipEntry_actual = $this->slipEntry->findById($slipEntryId, $bookId, true);

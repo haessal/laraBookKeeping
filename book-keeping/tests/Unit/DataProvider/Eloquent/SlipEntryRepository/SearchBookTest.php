@@ -554,6 +554,7 @@ class SearchBookTest extends TestCase
                 'amount',
                 'client',
                 'outline',
+                'credit_card_statement_id',
             ], array_keys($slipEntries[0]));
         }
     }

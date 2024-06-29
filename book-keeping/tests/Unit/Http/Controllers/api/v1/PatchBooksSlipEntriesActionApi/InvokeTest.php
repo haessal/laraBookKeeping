@@ -44,7 +44,7 @@ class InvokeTest extends TestCase
         /** @var \Illuminate\Http\Request|\Mockery\MockInterface $requestMock */
         $requestMock = Mockery::mock(Request::class);
         $requestMock->shouldReceive('all')
-            ->times(6)
+            ->times(7)
             ->andReturn($slipEntry);
 
         $controller = new PatchBooksSlipEntriesActionApi($serviceMock, $responderMock);
@@ -82,7 +82,7 @@ class InvokeTest extends TestCase
         /** @var \Illuminate\Http\Request|\Mockery\MockInterface $requestMock */
         $requestMock = Mockery::mock(Request::class);
         $requestMock->shouldReceive('all')
-            ->times(6)
+            ->times(7)
             ->andReturn($slipEntry);
 
         $controller = new PatchBooksSlipEntriesActionApi($serviceMock, $responderMock);

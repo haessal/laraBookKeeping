@@ -51,6 +51,7 @@ class RetrieveSlipEntryTest extends TestCase
             'amount' => $amount,
             'client' => $client,
             'outline' => $outline,
+            'credit_card_statement_id' => '',
         ];
         $slips = [
             $slipId => [
@@ -64,6 +65,7 @@ class RetrieveSlipEntryTest extends TestCase
                         'amount' => $amount,
                         'client' => $client,
                         'outline' => $outline,
+                        'credit_card_statement_id' => '',
                     ],
                 ],
             ],
