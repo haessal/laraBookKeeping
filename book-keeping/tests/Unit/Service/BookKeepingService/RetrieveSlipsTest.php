@@ -61,6 +61,7 @@ class RetrieveSlipsTest extends TestCase
                 'amount' => 100,
                 'client' => 'client_1',
                 'outline' => 'outline_1',
+                'credit_card_statement_id' => '',
             ],
             [
                 'slip_id' => $slipId_2,
@@ -73,6 +74,7 @@ class RetrieveSlipsTest extends TestCase
                 'amount' => 2000,
                 'client' => 'client_2',
                 'outline' => 'outline_2',
+                'credit_card_statement_id' => '',
             ],
             [
                 'slip_id' => $slipId_1,
@@ -85,6 +87,7 @@ class RetrieveSlipsTest extends TestCase
                 'amount' => 30000,
                 'client' => 'client_3',
                 'outline' => 'outline_3',
+                'credit_card_statement_id' => '',
             ],
         ];
         $slips = [
@@ -99,6 +102,7 @@ class RetrieveSlipsTest extends TestCase
                         'amount' => 100,
                         'client' => 'client_1',
                         'outline' => 'outline_1',
+                        'credit_card_statement_id' => '',
                     ],
                     $slipEntryId_3 => [
                         'debit' => ['account_id' => $accountId_5, 'account_title' => 'accountTitle_5'],
@@ -106,6 +110,7 @@ class RetrieveSlipsTest extends TestCase
                         'amount' => 30000,
                         'client' => 'client_3',
                         'outline' => 'outline_3',
+                        'credit_card_statement_id' => '',
                     ],
                 ],
             ],
@@ -120,6 +125,7 @@ class RetrieveSlipsTest extends TestCase
                         'amount' => 2000,
                         'client' => 'client_2',
                         'outline' => 'outline_2',
+                        'credit_card_statement_id' => '',
                     ],
                 ],
             ],

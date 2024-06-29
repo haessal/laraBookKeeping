@@ -29,6 +29,7 @@ class SearchSlipTest extends TestCase
         $amount = 2468;
         $client = 'client6';
         $outline = 'outline6';
+        $creditCardStatementId = (string) Str::uuid();
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $slipEntryId = SlipEntry::factory()->create([
             'slip_id' => $slipId,
@@ -37,6 +38,7 @@ class SearchSlipTest extends TestCase
             'amount' => $amount,
             'client' => $client,
             'outline' => $outline,
+            'credit_card_statement_id' => $creditCardStatementId,
         ])->slip_entry_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $slipEntries_expected = [
@@ -48,6 +50,7 @@ class SearchSlipTest extends TestCase
                 'amount' => $amount,
                 'client' => $client,
                 'outline' => $outline,
+                'credit_card_statement_id' => $creditCardStatementId,
             ],
         ];
 

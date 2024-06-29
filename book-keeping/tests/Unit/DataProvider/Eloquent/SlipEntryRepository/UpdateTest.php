@@ -34,6 +34,7 @@ class UpdateTest extends TestCase
         $amount_updated = 841;
         $client_updated = 'client_updated842';
         $outline_updated = 'outlin_updated843';
+        $credit_card_statement_updated = (string) Str::uuid();
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $slipEntryId = SlipEntry::factory()->create([
             'slip_id' => $slipId,
@@ -52,6 +53,7 @@ class UpdateTest extends TestCase
             'amount' => $amount_updated,
             'client' => $client_updated,
             'outline' => $outline_updated,
+            'credit_card_statement' => $credit_card_statement_updated,
         ]);
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
@@ -63,6 +65,7 @@ class UpdateTest extends TestCase
             'amount' => $amount_updated,
             'client' => $client_updated,
             'outline' => $outline_updated,
+            'credit_card_statement_id' => $credit_card_statement_updated,
         ]);
     }
 }
