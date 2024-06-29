@@ -38,7 +38,7 @@ class DisplayDashboardPageTest extends TestCase
         ]);
     }
 
-    public function test_dashboard_page_can_be_diplayed(): void
+    public function test_dashboard_page_can_be_displayed(): void
     {
         $response = $this->actingAs($this->user)
             ->get('/dashboard');
