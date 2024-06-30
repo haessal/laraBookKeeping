@@ -53,19 +53,28 @@ class BookKeepingService
     public $slip;
 
     /**
+     * Credit card statement service instance.
+     *
+     * @var \App\Service\CreditCardStatementService
+     */
+    public $creditCardStatement;
+
+    /**
      * Create a new BookKeepingService instance.
      *
      * @param  \App\Service\BookService  $book
      * @param  \App\Service\AccountService  $account
      * @param  \App\Service\BudgetService  $budget
      * @param  \App\Service\SlipService  $slip
+     * @param  \App\Service\CreditCardStatementService  $creditCardStatement
      */
-    public function __construct(BookService $book, AccountService $account, BudgetService $budget, SlipService $slip)
+    public function __construct(BookService $book, AccountService $account, BudgetService $budget, SlipService $slip, CreditCardStatementService $creditCardStatement)
     {
         $this->book = $book;
         $this->account = $account;
         $this->budget = $budget;
         $this->slip = $slip;
+        $this->creditCardStatement = $creditCardStatement;
     }
 
     /**
@@ -162,6 +171,29 @@ class BookKeepingService
     }
 
     /**
+     * Create a new credit card statement.
+     *
+     * @param  string  $outline
+     * @param  string|null  $memo
+     * @param  string  $date
+     * @param  int|null  $displayOrder
+     * @param  string  $bookId
+     * @return array{0:int, 1:string|null}
+     */
+    public function createCreditCardStatement($outline, $memo, $date, $displayOrder, $bookId): array
+    {
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckWritable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
+        }
+
+        $creditCardStatementId = $this->creditCardStatement->createCreditCardStatement($bookId, $outline, $memo, $date, $displayOrder);
+
+        return [self::STATUS_NORMAL, $creditCardStatementId];
+    }
+
+    /**
      * Create a new slip.
      *
      * @param  string  $outline
@@ -238,6 +270,36 @@ class BookKeepingService
         }
 
         return [self::STATUS_NORMAL, null];
+    }
+
+    /**
+     * Delete the credit card statement.
+     *
+     * @param  string  $creditCardStatementId
+     * @param  string  $bookId
+     * @return array{0:int, 1:null}
+     */
+    public function deleteCreditCardstatement($creditCardStatementId, $bookId): array
+    {
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckWritable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
+        }
+
+        $creditCardStatements = $this->creditCardStatement->retrieveCreditCardStatements($bookId, $creditCardStatementId);
+        if (! empty($creditCardStatements)) {
+            $slipEntries = $this->slip->retrieveSlipEntriesRegisteredInCreditCardStatement($bookId, $creditCardStatementId);
+            if (empty($slipEntries)) {
+                $this->creditCardStatement->deleteCreditCardstatement($creditCardStatementId);
+
+                return [self::STATUS_NORMAL, null];
+            } else {
+                return [self::STATUS_ERROR_BAD_CONDITION, null];
+            }
+        } else {
+            return [self::STATUS_ERROR_AUTH_NOTAVAILABLE, null];
+        }
     }
 
     /**
@@ -496,6 +558,112 @@ class BookKeepingService
         }
 
         return [self::STATUS_NORMAL, $accounts_menu];
+    }
+
+    /**
+     * Retrieve the credit card statement.
+     *
+     * @param  string  $creditCardStatementId
+     * @param  string  $bookId
+     * @return array{0:int, 1:array{
+     *   statement: array{
+     *     slip_entries: array{
+     *       slip_id: string,
+     *       date: string,
+     *       slip_outline: string,
+     *       slip_memo: string,
+     *       slip_entry_id: string,
+     *       debit: string,
+     *       credit: string,
+     *       amount: int,
+     *       client: string,
+     *       outline: string,
+     *       credit_card_statement_id: string,
+     *     }[],
+     *     total_amount: int,
+     *   },
+     *   payment: array{
+     *     slip_entries: array{
+     *       slip_id: string,
+     *       date: string,
+     *       slip_outline: string,
+     *       slip_memo: string,
+     *       slip_entry_id: string,
+     *       debit: string,
+     *       credit: string,
+     *       amount: int,
+     *       client: string,
+     *       outline: string,
+     *       credit_card_statement_id: string,
+     *     }[],
+     *     total_amount: int,
+     *   },
+     *   unpaid_amount: int,
+     * }|null}
+     */
+    public function retrieveCreditCardStatement($creditCardStatementId, $bookId): array
+    {
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckReadable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
+        }
+
+        $creditCardStatements = $this->creditCardStatement->retrieveCreditCardStatements($bookId, $creditCardStatementId);
+        if (! empty($creditCardStatements)) {
+            $status = self::STATUS_NORMAL;
+            $creditCardStatement['credit_card_statement_id'] = $creditCardStatements[$creditCardStatementId]['credit_card_statement_id'];
+            $creditCardStatement['credit_card_statement_outline'] = $creditCardStatements[$creditCardStatementId]['credit_card_statement_outline'];
+            $creditCardStatement['credit_card_statement_memo'] = $creditCardStatements[$creditCardStatementId]['credit_card_statement_memo'];
+            $creditCardStatement['date'] = $creditCardStatements[$creditCardStatementId]['date'];
+            $creditCardAccountIds = array_keys($this->account->retrieveAccounts($bookId, true));
+            $slipEntriesOfStatement = $this->slip->retrieveSlipEntriesOfCreditCardStatement(
+                $bookId,
+                self::ORIGIN_DATE,
+                (new Carbon())->format('Y-m-d'),
+                $creditCardStatementId,
+                $creditCardAccountIds,
+            );
+            $creditCardStatement['statement'] = [
+                'slip_entries' => $slipEntriesOfStatement['statement']['slip_entries'],
+                'total_amount' => $slipEntriesOfStatement['statement']['total_amount'],
+            ];
+            $creditCardStatement['payment'] = [
+                'slip_entries' => $slipEntriesOfStatement['payment']['slip_entries'],
+                'total_amount' => $slipEntriesOfStatement['payment']['total_amount'],
+            ];
+            $creditCardStatement['unpaid_amount'] = $slipEntriesOfStatement['statement']['total_amount'] - $slipEntriesOfStatement['payment']['total_amount'];
+        } else {
+            $status = self::STATUS_ERROR_AUTH_NOTAVAILABLE;
+            $creditCardStatement = null;
+        }
+
+        return [$status, $creditCardStatement];
+    }
+
+    /**
+     * Retrieve a list of credit card statements.
+     *
+     * @param  string  $bookId
+     * @param  string|null  $creditCardStatementId
+     * @return array{0:int, 1:array<string, array{
+     *   credit_card_statement_id: string,
+     *   credit_card_statement_outline: string,
+     *   credit_card_statement_memo: string,
+     *   date: string,
+     * }>|null}
+     */
+    public function retrieveCreditCardStatements($bookId, $creditCardStatementId = null): array
+    {
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckReadable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
+        }
+
+        $creditCardStatements = $this->creditCardStatement->retrieveCreditCardStatements($bookId, $creditCardStatementId);
+
+        return [self::STATUS_NORMAL, $creditCardStatements];
     }
 
     /**
@@ -1075,6 +1243,7 @@ class BookKeepingService
      * @param  string|null  $and_or
      * @param  string|null  $keyword
      * @param  string|null  $bookId
+     * @param  string|null  $creditCardStatementId
      * @return array{0:int, 1:array<string, array{
      *   date: string,
      *   slip_outline: string,
@@ -1089,7 +1258,7 @@ class BookKeepingService
      *   }>
      * }>|null}
      */
-    public function retrieveSlips($fromDate, $toDate, $debit, $credit, $and_or, $keyword, $bookId = null): array
+    public function retrieveSlips($fromDate, $toDate, $debit, $credit, $and_or, $keyword, $bookId = null, $creditCardStatementId = null): array
     {
         [$authorizedStatus, $bookId]
             = $this->book->retrieveDefaultBookOrCheckReadable($bookId, intval(Auth::id()));
@@ -1105,15 +1274,19 @@ class BookKeepingService
             $date = new Carbon();
             $toDate = $date->format('Y-m-d');
         }
+        $condition = [
+            'debit' => $debit,
+            'credit' => $credit,
+            'and_or' => $and_or,
+            'keyword' => $keyword,
+        ];
+        if (isset($creditCardStatementId)) {
+            $condition['credit_card_statement_id'] = $creditCardStatementId;
+        }
         $slipEntries = $this->slip->retrieveSlipEntries(
             $fromDate,
             $toDate,
-            [
-                'debit' => $debit,
-                'credit' => $credit,
-                'and_or' => $and_or,
-                'keyword' => $keyword,
-            ],
+            $condition,
             $bookId
         );
         $slips = $this->translateSlipEntriesToSlips($accounts, $slipEntries);
@@ -1289,6 +1462,36 @@ class BookKeepingService
     }
 
     /**
+     * Update the credit card statement.
+     *
+     * @param  string  $creditCardStatementId
+     * @param  array{
+     *   outline?: string,
+     *   memo?: string,
+     *   date?: string,
+     * }  $newData
+     * @param  string  $bookId
+     * @return array{0:int, 1:null}
+     */
+    public function updateCreditCardStatement($creditCardStatementId, array $newData, $bookId): array
+    {
+        [$authorizedStatus, $bookId]
+            = $this->book->retrieveDefaultBookOrCheckWritable($bookId, intval(Auth::id()));
+        if ($authorizedStatus != self::STATUS_NORMAL) {
+            return [$authorizedStatus, null];
+        }
+
+        $creditCardStatements = $this->creditCardStatement->retrieveCreditCardStatements($bookId, $creditCardStatementId);
+        if (empty($creditCardStatements)) {
+            return [self::STATUS_ERROR_AUTH_NOTAVAILABLE, null];
+        }
+
+        $this->creditCardStatement->updateCreditCardStatement($creditCardStatementId, $newData);
+
+        return [self::STATUS_NORMAL, null];
+    }
+
+    /**
      * Update the slip.
      *
      * @param  string  $slipId
@@ -1351,6 +1554,15 @@ class BookKeepingService
         }
         if (array_key_exists('credit', $newData) && (! array_key_exists($newData['credit'], $accounts))) {
             return [self::STATUS_ERROR_BAD_CONDITION, null];
+        }
+        if (array_key_exists('credit_card_statement', $newData) && (! empty($newData['credit_card_statement']))) {
+            $creditCardStatements = $this->creditCardStatement->retrieveCreditCardStatements(
+                $bookId,
+                $newData['credit_card_statement']
+            );
+            if (! array_key_exists($newData['credit_card_statement'], $creditCardStatements)) {
+                return [self::STATUS_ERROR_BAD_CONDITION, null];
+            }
         }
 
         $this->slip->updateSlipEntry($slipEntryId, $newData);
