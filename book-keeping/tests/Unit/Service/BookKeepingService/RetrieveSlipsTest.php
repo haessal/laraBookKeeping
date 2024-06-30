@@ -6,6 +6,7 @@ use App\Service\AccountService;
 use App\Service\BookKeepingService;
 use App\Service\BookService;
 use App\Service\BudgetService;
+use App\Service\CreditCardStatementService;
 use App\Service\SlipService;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Carbon;
@@ -152,8 +153,10 @@ class RetrieveSlipsTest extends TestCase
             ->once()
             ->with($fromDate, $toDate, $condition, $bookId)
             ->andReturn($slipEntries);
+        /** @var \App\Service\CreditCardStatementService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementService::class);
 
-        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock, $creditCardStatementMock);
         $result_actual = $BookKeeping->retrieveSlips($fromDate, $toDate, null, null, null, null);
 
         $this->assertSame($result_expected, $result_actual);
@@ -168,8 +171,15 @@ class RetrieveSlipsTest extends TestCase
         $user = new User();
         $user->id = $userId;
         $this->be($user);
+        $creditCardStatementId = (string) Str::uuid();
         $slips = [];
-        $condition = ['debit' => null, 'credit' => null, 'and_or' => null, 'keyword' => null];
+        $condition = [
+            'debit' => null,
+            'credit' => null,
+            'and_or' => null,
+            'keyword' => null,
+            'credit_card_statement_id' => $creditCardStatementId,
+        ];
         $result_expected = [BookKeepingService::STATUS_NORMAL, $slips];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
@@ -191,9 +201,11 @@ class RetrieveSlipsTest extends TestCase
             ->once()
             ->with($fromDate, $toDate, $condition, $bookId)
             ->andReturn($slips);
+        /** @var \App\Service\CreditCardStatementService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementService::class);
 
-        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
-        $result_actual = $BookKeeping->retrieveSlips($fromDate, $toDate, null, null, null, null, $bookId);
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock, $creditCardStatementMock);
+        $result_actual = $BookKeeping->retrieveSlips($fromDate, $toDate, null, null, null, null, $bookId, $creditCardStatementId);
 
         $this->assertSame($result_expected, $result_actual);
     }
@@ -228,9 +240,11 @@ class RetrieveSlipsTest extends TestCase
             ->once()
             ->with(BookKeepingService::ORIGIN_DATE, '2019-10-10', $condition, $bookId)
             ->andReturn($slips);
+        /** @var \App\Service\CreditCardStatementService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementService::class);
         Carbon::setTestNow(new Carbon('2019-10-10 09:59:59'));
 
-        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock, $creditCardStatementMock);
         $result_actual = $BookKeeping->retrieveSlips(null, null, null, null, null, null, $bookId);
 
         $this->assertSame($result_expected, $result_actual);
@@ -258,8 +272,10 @@ class RetrieveSlipsTest extends TestCase
         /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipService::class);
         $slipMock->shouldNotReceive('retrieveSlipEntries');
+        /** @var \App\Service\CreditCardStatementService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementService::class);
 
-        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock, $creditCardStatementMock);
         $result_actual = $BookKeeping->retrieveSlips(null, null, null, null, null, null, $bookId);
 
         $this->assertSame($result_expected, $result_actual);
