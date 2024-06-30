@@ -3,6 +3,7 @@
 namespace Tests\Unit\Service\BookKeepingMigrationValidator;
 
 use App\Service\BookKeepingMigrationValidator;
+use App\Service\BookKeepingMigrationVersion;
 use Illuminate\Support\Str;
 use Mockery;
 use Tests\TestCase;
@@ -17,16 +18,18 @@ class ValidateSlipEntryTest extends TestCase
     /**
      * @dataProvider forTestValidateSlipEntry
      */
-    public function test_it_validates_the_format_of_the_slip_entry($slipEntry, $slipEntry_expected): void
+    public function test_it_validates_the_format_of_the_slip_entry($version, $slipEntry, $slipEntry_expected): void
     {
         $service = new BookKeepingMigrationValidator();
-        $slipEntry_actual = $service->validateSlipEntry($slipEntry);
+        $slipEntry_actual = $service->validateSlipEntry($version, $slipEntry);
 
         $this->assertSame($slipEntry_expected, $slipEntry_actual);
     }
 
     public static function forTestValidateSlipEntry()
     {
+        $version2_0 = new BookKeepingMigrationVersion('2.0');
+        $version2_1_0 = new BookKeepingMigrationVersion('2.1.0');
         $slipEntryId = (string) Str::uuid();
         $slipId = (string) Str::uuid();
         $debit = (string) Str::uuid();
@@ -36,9 +39,11 @@ class ValidateSlipEntryTest extends TestCase
         $outline = 'outline36';
         $displayOrder = 2;
         $updatedAt = '2023-03-03T19:30:02+09:00';
+        $creditCardStatementId = (string) Str::uuid();
 
         return [
             [
+                $version2_0,
                 [
                     'slip_entry_id' => $slipEntryId,
                     'slip_id' => $slipId,
@@ -59,12 +64,14 @@ class ValidateSlipEntryTest extends TestCase
                     'amount' => $amount,
                     'client' => $client,
                     'outline' => $outline,
+                    'credit_card_statement_id' => null,
                     'display_order' => $displayOrder,
                     'updated_at' => $updatedAt,
                     'deleted' => false,
                 ],
             ],
             [
+                $version2_0,
                 [
                     'slip_entry_id' => $slipEntryId,
                     'slip_id' => $slipId,
@@ -85,12 +92,14 @@ class ValidateSlipEntryTest extends TestCase
                     'amount' => $amount,
                     'client' => $client,
                     'outline' => $outline,
+                    'credit_card_statement_id' => null,
                     'display_order' => null,
                     'updated_at' => null,
                     'deleted' => false,
                 ],
             ],
             [
+                $version2_0,
                 [
                     // 'slip_entry_id' => $slipEntryId, key missing
                     'slip_id' => $slipId,
@@ -106,6 +115,7 @@ class ValidateSlipEntryTest extends TestCase
                 null,
             ],
             [
+                $version2_0,
                 [
                     'slip_entry_id' => 123, // invalid uuid (not string)
                     'slip_id' => $slipId,
@@ -121,6 +131,7 @@ class ValidateSlipEntryTest extends TestCase
                 null,
             ],
             [
+                $version2_0,
                 [
                     'slip_entry_id' => $slipEntryId,
                     'slip_id' => 'aaaa', // invalid uuid
@@ -136,6 +147,7 @@ class ValidateSlipEntryTest extends TestCase
                 null,
             ],
             [
+                $version2_0,
                 [
                     'slip_entry_id' => $slipEntryId,
                     'slip_id' => $slipId,
@@ -151,6 +163,7 @@ class ValidateSlipEntryTest extends TestCase
                 null,
             ],
             [
+                $version2_0,
                 [
                     'slip_entry_id' => $slipEntryId,
                     'slip_id' => $slipId,
@@ -166,6 +179,7 @@ class ValidateSlipEntryTest extends TestCase
                 null,
             ],
             [
+                $version2_0,
                 [
                     'slip_entry_id' => $slipEntryId,
                     'slip_id' => $slipId,
@@ -181,6 +195,7 @@ class ValidateSlipEntryTest extends TestCase
                 null,
             ],
             [
+                $version2_0,
                 [
                     'slip_entry_id' => $slipEntryId,
                     'slip_id' => $slipId,
@@ -196,6 +211,7 @@ class ValidateSlipEntryTest extends TestCase
                 null,
             ],
             [
+                $version2_0,
                 [
                     'slip_entry_id' => $slipEntryId,
                     'slip_id' => $slipId,
@@ -211,6 +227,7 @@ class ValidateSlipEntryTest extends TestCase
                 null,
             ],
             [
+                $version2_0,
                 [
                     'slip_entry_id' => $slipEntryId,
                     'slip_id' => $slipId,
@@ -226,6 +243,7 @@ class ValidateSlipEntryTest extends TestCase
                 null,
             ],
             [
+                $version2_0,
                 [
                     'slip_entry_id' => $slipEntryId,
                     'slip_id' => $slipId,
@@ -241,6 +259,7 @@ class ValidateSlipEntryTest extends TestCase
                 null,
             ],
             [
+                $version2_0,
                 [
                     'slip_entry_id' => $slipEntryId,
                     'slip_id' => $slipId,
@@ -252,6 +271,98 @@ class ValidateSlipEntryTest extends TestCase
                     'display_order' => $displayOrder,
                     'updated_at' => $updatedAt,
                     'deleted' => 0, // invalid (not bool)
+                ],
+                null,
+            ],
+            [
+                $version2_1_0,
+                [
+                    'slip_entry_id' => $slipEntryId,
+                    'slip_id' => $slipId,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'amount' => $amount,
+                    'client' => $client,
+                    'outline' => $outline,
+                    'credit_card_statement_id' => $creditCardStatementId,
+                    'display_order' => $displayOrder,
+                    'updated_at' => $updatedAt,
+                    'deleted' => false,
+                ],
+                [
+                    'slip_entry_id' => $slipEntryId,
+                    'slip_id' => $slipId,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'amount' => $amount,
+                    'client' => $client,
+                    'outline' => $outline,
+                    'credit_card_statement_id' => $creditCardStatementId,
+                    'display_order' => $displayOrder,
+                    'updated_at' => $updatedAt,
+                    'deleted' => false,
+                ],
+            ],
+            [
+                $version2_1_0,
+                [
+                    'slip_entry_id' => $slipEntryId,
+                    'slip_id' => $slipId,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'amount' => $amount,
+                    'client' => $client,
+                    'outline' => $outline,
+                    'credit_card_statement_id' => null,
+                    'display_order' => $displayOrder,
+                    'updated_at' => $updatedAt,
+                    'deleted' => false,
+                ],
+                [
+                    'slip_entry_id' => $slipEntryId,
+                    'slip_id' => $slipId,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'amount' => $amount,
+                    'client' => $client,
+                    'outline' => $outline,
+                    'credit_card_statement_id' => null,
+                    'display_order' => $displayOrder,
+                    'updated_at' => $updatedAt,
+                    'deleted' => false,
+                ],
+            ],
+            [
+                $version2_1_0,
+                [
+                    'slip_entry_id' => $slipEntryId,
+                    'slip_id' => $slipId,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'amount' => $amount,
+                    'client' => $client,
+                    'outline' => $outline,
+                    // 'credit_card_statement_id' => null, key missing
+                    'display_order' => $displayOrder,
+                    'updated_at' => $updatedAt,
+                    'deleted' => false,
+                ],
+                null,
+            ],
+            [
+                $version2_1_0,
+                [
+                    'slip_entry_id' => $slipEntryId,
+                    'slip_id' => $slipId,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'amount' => $amount,
+                    'client' => $client,
+                    'outline' => $outline,
+                    'credit_card_statement_id' => 'aaaa', // invalid uuid
+                    'display_order' => $displayOrder,
+                    'updated_at' => $updatedAt,
+                    'deleted' => false,
                 ],
                 null,
             ],

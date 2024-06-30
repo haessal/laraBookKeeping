@@ -5,6 +5,7 @@ namespace Tests\Unit\Service\BookKeepingMigration;
 use App\Service\AccountMigrationService;
 use App\Service\BookKeepingMigration;
 use App\Service\BookMigrationService;
+use App\Service\CreditCardStatementMigrationService;
 use App\Service\SlipMigrationService;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Str;
@@ -41,6 +42,11 @@ class DumpBooksTest extends TestCase
                 ],
             ],
         ];
+        $creditCardStatements = [
+            [
+                'credit_card_statement_id' => (string) Str::uuid(),
+            ],
+        ];
         $books_expected = [
             [
                 'book_id' => $bookId,
@@ -48,6 +54,7 @@ class DumpBooksTest extends TestCase
                     'book_id' => $bookId,
                 ],
                 'accounts' => $accounts,
+                'creditCardStatements' => $creditCardStatements,
                 'slips' => $slips,
             ],
         ];
@@ -73,8 +80,14 @@ class DumpBooksTest extends TestCase
             ->once()
             ->with($bookId)
             ->andReturn($slips);
+        /** @var \App\Service\CreditCardStatementMigrationService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementMigrationService::class);
+        $creditCardStatementMock->shouldReceive('dumpCreditCardStatements')
+            ->once()
+            ->with($bookId)
+            ->andReturn($creditCardStatements);
 
-        $service = new BookKeepingMigration($bookMock, $accountMock, $slipMock);
+        $service = new BookKeepingMigration($bookMock, $accountMock, $slipMock, $creditCardStatementMock);
         $books_actual = $service->dumpBooks();
 
         $this->assertSame($books_expected, $books_actual);
