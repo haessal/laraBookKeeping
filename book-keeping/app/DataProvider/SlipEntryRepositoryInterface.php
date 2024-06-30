@@ -2,6 +2,8 @@
 
 namespace App\DataProvider;
 
+use App\Service\BookKeepingMigrationVersion;
+
 interface SlipEntryRepositoryInterface
 {
     /**
@@ -29,6 +31,7 @@ interface SlipEntryRepositoryInterface
      *   amount: int,
      *   client: string,
      *   outline: string,
+     *   credit_card_statement_id: string|null,
      *   display_order: int|null,
      *   updated_at: string|null,
      *   deleted: bool,
@@ -115,6 +118,7 @@ interface SlipEntryRepositoryInterface
     /**
      * Update the slip entry to import.
      *
+     * @param  \App\Service\BookKeepingMigrationVersion  $version
      * @param  array{
      *   slip_entry_id: string,
      *   slip_id: string,
@@ -123,11 +127,12 @@ interface SlipEntryRepositoryInterface
      *   amount: int,
      *   client: string,
      *   outline: string,
+     *   credit_card_statement_id: string|null,
      *   display_order: int|null,
      *   updated_at: string|null,
      *   deleted: bool,
      * }  $newSlipEntry
      * @return void
      */
-    public function updateForImporting(array $newSlipEntry);
+    public function updateForImporting(BookKeepingMigrationVersion $version, array $newSlipEntry);
 }

@@ -84,12 +84,13 @@ class SlipMigrationLoaderService extends SlipMigrationService
     /**
      * Load the slip entries belonging to the slip.
      *
+     * @param  \App\Service\BookKeepingMigrationVersion  $version
      * @param  string  $bookId
      * @param  string  $slipId
      * @param  array<string, array<string, mixed>>  $slipEntries
      * @return array{0: array<string, mixed>, 1: string|null}
      */
-    public function loadSlipEntries($bookId, $slipId, array $slipEntries): array
+    public function loadSlipEntries(BookKeepingMigrationVersion $version, $bookId, $slipId, array $slipEntries): array
     {
         $result = [];
         $error = null;
@@ -111,7 +112,7 @@ class SlipMigrationLoaderService extends SlipMigrationService
             }
             if (key_exists('slip_entry', $slipEntry) && is_array($slipEntry['slip_entry'])) {
                 [$result[$slipEntryIndex], $error] = $this->loadSlipEntry(
-                    $slipEntry['slip_entry'], $destinationSlipEntries[$slipId]['entries']
+                    $version, $slipEntry['slip_entry'], $destinationSlipEntries[$slipId]['entries']
                 );
                 if (isset($error)) {
                     break;
@@ -127,6 +128,7 @@ class SlipMigrationLoaderService extends SlipMigrationService
     /**
      * Load the slip entry.
      *
+     * @param  \App\Service\BookKeepingMigrationVersion  $version
      * @param  array<string, mixed>  $slipEntry
      * @param array<string, array{
      *   slip_entry_id: string,
@@ -134,13 +136,13 @@ class SlipMigrationLoaderService extends SlipMigrationService
      * }>  $destinationSlipEntries
      * @return array{0: array<string, mixed>, 1: string|null}
      */
-    public function loadSlipEntry(array $slipEntry, array $destinationSlipEntries): array
+    public function loadSlipEntry(BookKeepingMigrationVersion $version, array $slipEntry, array $destinationSlipEntries): array
     {
         $mode = null;
         $result = null;
         $error = null;
 
-        $newSlipEntry = $this->validator->validateSlipEntry($slipEntry);
+        $newSlipEntry = $this->validator->validateSlipEntry($version, $slipEntry);
         if (is_null($newSlipEntry)) {
             $error = 'invalid data format: slip entry';
 
@@ -159,7 +161,7 @@ class SlipMigrationLoaderService extends SlipMigrationService
         if (isset($mode)) {
             switch($mode) {
                 case 'update':
-                    $this->slipEntry->updateForImporting($newSlipEntry);
+                    $this->slipEntry->updateForImporting($version, $newSlipEntry);
                     $result = 'updated';
                     break;
                 case 'create':
@@ -179,11 +181,12 @@ class SlipMigrationLoaderService extends SlipMigrationService
     /**
      * Load the slips of the book.
      *
+     * @param  \App\Service\BookKeepingMigrationVersion  $version
      * @param  string  $bookId
      * @param  array<string, array<string, mixed>>  $slips
      * @return array{0: array<string, mixed>, 1: string|null}
      */
-    public function loadSlips($bookId, array $slips): array
+    public function loadSlips(BookKeepingMigrationVersion $version, $bookId, array $slips): array
     {
         $result = [];
         $error = null;
@@ -209,7 +212,7 @@ class SlipMigrationLoaderService extends SlipMigrationService
             if (key_exists('entries', $slip)) {
                 if (is_array($slip['entries'])) {
                     [$result[$slipIndex]['entries'], $error] = $this->loadSlipEntries(
-                        $bookId, $slipId, $slip['entries']
+                        $version, $bookId, $slipId, $slip['entries']
                     );
                     if (isset($error)) {
                         break;

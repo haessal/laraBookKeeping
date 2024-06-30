@@ -4,6 +4,7 @@ namespace App\DataProvider\Eloquent;
 
 use App\DataProvider\SlipEntryRepositoryInterface;
 use App\Models\SlipEntry;
+use App\Service\BookKeepingMigrationVersion;
 use Illuminate\Database\Eloquent\Builder;
 
 class SlipEntryRepository implements SlipEntryRepositoryInterface
@@ -46,6 +47,7 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
      *   amount: int,
      *   client: string,
      *   outline: string,
+     *   credit_card_statement_id: string|null,
      *   display_order: int|null,
      *   updated_at: string|null,
      *   deleted: bool,
@@ -62,6 +64,7 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
         $slipEntry->amount = $newSlipEntry['amount'];
         $slipEntry->client = $newSlipEntry['client'];
         $slipEntry->outline = $newSlipEntry['outline'];
+        $slipEntry->credit_card_statement_id = $newSlipEntry['credit_card_statement_id'];
         $slipEntry->display_order = $newSlipEntry['display_order'];
         $slipEntry->save();
         $slipEntry->refresh();
@@ -321,6 +324,7 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     /**
      * Update the slip entry to import.
      *
+     * @param  \App\Service\BookKeepingMigrationVersion  $version
      * @param  array{
      *   slip_entry_id: string,
      *   slip_id: string,
@@ -329,13 +333,14 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
      *   amount: int,
      *   client: string,
      *   outline: string,
+     *   credit_card_statement_id: string|null,
      *   display_order: int|null,
      *   updated_at: string|null,
      *   deleted: bool,
      * }  $newSlipEntry
      * @return void
      */
-    public function updateForImporting(array $newSlipEntry)
+    public function updateForImporting(BookKeepingMigrationVersion $version, array $newSlipEntry)
     {
         /** @var \App\Models\SlipEntry|null $slipEntry */
         $slipEntry = SlipEntry::withTrashed()->find($newSlipEntry['slip_entry_id']);
@@ -346,6 +351,9 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
             $slipEntry->amount = $newSlipEntry['amount'];
             $slipEntry->client = $newSlipEntry['client'];
             $slipEntry->outline = $newSlipEntry['outline'];
+            if ($version->isSupported(BookKeepingMigrationVersion::CREDIT_CARD_STATEMENT)) {
+                $slipEntry->credit_card_statement_id = $newSlipEntry['credit_card_statement_id'];
+            }
             $slipEntry->display_order = $newSlipEntry['display_order'];
             $slipEntry->touch();
             $slipEntry->save();
