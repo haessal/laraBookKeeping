@@ -52,13 +52,15 @@ class BookMigrationService extends BookService
          */
         $book = $this->book->findByIdForExporting($bookId);
         if (isset($book)) {
-            $converted = [
-                'book_id' => $book['book_id'],
-                'book_name' => $book['book_name'],
-                'display_order' => $book['display_order'],
-                'updated_at' => $book['updated_at'],
-                'deleted' => ! is_null($book['deleted_at']),
-            ];
+            /** @var array{
+             *   book_id: string,
+             *   book_name: string,
+             *   display_order: int|null,
+             *   updated_at: string|null,
+             *   deleted: bool,
+             * } $converted
+             */
+            $converted = $this->tools->convertExportedTimestamps($book);
         } else {
             $converted = null;
         }

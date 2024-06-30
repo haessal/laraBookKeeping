@@ -198,7 +198,7 @@ class AccountMigrationService extends AccountService
             foreach ($accountItemList as $accountItem) {
                 $accountItems[$accountItem['account_id']] = [
                     'account_id' => $accountItem['account_id'],
-                    'updated_at' => $accountItem['updated_at'],
+                    'updated_at' => $this->tools->convertExportedTimestamp($accountItem['updated_at']),
                 ];
             }
             $accountGroups[$accountGroup['account_group_id']] = ['items' => $accountItems];
@@ -239,7 +239,7 @@ class AccountMigrationService extends AccountService
             $accountGroupId = $accountGroup['account_group_id'];
             $accountGroups[$accountGroupId] = [
                 'account_group_id' => $accountGroup['account_group_id'],
-                'updated_at' => $accountGroup['updated_at'],
+                'updated_at' => $this->tools->convertExportedTimestamp($accountGroup['updated_at']),
             ];
         }
 
