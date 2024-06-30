@@ -17,6 +17,23 @@ interface CreditCardStatementRepositoryInterface
     public function create($bookId, $outline, $memo, $date, $displayOrder);
 
     /**
+     * Create a new credit card statement to import.
+     *
+     * @param  array{
+     *   credit_card_statement_id: string,
+     *   book_id: string,
+     *   credit_card_statement_outline: string,
+     *   credit_card_statement_memo: string|null,
+     *   date: string,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newCreditCardStatement
+     * @return void
+     */
+    public function createForImporting(array $newCreditCardStatement);
+
+    /**
      * Delete the credit card statement.
      *
      * @param  string  $creditCardStatementId
@@ -34,6 +51,15 @@ interface CreditCardStatementRepositoryInterface
     public function searchBook($bookId, $creditCardStatementId): array;
 
     /**
+     * Search the book for credit card statements to export.
+     *
+     * @param  string  $bookId
+     * @param  string|null  $creditCardStatementId
+     * @return array<int, array<string, mixed>>
+     */
+    public function searchBookForExporting($bookId, $creditCardStatementId = null): array;
+
+    /**
      * Update the credit card statement.
      *
      * @param  string  $creditCardStatementId
@@ -41,4 +67,21 @@ interface CreditCardStatementRepositoryInterface
      * @return void
      */
     public function update($creditCardStatementId, array $newData);
+
+    /**
+     * Update the credit card statement to import.
+     *
+     * @param  array{
+     *   credit_card_statement_id: string,
+     *   book_id: string,
+     *   credit_card_statement_outline: string,
+     *   credit_card_statement_memo: string|null,
+     *   date: string,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }  $newCreditCardStatement
+     * @return void
+     */
+    public function updateForImporting(array $newCreditCardStatement);
 }

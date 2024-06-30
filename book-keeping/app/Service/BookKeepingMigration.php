@@ -28,17 +28,26 @@ class BookKeepingMigration
     private $slip;
 
     /**
+     * Credit card statement migration service instance.
+     *
+     * @var \App\Service\CreditCardStatementMigrationService
+     */
+    private $creditCardStatement;
+
+    /**
      * Create a new BookKeepingMigration instance.
      *
      * @param  \App\Service\BookMigrationService  $book
      * @param  \App\Service\AccountMigrationService  $account
      * @param  \App\Service\SlipMigrationService  $slip
+     * @param  \App\Service\CreditCardStatementMigrationService  $creditCardStatement
      */
-    public function __construct(BookMigrationService $book, AccountMigrationService $account, SlipMigrationService $slip)
+    public function __construct(BookMigrationService $book, AccountMigrationService $account, SlipMigrationService $slip, CreditCardStatementMigrationService $creditCardStatement)
     {
         $this->book = $book;
         $this->account = $account;
         $this->slip = $slip;
+        $this->creditCardStatement = $creditCardStatement;
     }
 
     /**
@@ -125,6 +134,7 @@ class BookKeepingMigration
                 'book_id' => $bookId,
                 'book' => $this->book->exportInformation($bookId),
                 'accounts' => $this->account->dumpAccounts($bookId),
+                'creditCardStatements' => $this->creditCardStatement->dumpCreditCardStatements($bookId),
                 'slips' => $this->slip->dumpSlips($bookId),
             ];
         }

@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Models\CreditCardStatement;
 use Illuminate\Support\Carbon;
 
 class BookKeepingMigrationValidator
@@ -185,6 +186,60 @@ class BookKeepingMigrationValidator
     }
 
     /**
+     * Validate the credit card statement.
+     *
+     * @param  array<string, mixed>  $creditCardStatement
+     * @return array{
+     *   credit_card_statement_id: string,
+     *   book_id: string,
+     *   credit_card_statement_outline: string,
+     *   credit_card_statement_memo: string|null,
+     *   date: string,
+     *   display_order: int|null,
+     *   updated_at: string|null,
+     *   deleted: bool,
+     * }|null
+     */
+    public function validateCreditCardStatement(array $creditCardStatement): ?array
+    {
+        if (! key_exists('credit_card_statement_id', $creditCardStatement) || ! $this->validateUuid($creditCardStatement['credit_card_statement_id'])) {
+            return null;
+        }
+        if (! key_exists('book_id', $creditCardStatement) || ! $this->validateUuid($creditCardStatement['book_id'])) {
+            return null;
+        }
+        if (! key_exists('credit_card_statement_outline', $creditCardStatement) || ! is_string($creditCardStatement['credit_card_statement_outline'])) {
+            return null;
+        }
+        if (! key_exists('credit_card_statement_memo', $creditCardStatement) || ! $this->isStringOrNull($creditCardStatement['credit_card_statement_memo'])) {
+            return null;
+        }
+        if (! key_exists('date', $creditCardStatement) || ! $this->validateDateFormat($creditCardStatement['date'])) {
+            return null;
+        }
+        if (! key_exists('display_order', $creditCardStatement) || ! $this->isIntOrNull($creditCardStatement['display_order'])) {
+            return null;
+        }
+        if (! key_exists('updated_at', $creditCardStatement) || ! $this->validateUpdatedAt($creditCardStatement['updated_at'])) {
+            return null;
+        }
+        if (! key_exists('deleted', $creditCardStatement) || ! is_bool($creditCardStatement['deleted'])) {
+            return null;
+        }
+
+        return [
+            'credit_card_statement_id' => strval($creditCardStatement['credit_card_statement_id']),
+            'book_id' => strval($creditCardStatement['book_id']),
+            'credit_card_statement_outline' => $creditCardStatement['credit_card_statement_outline'],
+            'credit_card_statement_memo' => is_null($creditCardStatement['credit_card_statement_memo']) ? null : strval($creditCardStatement['credit_card_statement_memo']),
+            'date' => strval($creditCardStatement['date']),
+            'display_order' => is_null($creditCardStatement['display_order']) ? null : intval($creditCardStatement['display_order']),
+            'updated_at' => is_null($creditCardStatement['updated_at']) ? null : strval($creditCardStatement['updated_at']),
+            'deleted' => $creditCardStatement['deleted'],
+        ];
+    }
+
+    /**
      * Validate the slip.
      *
      * @param  array<string, mixed>  $slip
@@ -246,6 +301,7 @@ class BookKeepingMigrationValidator
     /**
      * Validate the slip entry.
      *
+     * @param  \App\Service\BookKeepingMigrationVersion  $version
      * @param  array<string, mixed>  $slipEntry
      * @return array{
      *   slip_entry_id: string,
@@ -255,12 +311,13 @@ class BookKeepingMigrationValidator
      *   amount: int,
      *   client: string,
      *   outline: string,
+     *   credit_card_statement_id: string|null,
      *   display_order: int|null,
      *   updated_at: string|null,
      *   deleted: bool,
      * }|null
      */
-    public function validateSlipEntry(array $slipEntry): ?array
+    public function validateSlipEntry($version, array $slipEntry): ?array
     {
         if (! key_exists('slip_entry_id', $slipEntry) || ! $this->validateUuid($slipEntry['slip_entry_id'])) {
             return null;
@@ -283,6 +340,23 @@ class BookKeepingMigrationValidator
         if (! key_exists('outline', $slipEntry) || ! is_string($slipEntry['outline'])) {
             return null;
         }
+        if ($version->isSupported(BookKeepingMigrationVersion::CREDIT_CARD_STATEMENT)) {
+            if (key_exists('credit_card_statement_id', $slipEntry)) {
+                if (is_null($slipEntry['credit_card_statement_id'])) {
+                    $creditCardStatementId = null;
+                } else {
+                    if ($this->validateUuid($slipEntry['credit_card_statement_id'])) {
+                        $creditCardStatementId = $slipEntry['credit_card_statement_id'];
+                    } else {
+                        return null;
+                    }
+                }
+            } else {
+                return null;
+            }
+        } else {
+            $creditCardStatementId = null;
+        }
         if (! key_exists('display_order', $slipEntry) || ! $this->isIntOrNull($slipEntry['display_order'])) {
             return null;
         }
@@ -301,6 +375,7 @@ class BookKeepingMigrationValidator
             'amount' => $slipEntry['amount'],
             'client' => $slipEntry['client'],
             'outline' => $slipEntry['outline'],
+            'credit_card_statement_id' => is_null($creditCardStatementId) ? null : strval($creditCardStatementId),
             'display_order' => is_null($slipEntry['display_order']) ? null : intval($slipEntry['display_order']),
             'updated_at' => is_null($slipEntry['updated_at']) ? null : strval($slipEntry['updated_at']),
             'deleted' => $slipEntry['deleted'],

@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\DataProvider\Eloquent\AccountGroupRepository;
 use App\DataProvider\Eloquent\AccountRepository;
 use App\DataProvider\Eloquent\BookRepository;
+use App\DataProvider\Eloquent\CreditCardStatementRepository;
 use App\DataProvider\Eloquent\PermissionRepository;
 use App\DataProvider\Eloquent\SlipEntryRepository;
 use App\DataProvider\Eloquent\SlipRepository;
@@ -14,6 +15,7 @@ use App\Service\BookKeepingMigrationLoader;
 use App\Service\BookKeepingMigrationTools;
 use App\Service\BookKeepingMigrationValidator;
 use App\Service\BookMigrationLoaderService;
+use App\Service\CreditCardStatementMigrationLoaderService;
 use App\Service\SlipMigrationLoaderService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Auth;
@@ -45,6 +47,7 @@ class LoadBooks extends Command
             new BookMigrationLoaderService(new BookRepository(), new PermissionRepository, $tools, $validator),
             new AccountMigrationLoaderService(new AccountRepository(), new AccountGroupRepository(), $tools, $validator),
             new SlipMigrationLoaderService(new SlipRepository(), new SlipEntryRepository(), $tools, $validator),
+            new CreditCardStatementMigrationLoaderService(new CreditCardStatementRepository(), $tools, $validator),
         );
         $userId = intval($this->argument('userId'));
         $file = strval($this->argument('file'));

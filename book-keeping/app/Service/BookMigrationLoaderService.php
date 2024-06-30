@@ -61,7 +61,7 @@ class BookMigrationLoaderService extends BookMigrationService
         $destinationInformation = $this->book->findByIdForExporting($bookId);
         if (isset($destinationInformation)) {
             $sourceUpdateAt = $newBook['updated_at'];
-            $destinationUpdateAt = $destinationInformation['updated_at'];
+            $destinationUpdateAt = $this->tools->convertExportedTimestamp($destinationInformation['updated_at']);
             if ($this->tools->isSourceLater($sourceUpdateAt, $destinationUpdateAt)) {
                 $mode = 'update';
             }
