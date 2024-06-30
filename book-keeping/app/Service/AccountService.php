@@ -100,6 +100,7 @@ class AccountService
      * Retrieve a list of accounts of the book.
      *
      * @param  string  $bookId
+     * @param  bool|null  $isCreditCard
      * @return array<string, array{
      *   account_type: string,
      *   account_group_id: string,
@@ -116,12 +117,15 @@ class AccountService
      *   account_group_created_at: string,
      * }>
      */
-    public function retrieveAccounts($bookId): array
+    public function retrieveAccounts($bookId, $isCreditCard = null): array
     {
         $accounts = [];
 
         $accountList = $this->account->searchBook($bookId);
         foreach ($accountList as $accountItem) {
+            if (isset($isCreditCard) && ($isCreditCard != boolval($accountItem['is_credit_card']))) {
+                continue;
+            }
             $accounts[strval($accountItem['account_id'])] = [
                 'account_type' => strval($accountItem['account_type']),
                 'account_group_id' => strval($accountItem['account_group_id']),
