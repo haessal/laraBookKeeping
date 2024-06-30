@@ -34,6 +34,10 @@ class ExportSlipsTest extends TestCase
         ];
         /** @var \App\Service\BookKeepingMigrationTools|\Mockery\MockInterface $toolsMock */
         $toolsMock = Mockery::mock(BookKeepingMigrationTools::class);
+        $toolsMock->shouldReceive('convertExportedTimestamp')
+            ->once()
+            ->with($slipUpdatedAt_1)
+            ->andReturn($slipUpdatedAt_1);
         /** @var \App\DataProvider\SlipRepositoryInterface|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipRepositoryInterface::class);
         $slipMock->shouldReceive('searchBookForExporting')

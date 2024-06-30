@@ -22,8 +22,8 @@ class ExportInformationTest extends TestCase
         $bookId = (string) Str::uuid();
         $bookName = 'name23';
         $displayOrder = 24;
-        $createdAt = '2023-12-10 10:01:01';
-        $updatedAt = '2023-12-10 10:01:02';
+        $createdAt = '2023-12-10T10:01:01+00:00';
+        $updatedAt = '2023-12-10T10:01:02+00:00';
         $bookInformation = [
             'book_id' => $bookId,
             'book_name' => $bookName,
@@ -32,15 +32,20 @@ class ExportInformationTest extends TestCase
             'updated_at' => $updatedAt,
             'deleted_at' => null,
         ];
-        $bookInformation_expected = [
+        $converted = [
             'book_id' => $bookId,
             'book_name' => $bookName,
             'display_order' => $displayOrder,
             'updated_at' => $updatedAt,
             'deleted' => false,
         ];
+        $bookInformation_expected = $converted;
         /** @var \App\Service\BookKeepingMigrationTools|\Mockery\MockInterface $toolsMock */
         $toolsMock = Mockery::mock(BookKeepingMigrationTools::class);
+        $toolsMock->shouldReceive('convertExportedTimestamps')
+            ->once()
+            ->with($bookInformation)
+            ->andReturn($converted);
         /** @var \App\DataProvider\BookRepositoryInterface|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookRepositoryInterface::class);
         $bookMock->shouldReceive('findByIdForExporting')
@@ -62,6 +67,7 @@ class ExportInformationTest extends TestCase
         $bookInformation_expected = null;
         /** @var \App\Service\BookKeepingMigrationTools|\Mockery\MockInterface $toolsMock */
         $toolsMock = Mockery::mock(BookKeepingMigrationTools::class);
+        $toolsMock->shouldNotReceive('convertExportedTimestamps');
         /** @var \App\DataProvider\BookRepositoryInterface|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookRepositoryInterface::class);
         $bookMock->shouldReceive('findByIdForExporting')

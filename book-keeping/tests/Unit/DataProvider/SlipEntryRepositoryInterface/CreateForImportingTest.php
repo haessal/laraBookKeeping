@@ -30,6 +30,7 @@ class CreateForImportingTest extends TestCase
             'amount' => 30,
             'client' => 'client31',
             'outline' => 'outline32',
+            'credit_card_statement_id' => (string) Str::uuid(),
             'display_order' => 0,
             'deleted' => false,
         ];
