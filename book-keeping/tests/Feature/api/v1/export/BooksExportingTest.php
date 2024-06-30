@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Service\BookKeepingMigrationVersion;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Carbon;
 use Tests\TestCase;
 
 class BooksExportingTest extends TestCase
@@ -72,7 +73,7 @@ class BooksExportingTest extends TestCase
         $response = $this->actingAs($this->user)
             ->get('/api/v1/export/books');
 
-        $bookUpdatedAt = $this->book->updated_at->toJSON();
+        $bookUpdatedAt = Carbon::parse($this->book->updated_at)->timezone('UTC')->toAtomString();
         $response->assertOk()
             ->assertJson([
                 'version' => BookKeepingMigrationVersion::CURRENT,
@@ -93,11 +94,11 @@ class BooksExportingTest extends TestCase
         $response = $this->actingAs($this->user)
             ->get('/api/v1/export/books?mode=dump');
 
-        $bookUpdatedAt = $this->book->updated_at->toJSON();
-        $accountGroupUpdatedAt = $this->accountGroup->updated_at->toJSON();
-        $accountItemUpdatedAt = $this->accountItem->updated_at->toJSON();
-        $slipUpdatedAt = $this->slip->updated_at->toJSON();
-        $slipEntryUpdatedAt = $this->slipEntry->updated_at->toJSON();
+        $bookUpdatedAt = Carbon::parse($this->book->updated_at)->timezone('UTC')->toAtomString();
+        $accountGroupUpdatedAt = Carbon::parse($this->accountGroup->updated_at)->timezone('UTC')->toAtomString();
+        $accountItemUpdatedAt = Carbon::parse($this->accountItem->updated_at)->timezone('UTC')->toAtomString();
+        $slipUpdatedAt = Carbon::parse($this->slip->updated_at)->timezone('UTC')->toAtomString();
+        $slipEntryUpdatedAt = Carbon::parse($this->slipEntry->updated_at)->timezone('UTC')->toAtomString();
         $response->assertOk()
             ->assertJson([
                 'version' => BookKeepingMigrationVersion::CURRENT,

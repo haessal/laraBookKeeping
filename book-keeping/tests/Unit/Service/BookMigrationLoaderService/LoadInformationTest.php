@@ -7,6 +7,7 @@ use App\DataProvider\PermissionRepositoryInterface;
 use App\Service\BookKeepingMigrationTools;
 use App\Service\BookKeepingMigrationValidator;
 use App\Service\BookMigrationLoaderService;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Mockery;
 use Tests\TestCase;
@@ -32,6 +33,7 @@ class LoadInformationTest extends TestCase
         ];
         /** @var \App\Service\BookKeepingMigrationTools|\Mockery\MockInterface $toolsMock */
         $toolsMock = Mockery::mock(BookKeepingMigrationTools::class);
+        $toolsMock->shouldNotReceive('convertExportedTimestamp');
         $toolsMock->shouldNotReceive('isSourceLater');
         /** @var \App\Service\BookKeepingMigrationValidator|\Mockery\MockInterface $validatorMock */
         $validatorMock = Mockery::mock(BookKeepingMigrationValidator::class);
@@ -67,6 +69,7 @@ class LoadInformationTest extends TestCase
         $bookId = (string) Str::uuid();
         $bookInformationUpdateAt = '2024-02-17T23:37:15+09:00';
         $destinationUpdateAt = '2024-02-17T22:37:15+09:00';
+        $convertedDestinationUpdateAt = Carbon::parse($destinationUpdateAt)->timezone('UTC')->toAtomString();
         $bookInformation = [
             'book_id' => $bookId,
             'book_name' => 'bookName77',
@@ -82,9 +85,13 @@ class LoadInformationTest extends TestCase
         ];
         /** @var \App\Service\BookKeepingMigrationTools|\Mockery\MockInterface $toolsMock */
         $toolsMock = Mockery::mock(BookKeepingMigrationTools::class);
+        $toolsMock->shouldNotReceive('convertExportedTimestamp')
+            ->once()
+            ->with($destinationUpdateAt)
+            ->andReturn($convertedDestinationUpdateAt);
         $toolsMock->shouldReceive('isSourceLater')
             ->once()
-            ->with($bookInformationUpdateAt, $destinationUpdateAt)
+            ->with($bookInformationUpdateAt, $convertedDestinationUpdateAt)
             ->andReturn(true);
         /** @var \App\Service\BookKeepingMigrationValidator|\Mockery\MockInterface $validatorMock */
         $validatorMock = Mockery::mock(BookKeepingMigrationValidator::class);
@@ -118,6 +125,7 @@ class LoadInformationTest extends TestCase
         $bookId = (string) Str::uuid();
         $bookInformationUpdateAt = '2024-02-23T12:37:15+09:00';
         $destinationUpdateAt = '2024-02-23T13:37:15+09:00';
+        $convertedDestinationUpdateAt = Carbon::parse($destinationUpdateAt)->timezone('UTC')->toAtomString();
         $bookInformation = [
             'book_id' => $bookId,
             'book_name' => 'bookName133',
@@ -133,9 +141,13 @@ class LoadInformationTest extends TestCase
         ];
         /** @var \App\Service\BookKeepingMigrationTools|\Mockery\MockInterface $toolsMock */
         $toolsMock = Mockery::mock(BookKeepingMigrationTools::class);
+        $toolsMock->shouldNotReceive('convertExportedTimestamp')
+            ->once()
+            ->with($destinationUpdateAt)
+            ->andReturn($convertedDestinationUpdateAt);
         $toolsMock->shouldReceive('isSourceLater')
             ->once()
-            ->with($bookInformationUpdateAt, $destinationUpdateAt)
+            ->with($bookInformationUpdateAt, $convertedDestinationUpdateAt)
             ->andReturn(false);
         /** @var \App\Service\BookKeepingMigrationValidator|\Mockery\MockInterface $validatorMock */
         $validatorMock = Mockery::mock(BookKeepingMigrationValidator::class);
@@ -177,6 +189,7 @@ class LoadInformationTest extends TestCase
         ];
         /** @var \App\Service\BookKeepingMigrationTools|\Mockery\MockInterface $toolsMock */
         $toolsMock = Mockery::mock(BookKeepingMigrationTools::class);
+        $toolsMock->shouldNotReceive('convertExportedTimestamp');
         $toolsMock->shouldNotReceive('isSourceLater');
         /** @var \App\Service\BookKeepingMigrationValidator|\Mockery\MockInterface $validatorMock */
         $validatorMock = Mockery::mock(BookKeepingMigrationValidator::class);

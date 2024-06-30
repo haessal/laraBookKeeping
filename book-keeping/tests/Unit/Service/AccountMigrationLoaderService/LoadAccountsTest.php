@@ -64,6 +64,10 @@ class LoadAccountsTest extends TestCase
         ];
         /** @var \App\Service\BookKeepingMigrationTools|\Mockery\MockInterface $toolsMock */
         $toolsMock = Mockery::mock(BookKeepingMigrationTools::class);
+        $toolsMock->shouldReceive('convertExportedTimestamp')
+            ->once()
+            ->with($accountItemUpdatedAt_1)
+            ->andReturn($accountItemUpdatedAt_1);
         $toolsMock->shouldReceive('isSourceLater')  // call from loadAccountItem from loadAccountItems
             ->once()
             ->with($accountItemUpdatedAt_1, $accountItemUpdatedAt_1)
@@ -115,6 +119,7 @@ class LoadAccountsTest extends TestCase
         $result_expected = [[], 'invalid data format: account_group_id'];
         /** @var \App\Service\BookKeepingMigrationTools|\Mockery\MockInterface $toolsMock */
         $toolsMock = Mockery::mock(BookKeepingMigrationTools::class);
+        $toolsMock->shouldNotReceive('convertExportedTimestamp');
         /** @var \App\Service\BookKeepingMigrationValidator|\Mockery\MockInterface $validatorMock */
         $validatorMock = Mockery::mock(BookKeepingMigrationValidator::class);
         /** @var \App\DataProvider\AccountGroupRepositoryInterface|\Mockery\MockInterface $accountGroupMock */
@@ -170,6 +175,7 @@ class LoadAccountsTest extends TestCase
         ];
         /** @var \App\Service\BookKeepingMigrationTools|\Mockery\MockInterface $toolsMock */
         $toolsMock = Mockery::mock(BookKeepingMigrationTools::class);
+        $toolsMock->shouldNotReceive('convertExportedTimestamp');
         /** @var \App\Service\BookKeepingMigrationValidator|\Mockery\MockInterface $validatorMock */
         $validatorMock = Mockery::mock(BookKeepingMigrationValidator::class);
         $validatorMock->shouldReceive('validateAccountGroup')  // call from loadAccountGroup
@@ -220,6 +226,7 @@ class LoadAccountsTest extends TestCase
         ];
         /** @var \App\Service\BookKeepingMigrationTools|\Mockery\MockInterface $toolsMock */
         $toolsMock = Mockery::mock(BookKeepingMigrationTools::class);
+        $toolsMock->shouldNotReceive('convertExportedTimestamp');
         /** @var \App\Service\BookKeepingMigrationValidator|\Mockery\MockInterface $validatorMock */
         $validatorMock = Mockery::mock(BookKeepingMigrationValidator::class);
         $validatorMock->shouldReceive('validateAccountGroup')  // call from loadAccountGroup

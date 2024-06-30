@@ -19,9 +19,9 @@ class ConvertExportedTimestampsTest extends TestCase
         $bookId = (string) Str::uuid();
         $bookName = 'name19';
         $displayOrder = 20;
-        $createdAt = '2023-12-09 21:01:01';
-        $updatedAt = '2023-12-09 21:01:02';
-        $deletedAt = '2023-12-09 21:01:03';
+        $createdAt = '2023-12-09T21:01:01+00:00';
+        $updatedAt = '2023-12-09T21:01:02+00:00';
+        $deletedAt = '2023-12-09T21:01:03+00:00';
         $book = [
             'book_id' => $bookId,
             'book_name' => $bookName,

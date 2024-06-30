@@ -5,6 +5,7 @@ namespace Tests\Unit\Service\BookKeepingMigration;
 use App\Service\AccountMigrationService;
 use App\Service\BookKeepingMigration;
 use App\Service\BookMigrationService;
+use App\Service\CreditCardStatementMigrationService;
 use App\Service\SlipMigrationService;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Str;
@@ -49,8 +50,10 @@ class ExportBooksTest extends TestCase
         $accountMock = Mockery::mock(AccountMigrationService::class);
         /** @var \App\Service\SlipMigrationService|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipMigrationService::class);
+        /** @var \App\Service\CreditCardStatementMigrationService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementMigrationService::class);
 
-        $service = new BookKeepingMigration($bookMock, $accountMock, $slipMock);
+        $service = new BookKeepingMigration($bookMock, $accountMock, $slipMock, $creditCardStatementMock);
         $books_actual = $service->exportBooks();
 
         $this->assertSame($books_expected, $books_actual);
