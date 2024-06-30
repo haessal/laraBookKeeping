@@ -6,6 +6,7 @@ use App\Service\AccountService;
 use App\Service\BookKeepingService;
 use App\Service\BookService;
 use App\Service\BudgetService;
+use App\Service\CreditCardStatementService;
 use App\Service\SlipService;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Str;
@@ -79,8 +80,10 @@ class DeleteSlipEntryAndEmptySlipTest extends TestCase
                 ],
             ]);
         $slipMock->shouldNotReceive('deleteSlip');
+        /** @var \App\Service\CreditCardStatementService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementService::class);
 
-        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock, $creditCardStatementMock);
         $result_actual = $BookKeeping->deleteSlipEntryAndEmptySlip($slipEntryId);
 
         $this->assertSame($result_expected, $result_actual);
@@ -135,8 +138,10 @@ class DeleteSlipEntryAndEmptySlipTest extends TestCase
         $slipMock->shouldReceive('deleteSlip')
             ->once()
             ->with($slipId);
+        /** @var \App\Service\CreditCardStatementService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementService::class);
 
-        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock, $creditCardStatementMock);
         $result_actual = $BookKeeping->deleteSlipEntryAndEmptySlip($slipEntryId, $bookId);
 
         $this->assertSame($result_expected, $result_actual);
@@ -170,8 +175,10 @@ class DeleteSlipEntryAndEmptySlipTest extends TestCase
         $slipMock->shouldNotReceive('deleteSlipEntry');
         $slipMock->shouldNotReceive('retrieveSlipEntriesBoundTo');
         $slipMock->shouldNotReceive('deleteSlip');
+        /** @var \App\Service\CreditCardStatementService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementService::class);
 
-        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock, $creditCardStatementMock);
         $result_actual = $BookKeeping->deleteSlipEntryAndEmptySlip($slipEntryId, $bookId);
 
         $this->assertSame($result_expected, $result_actual);
@@ -202,8 +209,10 @@ class DeleteSlipEntryAndEmptySlipTest extends TestCase
         $slipMock->shouldNotReceive('deleteSlipEntry');
         $slipMock->shouldNotReceive('retrieveSlipEntriesBoundTo');
         $slipMock->shouldNotReceive('deleteSlip');
+        /** @var \App\Service\CreditCardStatementService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementService::class);
 
-        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock, $creditCardStatementMock);
         $result_actual = $BookKeeping->deleteSlipEntryAndEmptySlip($slipEntryId, $bookId);
 
         $this->assertSame($result_expected, $result_actual);
