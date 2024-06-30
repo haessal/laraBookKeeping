@@ -6,6 +6,7 @@ use App\Service\AccountMigrationLoaderService;
 use App\Service\BookKeepingMigrationLoader;
 use App\Service\BookKeepingService;
 use App\Service\BookMigrationLoaderService;
+use App\Service\CreditCardStatementMigrationLoaderService;
 use App\Service\SlipMigrationLoaderService;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Str;
@@ -146,10 +147,14 @@ class LoadBooksTest extends TestCase
         $slipMock = Mockery::mock(SlipMigrationLoaderService::class);
         $slipMock->shouldReceive('loadSlips')
             ->once()
-            ->with($bookId, $slips)
+            ->with(Mockery::on(function ($version) {
+                return $version->toString() == '2.0';
+            }), $bookId, $slips)
             ->andReturn([$slipsResult, null]);
+        /** @var \App\Service\CreditCardStatementMigrationLoaderService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementMigrationLoaderService::class);
 
-        $service = new BookKeepingMigrationLoader($bookMock, $accountMock, $slipMock);
+        $service = new BookKeepingMigrationLoader($bookMock, $accountMock, $slipMock, $creditCardStatementMock);
         $result_actual = $service->loadBooks($contents);
 
         $this->assertSame($result_expected, $result_actual);
@@ -285,10 +290,14 @@ class LoadBooksTest extends TestCase
         $slipMock = Mockery::mock(SlipMigrationLoaderService::class);
         $slipMock->shouldReceive('loadSlips')
             ->once()
-            ->with($bookId, $slips)
+            ->with(Mockery::on(function ($version) {
+                return $version->toString() == '2.0';
+            }), $bookId, $slips)
             ->andReturn([$slipsResult, null]);
+        /** @var \App\Service\CreditCardStatementMigrationLoaderService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementMigrationLoaderService::class);
 
-        $service = new BookKeepingMigrationLoader($bookMock, $accountMock, $slipMock);
+        $service = new BookKeepingMigrationLoader($bookMock, $accountMock, $slipMock, $creditCardStatementMock);
         $result_actual = $service->loadBooks($contents);
 
         $this->assertSame($result_expected, $result_actual);
@@ -311,8 +320,10 @@ class LoadBooksTest extends TestCase
         /** @var \App\Service\SlipMigrationLoaderService|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipMigrationLoaderService::class);
         $slipMock->shouldNotReceive('loadSlips');
+        /** @var \App\Service\CreditCardStatementMigrationLoaderService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementMigrationLoaderService::class);
 
-        $service = new BookKeepingMigrationLoader($bookMock, $accountMock, $slipMock);
+        $service = new BookKeepingMigrationLoader($bookMock, $accountMock, $slipMock, $creditCardStatementMock);
         $result_actual = $service->loadBooks($contents);
 
         $this->assertSame($result_expected, $result_actual);
@@ -339,8 +350,10 @@ class LoadBooksTest extends TestCase
         /** @var \App\Service\SlipMigrationLoaderService|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipMigrationLoaderService::class);
         $slipMock->shouldNotReceive('loadSlips');
+        /** @var \App\Service\CreditCardStatementMigrationLoaderService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementMigrationLoaderService::class);
 
-        $service = new BookKeepingMigrationLoader($bookMock, $accountMock, $slipMock);
+        $service = new BookKeepingMigrationLoader($bookMock, $accountMock, $slipMock, $creditCardStatementMock);
         $result_actual = $service->loadBooks($contents);
 
         $this->assertSame($result_expected, $result_actual);
@@ -374,8 +387,10 @@ class LoadBooksTest extends TestCase
         /** @var \App\Service\SlipMigrationLoaderService|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipMigrationLoaderService::class);
         $slipMock->shouldNotReceive('loadSlips');
+        /** @var \App\Service\CreditCardStatementMigrationLoaderService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementMigrationLoaderService::class);
 
-        $service = new BookKeepingMigrationLoader($bookMock, $accountMock, $slipMock);
+        $service = new BookKeepingMigrationLoader($bookMock, $accountMock, $slipMock, $creditCardStatementMock);
         $result_actual = $service->loadBooks($contents);
 
         $this->assertSame($result_expected, $result_actual);
@@ -423,8 +438,10 @@ class LoadBooksTest extends TestCase
         /** @var \App\Service\SlipMigrationLoaderService|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipMigrationLoaderService::class);
         $slipMock->shouldNotReceive('loadSlips');
+        /** @var \App\Service\CreditCardStatementMigrationLoaderService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementMigrationLoaderService::class);
 
-        $service = new BookKeepingMigrationLoader($bookMock, $accountMock, $slipMock);
+        $service = new BookKeepingMigrationLoader($bookMock, $accountMock, $slipMock, $creditCardStatementMock);
         $result_actual = $service->loadBooks($contents);
 
         $this->assertSame($result_expected, $result_actual);
@@ -472,8 +489,10 @@ class LoadBooksTest extends TestCase
         /** @var \App\Service\SlipMigrationLoaderService|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipMigrationLoaderService::class);
         $slipMock->shouldNotReceive('loadSlips');
+        /** @var \App\Service\CreditCardStatementMigrationLoaderService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementMigrationLoaderService::class);
 
-        $service = new BookKeepingMigrationLoader($bookMock, $accountMock, $slipMock);
+        $service = new BookKeepingMigrationLoader($bookMock, $accountMock, $slipMock, $creditCardStatementMock);
         $result_actual = $service->loadBooks($contents);
 
         $this->assertSame($result_expected, $result_actual);
@@ -573,8 +592,10 @@ class LoadBooksTest extends TestCase
         /** @var \App\Service\SlipMigrationLoaderService|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipMigrationLoaderService::class);
         $slipMock->shouldNotReceive('loadSlips');
+        /** @var \App\Service\CreditCardStatementMigrationLoaderService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementMigrationLoaderService::class);
 
-        $service = new BookKeepingMigrationLoader($bookMock, $accountMock, $slipMock);
+        $service = new BookKeepingMigrationLoader($bookMock, $accountMock, $slipMock, $creditCardStatementMock);
         $result_actual = $service->loadBooks($contents);
 
         $this->assertSame($result_expected, $result_actual);
@@ -684,8 +705,10 @@ class LoadBooksTest extends TestCase
         /** @var \App\Service\SlipMigrationLoaderService|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipMigrationLoaderService::class);
         $slipMock->shouldNotReceive('loadSlips');
+        /** @var \App\Service\CreditCardStatementMigrationLoaderService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementMigrationLoaderService::class);
 
-        $service = new BookKeepingMigrationLoader($bookMock, $accountMock, $slipMock);
+        $service = new BookKeepingMigrationLoader($bookMock, $accountMock, $slipMock, $creditCardStatementMock);
         $result_actual = $service->loadBooks($contents);
 
         $this->assertSame($result_expected, $result_actual);
@@ -809,10 +832,14 @@ class LoadBooksTest extends TestCase
         $slipMock = Mockery::mock(SlipMigrationLoaderService::class);
         $slipMock->shouldReceive('loadSlips')
             ->once()
-            ->with($bookId, $slips)
+            ->with(Mockery::on(function ($version) {
+                return $version->toString() == '2.0';
+            }), $bookId, $slips)
             ->andReturn([[], 'invalid data format: slip_id']);
+        /** @var \App\Service\CreditCardStatementMigrationLoaderService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementMigrationLoaderService::class);
 
-        $service = new BookKeepingMigrationLoader($bookMock, $accountMock, $slipMock);
+        $service = new BookKeepingMigrationLoader($bookMock, $accountMock, $slipMock, $creditCardStatementMock);
         $result_actual = $service->loadBooks($contents);
 
         $this->assertSame($result_expected, $result_actual);

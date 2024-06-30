@@ -4,6 +4,7 @@ namespace Tests\Unit\DataProvider\Eloquent\SlipEntryRepository;
 
 use App\DataProvider\Eloquent\SlipEntryRepository;
 use App\Models\SlipEntry;
+use App\Service\BookKeepingMigrationVersion;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -23,12 +24,14 @@ class UpdateForImportingTest extends TestCase
 
     public function test_one_record_is_updated(): void
     {
+        $version = new BookKeepingMigrationVersion('2.0');
         $slipId = (string) Str::uuid();
         $debit = (string) Str::uuid();
         $credit = (string) Str::uuid();
         $amount = 29;
         $client = 'client30';
         $outline = 'outline31';
+        $creditCardStatementId = (string) Str::uuid();
         $displayOrder = 1;
         $deleted = false;
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
@@ -39,6 +42,7 @@ class UpdateForImportingTest extends TestCase
             'amount' => 39,
             'client' => 'client41',
             'outline' => 'outline42',
+            'credit_card_statement_id' => (string) Str::uuid(),
             'display_order' => 2,
         ])->slip_entry_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
@@ -50,12 +54,13 @@ class UpdateForImportingTest extends TestCase
             'amount' => $amount,
             'client' => $client,
             'outline' => $outline,
+            'credit_card_statement_id' => $creditCardStatementId,
             'display_order' => $displayOrder,
             'deleted' => $deleted,
         ];
 
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        $this->slipEntry->updateForImporting($newSlipEntry);
+        $this->slipEntry->updateForImporting($version, $newSlipEntry);
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $this->assertDatabaseHas('bk2_0_slip_entries', [
@@ -73,12 +78,14 @@ class UpdateForImportingTest extends TestCase
 
     public function test_one_record_is_updated_and_then_deleted(): void
     {
+        $version = new BookKeepingMigrationVersion('2.0');
         $slipId = (string) Str::uuid();
         $debit = (string) Str::uuid();
         $credit = (string) Str::uuid();
         $amount = 79;
         $client = 'client80';
         $outline = 'outline81';
+        $creditCardStatementId = (string) Str::uuid();
         $displayOrder = 1;
         $deleted = true;
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
@@ -89,6 +96,7 @@ class UpdateForImportingTest extends TestCase
             'amount' => 89,
             'client' => 'client90',
             'outline' => 'outline91',
+            'credit_card_statement_id' => $creditCardStatementId,
             'display_order' => 2,
         ])->slip_entry_id;
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
@@ -100,12 +108,13 @@ class UpdateForImportingTest extends TestCase
             'amount' => $amount,
             'client' => $client,
             'outline' => $outline,
+            'credit_card_statement_id' => $creditCardStatementId,
             'display_order' => $displayOrder,
             'deleted' => $deleted,
         ];
 
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        $this->slipEntry->updateForImporting($newSlipEntry);
+        $this->slipEntry->updateForImporting($version, $newSlipEntry);
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $this->assertSoftDeleted('bk2_0_slip_entries', [
@@ -122,12 +131,14 @@ class UpdateForImportingTest extends TestCase
 
     public function test_one_record_is_updated_and_then_restored(): void
     {
+        $version = new BookKeepingMigrationVersion(BookKeepingMigrationVersion::CURRENT);
         $slipId = (string) Str::uuid();
         $debit = (string) Str::uuid();
         $credit = (string) Str::uuid();
         $amount = 128;
         $client = 'client129';
         $outline = 'outline130';
+        $creditCardStatementId = (string) Str::uuid();
         $displayOrder = 1;
         $deleted = false;
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
@@ -138,6 +149,7 @@ class UpdateForImportingTest extends TestCase
             'amount' => 138,
             'client' => 'client139',
             'outline' => 'outline140',
+            'credit_card_statement_id' => (string) Str::uuid(),
             'display_order' => 2,
         ]);
         $slipEntryId = $slipEntry->slip_entry_id;
@@ -151,12 +163,13 @@ class UpdateForImportingTest extends TestCase
             'amount' => $amount,
             'client' => $client,
             'outline' => $outline,
+            'credit_card_statement_id' => $creditCardStatementId,
             'display_order' => $displayOrder,
             'deleted' => $deleted,
         ];
 
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        $this->slipEntry->updateForImporting($newSlipEntry);
+        $this->slipEntry->updateForImporting($version, $newSlipEntry);
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $this->assertDatabaseHas('bk2_0_slip_entries', [
@@ -167,6 +180,7 @@ class UpdateForImportingTest extends TestCase
             'amount' => $amount,
             'client' => $client,
             'outline' => $outline,
+            'credit_card_statement_id' => $creditCardStatementId,
             'display_order' => $displayOrder,
             'deleted_at' => null,
         ]);
@@ -174,12 +188,14 @@ class UpdateForImportingTest extends TestCase
 
     public function test_one_record_is_updated_and_still_in_the_trash(): void
     {
+        $version = new BookKeepingMigrationVersion(BookKeepingMigrationVersion::CURRENT);
         $slipId = (string) Str::uuid();
         $debit = (string) Str::uuid();
         $credit = (string) Str::uuid();
         $amount = 180;
         $client = 'client181';
         $outline = 'outline182';
+        $creditCardStatementId = (string) Str::uuid();
         $displayOrder = 1;
         $deleted = true;
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
@@ -190,6 +206,7 @@ class UpdateForImportingTest extends TestCase
             'amount' => 138,
             'client' => 'client139',
             'outline' => 'outline140',
+            'credit_card_statement_id' => (string) Str::uuid(),
             'display_order' => 2,
         ]);
         $slipEntryId = $slipEntry->slip_entry_id;
@@ -203,12 +220,13 @@ class UpdateForImportingTest extends TestCase
             'amount' => $amount,
             'client' => $client,
             'outline' => $outline,
+            'credit_card_statement_id' => $creditCardStatementId,
             'display_order' => $displayOrder,
             'deleted' => $deleted,
         ];
 
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        $this->slipEntry->updateForImporting($newSlipEntry);
+        $this->slipEntry->updateForImporting($version, $newSlipEntry);
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $this->assertSoftDeleted('bk2_0_slip_entries', [
@@ -219,6 +237,7 @@ class UpdateForImportingTest extends TestCase
             'amount' => $amount,
             'client' => $client,
             'outline' => $outline,
+            'credit_card_statement_id' => $creditCardStatementId,
             'display_order' => $displayOrder,
         ]);
     }
