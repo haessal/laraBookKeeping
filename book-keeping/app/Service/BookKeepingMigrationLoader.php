@@ -29,17 +29,26 @@ class BookKeepingMigrationLoader
     private $slip;
 
     /**
+     * Credit card statement migration service instance.
+     *
+     * @var \App\Service\CreditCardStatementMigrationLoaderService
+     */
+    private $creditCardStatement;
+
+    /**
      * Create a new BookKeepingMigration instance.
      *
      * @param  \App\Service\BookMigrationLoaderService  $book
      * @param  \App\Service\AccountMigrationLoaderService  $account
      * @param  \App\Service\SlipMigrationLoaderService  $slip
+     * @param  \App\Service\CreditCardStatementMigrationLoaderService  $creditCardStatement
      */
-    public function __construct(BookMigrationLoaderService $book, AccountMigrationLoaderService $account, SlipMigrationLoaderService $slip)
+    public function __construct(BookMigrationLoaderService $book, AccountMigrationLoaderService $account, SlipMigrationLoaderService $slip, CreditCardStatementMigrationLoaderService $creditCardStatement)
     {
         $this->book = $book;
         $this->account = $account;
         $this->slip = $slip;
+        $this->creditCardStatement = $creditCardStatement;
     }
 
     /**
@@ -101,9 +110,18 @@ class BookKeepingMigrationLoader
                             break;
                         }
                     }
+                    // credit card statements
+                    if (key_exists('creditCardStatements', $book)) {
+                        [$resultOfImportCreditCardStatements, $errorMessage] = $this->creditCardStatement->loadCreditCardStatements($bookId, $book['creditCardStatements']);
+                        $importResult['books'][$bookIndex]['creditCardStatements'] = $resultOfImportCreditCardStatements;
+                        if (isset($errorMessage)) {
+                            $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;
+                            break;
+                        }
+                    }
                     // slips
                     if (key_exists('slips', $book)) {
-                        [$resultOfImportSlips, $errorMessage] = $this->slip->loadSlips($bookId, $book['slips']);
+                        [$resultOfImportSlips, $errorMessage] = $this->slip->loadSlips($version, $bookId, $book['slips']);
                         $importResult['books'][$bookIndex]['slips'] = $resultOfImportSlips;
                         if (isset($errorMessage)) {
                             $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;
