@@ -200,6 +200,37 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
     }
 
     /**
+     * Search the book for slip entries registered in the credit card statement.
+     *
+     * @param  string  $bookId
+     * @param  string  $creditCardStatementId
+     * @return array<int, array<string, mixed>>
+     */
+    public function searchBookWithCreditCardStatement($bookId, $creditCardStatementId): array
+    {
+        /** @var array<int, array<string, mixed>> $list */
+        $list = SlipEntry::query()
+            ->join('bk2_0_slips', 'bk2_0_slips.slip_id', '=', 'bk2_0_slip_entries.slip_id')
+            ->select(
+                'slip_entry_id',
+                'bk2_0_slip_entries.slip_id',
+                'debit',
+                'credit',
+                'amount',
+                'client',
+                'outline',
+                'credit_card_statement_id',
+            )
+            ->where('book_id', $bookId)
+            ->where('credit_card_statement_id', $creditCardStatementId)
+            ->orderBy('bk2_0_slip_entries.created_at')
+            ->orderBy('bk2_0_slip_entries.display_order')
+            ->get()->toArray();
+
+        return $list;
+    }
+
+    /**
      * Search the slip for its entries.
      *
      * @param  string  $slipId
@@ -277,7 +308,11 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
                 $slipEntry->outline = strval($newData['outline']);
             }
             if (array_key_exists('credit_card_statement', $newData)) {
-                $slipEntry->credit_card_statement_id = strval($newData['credit_card_statement']);
+                if (empty($newData['credit_card_statement'])) {
+                    $slipEntry->credit_card_statement_id = null;
+                } else {
+                    $slipEntry->credit_card_statement_id = strval($newData['credit_card_statement']);
+                }
             }
             $slipEntry->save();
         }
@@ -343,6 +378,8 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
         $and_or = array_key_exists('and_or', $condition) ? $condition['and_or'] : null;
         /** @var string|null $keyword */
         $keyword = array_key_exists('keyword', $condition) ? $condition['keyword'] : null;
+        /** @var string[]|null $creditCardAccountIds */
+        $creditCardAccountIds = array_key_exists('credit_card_account_ids', $condition) ? $condition['credit_card_account_ids'] : null;
 
         /** @var \Illuminate\Database\Eloquent\Builder $query */
         $query = SlipEntry::query()
@@ -379,6 +416,22 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
                     $subquery->where('client', 'like binary', "%$keyword%")
                              ->orWhere('outline', 'like binary', "%$keyword%");
                 });
+        }
+        if (empty($debit) && empty($credit) && empty($and_or) && ! empty($creditCardAccountIds)) {
+            $query = $query
+                ->where(function ($subquery) use ($creditCardAccountIds) {
+                    foreach ($creditCardAccountIds as $accountId) {
+                        $subquery = $subquery->orWhere('debit', $accountId)->orWhere('credit', $accountId);
+                    }
+                });
+        }
+        if (array_key_exists('credit_card_statement_id', $condition)) {
+            if (strval($condition['credit_card_statement_id']) == '') {
+                $creditCardStatementId = null;
+            } else {
+                $creditCardStatementId = strval($condition['credit_card_statement_id']);
+            }
+            $query = $query->where('credit_card_statement_id', $creditCardStatementId);
         }
 
         return $query;

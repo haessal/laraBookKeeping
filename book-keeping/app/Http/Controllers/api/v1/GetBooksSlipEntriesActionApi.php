@@ -50,6 +50,7 @@ class GetBooksSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
         }
 
         $query = $result['query'];
+        $creditCardStatement = array_key_exists('creditcardstatement', $query) ? $query['creditcardstatement'] : null;
         [$status, $slips] = $this->BookKeeping->retrieveSlips(
             $query['from'],
             $query['to'],
@@ -57,7 +58,8 @@ class GetBooksSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
             $query['credit'],
             $query['operand'],
             $query['keyword'],
-            $bookId
+            $bookId,
+            $creditCardStatement,
         );
         switch ($status) {
             case BookKeepingService::STATUS_NORMAL:
@@ -90,6 +92,7 @@ class GetBooksSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
      *   credit: string|null,
      *   operand: string|null,
      *   keyword: string|null,
+     *   creditcardstatement?: string,
      * }}
      */
     private function validateAndTrimSlipEntriesQuery(array $query): array
@@ -122,12 +125,14 @@ class GetBooksSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
                 case 'keyword':
                     $keyword = trim(strval($queryItem));
                     break;
+                case 'creditcardstatement':
+                    break;
                 default:
                     $success = false;
                     break;
             }
         }
-        if (empty($from) && empty($to) && empty($debit) && empty($credit) && empty($keyword)) {
+        if (empty($from) && empty($to) && empty($debit) && empty($credit) && empty($keyword) && ! array_key_exists('creditcardstatement', $query)) {
             $success = false;
         }
         if (! $this->BookKeeping->validatePeriod($from, $to)) {
@@ -145,14 +150,38 @@ class GetBooksSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
         if (! empty($debit) && ! empty($credit) && empty($operand)) {
             $success = false;
         }
-        $trimmed_query = [
-            'from' => $from,
-            'to' => $to,
-            'debit' => $debit,
-            'credit' => $credit,
-            'operand' => $operand,
-            'keyword' => $keyword,
-        ];
+        if (array_key_exists('creditcardstatement', $query)) {
+            $creditCardStatement = strval($query['creditcardstatement']);
+            if (($creditCardStatement != '') && ! $this->BookKeeping->validateUuid($creditCardStatement)) {
+                $success = false;
+            } else {
+                if ($creditCardStatement == '' && ! array_key_exists('debit', $query) && ! array_key_exists('credit', $query)) {
+                    $success = false;
+                }
+            }
+        } else {
+            $creditCardStatement = '';
+        }
+        if ($success && array_key_exists('creditcardstatement', $query)) {
+            $trimmed_query = [
+                'from' => $from,
+                'to' => $to,
+                'debit' => $debit,
+                'credit' => $credit,
+                'operand' => $operand,
+                'keyword' => $keyword,
+                'creditcardstatement' => $creditCardStatement,
+            ];
+        } else {
+            $trimmed_query = [
+                'from' => $from,
+                'to' => $to,
+                'debit' => $debit,
+                'credit' => $credit,
+                'operand' => $operand,
+                'keyword' => $keyword,
+            ];
+        }
 
         return ['success' => $success, 'query' => $trimmed_query];
     }

@@ -199,6 +199,7 @@ class SlipService
      *   credit?: string|null,
      *   and_or?: string|null,
      *   keyword?: string|null,
+     *   credit_card_statement_id? : string,
      * }  $condition
      * @param  string  $bookId
      * @return array{
@@ -227,6 +228,134 @@ class SlipService
                 'slip_outline' => strval($slipEntry['slip_outline']),
                 'slip_memo' => strval($slipEntry['slip_memo']),
                 'slip_entry_id' => strval($slipEntry['slip_entry_id']),
+                'debit' => strval($slipEntry['debit']),
+                'credit' => strval($slipEntry['credit']),
+                'amount' => intval($slipEntry['amount']),
+                'client' => strval($slipEntry['client']),
+                'outline' => strval($slipEntry['outline']),
+                'credit_card_statement_id' => strval($slipEntry['credit_card_statement_id']),
+            ];
+        }
+
+        return $slipEntries;
+    }
+
+    /**
+     * Retrieve a list of slip entries of the credit card statement.
+     *
+     * @param  string  $bookId
+     * @param  string  $fromDate
+     * @param  string  $toDate
+     * @param  string  $creditCardStatementId
+     * @param  string[]  $creditCardAccountIds
+     * @return array{
+     *   statement: array{
+     *     slip_entries: array{
+     *       slip_id: string,
+     *       date: string,
+     *       slip_outline: string,
+     *       slip_memo: string,
+     *       slip_entry_id: string,
+     *       debit: string,
+     *       credit: string,
+     *       amount: int,
+     *       client: string,
+     *       outline: string,
+     *       credit_card_statement_id: string,
+     *     }[],
+     *     total_amount: int,
+     *   },
+     *   payment: array{
+     *     slip_entries: array{
+     *       slip_id: string,
+     *       date: string,
+     *       slip_outline: string,
+     *       slip_memo: string,
+     *       slip_entry_id: string,
+     *       debit: string,
+     *       credit: string,
+     *       amount: int,
+     *       client: string,
+     *       outline: string,
+     *       credit_card_statement_id: string,
+     *     }[],
+     *     total_amount: int,
+     *   },
+     * }
+     */
+    public function retrieveSlipEntriesOfCreditCardStatement($bookId, $fromDate, $toDate, $creditCardStatementId, array $creditCardAccountIds): array
+    {
+        $slipEntriesOfStatement = [];
+        $slipEntriesOfPayment = [];
+        $totalAmountOfStatement = 0;
+        $totalAmountOfPayment = 0;
+
+        $list = $this->slipEntry->searchBook($bookId, $fromDate, $toDate, [
+            'credit_card_account_ids' => $creditCardAccountIds,
+            'credit_card_statement_id' => $creditCardStatementId,
+        ]);
+        foreach ($list as $item) {
+            $debit = strval($item['debit']);
+            $credit = strval($item['credit']);
+            $amount = intval($item['amount']);
+            $slipEntry = [
+                'slip_id' => strval($item['slip_id']),
+                'date' => strval($item['date']),
+                'slip_outline' => strval($item['slip_outline']),
+                'slip_memo' => strval($item['slip_memo']),
+                'slip_entry_id' => strval($item['slip_entry_id']),
+                'debit' => $debit,
+                'credit' => $credit,
+                'amount' => $amount,
+                'client' => strval($item['client']),
+                'outline' => strval($item['outline']),
+                'credit_card_statement_id' => strval($item['credit_card_statement_id']),
+            ];
+            if (in_array($debit, $creditCardAccountIds)) {
+                $slipEntriesOfPayment[] = $slipEntry;
+                $totalAmountOfPayment += $amount;
+            }
+            if (in_array($credit, $creditCardAccountIds)) {
+                $slipEntriesOfStatement[] = $slipEntry;
+                $totalAmountOfStatement += $amount;
+            }
+        }
+
+        return [
+            'statement' => [
+                'slip_entries' => $slipEntriesOfStatement, 'total_amount' => $totalAmountOfStatement,
+            ],
+            'payment' => [
+                'slip_entries' => $slipEntriesOfPayment, 'total_amount' => $totalAmountOfPayment,
+            ],
+        ];
+    }
+
+    /**
+     * Retrieve a list of slip entries that registered in the credit card statement.
+     *
+     * @param  string  $bookId
+     * @param  string  $creditCardStatementId
+     * @return array{
+     *   slip_entry_id: string,
+     *   slip_id: string,
+     *   debit: string,
+     *   credit: string,
+     *   amount: int,
+     *   client: string,
+     *   outline: string,
+     *   credit_card_statement_id: string,
+     * }[]
+     */
+    public function retrieveSlipEntriesRegisteredInCreditCardStatement($bookId, $creditCardStatementId): array
+    {
+        $slipEntries = [];
+
+        $list = $this->slipEntry->searchBookWithCreditCardStatement($bookId, $creditCardStatementId);
+        foreach ($list as $slipEntry) {
+            $slipEntries[] = [
+                'slip_entry_id' => strval($slipEntry['slip_entry_id']),
+                'slip_id' => strval($slipEntry['slip_id']),
                 'debit' => strval($slipEntry['debit']),
                 'credit' => strval($slipEntry['credit']),
                 'amount' => intval($slipEntry['amount']),
