@@ -68,4 +68,53 @@ class UpdateTest extends TestCase
             'credit_card_statement_id' => $credit_card_statement_updated,
         ]);
     }
+
+    public function test_one_record_is_updated_by_null_for_credit_card_statement(): void
+    {
+        $slipId = (string) Str::uuid();
+        $debit = (string) Str::uuid();
+        $credit = (string) Str::uuid();
+        $amount = 877;
+        $client = 'client878';
+        $outline = 'outlin879';
+        $debit_updated = (string) Str::uuid();
+        $credit_updated = (string) Str::uuid();
+        $amount_updated = 882;
+        $client_updated = 'client_updated883';
+        $outline_updated = 'outlin_updated884';
+        $credit_card_statement_updated = (string) Str::uuid();
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $slipEntryId = SlipEntry::factory()->create([
+            'slip_id' => $slipId,
+            'debit' => $debit,
+            'credit' => $credit,
+            'amount' => $amount,
+            'client' => $client,
+            'outline' => $outline,
+            'credit_card_statement_id' => $credit_card_statement_updated,
+        ])->slip_entry_id;
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $this->slipEntry->update($slipEntryId, [
+            'debit' => $debit_updated,
+            'credit' => $credit_updated,
+            'amount' => $amount_updated,
+            'client' => $client_updated,
+            'outline' => $outline_updated,
+            'credit_card_statement' => null,
+        ]);
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        $this->assertDatabaseHas('bk2_0_slip_entries', [
+            'slip_entry_id' => $slipEntryId,
+            'slip_id' => $slipId,
+            'debit' => $debit_updated,
+            'credit' => $credit_updated,
+            'amount' => $amount_updated,
+            'client' => $client_updated,
+            'outline' => $outline_updated,
+            'credit_card_statement_id' => null,
+        ]);
+    }
 }

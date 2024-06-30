@@ -6,6 +6,7 @@ use App\Service\AccountService;
 use App\Service\BookKeepingService;
 use App\Service\BookService;
 use App\Service\BudgetService;
+use App\Service\CreditCardStatementService;
 use App\Service\SlipService;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Str;
@@ -53,8 +54,10 @@ class UpdateAccountTest extends TestCase
         $budgetMock = Mockery::mock(BudgetService::class);
         /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipService::class);
+        /** @var \App\Service\CreditCardStatementService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementService::class);
 
-        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock, $creditCardStatementMock);
         $result_actual = $BookKeeping->updateAccount($accountId, $newData, $bookId);
 
         $this->assertSame($result_expected, $result_actual);
@@ -92,8 +95,10 @@ class UpdateAccountTest extends TestCase
         $budgetMock = Mockery::mock(BudgetService::class);
         /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipService::class);
+        /** @var \App\Service\CreditCardStatementService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementService::class);
 
-        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock, $creditCardStatementMock);
         $result_actual = $BookKeeping->updateAccount($accountId, $newData, $bookId);
 
         $this->assertSame($result_expected, $result_actual);
@@ -127,8 +132,10 @@ class UpdateAccountTest extends TestCase
         $budgetMock = Mockery::mock(BudgetService::class);
         /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipService::class);
+        /** @var \App\Service\CreditCardStatementService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementService::class);
 
-        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock, $creditCardStatementMock);
         $result_actual = $BookKeeping->updateAccount($accountId, $newData, $bookId);
 
         $this->assertSame($result_expected, $result_actual);
@@ -159,8 +166,10 @@ class UpdateAccountTest extends TestCase
         $budgetMock = Mockery::mock(BudgetService::class);
         /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipService::class);
+        /** @var \App\Service\CreditCardStatementService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementService::class);
 
-        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock, $creditCardStatementMock);
         $result_actual = $BookKeeping->updateAccount($accountId, $newData, $bookId);
 
         $this->assertSame($result_expected, $result_actual);

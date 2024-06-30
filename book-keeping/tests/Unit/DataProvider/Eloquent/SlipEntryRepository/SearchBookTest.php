@@ -507,6 +507,90 @@ class SearchBookTest extends TestCase
         $this->assertSame(3, count($slipEntries));
     }
 
+    public function test_it_returns_the_slip_entries_with_specified_credit_card_account(): void
+    {
+        $fromDate = '2024-05-01';
+        $toDate = '2024-05-31';
+        $bookId = (string) Str::uuid();
+        $slipOutline = 'slip_outline515';
+        $memo = 'memo516';
+        $date = '2024-05-10';
+        $isDraft = false;
+        $accountId1 = (string) Str::uuid();
+        $accountId2 = (string) Str::uuid();
+        $amount1 = 1000;
+        $keyword = 'keyword522';
+        $outline1 = 'outline523';
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $slipId = Slip::factory()->create([
+            'book_id' => $bookId,
+            'slip_outline' => $slipOutline,
+            'slip_memo' => $memo,
+            'date' => $date,
+            'is_draft' => $isDraft,
+        ])->slip_id;
+        $slipEntryId1 = SlipEntry::factory()->create([
+            'slip_id' => $slipId,
+            'debit' => $accountId1,
+            'credit' => $accountId2,
+            'amount' => $amount1,
+            'client' => $keyword,
+            'outline' => $outline1,
+            'credit_card_statement_id' => null,
+        ])->slip_entry_id;
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        $condition = [
+            'credit_card_statement_id' => null,
+            'credit_card_account_ids' => [$accountId1],
+        ];
+
+        $slipEntries = $this->slipEntry->searchBook($bookId, $fromDate, $toDate, $condition);
+
+        $this->assertSame(1, count($slipEntries));
+    }
+
+    public function test_it_returns_the_slip_entries_with_specified_credit_card_statement(): void
+    {
+        $fromDate = '2024-06-01';
+        $toDate = '2024-06-31';
+        $bookId = (string) Str::uuid();
+        $slipOutline = 'slip_outline557';
+        $memo = 'memo558';
+        $date = '2024-06-10';
+        $isDraft = false;
+        $accountId1 = (string) Str::uuid();
+        $accountId2 = (string) Str::uuid();
+        $amount1 = 1000;
+        $keyword = 'keyword564';
+        $outline1 = 'outline565';
+        $creditCardStatementId = (string) Str::uuid();
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $slipId = Slip::factory()->create([
+            'book_id' => $bookId,
+            'slip_outline' => $slipOutline,
+            'slip_memo' => $memo,
+            'date' => $date,
+            'is_draft' => $isDraft,
+        ])->slip_id;
+        $slipEntryId1 = SlipEntry::factory()->create([
+            'slip_id' => $slipId,
+            'debit' => $accountId1,
+            'credit' => $accountId2,
+            'amount' => $amount1,
+            'client' => $keyword,
+            'outline' => $outline1,
+            'credit_card_statement_id' => $creditCardStatementId,
+        ])->slip_entry_id;
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        $condition = [
+            'credit_card_statement_id' => $creditCardStatementId,
+        ];
+
+        $slipEntries = $this->slipEntry->searchBook($bookId, $fromDate, $toDate, $condition);
+
+        $this->assertSame(1, count($slipEntries));
+    }
+
     public function test_the_returned_array_has_keys_as_slip_entry(): void
     {
         $fromDate = '2019-09-15';

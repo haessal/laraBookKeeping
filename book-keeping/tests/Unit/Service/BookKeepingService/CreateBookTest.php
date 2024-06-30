@@ -6,6 +6,7 @@ use App\Service\AccountService;
 use App\Service\BookKeepingService;
 use App\Service\BookService;
 use App\Service\BudgetService;
+use App\Service\CreditCardStatementService;
 use App\Service\SlipService;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Str;
@@ -39,8 +40,10 @@ class CreateBookTest extends TestCase
         $budgetMock = Mockery::mock(BudgetService::class);
         /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
         $slipMock = Mockery::mock(SlipService::class);
+        /** @var \App\Service\CreditCardStatementService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementService::class);
 
-        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock);
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock, $creditCardStatementMock);
         $bookId_actual = $BookKeeping->createBook($title);
 
         $this->assertSame($bookId_expected, $bookId_actual);
