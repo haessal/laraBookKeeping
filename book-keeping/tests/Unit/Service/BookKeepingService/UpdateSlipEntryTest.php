@@ -263,4 +263,56 @@ class UpdateSlipEntryTest extends TestCase
 
         $this->assertSame($result_expected, $result_actual);
     }
+
+    public function test_it_does_nothing_because_the_credit_card_statement_in_new_data_is_not_found(): void
+    {
+        $bookId = (string) Str::uuid();
+        $userId = 109;
+        $user = new User();
+        $user->id = $userId;
+        $this->be($user);
+        $slipEntryId = (string) Str::uuid();
+        $slipEntry = [
+            'slip_entry_id' => $slipEntryId,
+        ];
+        $accountId1 = (string) Str::uuid();
+        $creditCardStatementId = (string) Str::uuid();
+        $accounts = [
+            $accountId1 => [],
+        ];
+        $newData = ['credit_card_statement' => $creditCardStatementId];
+        $result_expected = [BookKeepingService::STATUS_ERROR_BAD_CONDITION, null];
+        /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
+        $bookMock = Mockery::mock(BookService::class);
+        $bookMock->shouldReceive('retrieveDefaultBookOrCheckWritable')
+            ->once()
+            ->with($bookId, $userId)
+            ->andReturn([BookKeepingService::STATUS_NORMAL, $bookId]);
+        /** @var \App\Service\AccountService|\Mockery\MockInterface $accountMock */
+        $accountMock = Mockery::mock(AccountService::class);
+        $accountMock->shouldReceive('retrieveAccounts')
+            ->once()
+            ->with($bookId)
+            ->andReturn($accounts);
+        /** @var \App\Service\BudgetService|\Mockery\MockInterface $budgetMock */
+        $budgetMock = Mockery::mock(BudgetService::class);
+        /** @var \App\Service\SlipService|\Mockery\MockInterface $slipMock */
+        $slipMock = Mockery::mock(SlipService::class);
+        $slipMock->shouldReceive('retrieveSlipEntry')
+            ->once()
+            ->with($slipEntryId, $bookId, false)
+            ->andReturn($slipEntry);
+        $slipMock->shouldNotReceive('updateSlipEntry');
+        /** @var \App\Service\CreditCardStatementService|\Mockery\MockInterface $creditCardStatementMock */
+        $creditCardStatementMock = Mockery::mock(CreditCardStatementService::class);
+        $creditCardStatementMock->shouldReceive('retrieveCreditCardStatements')
+            ->once()
+            ->with($bookId, $creditCardStatementId)
+            ->andReturn([]);
+
+        $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock, $creditCardStatementMock);
+        $result_actual = $BookKeeping->updateSlipEntry($slipEntryId, $newData, $bookId);
+
+        $this->assertSame($result_expected, $result_actual);
+    }
 }

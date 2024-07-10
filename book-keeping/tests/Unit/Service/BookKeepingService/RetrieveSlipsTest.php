@@ -171,8 +171,15 @@ class RetrieveSlipsTest extends TestCase
         $user = new User();
         $user->id = $userId;
         $this->be($user);
+        $creditCardStatementId = (string) Str::uuid();
         $slips = [];
-        $condition = ['debit' => null, 'credit' => null, 'and_or' => null, 'keyword' => null];
+        $condition = [
+            'debit' => null,
+            'credit' => null,
+            'and_or' => null,
+            'keyword' => null,
+            'credit_card_statement_id' => $creditCardStatementId,
+        ];
         $result_expected = [BookKeepingService::STATUS_NORMAL, $slips];
         /** @var \App\Service\BookService|\Mockery\MockInterface $bookMock */
         $bookMock = Mockery::mock(BookService::class);
@@ -198,7 +205,7 @@ class RetrieveSlipsTest extends TestCase
         $creditCardStatementMock = Mockery::mock(CreditCardStatementService::class);
 
         $BookKeeping = new BookKeepingService($bookMock, $accountMock, $budgetMock, $slipMock, $creditCardStatementMock);
-        $result_actual = $BookKeeping->retrieveSlips($fromDate, $toDate, null, null, null, null, $bookId);
+        $result_actual = $BookKeeping->retrieveSlips($fromDate, $toDate, null, null, null, null, $bookId, $creditCardStatementId);
 
         $this->assertSame($result_expected, $result_actual);
     }
