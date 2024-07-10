@@ -100,7 +100,7 @@ class DeleteCreditCardStatementTest extends TestCase
                     'client' => 'client100',
                     'outline' => 'outline101',
                     'credit_card_statement_id' => $creditCardStatementId,
-                ]
+                ],
             ]);
         /** @var \App\Service\CreditCardStatementService|\Mockery\MockInterface $creditCardStatementMock */
         $creditCardStatementMock = Mockery::mock(CreditCardStatementService::class);

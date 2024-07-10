@@ -25,7 +25,7 @@ class SearchBookWithCreditCardStatementTest extends TestCase
     public function test_it_returns_the_slip_entries_registered_in_specified_credit(): void
     {
         $bookId = (string) Str::uuid();
-        $creditCardStatementId = (string) Str::uuid(); 
+        $creditCardStatementId = (string) Str::uuid();
         $accountId1 = (string) Str::uuid();
         $accountId2 = (string) Str::uuid();
         $slipOutline = 'slip_outline31';

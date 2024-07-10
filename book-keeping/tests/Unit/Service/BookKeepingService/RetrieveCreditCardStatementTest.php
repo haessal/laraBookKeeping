@@ -187,7 +187,7 @@ class RetrieveCreditCardStatementTest extends TestCase
 
         $this->assertSame($result_expected, $result_actual);
     }
-    
+
     public function test_it_retrieves_nothing_because_the_credit_card_statement_for_the_specified_book_is_not_found(): void
     {
         $bookId = (string) Str::uuid();

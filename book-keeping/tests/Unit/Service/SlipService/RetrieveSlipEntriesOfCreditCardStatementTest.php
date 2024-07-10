@@ -91,7 +91,7 @@ class RetrieveSlipEntriesOfCreditCardStatementTest extends TestCase
             'credit_card_statement_id' => $creditCardStatementId,
         ];
         $slipEntries = [
-            $slipEntry_1, $slipEntry_2, $slipEntry_3 ,$slipEntry_4
+            $slipEntry_1, $slipEntry_2, $slipEntry_3, $slipEntry_4,
         ];
         $slipEntries_expected = [
             'statement' => [
