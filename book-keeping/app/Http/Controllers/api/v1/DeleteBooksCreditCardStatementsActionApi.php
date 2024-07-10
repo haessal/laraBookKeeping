@@ -39,7 +39,7 @@ class DeleteBooksCreditCardStatementsActionApi extends AuthenticatedBookKeepingA
             return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
         }
 
-        [$status, $_] = $this->BookKeeping->deleteCreditCardstatement($creditCardStatementId, $bookId);
+        [$status, $_] = $this->BookKeeping->deleteCreditCardStatement($creditCardStatementId, $bookId);
         switch ($status) {
             case BookKeepingService::STATUS_NORMAL:
                 $response = new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);

@@ -46,7 +46,7 @@ class CreditCardStatementService
      * @param  string  $creditCardStatementId
      * @return void
      */
-    public function deleteCreditCardstatement($creditCardStatementId)
+    public function deleteCreditCardStatement($creditCardStatementId)
     {
         $this->creditCardStatement->delete($creditCardStatementId);
     }

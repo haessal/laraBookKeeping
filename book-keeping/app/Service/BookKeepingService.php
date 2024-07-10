@@ -279,7 +279,7 @@ class BookKeepingService
      * @param  string  $bookId
      * @return array{0:int, 1:null}
      */
-    public function deleteCreditCardstatement($creditCardStatementId, $bookId): array
+    public function deleteCreditCardStatement($creditCardStatementId, $bookId): array
     {
         [$authorizedStatus, $bookId]
             = $this->book->retrieveDefaultBookOrCheckWritable($bookId, intval(Auth::id()));
@@ -291,7 +291,7 @@ class BookKeepingService
         if (! empty($creditCardStatements)) {
             $slipEntries = $this->slip->retrieveSlipEntriesRegisteredInCreditCardStatement($bookId, $creditCardStatementId);
             if (empty($slipEntries)) {
-                $this->creditCardStatement->deleteCreditCardstatement($creditCardStatementId);
+                $this->creditCardStatement->deleteCreditCardStatement($creditCardStatementId);
 
                 return [self::STATUS_NORMAL, null];
             } else {
