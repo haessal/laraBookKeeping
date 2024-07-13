@@ -5,6 +5,7 @@ namespace Tests\Feature\api\v1\SlipEntries;
 use App\Models\Account;
 use App\Models\AccountGroup;
 use App\Models\Book;
+use App\Models\CreditCardStatement;
 use App\Models\Permission;
 use App\Models\Slip;
 use App\Models\SlipEntry;
@@ -45,6 +46,9 @@ class SlipEntryListRetrievalTest extends TestCase
 
     /** @var \App\Models\SlipEntry */
     private $slipEntry;
+
+    /** @var \App\Models\CreditCardStatement */
+    private $creditCardStatement;
 
     /** @var \App\Models\Slip */
     private $unavailableSlip;
@@ -98,10 +102,14 @@ class SlipEntryListRetrievalTest extends TestCase
             'book_id' => $this->book->book_id,
             'is_draft' => false,
         ]);
+        $this->creditCardStatement = CreditCardStatement::factory()->create([
+            'book_id' => $this->book->book_id,
+        ]);
         $this->slipEntry = SlipEntry::factory()->create([
             'slip_id' => $this->slip->slip_id,
             'debit' => $this->debit->account_id,
             'credit' => $this->credit->account_id,
+            'credit_card_statement_id' => $this->creditCardStatement->credit_card_statement_id,
         ]);
         $this->unavailableSlip = Slip::factory()->create([
             'book_id' => $this->unavailableBook->book_id,
@@ -118,7 +126,8 @@ class SlipEntryListRetrievalTest extends TestCase
                 .'debit='.$this->debit->account_id.'&'
                 .'credit='.$this->credit->account_id.'&'
                 .'operand=and&'
-                .'keyword='.$this->slipEntry->client);
+                .'keyword='.$this->slipEntry->client.'&'
+                .'creditcardstatement='.$this->creditCardStatement->credit_card_statement_id);
 
         $response->assertOk()
             ->assertJsonFragment([
@@ -135,7 +144,7 @@ class SlipEntryListRetrievalTest extends TestCase
                     'amount' => $this->slipEntry->amount,
                     'client' => $this->slipEntry->client,
                     'outline' => $this->slipEntry->outline,
-                    'credit_card_statement' => '',
+                    'credit_card_statement' => $this->creditCardStatement->credit_card_statement_id,
                     'slip' => [
                         'id' => $this->slip->slip_id,
                         'date' => $this->slip->date,
@@ -180,6 +189,14 @@ class SlipEntryListRetrievalTest extends TestCase
                 .'debit='.$this->debit->account_id.'&'
                 .'credit='.$this->credit->account_id.'&'
                 .'keyword='.$this->slipEntry->client);
+
+        $response->assertBadRequest();
+    }
+
+    public function test_slip_entry_is_not_retrieved_with_invalid_query_parameter_4(): void
+    {
+        $response = $this->actingAs($this->user)
+        ->get('/api/v1/books/'.$this->book->book_id.'/slipentries/?creditcardstatement=0');
 
         $response->assertBadRequest();
     }
