@@ -34,11 +34,11 @@ interface CreditCardStatementRepositoryInterface
     public function searchBook($bookId, $creditCardStatementId): array;
 
     /**
-     * Update the account group.
+     * Update the credit card statement.
      *
-     * @param  string  $accountGroupId
-     * @param  array<string, mixed>  $newData
+     * @param  string  $creditCardStatementId
+     * @param  array<string, string>  $newData
      * @return void
      */
-    public function update($accountGroupId, array $newData);
+    public function update($creditCardStatementId, array $newData);
 }
