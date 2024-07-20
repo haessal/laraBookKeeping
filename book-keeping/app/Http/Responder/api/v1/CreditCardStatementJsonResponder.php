@@ -12,6 +12,10 @@ class CreditCardStatementJsonResponder extends BaseJsonResponder
      *
      * @param  array{
      *   creditCardStatement: array{
+     *     credit_card_statement_id: string,
+     *     credit_card_statement_outline: string,
+     *     credit_card_statement_memo: string|null,
+     *     date: string,
      *     statement: array{
      *       slip_entries: array{
      *         slip_id: string,
@@ -51,7 +55,7 @@ class CreditCardStatementJsonResponder extends BaseJsonResponder
      */
     public function response(array $context): JsonResponse
     {
-        $this->response->setData($context['creditCardStatement']);
+        $this->response->setData($context['creditCardStatement']); // TODO: To be converted
         $this->response->setStatusCode(JsonResponse::HTTP_OK);
 
         return $this->response;

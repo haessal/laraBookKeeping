@@ -59,7 +59,7 @@ class CreditCardStatementService
      * @return array<string, array{
      *   credit_card_statement_id: string,
      *   credit_card_statement_outline: string,
-     *   credit_card_statement_memo: string,
+     *   credit_card_statement_memo: string|null,
      *   date: string,
      * }>
      */

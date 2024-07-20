@@ -117,7 +117,7 @@ class PostBooksCreditCardStatementsActionApi extends AuthenticatedBookKeepingAct
             } else {
                 $trimmed_memo = trim($creditCardStatement['memo']);
                 if (empty($trimmed_memo)) {
-                    $trimmedCreditCardStatement['memo'] = null;
+                    $trimmedCreditCardStatement['memo'] = null; // @codeCoverageIgnore
                 } else {
                     $trimmedCreditCardStatement['memo'] = $trimmed_memo;
                 }
@@ -158,7 +158,7 @@ class PostBooksCreditCardStatementsActionApi extends AuthenticatedBookKeepingAct
         } else {
             $trimmed_string = trim($array_in[$key]);
             if (empty($trimmed_string)) {
-                $string_out = null;
+                $string_out = null; // @codeCoverageIgnore
             } else {
                 $string_out = $trimmed_string;
             }

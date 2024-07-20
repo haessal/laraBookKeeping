@@ -566,6 +566,10 @@ class BookKeepingService
      * @param  string  $creditCardStatementId
      * @param  string  $bookId
      * @return array{0:int, 1:array{
+     *   credit_card_statement_id: string,
+     *   credit_card_statement_outline: string,
+     *   credit_card_statement_memo: string|null,
+     *   date: string,
      *   statement: array{
      *     slip_entries: array{
      *       slip_id: string,
@@ -649,7 +653,7 @@ class BookKeepingService
      * @return array{0:int, 1:array<string, array{
      *   credit_card_statement_id: string,
      *   credit_card_statement_outline: string,
-     *   credit_card_statement_memo: string,
+     *   credit_card_statement_memo: string|null,
      *   date: string,
      * }>|null}
      */

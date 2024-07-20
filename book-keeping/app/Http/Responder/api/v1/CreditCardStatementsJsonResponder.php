@@ -14,7 +14,7 @@ class CreditCardStatementsJsonResponder extends BaseJsonResponder
      *   creditCardStatements: array<string, array{
      *     credit_card_statement_id: string,
      *     credit_card_statement_outline: string,
-     *     credit_card_statement_memo: string,
+     *     credit_card_statement_memo: string|null,
      *     date: string,
      *   }>
      * }  $context
@@ -35,13 +35,13 @@ class CreditCardStatementsJsonResponder extends BaseJsonResponder
      * @param  array<string, array{
      *   credit_card_statement_id: string,
      *   credit_card_statement_outline: string,
-     *   credit_card_statement_memo: string,
+     *   credit_card_statement_memo: string|null,
      *   date: string,
      * }>  $creditCardStatements
      * @return array{
      *   id: string,
      *   outline: string,
-     *   memo: string,
+     *   memo: string|null,
      *   date: string,
      * }[]
      */
