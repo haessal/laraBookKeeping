@@ -67,7 +67,7 @@ class CreditCardStatementCreationTest extends TestCase
 
         $response->assertCreated()
             ->assertJsonStructure([
-                ['id', 'outline', 'memo', 'date']
+                ['id', 'outline', 'memo', 'date'],
             ])
             ->assertJsonFragment([
                 'outline' => $creditCardStatementOutline,
