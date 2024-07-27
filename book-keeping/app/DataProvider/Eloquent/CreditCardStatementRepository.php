@@ -56,7 +56,7 @@ class CreditCardStatementRepository implements CreditCardStatementRepositoryInte
         $creditCardStatement->display_order = $newCreditCardStatement['display_order'];
         $creditCardStatement->save();
         $creditCardStatement->refresh();
-        if ($creditCardStatement['deleted']) {
+        if ($newCreditCardStatement['deleted']) {
             $creditCardStatement->delete();
         }
     }
