@@ -21,7 +21,7 @@ class UpdateForImportingTest extends TestCase
         $this->slipEntry = new SlipEntryRepository();
     }
 
-    public function test_it_takes_one_argument_and_returns_nothing(): void
+    public function test_it_takes_two_arguments_and_returns_nothing(): void
     {
         $version = new BookKeepingMigrationVersion('2.0');
         $newSlipEntry = [
