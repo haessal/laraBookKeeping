@@ -29,6 +29,7 @@ class ValidateSlipEntryTest extends TestCase
     public static function forTestValidateSlipEntry()
     {
         $version2_0 = new BookKeepingMigrationVersion('2.0');
+        $version2_1_0 = new BookKeepingMigrationVersion('2.1.0');
         $slipEntryId = (string) Str::uuid();
         $slipId = (string) Str::uuid();
         $debit = (string) Str::uuid();
@@ -38,6 +39,7 @@ class ValidateSlipEntryTest extends TestCase
         $outline = 'outline36';
         $displayOrder = 2;
         $updatedAt = '2023-03-03T19:30:02+09:00';
+        $creditCardStatementId = (string) Str::uuid();
 
         return [
             [
@@ -269,6 +271,98 @@ class ValidateSlipEntryTest extends TestCase
                     'display_order' => $displayOrder,
                     'updated_at' => $updatedAt,
                     'deleted' => 0, // invalid (not bool)
+                ],
+                null,
+            ],
+            [
+                $version2_1_0,
+                [
+                    'slip_entry_id' => $slipEntryId,
+                    'slip_id' => $slipId,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'amount' => $amount,
+                    'client' => $client,
+                    'outline' => $outline,
+                    'credit_card_statement_id' => $creditCardStatementId,
+                    'display_order' => $displayOrder,
+                    'updated_at' => $updatedAt,
+                    'deleted' => false,
+                ],
+                [
+                    'slip_entry_id' => $slipEntryId,
+                    'slip_id' => $slipId,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'amount' => $amount,
+                    'client' => $client,
+                    'outline' => $outline,
+                    'credit_card_statement_id' => $creditCardStatementId,
+                    'display_order' => $displayOrder,
+                    'updated_at' => $updatedAt,
+                    'deleted' => false,
+                ],
+            ],
+            [
+                $version2_1_0,
+                [
+                    'slip_entry_id' => $slipEntryId,
+                    'slip_id' => $slipId,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'amount' => $amount,
+                    'client' => $client,
+                    'outline' => $outline,
+                    'credit_card_statement_id' => null,
+                    'display_order' => $displayOrder,
+                    'updated_at' => $updatedAt,
+                    'deleted' => false,
+                ],
+                [
+                    'slip_entry_id' => $slipEntryId,
+                    'slip_id' => $slipId,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'amount' => $amount,
+                    'client' => $client,
+                    'outline' => $outline,
+                    'credit_card_statement_id' => null,
+                    'display_order' => $displayOrder,
+                    'updated_at' => $updatedAt,
+                    'deleted' => false,
+                ],
+            ],
+            [
+                $version2_1_0,
+                [
+                    'slip_entry_id' => $slipEntryId,
+                    'slip_id' => $slipId,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'amount' => $amount,
+                    'client' => $client,
+                    'outline' => $outline,
+                    // 'credit_card_statement_id' => null, key missing
+                    'display_order' => $displayOrder,
+                    'updated_at' => $updatedAt,
+                    'deleted' => false,
+                ],
+                null,
+            ],
+            [
+                $version2_1_0,
+                [
+                    'slip_entry_id' => $slipEntryId,
+                    'slip_id' => $slipId,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'amount' => $amount,
+                    'client' => $client,
+                    'outline' => $outline,
+                    'credit_card_statement_id' => 'aaaa', // invalid uuid
+                    'display_order' => $displayOrder,
+                    'updated_at' => $updatedAt,
+                    'deleted' => false,
                 ],
                 null,
             ],
