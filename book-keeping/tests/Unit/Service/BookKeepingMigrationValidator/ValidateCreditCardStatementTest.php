@@ -121,7 +121,7 @@ class ValidateCreditCardStatementTest extends TestCase
             ],
             [
                 [
-                    'credit_card_statement_id' =>  $creditCardStatementId,
+                    'credit_card_statement_id' => $creditCardStatementId,
                     'book_id' => 'aaaa', // invalid uuid
                     'credit_card_statement_outline' => $outline,
                     'credit_card_statement_memo' => null,
