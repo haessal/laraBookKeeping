@@ -76,7 +76,7 @@ class UpdateDefaultBookTest extends TestCase
 
     public function test_setting_the_book_as_the_default_book()
     {
-        $response = $this->actingAs($this->userWhoDoesNotHaveDefaultBook1)->post('/settings/default-book',[
+        $response = $this->actingAs($this->userWhoDoesNotHaveDefaultBook1)->post('/settings/default-book', [
             'selectedBook' => $this->bookToBeSetAsDefault->book_id,
         ]);
 
