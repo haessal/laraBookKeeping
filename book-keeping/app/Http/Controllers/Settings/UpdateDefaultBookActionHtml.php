@@ -41,7 +41,7 @@ class UpdateDefaultBookActionHtml extends AuthenticatedBookKeepingAction
 
         if ($request->isMethod('post')) {
             $selectedBook = $request->input('selectedBook');
-            if (isset($selectedBook)) {
+            if (isset($selectedBook) && is_string($selectedBook)) {
                 $this->BookKeeping->setBookAsDefault($selectedBook);
             }
         }
