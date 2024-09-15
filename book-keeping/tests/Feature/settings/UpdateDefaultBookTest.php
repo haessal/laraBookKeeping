@@ -17,10 +17,16 @@ class UpdateDefaultBookTest extends TestCase
     private $user;
 
     /** @var \App\Models\User */
-    private $userWhoDoesNotHaveDefaultBook;
+    private $userWhoDoesNotHaveDefaultBook1;
+
+    /** @var \App\Models\User */
+    private $userWhoDoesNotHaveDefaultBook2;
 
     /** @var \App\Models\Book */
     private $book;
+
+    /** @var \App\Models\Book */
+    private $bookToBeSetAsDefault;
 
     public function setup(): void
     {
@@ -36,7 +42,17 @@ class UpdateDefaultBookTest extends TestCase
             'is_owner' => true,
             'is_default' => true,
         ]);
-        $this->userWhoDoesNotHaveDefaultBook = User::factory()->create();
+        $this->userWhoDoesNotHaveDefaultBook1 = User::factory()->create();
+        $this->bookToBeSetAsDefault = Book::factory()->create([
+            'book_name' => $this->faker->word(),
+        ]);
+        Permission::factory()->create([
+            'permitted_user' => $this->userWhoDoesNotHaveDefaultBook1->id,
+            'readable_book' => $this->bookToBeSetAsDefault->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => false,
+        ]);
     }
 
     public function test_default_book_screen_can_be_rendered_with_setting_default_book()
@@ -50,7 +66,7 @@ class UpdateDefaultBookTest extends TestCase
 
     public function test_default_book_screen_can_be_rendered_without_setting_default_book()
     {
-        $response = $this->actingAs($this->userWhoDoesNotHaveDefaultBook)->get('/settings/default-book');
+        $response = $this->actingAs($this->userWhoDoesNotHaveDefaultBook1)->get('/settings/default-book');
 
         $response->assertStatus(200);
 
