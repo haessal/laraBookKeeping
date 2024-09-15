@@ -9,8 +9,8 @@
             <div class="overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
                 <div
                     class="border-b border-gray-200 bg-white p-6 text-black dark:border-gray-900 dark:bg-gray-800 dark:text-gray-200">
-                    @if (is_null($defaultBook))
-                    {{{ $message }}}<br />
+                    @if (is_null($defaultBook)) {{{ $message }}}
+                    <br />
                     <br />
                     <form method="POST" action="{{ route('settings_default_book') }}">
                         @csrf
@@ -21,7 +21,7 @@
                                 class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-gray-900 focus:ring-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400">
                                 <option value="0" selected></option>
                                 @foreach ($candidates as $candidate)
-                                    <option value="{{ $candidate['bookId'] }}">{{{ $candidate['bookName'] }}}</option>
+                                <option value="{{ $candidate['bookId'] }}">{{{ $candidate['bookName'] }}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -29,8 +29,8 @@
                             <x-primary-button type="submit" class="">{{ __('Set') }}</x-primary-button>
                         </div>
                     </form>
-                    @else
-                    {{{ $defaultBook['name'] }}}<br />
+                    @else {{{ $defaultBook['name'] }}}
+                    <br />
                     <br />
                     <form method="POST" action="{{ route('settings_default_book') }}">
                         @csrf
