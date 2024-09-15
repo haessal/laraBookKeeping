@@ -27,7 +27,8 @@
                 <x-slot name="content">
                     <x-dropdown-link :href="route('dashboard')">{{ __('Dashboard') }}</x-dropdown-link>
                     <x-dropdown-link :href="route('v1_top')">{{ __('Switch to Previous version') }}</x-dropdown-link>
-                    <x-dropdown-link :href="route('settings_tokens')">{{ __('Settings') }}</x-dropdown-link>
+                    <x-dropdown-link :href="route('settings_default_book')">{{ __('Default Book') }}</x-dropdown-link>
+                    <x-dropdown-link :href="route('settings_tokens')">{{ __('Personal access tokens') }}</x-dropdown-link>
                     <x-dropdown-link :href="route('profile.edit')">{{ __('Profile') }}</x-dropdown-link>
                     <!-- Authentication -->
                     <form method="POST" action="{{ route('logout') }}">
