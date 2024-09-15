@@ -53,6 +53,7 @@ class UpdateDefaultBookTest extends TestCase
             'is_owner' => true,
             'is_default' => false,
         ]);
+        $this->userWhoDoesNotHaveDefaultBook2 = User::factory()->create();
     }
 
     public function test_default_book_screen_can_be_rendered_with_setting_default_book()
@@ -70,28 +71,35 @@ class UpdateDefaultBookTest extends TestCase
 
         $response->assertStatus(200);
 
-        $response->assertSee(__('Select the book to set as the default'));
+        $response->assertSee(__('Select the book to set as the default.'));
     }
 
-    public function issueing_personal_access_token_success()
+    public function test_setting_the_book_as_the_default_book()
     {
-        $response = $this->actingAs($this->user)->post('/settings/default-book');
+        $response = $this->actingAs($this->userWhoDoesNotHaveDefaultBook1)->post('/settings/default-book',[
+            'selectedBook' => $this->bookToBeSetAsDefault->book_id,
+        ]);
 
         $response->assertStatus(200);
 
-        $response->assertSee(__('Make sure to copy your new personal access token now.'));
+        $response->assertSee(__('Remove from the default'));
     }
 
-    public function deleting_personal_access_token_success()
+    public function test_removing_the_book_from_the_default_books()
     {
-        /** @var \App\Models\User $user */
-        $user = User::factory()->create();
-        $user->createToken('personal-access-token');
-
         $response = $this->actingAs($this->user)->delete('/settings/default-book');
 
         $response->assertStatus(200);
 
-        $response->assertSee(__('There is no token available.'));
+        $response->assertSee(__('Select the book to set as the default.'));
+    }
+
+    public function test_removing_the_book_from_the_default_books_but_the_default_book_was_not_set_already()
+    {
+        $response = $this->actingAs($this->userWhoDoesNotHaveDefaultBook2)->delete('/settings/default-book');
+
+        $response->assertStatus(200);
+
+        $response->assertSee(__('Select the book to set as the default.'));
     }
 }
