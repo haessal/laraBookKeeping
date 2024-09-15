@@ -3,7 +3,7 @@
 
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <h2 class="py-3 pl-2 text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200 sm:pl-0">
+            <h2 class="py-3 pl-2 text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
                 {{ __('Book List') }}
             </h2>
             <div

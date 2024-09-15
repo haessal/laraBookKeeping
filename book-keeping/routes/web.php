@@ -15,6 +15,7 @@ use App\Http\Controllers\page\v2\UpdateAccountsGroupActionHtml;
 use App\Http\Controllers\page\v2\UpdateAccountsItemActionHtml;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Settings\UpdateAccessTokenActionHtml;
+use App\Http\Controllers\Settings\UpdateDefaultBookActionHtml;
 use App\Http\Controllers\ShowDashboardActionHtml;
 use Illuminate\Support\Facades\Route;
 
@@ -41,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::match(['get', 'post', 'delete'], '/settings/default-book', UpdateDefaultBookActionHtml::class)->name('settings_default_book');
 Route::match(['get', 'post', 'delete'], '/settings/tokens', UpdateAccessTokenActionHtml::class)->middleware(['verified'])->name('settings_tokens');
 
 Route::prefix('/page/v1')->group(function () {
