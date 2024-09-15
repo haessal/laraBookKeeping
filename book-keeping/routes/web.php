@@ -14,8 +14,8 @@ use App\Http\Controllers\page\v2\ShowSettingsActionHtml;
 use App\Http\Controllers\page\v2\UpdateAccountsGroupActionHtml;
 use App\Http\Controllers\page\v2\UpdateAccountsItemActionHtml;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Settings\UpdateDefaultBookActionHtml;
 use App\Http\Controllers\Settings\UpdateAccessTokenActionHtml;
+use App\Http\Controllers\Settings\UpdateDefaultBookActionHtml;
 use App\Http\Controllers\ShowDashboardActionHtml;
 use Illuminate\Support\Facades\Route;
 

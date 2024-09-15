@@ -75,7 +75,7 @@ class UpdateDefaultBookActionHtml extends AuthenticatedBookKeepingAction
                 if ($book['is_owner']) {
                     $booksUserOwn[] = [
                         'bookId' => $book['id'],
-                        'bookName' => $book['name']
+                        'bookName' => $book['name'],
                     ];
                 }
             }
