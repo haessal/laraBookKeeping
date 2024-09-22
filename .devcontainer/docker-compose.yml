@@ -8,25 +8,9 @@ services:
       - devcontainer_user.env
     environment:
       - TZ=Asia/Tokyo
-      - DB_DATABASE=devcontainer_testing
-      - APP_ENV=testing
     volumes:
       - ..:/workspace:cached
       - ./workspace/php.ini:/usr/local/etc/php/php.ini:ro
-  web:
-    build:
-      context: ./web
-      dockerfile: Dockerfile
-    env_file:
-      - devcontainer.env
-      - devcontainer_user.env
-    ports:
-      - "8080:80"
-    volumes:
-      - ..:/var/devcontainer
-      - ./web/php.ini:/usr/local/etc/php/php.ini:ro
-    depends_on:
-      - db
   db:
     image: mariadb:10.5.9
     environment:
