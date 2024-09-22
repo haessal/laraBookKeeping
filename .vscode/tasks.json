@@ -1,0 +1,88 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "spell checking",
+            "type": "shell",
+            "command": "cspell lint '**'"
+        },
+        {
+            "label": "generate documentation",
+            "type": "shell",
+            "command": "phpdoc -d ./app",
+            "options": {
+                "cwd": "${workspaceFolder}/book-keeping",
+                "env": {
+                    "XDEBUG_MODE": "off"
+                }
+            }
+        },
+        {
+            "label": "HTML/CSS format checking",
+            "type": "shell",
+            "command": "npx prettier --check **/*.blade.php",
+            "options": {
+                "cwd": "${workspaceFolder}/book-keeping"
+            }
+        },
+        {
+            "label": "static analysis",
+            "type": "shell",
+            "command": "./vendor/bin/phpstan analyse",
+            "options": {
+                "cwd": "${workspaceFolder}/book-keeping",
+                "env": {
+                    "XDEBUG_MODE": "off"
+                }
+            }
+        },
+        {
+            "label": "unit test",
+            "type": "shell",
+            "command": "./vendor/bin/phpunit --testdox",
+            "options": {
+                "cwd": "${workspaceFolder}/book-keeping",
+                "env": {
+                    "XDEBUG_MODE": "off"
+                }
+            }
+        },
+        {
+            "label": "unit test and coverage",
+            "type": "shell",
+            "command": "./vendor/bin/phpunit --coverage-clover ./cov.xml",
+            "options": {
+                "cwd": "${workspaceFolder}/book-keeping",
+                "env": {
+                    "XDEBUG_MODE": "coverage"
+                }
+            }
+        },
+        {
+            "label": "migrate:fresh",
+            "type": "shell",
+            "command": "php artisan migrate:fresh",
+            "options": {
+                "cwd": "${workspaceFolder}/book-keeping",
+                "env": {
+                    "XDEBUG_MODE": "off",
+                    "DB_DATABASE": "devcontainer"
+                }
+            }
+        },
+        {
+            "label": "migrate:fresh with seed",
+            "type": "shell",
+            "command": "php artisan migrate:fresh --seed",
+            "options": {
+                "cwd": "${workspaceFolder}/book-keeping",
+                "env": {
+                    "XDEBUG_MODE": "off",
+                    "DB_DATABASE": "devcontainer"
+                }
+            }
+        }
+    ]
+}
