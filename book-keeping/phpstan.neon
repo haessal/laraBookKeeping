@@ -1,0 +1,6 @@
+parameters:
+    paths:
+        - app/
+    excludePaths:
+        - app/Models/User.php
+    level: 9
