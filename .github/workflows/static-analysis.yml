@@ -1,0 +1,22 @@
+name: Static Analysis by PHPStan
+
+on: [push]
+
+jobs:
+
+  build-test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+    - uses: php-actions/composer@v6
+      with:
+        working_dir: book-keeping
+    - name: run Larastan
+      run: XDEBUG_MODE=off vendor/bin/phpstan analyse
+      working-directory: ./book-keeping
