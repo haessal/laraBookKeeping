@@ -6,12 +6,16 @@ barryvdh
 beanstalkd
 bmewburn
 bradlc
+cimg
 Curotec
 eamodio
+enmod
 Envoyer
 felixfbecker
+haessal
 humao
 intelephense
+mysqld
 nunomaduro
 Otwell
 ryanluker
@@ -20,4 +24,5 @@ Vehikl
 # Misc
 dont
 EHLO
+NOWARNINGS
 sasl
