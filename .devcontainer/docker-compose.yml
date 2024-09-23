@@ -4,7 +4,6 @@ services:
       context: ./workspace
       dockerfile: Dockerfile
     env_file:
-      - devcontainer.env
       - devcontainer_user.env
     environment:
       - TZ=Asia/Tokyo
