@@ -54,6 +54,12 @@ RUN groupadd --gid $USER_GID ${USERNAME} \
         && useradd -s /bin/bash --uid ${USER_UID} --gid ${USER_GID} -m ${USERNAME} \
         && echo 'source /usr/local/etc/git-completion.bash' >> /home/${USERNAME}/.bashrc
 
+# Install Laravel installer as developer
+USER ${USERNAME}
+RUN composer global require laravel/installer \
+        && echo 'export PATH="$PATH:~/.composer/vendor/bin"' >> /home/${USERNAME}/.bashrc
+
+USER root
 COPY devcontainer-workspace-start /usr/local/bin/
 
 CMD ["devcontainer-workspace-start"]
