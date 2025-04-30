@@ -41,6 +41,8 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
         && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
         && docker-php-ext-install pdo_mysql
 
+RUN docker-php-ext-configure pcntl --enable-pcntl && docker-php-ext-install pcntl
+
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
