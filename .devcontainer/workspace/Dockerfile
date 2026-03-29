@@ -1,4 +1,4 @@
-FROM php:8.2
+FROM php:8.5
 
 LABEL maintainer="haessal@mizutamauki.net"
 
@@ -19,32 +19,33 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
                -o /usr/local/etc/git-completion.bash \
                https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
 
-# Install an extension with PECL
-RUN pecl install xdebug \
-        && docker-php-ext-enable xdebug
-
-# Install Node.js
-RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
-            nodejs \
-            npm \
-        && npm install -g n && n stable \
-        && apt-get purge -y nodejs npm \
-        && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-RUN npm install -g npm && npm install -g npm-check-updates
+# Install Node.js 22 (LTS)
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+        && apt-get install -y nodejs \
+        && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+        && npm install -g npm-check-updates
 
 # Install CSpell(command line tool for spell checking code)
 RUN npm install -g cspell
 
-# Install MySQL and related extention
+# Install MySQL and related extension
 RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+            default-libmysqlclient-dev \
             default-mysql-client \
         && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
         && docker-php-ext-install pdo_mysql
 
+# Install libraries required by Composer/Laravel
+RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+            libonig-dev \
+            libzip-dev \
+        && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+        && docker-php-ext-install bcmath mbstring zip pcntl
+
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
-# Install phpDocumenter
+# Install phpDocumentor
 RUN curl -sS -L -o /usr/local/bin/phpdoc https://phpdoc.org/phpDocumentor.phar && chmod +x /usr/local/bin/phpdoc
 
 ENV USERNAME=developer

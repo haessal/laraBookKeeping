@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+echo "date.timezone = ${TZ:-UTC}" > /usr/local/etc/php/conf.d/timezone.ini
+
 echo "Set $USERNAME's id with UID: $USER_UID, GID: $USER_GID"
 
 groupmod -g $USER_GID -o $USERNAME
