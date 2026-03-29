@@ -1,18 +1,13 @@
 #!/bin/bash
 set -e
 
-ENV_FILE=`dirname $0`/devcontainer_user.env
+ENV_FILE=`dirname $0`/.env.host
 if [ -e ${ENV_FILE} ]; then
     echo "${ENV_FILE} already exists."
     exit
 fi
 
-PROJECT_NAME=$1
-if [ "${PROJECT_NAME}_PROJECT_NAME" = "_PROJECT_NAME" ]; then
-    echo "Project name is not specified."
-    exit
-fi
-
+PROJECT_NAME=${1:-project}
 
 DEVCONTAINER_HOST_OS=`uname`
 cat << EOS > ${ENV_FILE}

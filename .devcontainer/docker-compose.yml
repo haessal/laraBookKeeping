@@ -4,8 +4,8 @@ services:
       context: ./workspace
       dockerfile: Dockerfile
     env_file:
-      - devcontainer.env
-      - devcontainer_user.env
+      - .env.host
+      - .env.mysql
     environment:
       - TZ=Asia/Tokyo
     volumes:
@@ -13,10 +13,8 @@ services:
       - ./workspace/php.ini:/usr/local/etc/php/php.ini:ro
   db:
     image: mariadb:10.5.9
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_USER=default
-      - MYSQL_PASSWORD=secret
+    env_file:
+      - .env.mysql
     volumes:
       - laravel-devcontainer-mysql:/var/lib/mysql
       - ./db/mysql/conf.d:/etc/mysql/conf.d:ro
