@@ -6,6 +6,7 @@
     ],
     "service": "workspace",
     "workspaceFolder": "/workspace",
+    "forwardPorts": [8000, 5173, 9003],
     "customizations": {
         "vscode": {
             "settings": {
@@ -23,6 +24,7 @@
                 "arjun.swagger-viewer",
                 "bmewburn.vscode-intelephense-client",
                 "bradlc.vscode-tailwindcss",
+                "circleci.circleci",
                 "csstools.postcss",
                 "eamodio.gitlens",
                 "felixfbecker.php-intellisense",
