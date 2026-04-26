@@ -1,0 +1,22 @@
+services:
+  xrea:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:10.5
+    environment:
+      - MYSQL_DATABASE=bookkeeping
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=default
+      - MYSQL_PASSWORD=secret
+    volumes:
+      - xrea-mysql:/var/lib/mysql
+
+volumes:
+  xrea-mysql:
