@@ -44,10 +44,20 @@ COPY php-fpm.conf /etc/php-fpm.d/www.conf
 # Create required directories for PHP-FPM
 RUN mkdir -p /run/php-fpm
 
-# Install the Book Keeping (dummy)
-RUN mkdir -p /var/laraBookKeeping/book-keeping
+# Install the Book Keeping
+RUN mkdir -p /var/laraBookKeeping/
 
-COPY phpinfo.php /var/laraBookKeeping/book-keeping/public/phpinfo.php
+COPY laraBookKeeping-dev.tar.gz /var/laraBookKeeping/laraBookKeeping-dev.tar.gz
+
+RUN cd /var/laraBookKeeping && tar -xzf laraBookKeeping-dev.tar.gz && rm laraBookKeeping-dev.tar.gz
+
+COPY setup.sh /var/laraBookKeeping/book-keeping/setup.sh
+
+RUN cd /var/laraBookKeeping/book-keeping \
+    && composer install --no-interaction --no-dev --optimize-autoloader --prefer-dist \
+    && chown -R apache:apache storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache \
+    && chmod 755 setup.sh
 
 WORKDIR /var/laraBookKeeping/book-keeping
 
