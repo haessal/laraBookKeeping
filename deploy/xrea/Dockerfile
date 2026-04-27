@@ -5,8 +5,10 @@ RUN dnf install -y epel-release \
         https://rpms.remirepo.net/enterprise/remi-release-8.rpm \
     && dnf clean all
 
-# Install Apache
-RUN dnf install -y httpd \
+# Install Apache and common tools
+RUN dnf install -y \
+        git \
+        httpd \
     && dnf clean all
 
 # Install PHP 8.5 and extensions required by Laravel
@@ -46,9 +48,25 @@ COPY php-fpm.conf /etc/php-fpm.d/www.conf
 
 # Create required directories for PHP-FPM
 RUN mkdir -p /run/php-fpm
-RUN mkdir -p /var/www/laravel/public
 
-COPY phpinfo.php /var/www/laravel/public/phpinfo.php
+# Install the Book Keeping
+RUN git clone -b try-main13 \
+        https://github.com/haessal/laraBookKeeping.git \
+        /var/laraBookKeeping
+
+COPY setup.sh /var/laraBookKeeping/book-keeping/setup.sh
+
+RUN cd /var/laraBookKeeping/book-keeping \
+    && composer install -n --prefer-dist \
+    && npm install --legacy-peer-deps \
+    && npm run build \
+    && chown -R apache:apache storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache \
+    && chmod 755 setup.sh
+
+COPY phpinfo.php /var/laraBookKeeping/book-keeping/public/phpinfo.php
+
+WORKDIR /var/laraBookKeeping/book-keeping
 
 EXPOSE 80
 
