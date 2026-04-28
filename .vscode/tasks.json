@@ -7,6 +7,11 @@
             "command": "cspell lint '**'"
         },
         {
+            "label": "create release archive for xrea",
+            "type": "shell",
+            "command": "scripts/create-release-for-xrea.sh"
+        },
+        {
             "label": "set up dev environment",
             "type": "shell",
             "command": "scripts/setup-dev-environment.sh",

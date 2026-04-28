@@ -19,5 +19,8 @@ Homestead.json
 # Rocketeer PHP task runner and deployment package. https://github.com/rocketeers/rocketeer
 .rocketeer/
 
+# Local release archive for XREA
+deploy/xrea/*.tar.gz
+
 # Devcontainer settings generated based on host OS information
 .devcontainer/.env.host
