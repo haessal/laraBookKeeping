@@ -5,13 +5,20 @@
     "ignorePaths": [
         "book-keeping/cov.xml",
         "book-keeping/bootstrap/cache/**",
+        "book-keeping/composer.json",
+        "book-keeping/composer.lock",
         "book-keeping/node_modules/**",
+        "book-keeping/package-lock.json",
+        "book-keeping/package.json",
         "book-keeping/public/build/**",
         "book-keeping/public/css/app.css",
         "book-keeping/public/js/app.js",
+        "book-keeping/storage/debugbar/**",
         "book-keeping/storage/logs/**",
         "book-keeping/storage/framework/**",
-        "book-keeping/vendor/**"
+        "book-keeping/vendor/**",
+        "deploy/**",
+        "scripts/**"
     ],
     "allowCompoundWords": true,
     "dictionaries": ["php", "custom-words"],
