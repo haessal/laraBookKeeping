@@ -13,7 +13,24 @@ jobs:
           name: Run CSpell
           command: npx cspell --config .cSpell.json "**/*.{ts,tsx,php,md,yml,json}"
 
+  build:
+    docker:
+      - image: cimg/node:22.22.2
+    steps:
+      - checkout
+      - run:
+          name: Install npm dependencies
+          command: |
+            cd book-keeping
+            npm install --legacy-peer-deps
+      - run:
+          name: Build assets
+          command: |
+            cd book-keeping
+            npm run build
+
 workflows:
   ci:
     jobs:
       - spellcheck
+      - build
