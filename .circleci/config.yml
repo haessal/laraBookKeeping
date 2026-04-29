@@ -1,0 +1,19 @@
+version: 2.1
+
+jobs:
+  spellcheck:
+    docker:
+      - image: cimg/node:22.22.2
+    steps:
+      - checkout
+      - run:
+          name: Install CSpell
+          command: npx --yes cspell --version
+      - run:
+          name: Run CSpell
+          command: npx cspell --config .cSpell.json "**/*.{ts,tsx,php,md,yml,json}"
+
+workflows:
+  ci:
+    jobs:
+      - spellcheck
