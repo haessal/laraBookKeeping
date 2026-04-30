@@ -15,6 +15,18 @@
             }
         },
         {
+            "label": "unit test and coverage",
+            "type": "shell",
+            "command": "./vendor/bin/phpunit --coverage-clover ../build/logs/cov.xml",
+            "options": {
+                "cwd": "${workspaceFolder}/book-keeping",
+                "env": {
+                    "XDEBUG_MODE": "coverage"
+                }
+            },
+            "dependsOn": "build asset"
+        },
+        {
             "label": "create release archive for xrea",
             "type": "shell",
             "command": "scripts/create-release-for-xrea.sh"
