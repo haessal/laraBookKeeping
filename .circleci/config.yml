@@ -29,8 +29,61 @@ jobs:
             cd book-keeping
             npm run build
 
+  phpunit:
+    docker:
+      - image: cimg/php:8.5-node
+        environment:
+          DB_HOST: 127.0.0.1
+          DB_DATABASE: testing
+          DB_USERNAME: default
+          DB_PASSWORD: secret
+      - image: cimg/mariadb:10.5
+        environment:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: testing
+          MYSQL_USER: default
+          MYSQL_PASSWORD: secret
+    steps:
+      - checkout
+      - run:
+          name: Install Xdebug 
+          command: |
+            sudo pecl channel-update pecl.php.net
+            sudo pecl install xdebug
+            sudo docker-php-ext-enable xdebug
+      - run:
+          name: Install Composer dependencies
+          command: |
+            cd book-keeping
+            composer install -n --prefer-dist
+      - run:
+          name: Install npm dependencies and build assets
+          command: |
+            cd book-keeping
+            npm install --legacy-peer-deps
+            npm run build
+      - run:
+          name: Set up .env for testing
+          command: |
+            cd book-keeping
+            cp .env.example .env
+            php artisan key:generate
+      - run:
+          name: Wait for MySQL
+          command: dockerize -wait tcp://127.0.0.1:3306 -timeout 60s
+      - run:
+          name: Run PHPUnit
+          command: |
+            cd book-keeping
+            php artisan config:clear
+            XDEBUG_MODE=coverage ./vendor/bin/phpunit -d memory_limit=512M \
+              --coverage-clover ../build/logs/clover.xml
+            php ./vendor/bin/php-coveralls \
+              --coverage_clover=../build/logs/clover.xml \
+              --json_path=../build/logs/coveralls-upload.json
 workflows:
   ci:
     jobs:
       - spellcheck
       - build
+      - phpunit
