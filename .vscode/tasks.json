@@ -7,6 +7,14 @@
             "command": "cspell lint '**'"
         },
         {
+            "label": "build asset",
+            "type": "shell",
+            "command": "npm run build",
+            "options": {
+                "cwd": "${workspaceFolder}/book-keeping"
+            }
+        },
+        {
             "label": "create release archive for xrea",
             "type": "shell",
             "command": "scripts/create-release-for-xrea.sh"
