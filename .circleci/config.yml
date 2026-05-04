@@ -13,6 +13,22 @@ jobs:
           name: Run CSpell
           command: npx cspell --config .cSpell.json "**/*.{ts,tsx,php,md,yml,json}"
 
+  formatcheck:
+    docker:
+      - image: cimg/node:22.22.2
+    steps:
+      - checkout
+      - run:
+          name: Install npm dependencies
+          command: |
+            cd book-keeping
+            npm install --legacy-peer-deps
+      - run:
+          name: Run prettier
+          command: |
+            cd book-keeping
+            npx prettier --check "resources/views/**/*.blade.php" "resources/js/**/*.{js,jsx,ts,tsx}"
+
   build:
     docker:
       - image: cimg/node:22.22.2
@@ -85,5 +101,6 @@ workflows:
   ci:
     jobs:
       - spellcheck
+      - formatcheck
       - build
       - phpunit
