@@ -45,6 +45,22 @@ jobs:
             cd book-keeping
             npm run build
 
+  static-analysis:
+    docker:
+      - image: cimg/php:8.5
+    steps:
+      - checkout
+      - run:
+          name: Install Composer dependencies
+          command: |
+            cd book-keeping
+            composer install -n --prefer-dist
+      - run:
+          name: Run PHPStan with Larastan extension
+          command: |
+            cd book-keeping
+            ./vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=512M
+
   phpunit:
     docker:
       - image: cimg/php:8.5-node
@@ -103,4 +119,5 @@ workflows:
       - spellcheck
       - formatcheck
       - build
+      - static-analysis
       - phpunit
