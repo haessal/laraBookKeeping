@@ -17,6 +17,7 @@
         "book-keeping/storage/logs/**",
         "book-keeping/storage/framework/**",
         "book-keeping/vendor/**",
+        "build/**",
         "deploy/**",
         "scripts/**"
     ],
