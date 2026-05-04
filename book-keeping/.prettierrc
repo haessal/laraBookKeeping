@@ -1,7 +1,19 @@
 {
     "singleQuote": true,
+    "printWidth": 120,
+    "bracketSameLine": true,
+    "htmlWhitespaceSensitivity": "ignore",
     "plugins": [
         "prettier-plugin-organize-imports",
-        "prettier-plugin-tailwindcss"
+        "prettier-plugin-tailwindcss",
+        "@shufo/prettier-plugin-blade"
+    ],
+    "overrides": [
+        {
+            "files": "*.blade.php",
+            "options": {
+                "parser": "blade"
+            }
+        }
     ]
 }
