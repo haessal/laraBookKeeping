@@ -15,6 +15,17 @@
             }
         },
         {
+            "label": "static analysis",
+            "type": "shell",
+            "command": "./vendor/bin/phpstan analyse",
+            "options": {
+                "cwd": "${workspaceFolder}/book-keeping",
+                "env": {
+                    "XDEBUG_MODE": "off"
+                }
+            }
+        },
+        {
             "label": "build asset",
             "type": "shell",
             "command": "npm run build",
