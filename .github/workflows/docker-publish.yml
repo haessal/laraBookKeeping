@@ -1,11 +1,12 @@
 name: Publish Docker Image
 
-on: [push]
+on:
+  push:
+    tags:
+      - 'v*.*.*'
 
 jobs:
-
-  build:
-
+  build-and-publish:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,6 +20,7 @@ jobs:
         id: meta
         with:
           images: ${{ github.repository }}
+          tags: type=ref,event=tag
       - uses: docker/build-push-action@v3
         with:
           platforms: linux/amd64,linux/arm64
