@@ -19,6 +19,12 @@ jobs:
           php-version: '8.5'
           extensions: mbstring, zip, bcmath, pdo_mysql, pcntl, sodium
 
+      - name: Install phpDocumentor
+        run: |
+          curl -sS -L https://phpdoc.org/phpDocumentor.phar -o phpdoc.phar
+          chmod +x phpdoc.phar
+          sudo mv phpdoc.phar /usr/local/bin/phpdoc
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -32,15 +38,27 @@ jobs:
         working-directory: book-keeping
         run: npm run build
 
+      - name: Generate code reference
+        working-directory: book-keeping
+        run: phpdoc -d ./app -t ./docs --ignore="vendor/*,node_modules/*,tests/*"
+
       - name: Create release archive
         run: |
           tar -czf laraBookKeeping-${{ github.ref_name }}.tar.gz \
-            --exclude='book-keeping/.git' \
+            --exclude='book-keeping/.DS_Store' \
             --exclude='book-keeping/.env' \
+            --exclude='book-keeping/.gitattributes' \
+            --exclude='book-keeping/.gitignore' \
+            --exclude='book-keeping/.phpdoc' \
+            --exclude='book-keeping/.phpunit.result.cache' \
+            --exclude='book-keeping/.phpunit.cache' \
+            --exclude='book-keeping/.prettierignore' \
+            --exclude='book-keeping/.prettierrc' \
             --exclude='book-keeping/node_modules' \
-            --exclude='book-keeping/vendor' \
-            --exclude='book-keeping/tests' \
+            --exclude='book-keeping/phpstan.neon' \
             --exclude='book-keeping/phpunit.xml' \
+            --exclude='book-keeping/tests' \
+            --exclude='book-keeping/vendor' \
             book-keeping/
 
       - name: Create GitHub Release
