@@ -46,6 +46,17 @@
             "dependsOn": "build asset"
         },
         {
+            "label": "generate code reference",
+            "type": "shell",
+            "command": "phpdoc -d ./app -t ./docs --ignore=\"vendor/*,node_modules/*,tests/*\"",
+            "options": {
+                "cwd": "${workspaceFolder}/book-keeping",
+                "env": {
+                    "XDEBUG_MODE": "off"
+                }
+            },
+        },
+        {
             "label": "create release archive for xrea",
             "type": "shell",
             "command": "scripts/create-release-for-xrea.sh"
