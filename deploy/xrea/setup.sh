@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash -e
 
 function overwrite_env_file() {
     local env_file=$1
@@ -26,8 +26,12 @@ function overwrite_env_file() {
     done <<< "$(printf "%s\n" "${items[@]}")"
 }
 
+echo "Set up .env"
 cp .env.example .env
 overwrite_env_file .env
 
+echo "Generating key"
 php artisan key:generate
+
+echo "Set up database"
 php artisan migrate:fresh

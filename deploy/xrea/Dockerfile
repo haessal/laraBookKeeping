@@ -45,16 +45,30 @@ COPY php-fpm.conf /etc/php-fpm.d/www.conf
 RUN mkdir -p /run/php-fpm
 
 # Install the Book Keeping
+ENV USERNAME=user
+ENV USER_UID=1000
+ENV USER_GID=1000
+RUN groupadd --gid $USER_GID ${USERNAME} \
+        && useradd -s /bin/bash --uid ${USER_UID} --gid ${USER_GID} -m ${USERNAME}
+
 RUN mkdir -p /var/laraBookKeeping/
 
 COPY laraBookKeeping-dev.tar.gz /var/laraBookKeeping/laraBookKeeping-dev.tar.gz
 
-RUN cd /var/laraBookKeeping && tar -xzf laraBookKeeping-dev.tar.gz && rm laraBookKeeping-dev.tar.gz
+RUN cd /var/laraBookKeeping \
+    && tar -xzf laraBookKeeping-dev.tar.gz \
+    && rm laraBookKeeping-dev.tar.gz
 
 COPY setup.sh /var/laraBookKeeping/book-keeping/setup.sh
 
 RUN cd /var/laraBookKeeping/book-keeping \
-    && composer install --no-interaction --no-dev --optimize-autoloader --prefer-dist \
+    && composer install --no-interaction --no-dev --optimize-autoloader --prefer-dist
+
+RUN cd /var/laraBookKeeping/book-keeping/public && ln -s ../docs
+
+RUN cd /var/laraBookKeeping && chown -R user:apache book-keeping
+
+RUN cd /var/laraBookKeeping/book-keeping \
     && chown -R apache:apache storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache \
     && chmod 755 setup.sh
