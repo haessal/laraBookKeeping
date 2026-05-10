@@ -36,5 +36,8 @@
         "tailwindcss": "^4.3.0",
         "typescript": "^5.0.2",
         "vite": "^8.0.0"
+    },
+    "dependencies": {
+        "flowbite": "^4.0.1"
     }
 }
