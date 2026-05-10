@@ -7,6 +7,7 @@
         "book-keeping/bootstrap/cache/**",
         "book-keeping/composer.json",
         "book-keeping/composer.lock",
+        "book-keeping/docs/**",
         "book-keeping/node_modules/**",
         "book-keeping/package-lock.json",
         "book-keeping/package.json",
