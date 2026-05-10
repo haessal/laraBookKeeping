@@ -1,4 +1,5 @@
 import '../css/app.css';
+import 'flowbite';
 import './bootstrap';
 
 import { createInertiaApp } from '@inertiajs/react';
