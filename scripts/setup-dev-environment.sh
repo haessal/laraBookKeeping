@@ -14,6 +14,11 @@ function overwrite_env_file() {
         "DB_USERNAME=${mysql_user}"
         "DB_PASSWORD=${mysql_password}"
         "SESSION_DRIVER=file"
+        "MAIL_MAILER=smtp"
+        "MAIL_HOST=mailhog"
+        "MAIL_PORT=1025"
+        "MAIL_USERNAME=null"
+        "MAIL_PASSWORD=null"
     )
 
     while IFS= read -r line; do
