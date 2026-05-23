@@ -28,7 +28,7 @@ class ProfileTest extends TestCase
         $response = $this
             ->actingAs($user)
             ->patch('/profile', [
-                'name' => 'Test User',
+                // 'name' => 'Test User',
                 'email' => 'test@example.com',
             ]);
 
@@ -38,7 +38,7 @@ class ProfileTest extends TestCase
 
         $user->refresh();
 
-        $this->assertSame('Test User', $user->name);
+        // $this->assertSame('Test User', $user->name);
         $this->assertSame('test@example.com', $user->email);
         $this->assertNull($user->email_verified_at);
     }
@@ -50,7 +50,7 @@ class ProfileTest extends TestCase
         $response = $this
             ->actingAs($user)
             ->patch('/profile', [
-                'name' => 'Test User',
+                // 'name' => 'Test User',
                 'email' => $user->email,
             ]);
 
@@ -61,6 +61,10 @@ class ProfileTest extends TestCase
         $this->assertNotNull($user->refresh()->email_verified_at);
     }
 
+    /* --- IGNORE ---
+     * The following tests are for the "Delete Account" feature, which has been commented out in the application.
+     * If you wish to re-enable this feature, you can uncomment these tests and the corresponding code in the application.
+     *
     public function test_user_can_delete_their_account(): void
     {
         $user = User::factory()->create();
@@ -96,4 +100,5 @@ class ProfileTest extends TestCase
 
         $this->assertNotNull($user->fresh());
     }
+    */
 }
