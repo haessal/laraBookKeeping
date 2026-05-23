@@ -47,12 +47,11 @@ export default function UpdateProfileInformation({
 
                     <TextInput
                         id="name"
-                        className="mt-1 block w-full"
+                        className="mt-1 block w-full bg-gray-100"
                         value={data.name}
                         onChange={(e) => setData('name', e.target.value)}
-                        required
-                        isFocused
-                        autoComplete="name"
+                        disabled
+                        readOnly
                     />
 
                     <InputError className="mt-2" message={errors.name} />
