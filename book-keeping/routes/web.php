@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\PersonalAccessTokenController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +23,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile/token', [PersonalAccessTokenController::class, 'get_creation_date']);
+    Route::post('/profile/token', [PersonalAccessTokenController::class, 'store']);
+    Route::delete('/profile/token', [PersonalAccessTokenController::class, 'destroy']);
 });
 
 require __DIR__.'/auth.php';
