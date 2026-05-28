@@ -7,15 +7,23 @@
             "command": "cspell lint '**'"
         },
         {
-            "label": "HTML/CSS format check",
+            "label": "HTML/CSS format check and fix",
             "type": "shell",
-            "command": "npx prettier --check \"resources/views/**/*.blade.php\" \"resources/js/**/*.{js,jsx,ts,tsx}\"",
+            "command": "npx prettier --write \"resources/views/**/*.blade.php\" \"resources/js/**/*.{js,jsx,ts,tsx}\"",
             "options": {
                 "cwd": "${workspaceFolder}/book-keeping"
             }
         },
         {
-            "label": "static analysis",
+            "label": "JavaScript/TypeScript format check and fix",
+            "type": "shell",
+            "command": "npm run lint:fix",
+            "options": {
+                "cwd": "${workspaceFolder}/book-keeping"
+            }
+        },
+        {
+            "label": "PHP static analysis",
             "type": "shell",
             "command": "./vendor/bin/phpstan analyse",
             "options": {
