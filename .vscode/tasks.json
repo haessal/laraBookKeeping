@@ -7,9 +7,9 @@
             "command": "cspell lint '**'"
         },
         {
-            "label": "HTML/CSS format check",
+            "label": "HTML/CSS format check and fix",
             "type": "shell",
-            "command": "npx prettier --check \"resources/views/**/*.blade.php\" \"resources/js/**/*.{js,jsx,ts,tsx}\"",
+            "command": "npx prettier --write \"resources/views/**/*.blade.php\" \"resources/js/**/*.{js,jsx,ts,tsx}\"",
             "options": {
                 "cwd": "${workspaceFolder}/book-keeping"
             }

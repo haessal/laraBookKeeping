@@ -53,7 +53,7 @@ if [ ! -f "${ENV_FILE}" ]; then
     php artisan key:generate
 
     echo "Running database migrations"
-    php artisan migrate:fresh
+    php artisan migrate:fresh --seed
 else
     echo "Doing nothing because .env file already exists."
 fi
