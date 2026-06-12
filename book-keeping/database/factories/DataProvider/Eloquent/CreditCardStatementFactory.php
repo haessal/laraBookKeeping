@@ -18,7 +18,8 @@ class CreditCardStatementFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'credit_card_statement_outline' => fake()->sentence(),
+            'date' => fake()->date(),
         ];
     }
 }

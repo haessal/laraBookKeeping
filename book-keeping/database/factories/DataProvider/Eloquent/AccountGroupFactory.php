@@ -18,7 +18,7 @@ class AccountGroupFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'account_group_title' => fake()->word(),
         ];
     }
 }
