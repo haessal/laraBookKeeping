@@ -18,7 +18,8 @@ class SlipFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'slip_outline' => fake()->sentence(),
+            'date' => fake()->date(),
         ];
     }
 }
