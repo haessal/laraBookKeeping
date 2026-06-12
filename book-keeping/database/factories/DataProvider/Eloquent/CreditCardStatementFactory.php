@@ -18,7 +18,11 @@ class CreditCardStatementFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'credit_card_statement_id' => fake()->uuid(),
+            'book_id' => fake()->uuid(),
+            'credit_card_statement_outline' => fake()->sentence(),
+            'credit_card_statement_memo' => fake()->paragraph(),
+            'date' => fake()->date(),
         ];
     }
 }

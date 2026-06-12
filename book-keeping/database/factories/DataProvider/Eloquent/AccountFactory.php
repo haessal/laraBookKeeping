@@ -18,7 +18,12 @@ class AccountFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'account_id' => fake()->uuid(),
+            'account_group_id' => fake()->uuid(),
+            'account_title' => fake()->word(),
+            'description' => fake()->sentence(),
+            'selectable' => fake()->boolean(),
+            'is_credit_card' => fake()->boolean(),
         ];
     }
 }
