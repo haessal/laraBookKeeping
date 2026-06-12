@@ -18,7 +18,7 @@ class BookFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'book_name' => fake()->name(),
         ];
     }
 }
