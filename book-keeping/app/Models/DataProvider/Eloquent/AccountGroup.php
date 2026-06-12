@@ -4,6 +4,7 @@ namespace App\Models\DataProvider\Eloquent;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable(['book_id', 'account_type', 'account_group_title', 'bk_uid', 'account_group_bk_code', 'is_current'])]
 class AccountGroup extends BookKeepingBasicModel
@@ -24,4 +25,14 @@ class AccountGroup extends BookKeepingBasicModel
      * @var string
      */
     protected $primaryKey = 'account_group_id';
+
+    /**
+     * Get the accounts for the account group.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Account, $this>
+     */
+    public function accounts(): HasMany
+    {
+        return $this->hasMany(Account::class, 'account_group_id', 'account_group_id');
+    }
 }
