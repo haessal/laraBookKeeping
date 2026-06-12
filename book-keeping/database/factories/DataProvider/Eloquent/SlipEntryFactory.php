@@ -18,7 +18,9 @@ class SlipEntryFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'amount' => fake()->numberBetween(1, 10000),
+            'client' => fake()->name(),
+            'outline' => fake()->sentence(),
         ];
     }
 }
