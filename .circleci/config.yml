@@ -28,6 +28,11 @@ jobs:
           command: |
             cd book-keeping
             npx prettier --check "resources/views/**/*.blade.php" "resources/js/**/*.{js,jsx,ts,tsx}"
+      - run:
+          name: Run lint
+          command: |
+            cd book-keeping
+            npm run lint
 
   build:
     docker:
