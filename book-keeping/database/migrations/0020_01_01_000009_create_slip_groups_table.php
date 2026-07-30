@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('slip_group_outline', 200);
             $table->string('slip_group_memo', 500)->nullable();
             $table->bigInteger('display_order')->nullable();
+            $table->foreignId('created_by')->nullable()->constrained('users');
+            $table->foreignId('updated_by')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
         });

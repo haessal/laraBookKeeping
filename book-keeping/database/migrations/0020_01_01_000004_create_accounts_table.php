@@ -22,6 +22,8 @@ return new class extends Migration
             $table->unsignedBigInteger('bk_uid')->nullable();
             $table->unsignedBigInteger('account_bk_code')->nullable();
             $table->bigInteger('display_order')->nullable();
+            $table->foreignId('created_by')->nullable()->constrained('users');
+            $table->foreignId('updated_by')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
         });

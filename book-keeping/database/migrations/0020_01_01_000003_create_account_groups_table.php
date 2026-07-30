@@ -21,6 +21,8 @@ return new class extends Migration
             $table->unsignedBigInteger('account_group_bk_code')->nullable();
             $table->boolean('is_current');
             $table->bigInteger('display_order')->nullable();
+            $table->foreignId('created_by')->nullable()->constrained('users');
+            $table->foreignId('updated_by')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
         });
