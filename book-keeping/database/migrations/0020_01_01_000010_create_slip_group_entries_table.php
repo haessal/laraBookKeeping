@@ -18,6 +18,8 @@ return new class extends Migration
             $table->uuid('related_slip');
             $table->foreign('related_slip')->references('slip_id')->on('bk2_0_slips');
             $table->bigInteger('display_order')->nullable();
+            $table->foreignId('created_by')->nullable()->constrained('users');
+            $table->foreignId('updated_by')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
         });

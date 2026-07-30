@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('credit_card_statement_memo', 500)->nullable();
             $table->date('date');
             $table->bigInteger('display_order')->nullable();
+            $table->foreignId('created_by')->nullable()->constrained('users');
+            $table->foreignId('updated_by')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
         });

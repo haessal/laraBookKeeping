@@ -25,6 +25,8 @@ return new class extends Migration
             $table->uuid('credit_card_statement_id')->nullable();
             $table->foreign('credit_card_statement_id')->references('credit_card_statement_id')->on('bk2_0_credit_card_statements');
             $table->bigInteger('display_order')->nullable();
+            $table->foreignId('created_by')->nullable()->constrained('users');
+            $table->foreignId('updated_by')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
         });
