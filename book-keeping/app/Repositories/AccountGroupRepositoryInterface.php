@@ -8,7 +8,7 @@ interface AccountGroupRepositoryInterface
      * Create a new account group to be bound in the book.
      *
      * @param  string  $bookId
-     * @param  string  $accountType
+     * @param  'asset'|'expense'|'liability'|'revenue'  $accountType
      * @param  string  $title
      * @param  bool  $isCurrent
      * @param  int|null  $bk_uid
@@ -23,7 +23,7 @@ interface AccountGroupRepositoryInterface
      * @param  array{
      *   account_group_id: string,
      *   book_id: string,
-     *   account_type: string,
+     *   account_type: 'asset'|'expense'|'liability'|'revenue',
      *   account_group_title: string,
      *   bk_uid: int|null,
      *   account_group_bk_code: int|null,
@@ -57,7 +57,10 @@ interface AccountGroupRepositoryInterface
      * Update the account group.
      *
      * @param  string  $accountGroupId
-     * @param  array<string, mixed>  $newData
+     * @param  array{
+     *   title?: string,
+     *   is_current?: bool
+     * }  $newData
      * @return void
      */
     public function update($accountGroupId, array $newData);
@@ -68,7 +71,7 @@ interface AccountGroupRepositoryInterface
      * @param  array{
      *   account_group_id: string,
      *   book_id: string,
-     *   account_type: string,
+     *   account_type: 'asset'|'expense'|'liability'|'revenue',
      *   account_group_title: string,
      *   bk_uid: int|null,
      *   account_group_bk_code: int|null,

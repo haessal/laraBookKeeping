@@ -62,7 +62,14 @@ interface SlipEntryRepositoryInterface
      * @param  string  $bookId
      * @param  string  $fromDate
      * @param  string  $toDate
-     * @param  array<string, mixed>  $condition
+     * @param  array{
+     *   debit?: string,
+     *   credit?: string,
+     *   and_or?: string,
+     *   keyword?: string,
+     *   credit_card_account_ids?: string[],
+     *   credit_card_statement_id?: string,
+     * }  $condition
      * @return array<int, array<string, mixed>>
      */
     public function searchBook($bookId, $fromDate, $toDate, array $condition): array;
@@ -108,7 +115,14 @@ interface SlipEntryRepositoryInterface
      * Update the slip entry.
      *
      * @param  string  $slipEntryId
-     * @param  array<string, mixed>  $newData
+     * @param  array{
+     *   debit?: string,
+     *   credit?: string,
+     *   amount?: int,
+     *   client?: string,
+     *   outline?: string,
+     *   credit_card_statement?: string
+     * }  $newData
      * @return void
      */
     public function update($slipEntryId, array $newData);

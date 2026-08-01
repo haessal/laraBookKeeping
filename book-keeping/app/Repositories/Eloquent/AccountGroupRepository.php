@@ -11,7 +11,7 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
      * Create a new account group to be bound in the book.
      *
      * @param  string  $bookId
-     * @param  string  $accountType
+     * @param  'asset'|'expense'|'liability'|'revenue'  $accountType
      * @param  string  $title
      * @param  bool  $isCurrent
      * @param  int|null  $bk_uid
@@ -25,8 +25,8 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
         $accountGroup->account_type = $accountType;
         $accountGroup->account_group_title = $title;
         $accountGroup->is_current = $isCurrent;
-        $accountGroup->bk_uid = $bk_uid;
-        $accountGroup->account_group_bk_code = $bk_code;
+        $accountGroup->bk_uid = is_null($bk_uid) ? null : ($bk_uid < 0 ? null : $bk_uid);
+        $accountGroup->account_group_bk_code = is_null($bk_code) ? null : ($bk_code < 0 ? null : $bk_code);
         $accountGroup->save();
 
         return $accountGroup->account_group_id;
@@ -38,7 +38,7 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
      * @param  array{
      *   account_group_id: string,
      *   book_id: string,
-     *   account_type: string,
+     *   account_type: 'asset'|'expense'|'liability'|'revenue',
      *   account_group_title: string,
      *   bk_uid: int|null,
      *   account_group_bk_code: int|null,
@@ -56,8 +56,10 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
         $accountGroup->book_id = $newAccountGroup['book_id'];
         $accountGroup->account_type = $newAccountGroup['account_type'];
         $accountGroup->account_group_title = $newAccountGroup['account_group_title'];
-        $accountGroup->bk_uid = $newAccountGroup['bk_uid'];
-        $accountGroup->account_group_bk_code = $newAccountGroup['account_group_bk_code'];
+        $bk_uid = $newAccountGroup['bk_uid'];
+        $accountGroup->bk_uid = is_null($bk_uid) ? null : ($bk_uid < 0 ? null : $bk_uid);
+        $bk_code = $newAccountGroup['account_group_bk_code'];
+        $accountGroup->account_group_bk_code = is_null($bk_code) ? null : ($bk_code < 0 ? null : $bk_code);
         $accountGroup->is_current = $newAccountGroup['is_current'];
         $accountGroup->display_order = $newAccountGroup['display_order'];
         $accountGroup->save();
@@ -103,7 +105,6 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
      */
     public function searchBookForExporting($bookId, $accountGroupId = null): array
     {
-        /** @var \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder $query */
         $query = AccountGroup::withTrashed()
             ->select('*')
             ->where('book_id', $bookId);
@@ -120,7 +121,10 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
      * Update the account group.
      *
      * @param  string  $accountGroupId
-     * @param  array<string, mixed>  $newData
+     * @param  array{
+     *   title?: string,
+     *   is_current?: bool
+     * }  $newData
      * @return void
      */
     public function update($accountGroupId, array $newData)
@@ -129,10 +133,10 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
         $accountGroup = AccountGroup::query()->find($accountGroupId);
         if (! is_null($accountGroup)) {
             if (array_key_exists('title', $newData)) {
-                $accountGroup->account_group_title = strval($newData['title']);
+                $accountGroup->account_group_title = $newData['title'];
             }
             if (array_key_exists('is_current', $newData)) {
-                $accountGroup->is_current = boolval($newData['is_current']);
+                $accountGroup->is_current = $newData['is_current'];
             }
             $accountGroup->save();
         }
@@ -144,7 +148,7 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
      * @param  array{
      *   account_group_id: string,
      *   book_id: string,
-     *   account_type: string,
+     *   account_type: 'asset'|'expense'|'liability'|'revenue',
      *   account_group_title: string,
      *   bk_uid: int|null,
      *   account_group_bk_code: int|null,
@@ -163,8 +167,10 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
             $accountGroup->book_id = $newAccountGroup['book_id'];
             $accountGroup->account_type = $newAccountGroup['account_type'];
             $accountGroup->account_group_title = $newAccountGroup['account_group_title'];
-            $accountGroup->bk_uid = $newAccountGroup['bk_uid'];
-            $accountGroup->account_group_bk_code = $newAccountGroup['account_group_bk_code'];
+            $bk_uid = $newAccountGroup['bk_uid'];
+            $accountGroup->bk_uid = is_null($bk_uid) ? null : ($bk_uid < 0 ? null : $bk_uid);
+            $bk_code = $newAccountGroup['account_group_bk_code'];
+            $accountGroup->account_group_bk_code = is_null($bk_code) ? null : ($bk_code < 0 ? null : $bk_code);
             $accountGroup->is_current = $newAccountGroup['is_current'];
             $accountGroup->display_order = $newAccountGroup['display_order'];
             $accountGroup->touch();

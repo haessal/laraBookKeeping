@@ -30,7 +30,7 @@ interface BookRepositoryInterface
      * Find the book.
      *
      * @param  string  $bookId
-     * @return array<string, string>|null
+     * @return array<string, mixed>|null
      */
     public function findById($bookId): ?array;
 

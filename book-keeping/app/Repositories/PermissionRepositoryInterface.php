@@ -12,7 +12,7 @@ interface PermissionRepositoryInterface
      * @param  bool  $modifiable
      * @param  bool  $is_owner
      * @param  bool  $is_default
-     * @return string
+     * @return string|null
      */
     public function create($userId, $bookId, $modifiable, $is_owner, $is_default);
 
@@ -30,7 +30,7 @@ interface PermissionRepositoryInterface
      *
      * @param  int  $userId
      * @param  string  $bookId
-     * @return array<string, string>|null
+     * @return array<string, mixed>|null
      */
     public function findBook($userId, $bookId): ?array;
 
@@ -54,7 +54,7 @@ interface PermissionRepositoryInterface
      * Find the owner of the book.
      *
      * @param  string  $bookId
-     * @return array<string, string>|null
+     * @return array<string, mixed>|null
      */
     public function findOwnerOfBook($bookId): ?array;
 
