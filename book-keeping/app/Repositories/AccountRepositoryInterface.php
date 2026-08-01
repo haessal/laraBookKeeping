@@ -57,7 +57,13 @@ interface AccountRepositoryInterface
      * Update the account.
      *
      * @param  string  $accountId
-     * @param  array<string, mixed>  $newData
+     * @param  array{
+     *   group?: string,
+     *   title?: string,
+     *   description?: string,
+     *   selectable?: bool,
+     *   is_credit_card?: bool
+     * }  $newData
      * @return void
      */
     public function update($accountId, array $newData);

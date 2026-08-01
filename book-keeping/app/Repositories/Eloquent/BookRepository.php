@@ -51,11 +51,10 @@ class BookRepository implements BookRepositoryInterface
      * Find the book.
      *
      * @param  string  $bookId
-     * @return array<string, string>|null
+     * @return array<string, mixed>|null
      */
     public function findById($bookId): ?array
     {
-        /** @var \Illuminate\Database\Eloquent\Model|null $book */
         $book = Book::query()->select('book_id', 'book_name')
             ->where('book_id', $bookId)
             ->first();
@@ -71,7 +70,6 @@ class BookRepository implements BookRepositoryInterface
      */
     public function findByIdForExporting($bookId): ?array
     {
-        /** @var \Illuminate\Database\Eloquent\Model|null $book */
         $book = Book::query()
             ->select('*')
             ->where('book_id', $bookId)

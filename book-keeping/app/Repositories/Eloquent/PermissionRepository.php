@@ -16,10 +16,13 @@ class PermissionRepository implements PermissionRepositoryInterface
      * @param  bool  $modifiable
      * @param  bool  $is_owner
      * @param  bool  $is_default
-     * @return string
+     * @return string|null
      */
     public function create($userId, $bookId, $modifiable, $is_owner, $is_default)
     {
+        if ($userId < 0) {
+            return null;
+        }
         $permission = new Permission();
         $permission->permitted_user = $userId;
         $permission->readable_book = $bookId;
@@ -40,7 +43,6 @@ class PermissionRepository implements PermissionRepositoryInterface
      */
     public function delete($userId, $bookId)
     {
-        /** @var \Illuminate\Database\Eloquent\Model|null $permission */
         $permission = Permission::query()
             ->where('permitted_user', $userId)
             ->where('readable_book', $bookId)
@@ -55,11 +57,10 @@ class PermissionRepository implements PermissionRepositoryInterface
      *
      * @param  int  $userId
      * @param  string  $bookId
-     * @return array<string, string>|null
+     * @return array<string, mixed>|null
      */
     public function findBook($userId, $bookId): ?array
     {
-        /** @var \Illuminate\Database\Eloquent\Model|null $book */
         $book = Permission::query()
             ->select('book_id', 'book_name', 'modifiable', 'is_owner', 'is_default', 'bk2_0_books.created_at')
             ->join('bk2_0_books', 'bk2_0_books.book_id', '=', 'bk2_0_permissions.readable_book')
@@ -95,7 +96,6 @@ class PermissionRepository implements PermissionRepositoryInterface
      */
     public function findDefaultBook($userId)
     {
-        /** @var \Illuminate\Database\Eloquent\Model|null $book */
         $book = Permission::query()
             ->select('book_id')
             ->join('bk2_0_books', 'bk2_0_books.book_id', '=', 'bk2_0_permissions.readable_book')
@@ -116,12 +116,11 @@ class PermissionRepository implements PermissionRepositoryInterface
      * Find the owner of the book.
      *
      * @param  string  $bookId
-     * @return array<string, string>|null
+     * @return array<string, mixed>|null
      */
     public function findOwnerOfBook($bookId): ?array
     {
         $owner = null;
-        /** @var \Illuminate\Database\Eloquent\Model|null $permission */
         $permission = Permission::query()
             ->select('permitted_user')
             ->where('readable_book', $bookId)
@@ -161,7 +160,6 @@ class PermissionRepository implements PermissionRepositoryInterface
      */
     public function findUserByName($name): ?array
     {
-        /** @var \Illuminate\Database\Eloquent\Model|null $user */
         $user = User::query()->where('name', $name)->first();
 
         return is_null($user) ? null : $user->toArray();
@@ -196,7 +194,6 @@ class PermissionRepository implements PermissionRepositoryInterface
      */
     public function updateDefaultBookMark($userId, $bookId, $isDefault)
     {
-        /** @var \Illuminate\Database\Eloquent\Model|null $selected */
         $selected = Permission::query()
             ->select('permission_id')
             ->where('permitted_user', $userId)

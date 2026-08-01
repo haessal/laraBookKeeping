@@ -119,7 +119,6 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
         if (! $draftInclude) {
             $query = $query->where('is_draft', false);
         }
-        /** @var \Illuminate\Database\Eloquent\Model|null $slipEntry */
         $slipEntry = $query->first();
 
         return is_null($slipEntry) ? null : $slipEntry->toArray();
@@ -131,7 +130,14 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
      * @param  string  $bookId
      * @param  string  $fromDate
      * @param  string  $toDate
-     * @param  array<string, mixed>  $condition
+     * @param  array{
+     *   debit?: string,
+     *   credit?: string,
+     *   and_or?: string,
+     *   keyword?: string,
+     *   credit_card_account_ids?: string[],
+     *   credit_card_statement_id?: string,
+     * }  $condition
      * @return array<int, array<string, mixed>>
      */
     public function searchBook($bookId, $fromDate, $toDate, array $condition): array
@@ -171,12 +177,12 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
      */
     public function searchBookAndCalculateSum($bookId, $fromDate, $toDate): array
     {
-        /** @var array<int, array<string, mixed>> $debitSumList */
+        /** @var array<int, array{debit: string, debitsum: int}> $debitSumList */
         $debitSumList = $this->getSlipEntriesQuery($bookId, $fromDate, $toDate, [])
             ->groupBy('debit')
             ->selectRaw('debit, sum(amount) as debitsum')
             ->get()->toArray();
-        /** @var array<int, array<string, mixed>> $creditSumList */
+        /** @var array<int, array{credit: string, creditsum: int}> $creditSumList */
         $creditSumList = $this->getSlipEntriesQuery($bookId, $fromDate, $toDate, [])
             ->groupBy('credit')
             ->selectRaw('credit, sum(amount) as creditsum')
@@ -184,14 +190,14 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
         /** @var array<string, array<string, int>> $list */
         $list = [];
         foreach ($debitSumList as $debit) {
-            $accountId = strval($debit['debit']);
+            $accountId = $debit['debit'];
             $list[$accountId]['debit'] = intval($debit['debitsum']);
             if (! array_key_exists('credit', $list[$accountId])) {
                 $list[$accountId]['credit'] = 0;
             }
         }
         foreach ($creditSumList as $credit) {
-            $accountId = strval($credit['credit']);
+            $accountId = $credit['credit'];
             $list[$accountId]['credit'] = intval($credit['creditsum']);
             if (! array_key_exists('debit', $list[$accountId])) {
                 $list[$accountId]['debit'] = 0;
@@ -269,7 +275,6 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
      */
     public function searchSlipForExporting($slipId, $slipEntryId = null): array
     {
-        /** @var \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder $query */
         $query = SlipEntry::withTrashed()
             ->select('*')
             ->where('slip_id', $slipId);
@@ -286,7 +291,14 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
      * Update the slip entry.
      *
      * @param  string  $slipEntryId
-     * @param  array<string, mixed>  $newData
+     * @param  array{
+     *   debit?: string,
+     *   credit?: string,
+     *   amount?: int,
+     *   client?: string,
+     *   outline?: string,
+     *   credit_card_statement?: string
+     * }  $newData
      * @return void
      */
     public function update($slipEntryId, array $newData)
@@ -295,25 +307,25 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
         $slipEntry = SlipEntry::query()->find($slipEntryId);
         if (! is_null($slipEntry)) {
             if (array_key_exists('debit', $newData)) {
-                $slipEntry->debit = strval($newData['debit']);
+                $slipEntry->debit = $newData['debit'];
             }
             if (array_key_exists('credit', $newData)) {
-                $slipEntry->credit = strval($newData['credit']);
+                $slipEntry->credit = $newData['credit'];
             }
             if (array_key_exists('amount', $newData)) {
-                $slipEntry->amount = intval($newData['amount']);
+                $slipEntry->amount = $newData['amount'];
             }
             if (array_key_exists('client', $newData)) {
-                $slipEntry->client = strval($newData['client']);
+                $slipEntry->client = $newData['client'];
             }
             if (array_key_exists('outline', $newData)) {
-                $slipEntry->outline = strval($newData['outline']);
+                $slipEntry->outline = $newData['outline'];
             }
             if (array_key_exists('credit_card_statement', $newData)) {
                 if (empty($newData['credit_card_statement'])) {
                     $slipEntry->credit_card_statement_id = null;
                 } else {
-                    $slipEntry->credit_card_statement_id = strval($newData['credit_card_statement']);
+                    $slipEntry->credit_card_statement_id = $newData['credit_card_statement'];
                 }
             }
             $slipEntry->save();
@@ -372,8 +384,15 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
      * @param  string  $bookId
      * @param  string  $fromDate
      * @param  string  $toDate
-     * @param  array<string, mixed>  $condition
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  array{
+     *   debit?: string,
+     *   credit?: string,
+     *   and_or?: string,
+     *   keyword?: string,
+     *   credit_card_account_ids?: string[],
+     *   credit_card_statement_id?: string,
+     * }  $condition
+     * @return Builder<\App\Models\DataProvider\Eloquent\SlipEntry>
      */
     private function getSlipEntriesQuery($bookId, $fromDate, $toDate, array $condition): Builder
     {
@@ -385,7 +404,6 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
         /** @var string[]|null $creditCardAccountIds */
         $creditCardAccountIds = array_key_exists('credit_card_account_ids', $condition) ? $condition['credit_card_account_ids'] : null;
 
-        /** @var \Illuminate\Database\Eloquent\Builder $query */
         $query = SlipEntry::query()
             ->join('bk2_0_slips', 'bk2_0_slips.slip_id', '=', 'bk2_0_slip_entries.slip_id')
             ->where('book_id', $bookId)
@@ -430,10 +448,10 @@ class SlipEntryRepository implements SlipEntryRepositoryInterface
                 });
         }
         if (array_key_exists('credit_card_statement_id', $condition)) {
-            if (strval($condition['credit_card_statement_id']) == '') {
+            if ($condition['credit_card_statement_id'] == '') {
                 $creditCardStatementId = null;
             } else {
-                $creditCardStatementId = strval($condition['credit_card_statement_id']);
+                $creditCardStatementId = $condition['credit_card_statement_id'];
             }
             $query = $query->where('credit_card_statement_id', $creditCardStatementId);
         }

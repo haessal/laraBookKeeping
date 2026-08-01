@@ -25,8 +25,8 @@ class AccountRepository implements AccountRepositoryInterface
         $account->description = $description;
         $account->selectable = true;
         $account->is_credit_card = false;
-        $account->bk_uid = $bk_uid;
-        $account->account_bk_code = $bk_code;
+        $account->bk_uid = is_null($bk_uid) ? null : ($bk_uid < 0 ? null : $bk_uid);
+        $account->account_bk_code = is_null($bk_code) ? null : ($bk_code < 0 ? null : $bk_code);
         $account->save();
 
         return $account->account_id;
@@ -63,8 +63,10 @@ class AccountRepository implements AccountRepositoryInterface
         } else {
             $account->is_credit_card = false;
         }
-        $account->bk_uid = $newAccount['bk_uid'];
-        $account->account_bk_code = $newAccount['account_bk_code'];
+        $bk_uid = $newAccount['bk_uid'];
+        $account->bk_uid = is_null($bk_uid) ? null : ($bk_uid < 0 ? null : $bk_uid);
+        $bk_code = $newAccount['account_bk_code'];
+        $account->account_bk_code = is_null($bk_code) ? null : ($bk_code < 0 ? null : $bk_code);
         $account->display_order = $newAccount['display_order'];
         $account->save();
         $account->refresh();
@@ -82,7 +84,6 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function searchAccountGropupForExporting($accountGroupId, $accountId = null): array
     {
-        /** @var \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder $query */
         $query = Account::withTrashed()
             ->select('*')
             ->where('account_group_id', $accountGroupId);
@@ -134,7 +135,13 @@ class AccountRepository implements AccountRepositoryInterface
      * Update the account.
      *
      * @param  string  $accountId
-     * @param  array<string, mixed>  $newData
+     * @param  array{
+     *   group?: string,
+     *   title?: string,
+     *   description?: string,
+     *   selectable?: bool,
+     *   is_credit_card?: bool
+     * }  $newData
      * @return void
      */
     public function update($accountId, array $newData)
@@ -143,19 +150,19 @@ class AccountRepository implements AccountRepositoryInterface
         $account = Account::query()->find($accountId);
         if (! is_null($account)) {
             if (array_key_exists('group', $newData)) {
-                $account->account_group_id = strval($newData['group']);
+                $account->account_group_id = $newData['group'];
             }
             if (array_key_exists('title', $newData)) {
-                $account->account_title = strval($newData['title']);
+                $account->account_title = $newData['title'];
             }
             if (array_key_exists('description', $newData)) {
-                $account->description = strval($newData['description']);
+                $account->description = $newData['description'];
             }
             if (array_key_exists('selectable', $newData)) {
-                $account->selectable = boolval($newData['selectable']);
+                $account->selectable = $newData['selectable'];
             }
             if (array_key_exists('is_credit_card', $newData)) {
-                $account->is_credit_card = boolval($newData['is_credit_card']);
+                $account->is_credit_card = $newData['is_credit_card'];
             }
             $account->save();
         }
@@ -191,8 +198,10 @@ class AccountRepository implements AccountRepositoryInterface
             if (isset($newAccount['is_credit_card'])) {
                 $account->is_credit_card = $newAccount['is_credit_card'];
             }
-            $account->bk_uid = $newAccount['bk_uid'];
-            $account->account_bk_code = $newAccount['account_bk_code'];
+            $bk_uid = $newAccount['bk_uid'];
+            $account->bk_uid = is_null($bk_uid) ? null : ($bk_uid < 0 ? null : $bk_uid);
+            $bk_code = $newAccount['account_bk_code'];
+            $account->account_bk_code = is_null($bk_code) ? null : ($bk_code < 0 ? null : $bk_code);
             $account->display_order = $newAccount['display_order'];
             $account->touch();
             $account->save();

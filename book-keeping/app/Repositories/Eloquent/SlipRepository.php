@@ -85,11 +85,10 @@ class SlipRepository implements SlipRepositoryInterface
      *
      * @param  string  $slipId
      * @param  string  $bookId
-     * @return array<string, string>|null
+     * @return array<string, mixed>|null
      */
     public function findById($slipId, $bookId): ?array
     {
-        /** @var \Illuminate\Database\Eloquent\Model|null $slip */
         $slip = Slip::query()
             ->select('book_id', 'slip_id', 'date', 'slip_outline', 'slip_memo')
             ->where('book_id', $bookId)
@@ -104,11 +103,11 @@ class SlipRepository implements SlipRepositoryInterface
      * Search the book for draft slips.
      *
      * @param  string  $bookId
-     * @return array<int, array<string, string>>
+     * @return array<int, array<string, mixed>>
      */
     public function searchBookForDraft($bookId): array
     {
-        /** @var array<int, array<string, string>> $list */
+        /** @var array<int, array<string, mixed>> $list */
         $list = Slip::query()
             ->select('slip_id', 'date', 'slip_outline', 'slip_memo')
             ->where('book_id', $bookId)
@@ -127,7 +126,6 @@ class SlipRepository implements SlipRepositoryInterface
      */
     public function searchBookForExporting($bookId, $slipId = null): array
     {
-        /** @var \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder $query */
         $query = Slip::withTrashed()
             ->select('*')
             ->where('book_id', $bookId);

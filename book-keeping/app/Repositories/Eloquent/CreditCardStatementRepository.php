@@ -85,7 +85,6 @@ class CreditCardStatementRepository implements CreditCardStatementRepositoryInte
      */
     public function searchBook($bookId, $creditCardStatementId): array
     {
-        /** @var \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder $query */
         $query = CreditCardStatement::query()
             ->select(
                 'credit_card_statement_id',
@@ -113,7 +112,6 @@ class CreditCardStatementRepository implements CreditCardStatementRepositoryInte
      */
     public function searchBookForExporting($bookId, $creditCardStatementId = null): array
     {
-        /** @var \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder $query */
         $query = CreditCardStatement::withTrashed()
             ->select('*')
             ->where('book_id', $bookId);
