@@ -2,8 +2,6 @@
 
 namespace App\Service;
 
-use Composer\Semver\Comparator;
-
 class BookKeepingMigrationVersion
 {
     /**
@@ -45,7 +43,7 @@ class BookKeepingMigrationVersion
      */
     public function isSupported($feature)
     {
-        return Comparator::greaterThanOrEqualTo($this->version, $feature);
+        return version_compare($this->version, $feature, '>=');
     }
 
     /**

@@ -161,7 +161,7 @@ class SlipMigrationLoaderService extends SlipMigrationService
         if (isset($mode)) {
             switch($mode) {
                 case 'update':
-                    $this->slipEntry->updateForImporting($version, $newSlipEntry);
+                    $this->slipEntry->updateForImporting($newSlipEntry);
                     $result = 'updated';
                     break;
                 case 'create':
