@@ -82,7 +82,7 @@ class AccountService
      * Create a new account group.
      *
      * @param  string  $bookId
-     * @param  string  $accountType
+     * @param  'asset'|'expense'|'liability'|'revenue'  $accountType
      * @param  string  $title
      * @param  bool  $isCurrent
      * @param  int  $bk_uid
@@ -121,25 +121,41 @@ class AccountService
     {
         $accounts = [];
 
+        /** @var array<int, array{
+         *   account_id: string,
+         *   account_group_id: string,
+         *   account_type: 'asset'|'expense'|'liability'|'revenue',
+         *   account_group_title: string,
+         *   is_current: bool,
+         *   account_title: string,
+         *   description: string,
+         *   selectable: bool,
+         *   is_credit_card: bool,
+         *   account_bk_code: int,
+         *   created_at: string,
+         *   account_group_bk_code: int,
+         *   account_group_created_at: string,
+         * }> $accountList
+         */
         $accountList = $this->account->searchBook($bookId);
         foreach ($accountList as $accountItem) {
             if (isset($isCreditCard) && ($isCreditCard != boolval($accountItem['is_credit_card']))) {
                 continue;
             }
-            $accounts[strval($accountItem['account_id'])] = [
-                'account_type' => strval($accountItem['account_type']),
-                'account_group_id' => strval($accountItem['account_group_id']),
-                'account_group_title' => strval($accountItem['account_group_title']),
+            $accounts[$accountItem['account_id']] = [
+                'account_type' => $accountItem['account_type'],
+                'account_group_id' => $accountItem['account_group_id'],
+                'account_group_title' => $accountItem['account_group_title'],
                 'is_current' => boolval($accountItem['is_current']),
-                'account_id' => strval($accountItem['account_id']),
-                'account_title' => strval($accountItem['account_title']),
-                'description' => strval($accountItem['description']),
+                'account_id' => $accountItem['account_id'],
+                'account_title' => $accountItem['account_title'],
+                'description' => $accountItem['description'],
                 'selectable' => boolval($accountItem['selectable']),
                 'is_credit_card' => boolval($accountItem['is_credit_card']),
                 'account_bk_code' => intval($accountItem['account_bk_code']),
-                'created_at' => strval($accountItem['created_at']),
+                'created_at' => $accountItem['created_at'],
                 'account_group_bk_code' => intval($accountItem['account_group_bk_code']),
-                'account_group_created_at' => strval($accountItem['account_group_created_at']),
+                'account_group_created_at' => $accountItem['account_group_created_at'],
             ];
         }
 
@@ -163,15 +179,24 @@ class AccountService
     {
         $accountGroups = [];
 
+        /** @var array<int, array{
+         *   account_group_id: string,
+         *   account_type: 'asset'|'expense'|'liability'|'revenue',
+         *   account_group_title: string,
+         *   is_current: bool,
+         *   account_group_bk_code: int,
+         *   created_at: string,
+         * }> $accountGroupList
+         */
         $accountGroupList = $this->accountGroup->searchBook($bookId);
         foreach ($accountGroupList as $accountGroup) {
-            $accountGroups[strval($accountGroup['account_group_id'])] = [
-                'account_group_id' => strval($accountGroup['account_group_id']),
-                'account_type' => strval($accountGroup['account_type']),
-                'account_group_title' => strval($accountGroup['account_group_title']),
+            $accountGroups[$accountGroup['account_group_id']] = [
+                'account_group_id' => $accountGroup['account_group_id'],
+                'account_type' => $accountGroup['account_type'],
+                'account_group_title' => $accountGroup['account_group_title'],
                 'is_current' => boolval($accountGroup['is_current']),
                 'account_group_bk_code' => intval($accountGroup['account_group_bk_code']),
-                'created_at' => strval($accountGroup['created_at']),
+                'created_at' => $accountGroup['created_at'],
             ];
         }
 

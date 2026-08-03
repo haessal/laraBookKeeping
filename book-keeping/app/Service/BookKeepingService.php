@@ -139,7 +139,7 @@ class BookKeepingService
     /**
      * Create a new account group.
      *
-     * @param  string  $accountType
+     * @param  'asset'|'expense'|'liability'|'revenue'  $accountType
      * @param  string  $title
      * @param  string  $bookId
      * @return array{0:int, 1:string|null}
@@ -1776,9 +1776,25 @@ class BookKeepingService
                 }
                 $accountGroupId = $accounts[$accountId]['account_group_id'];
                 $statements[$accountType]['amount'] += $amount;
-                if (! array_key_exists($accountGroupId, $statements[$accountType]['groups'])) {
+
+                /** @var array{
+                 *     title: string,
+                 *     isCurrent: bool,
+                 *     amount: int,
+                 *     bk_code: int,
+                 *     createdAt: string,
+                 *     items: array<string, array{
+                 *         title: string,
+                 *         amount: int,
+                 *         bk_code: int,
+                 *         createdAt: string,
+                 *     }>
+                 * } $accountGroup
+                 */
+                $accountGroup = array_key_exists($accountGroupId, $statements[$accountType]['groups'])
+                    ? $statements[$accountType]['groups'][$accountGroupId]
                     /* This is the first time that the account which belongs to the group appears. */
-                    $statements[$accountType]['groups'][$accountGroupId] = [
+                    : [
                         'title' => $accounts[$accountId]['account_group_title'],
                         'isCurrent' => $accounts[$accountId]['is_current'],
                         'amount' => 0,
@@ -1786,8 +1802,7 @@ class BookKeepingService
                         'createdAt' => $accounts[$accountId]['account_group_created_at'],
                         'items' => [],
                     ];
-                }
-                $statements[$accountType]['groups'][$accountGroupId]['amount'] += $amount;
+                $accountGroup['amount'] += $amount;
                 if ($accounts[$accountId]['is_current']) {
                     if ($accountType == AccountService::ACCOUNT_TYPE_ASSET) {
                         $statements['current_net_asset']['amount'] += $amount;
@@ -1796,12 +1811,13 @@ class BookKeepingService
                     } else {
                     }
                 }
-                $statements[$accountType]['groups'][$accountGroupId]['items'][$accountId] = [
+                $accountGroup['items'][$accountId] = [
                     'title' => $accounts[$accountId]['account_title'],
                     'amount' => $amount,
                     'bk_code' => $accounts[$accountId]['account_bk_code'],
                     'createdAt' => $accounts[$accountId]['created_at'],
                 ];
+                $statements[$accountType]['groups'][$accountGroupId] = $accountGroup;
             }
         }
         $statements['net_income']['amount']
