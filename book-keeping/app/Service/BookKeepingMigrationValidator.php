@@ -14,7 +14,7 @@ class BookKeepingMigrationValidator
      * @return array{
      *   account_group_id: string,
      *   book_id: string,
-     *   account_type: string,
+     *   account_type: 'asset'|'expense'|'liability'|'revenue',
      *   account_group_title: string,
      *   bk_uid: int|null,
      *   account_group_bk_code: int|null,
@@ -29,45 +29,65 @@ class BookKeepingMigrationValidator
         if (! key_exists('account_group_id', $accountGroup) || ! $this->validateUuid($accountGroup['account_group_id'])) {
             return null;
         }
+        /** @var string $accountGroupId */
+        $accountGroupId = $accountGroup['account_group_id'];
         if (! key_exists('book_id', $accountGroup) || ! $this->validateUuid($accountGroup['book_id'])) {
             return null;
         }
+        /** @var string $bookId */
+        $bookId = $accountGroup['book_id'];
         if (! key_exists('account_type', $accountGroup) || ! $this->validateAccountType($accountGroup['account_type'])) {
             return null;
         }
+        /** @var 'asset'|'expense'|'liability'|'revenue' $accountType */
+        $accountType = $accountGroup['account_type'];
         if (! key_exists('account_group_title', $accountGroup) || ! is_string($accountGroup['account_group_title'])) {
             return null;
         }
+        /** @var string $accountGroupTitle */
+        $accountGroupTitle = $accountGroup['account_group_title'];
         if (! key_exists('bk_uid', $accountGroup) || ! $this->isIntOrNull($accountGroup['bk_uid'])) {
             return null;
         }
+        /** @var int|null $bkUid */
+        $bkUid = $accountGroup['bk_uid'];
         if (! key_exists('account_group_bk_code', $accountGroup) || ! $this->isIntOrNull($accountGroup['account_group_bk_code'])) {
             return null;
         }
+        /** @var int|null $accountGroupBkCode */
+        $accountGroupBkCode = $accountGroup['account_group_bk_code'];
         if (! key_exists('is_current', $accountGroup) || ! is_int($accountGroup['is_current'])) {
             return null;
         }
+        /** @var bool $isCurrent */
+        $isCurrent = boolval($accountGroup['is_current']);
         if (! key_exists('display_order', $accountGroup) || ! $this->isIntOrNull($accountGroup['display_order'])) {
             return null;
         }
+        /** @var int|null $displayOrder */
+        $displayOrder = $accountGroup['display_order'];
         if (! key_exists('updated_at', $accountGroup) || ! $this->validateUpdatedAt($accountGroup['updated_at'])) {
             return null;
         }
+        /** @var string|null $updatedAt */
+        $updatedAt = $accountGroup['updated_at'];
         if (! key_exists('deleted', $accountGroup) || ! is_bool($accountGroup['deleted'])) {
             return null;
         }
+        /** @var bool $deleted */
+        $deleted = $accountGroup['deleted'];
 
         return [
-            'account_group_id' => strval($accountGroup['account_group_id']),
-            'book_id' => strval($accountGroup['book_id']),
-            'account_type' => strval($accountGroup['account_type']),
-            'account_group_title' => $accountGroup['account_group_title'],
-            'bk_uid' => is_null($accountGroup['bk_uid']) ? null : intval($accountGroup['bk_uid']),
-            'account_group_bk_code' => is_null($accountGroup['account_group_bk_code']) ? null : intval($accountGroup['account_group_bk_code']),
-            'is_current' => boolval($accountGroup['is_current']),
-            'display_order' => is_null($accountGroup['display_order']) ? null : intval($accountGroup['display_order']),
-            'updated_at' => is_null($accountGroup['updated_at']) ? null : strval($accountGroup['updated_at']),
-            'deleted' => $accountGroup['deleted'],
+            'account_group_id' => $accountGroupId,
+            'book_id' => $bookId,
+            'account_type' => $accountType,
+            'account_group_title' => $accountGroupTitle,
+            'bk_uid' => $bkUid,
+            'account_group_bk_code' => $accountGroupBkCode,
+            'is_current' => $isCurrent,
+            'display_order' => $displayOrder,
+            'updated_at' => $updatedAt,
+            'deleted' => $deleted,
         ];
     }
 
@@ -95,54 +115,74 @@ class BookKeepingMigrationValidator
         if (! key_exists('account_id', $accountItem) || ! $this->validateUuid($accountItem['account_id'])) {
             return null;
         }
+        /** @var string $accountId */
+        $accountId = $accountItem['account_id'];
         if (! key_exists('account_group_id', $accountItem) || ! $this->validateUuid($accountItem['account_group_id'])) {
             return null;
         }
+        /** @var string $accountGroupId */
+        $accountGroupId = $accountItem['account_group_id'];
         if (! key_exists('account_title', $accountItem) || ! is_string($accountItem['account_title'])) {
             return null;
         }
+        /** @var string $accountTitle */
+        $accountTitle = $accountItem['account_title'];
         if (! key_exists('description', $accountItem) || ! is_string($accountItem['description'])) {
             return null;
         }
+        /** @var string $description */
+        $description = $accountItem['description'];
         if (! key_exists('selectable', $accountItem) || ! is_int($accountItem['selectable'])) {
             return null;
         }
+        /** @var bool $selectable */
+        $selectable = boolval($accountItem['selectable']);
         if ($version->isSupported(BookKeepingMigrationVersion::CREDIT_CARD_STATEMENT)) {
             if (! key_exists('is_credit_card', $accountItem) || ! is_int($accountItem['is_credit_card'])) {
                 return null;
             }
-            $isCreditCard = $accountItem['is_credit_card'];
+            $isCreditCard = boolval($accountItem['is_credit_card']);
         } else {
             $isCreditCard = null;
         }
         if (! key_exists('bk_uid', $accountItem) || ! $this->isIntOrNull($accountItem['bk_uid'])) {
             return null;
         }
+        /** @var int|null $bkUid */
+        $bkUid = $accountItem['bk_uid'];
         if (! key_exists('account_bk_code', $accountItem) || ! $this->isIntOrNull($accountItem['account_bk_code'])) {
             return null;
         }
+        /** @var int|null $accountBkCode */
+        $accountBkCode = $accountItem['account_bk_code'];
         if (! key_exists('display_order', $accountItem) || ! $this->isIntOrNull($accountItem['display_order'])) {
             return null;
         }
+        /** @var int|null $displayOrder */
+        $displayOrder = $accountItem['display_order'];
         if (! key_exists('updated_at', $accountItem) || ! $this->validateUpdatedAt($accountItem['updated_at'])) {
             return null;
         }
+        /** @var string|null $updatedAt */
+        $updatedAt = $accountItem['updated_at'];
         if (! key_exists('deleted', $accountItem) || ! is_bool($accountItem['deleted'])) {
             return null;
         }
+        /** @var bool $deleted */
+        $deleted = $accountItem['deleted'];
 
         return [
-            'account_id' => strval($accountItem['account_id']),
-            'account_group_id' => strval($accountItem['account_group_id']),
-            'account_title' => $accountItem['account_title'],
-            'description' => $accountItem['description'],
-            'selectable' => boolval($accountItem['selectable']),
-            'is_credit_card' => is_null($isCreditCard) ? null : boolval($isCreditCard),
-            'bk_uid' => is_null($accountItem['bk_uid']) ? null : intval($accountItem['bk_uid']),
-            'account_bk_code' => is_null($accountItem['account_bk_code']) ? null : intval($accountItem['account_bk_code']),
-            'display_order' => is_null($accountItem['display_order']) ? null : intval($accountItem['display_order']),
-            'updated_at' => is_null($accountItem['updated_at']) ? null : strval($accountItem['updated_at']),
-            'deleted' => $accountItem['deleted'],
+            'account_id' => $accountId,
+            'account_group_id' => $accountGroupId,
+            'account_title' => $accountTitle,
+            'description' => $description,
+            'selectable' => $selectable,
+            'is_credit_card' => $isCreditCard,
+            'bk_uid' => $bkUid,
+            'account_bk_code' => $accountBkCode,
+            'display_order' => $displayOrder,
+            'updated_at' => $updatedAt,
+            'deleted' => $deleted,
         ];
     }
 
@@ -163,25 +203,35 @@ class BookKeepingMigrationValidator
         if (! key_exists('book_id', $bookInformation) || ! $this->validateUuid($bookInformation['book_id'])) {
             return null;
         }
+        /** @var string $bookId */
+        $bookId = $bookInformation['book_id'];
         if (! key_exists('book_name', $bookInformation) || ! is_string($bookInformation['book_name'])) {
             return null;
         }
+        /** @var string $bookName */
+        $bookName = $bookInformation['book_name'];
         if (! key_exists('display_order', $bookInformation) || ! $this->isIntOrNull($bookInformation['display_order'])) {
             return null;
         }
+        /** @var int|null $displayOrder */
+        $displayOrder = $bookInformation['display_order'];
         if (! key_exists('updated_at', $bookInformation) || ! $this->validateUpdatedAt($bookInformation['updated_at'])) {
             return null;
         }
+        /** @var string|null $updatedAt */
+        $updatedAt = $bookInformation['updated_at'];
         if (! key_exists('deleted', $bookInformation) || ! is_bool($bookInformation['deleted'])) {
             return null;
         }
+        /** @var bool $deleted */
+        $deleted = $bookInformation['deleted'];
 
         return [
-            'book_id' => strval($bookInformation['book_id']),
-            'book_name' => $bookInformation['book_name'],
-            'display_order' => is_null($bookInformation['display_order']) ? null : intval($bookInformation['display_order']),
-            'updated_at' => is_null($bookInformation['updated_at']) ? null : strval($bookInformation['updated_at']),
-            'deleted' => $bookInformation['deleted'],
+            'book_id' => $bookId,
+            'book_name' => $bookName,
+            'display_order' => $displayOrder,
+            'updated_at' => $updatedAt,
+            'deleted' => $deleted,
         ];
     }
 
@@ -205,44 +255,60 @@ class BookKeepingMigrationValidator
         if (! key_exists('credit_card_statement_id', $creditCardStatement) || ! $this->validateUuid($creditCardStatement['credit_card_statement_id'])) {
             return null;
         }
+        /** @var string $creditCardStatementId */
+        $creditCardStatementId = $creditCardStatement['credit_card_statement_id'];
         if (! key_exists('book_id', $creditCardStatement) || ! $this->validateUuid($creditCardStatement['book_id'])) {
             return null;
         }
+        /** @var string $bookId */
+        $bookId = $creditCardStatement['book_id'];
         if (! key_exists('credit_card_statement_outline', $creditCardStatement) || ! is_string($creditCardStatement['credit_card_statement_outline'])) {
             return null;
         }
+        /** @var string $creditCardStatementOutline */
+        $creditCardStatementOutline = $creditCardStatement['credit_card_statement_outline'];
         if (! key_exists('credit_card_statement_memo', $creditCardStatement) || ! $this->isStringOrNull($creditCardStatement['credit_card_statement_memo'])) {
             return null;
         }
+        /** @var string|null $creditCardStatementMemo */
+        $creditCardStatementMemo = $creditCardStatement['credit_card_statement_memo'];
         if (! key_exists('date', $creditCardStatement) || ! $this->validateDateFormat($creditCardStatement['date'])) {
             return null;
         }
+        /** @var string $date */
+        $date = $creditCardStatement['date'];
         if (! key_exists('display_order', $creditCardStatement) || ! $this->isIntOrNull($creditCardStatement['display_order'])) {
             return null;
         }
+        /** @var int|null $displayOrder */
+        $displayOrder = $creditCardStatement['display_order'];
         if (! key_exists('updated_at', $creditCardStatement) || ! $this->validateUpdatedAt($creditCardStatement['updated_at'])) {
             return null;
         }
+        /** @var string|null $updatedAt */
+        $updatedAt = $creditCardStatement['updated_at'];
         if (! key_exists('deleted', $creditCardStatement) || ! is_bool($creditCardStatement['deleted'])) {
             return null;
         }
+        /** @var bool $deleted */
+        $deleted = $creditCardStatement['deleted'];
 
         return [
-            'credit_card_statement_id' => strval($creditCardStatement['credit_card_statement_id']),
-            'book_id' => strval($creditCardStatement['book_id']),
-            'credit_card_statement_outline' => $creditCardStatement['credit_card_statement_outline'],
-            'credit_card_statement_memo' => is_null($creditCardStatement['credit_card_statement_memo']) ? null : strval($creditCardStatement['credit_card_statement_memo']),
-            'date' => strval($creditCardStatement['date']),
-            'display_order' => is_null($creditCardStatement['display_order']) ? null : intval($creditCardStatement['display_order']),
-            'updated_at' => is_null($creditCardStatement['updated_at']) ? null : strval($creditCardStatement['updated_at']),
-            'deleted' => $creditCardStatement['deleted'],
+            'credit_card_statement_id' => $creditCardStatementId,
+            'book_id' => $bookId,
+            'credit_card_statement_outline' => $creditCardStatementOutline,
+            'credit_card_statement_memo' => $creditCardStatementMemo,
+            'date' => $date,
+            'display_order' => $displayOrder,
+            'updated_at' => $updatedAt,
+            'deleted' => $deleted,
         ];
     }
 
     /**
      * Validate the slip.
      *
-     * @param  array<string, mixed>  $slip
+     * @param  array<mixed, mixed>  $slip
      * @return array{
      *   slip_id: string,
      *   book_id: string,
@@ -302,7 +368,7 @@ class BookKeepingMigrationValidator
      * Validate the slip entry.
      *
      * @param  \App\Service\BookKeepingMigrationVersion  $version
-     * @param  array<string, mixed>  $slipEntry
+     * @param  array<mixed, mixed>  $slipEntry
      * @return array{
      *   slip_entry_id: string,
      *   slip_id: string,

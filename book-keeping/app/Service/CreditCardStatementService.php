@@ -67,6 +67,12 @@ class CreditCardStatementService
     {
         $creditCardStatements = [];
 
+        /** @var array<int, array{
+         *  credit_card_statement_id: string,
+         *  credit_card_statement_outline: string,
+         *  credit_card_statement_memo: string|null,
+         *  date: string
+         * }> $creditCardStatementList */
         $creditCardStatementList = $this->creditCardStatement->searchBook($bookId, $creditCardStatementId);
         foreach ($creditCardStatementList as $creditCardStatementItem) {
             $creditCardStatements[strval($creditCardStatementItem['credit_card_statement_id'])] = [

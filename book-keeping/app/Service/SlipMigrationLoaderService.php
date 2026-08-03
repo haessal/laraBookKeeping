@@ -32,7 +32,7 @@ class SlipMigrationLoaderService extends SlipMigrationService
     /**
      * Load the slip.
      *
-     * @param  array<string, mixed>  $slip
+     * @param  array<mixed, mixed>  $slip
      * @param array<string, array{
      *   slip_id: string,
      *   updated_at: string|null,
@@ -87,7 +87,7 @@ class SlipMigrationLoaderService extends SlipMigrationService
      * @param  \App\Service\BookKeepingMigrationVersion  $version
      * @param  string  $bookId
      * @param  string  $slipId
-     * @param  array<string, array<string, mixed>>  $slipEntries
+     * @param  array<string, array<mixed, mixed>>  $slipEntries
      * @return array{0: array<string, mixed>, 1: string|null}
      */
     public function loadSlipEntries(BookKeepingMigrationVersion $version, $bookId, $slipId, array $slipEntries): array
@@ -105,6 +105,7 @@ class SlipMigrationLoaderService extends SlipMigrationService
         $slipEntryCount = 0;
         foreach ($slipEntries as $slipEntryIndex => $slipEntry) {
             if (key_exists('slip_entry_id', $slipEntry)) {
+                /** @var string $slipEntryId */
                 $slipEntryId = $slipEntry['slip_entry_id'];
             } else {
                 $error = 'invalid data format: slip_entry_id';
@@ -117,7 +118,19 @@ class SlipMigrationLoaderService extends SlipMigrationService
                 if (isset($error)) {
                     break;
                 }
-                Log::debug('load: slip entry '.sprintf('%5d', $slipEntryCount).'/'.sprintf('%5d', $slipEntryNumber).' '.$slipEntryId.' '.$result[$slipEntryIndex]['result']);
+                /** @var string $result_for_log */
+                $result_for_log = key_exists('result', $result[$slipEntryIndex])
+                    ? $result[$slipEntryIndex]['result']
+                    : 'null';
+                Log::debug('load: slip entry '
+                    .sprintf('%5d', $slipEntryCount)
+                    .'/'
+                    .sprintf('%5d', $slipEntryNumber)
+                    .' '
+                    .$slipEntryId
+                    .' '
+                    .$result_for_log
+                );
             }
             $slipEntryCount++;
         }
@@ -129,7 +142,7 @@ class SlipMigrationLoaderService extends SlipMigrationService
      * Load the slip entry.
      *
      * @param  \App\Service\BookKeepingMigrationVersion  $version
-     * @param  array<string, mixed>  $slipEntry
+     * @param  array<mixed, mixed>  $slipEntry
      * @param array<string, array{
      *   slip_entry_id: string,
      *   updated_at: string|null,
@@ -196,6 +209,7 @@ class SlipMigrationLoaderService extends SlipMigrationService
         $slipCount = 0;
         foreach ($slips as $slipIndex => $slip) {
             if (key_exists('slip_id', $slip) && is_string($slip['slip_id'])) {
+                /** @var string $slipId */
                 $slipId = $slip['slip_id'];
             } else {
                 $error = 'invalid data format: slip_id';
@@ -206,13 +220,27 @@ class SlipMigrationLoaderService extends SlipMigrationService
                 if (isset($error)) {
                     break;
                 }
-                Log::debug('load: slip       '.sprintf('%5d', $slipCount).'/'.sprintf('%5d', $slipNumber).' '.$slipId.' '.$result[$slipIndex]['result']);
+                /** @var string $result_for_log */
+                $result_for_log = key_exists('result', $result[$slipIndex])
+                    ? $result[$slipIndex]['result']
+                    : 'null';
+                Log::debug('load: slip       '
+                    .sprintf('%5d', $slipCount)
+                    .'/'
+                    .sprintf('%5d', $slipNumber)
+                    .' '
+                    .$slipId
+                    .' '
+                    .$result_for_log
+                );
             }
             $slipCount++;
             if (key_exists('entries', $slip)) {
                 if (is_array($slip['entries'])) {
+                    /** @var array<string, array<mixed, mixed>> $slipEntries */
+                    $slipEntries = $slip['entries'];
                     [$result[$slipIndex]['entries'], $error] = $this->loadSlipEntries(
-                        $version, $bookId, $slipId, $slip['entries']
+                        $version, $bookId, $slipId, $slipEntries
                     );
                     if (isset($error)) {
                         break;

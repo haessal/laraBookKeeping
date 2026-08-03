@@ -60,9 +60,11 @@ class BookService
     {
         $permission = null;
         $user = $this->permission->findUserByName($userName);
-        if (isset($user)) {
+        if (isset($user) && key_exists('id', $user)) {
+            /** @var int $userId */
+            $userId = $user['id'];
             $modifiable = ($mode == 'ReadWrite') ? true : false;
-            $this->permission->create(intval($user['id']), $bookId, $modifiable, false, false);
+            $this->permission->create($userId, $bookId, $modifiable, false, false);
             $permission = ['user' => $userName, 'permitted_to' => $mode];
         }
 
@@ -79,8 +81,10 @@ class BookService
     public function deletePermission($bookId, $userName)
     {
         $user = $this->permission->findUserByName($userName);
-        if (isset($user)) {
-            $this->permission->delete(intval($user['id']), $bookId);
+        if (isset($user) && key_exists('id', $user)) {
+            /** @var int $userId */
+            $userId = $user['id'];
+            $this->permission->delete($userId, $bookId);
         }
     }
 
@@ -100,6 +104,14 @@ class BookService
      */
     public function retrieveBook($bookId, $userId): ?array
     {
+        /** @var array{
+         *  book_id: string,
+         *  book_name: string,
+         *  modifiable: bool,
+         *  is_owner: bool,
+         *  is_default: bool,
+         *  created_at: string
+         * }|null $book */
         $book = $this->permission->findBook($userId, $bookId);
 
         return is_null($book) ? null : [
@@ -218,6 +230,10 @@ class BookService
      */
     public function retrieveInformationOf($bookId): ?array
     {
+        /** @var array{
+         *  book_id: string,
+         *  book_name: string
+         * }|null $book */
         $book = $this->book->findById($bookId);
 
         return is_null($book) ? null : [
@@ -234,6 +250,7 @@ class BookService
      */
     public function retrieveOwnerNameOf($bookId)
     {
+        /** @var array{name: string}|null $user */
         $user = $this->permission->findOwnerOfBook($bookId);
 
         return is_null($user) ? null : $user['name'];
@@ -248,9 +265,11 @@ class BookService
     public function retrievePermissions($bookId): array
     {
         $permissions = [];
+        /** @var array<int, array{permitted_user: int, modifiable: int}> $permission_list */
         $permission_list = $this->permission->findByBookId($bookId);
         foreach ($permission_list as $item) {
-            $user = $this->permission->findUser(intval($item['permitted_user']));
+            /** @var array{name: string}|null $user */
+            $user = $this->permission->findUser($item['permitted_user']);
             if (isset($user)) {
                 $permissions[] = [
                     'user' => strval($user['name']),
