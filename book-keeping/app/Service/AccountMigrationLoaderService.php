@@ -158,19 +158,34 @@ class AccountMigrationLoaderService extends AccountMigrationService
         $accountItemCount = 0;
         foreach ($accountItems as $accountIndex => $accountItem) {
             if (key_exists('account_id', $accountItem)) {
+                /** @var string $accountId */
                 $accountId = $accountItem['account_id'];
             } else {
                 $error = 'invalid data format: account_id';
                 break;
             }
             if (key_exists('account', $accountItem) && is_array($accountItem['account'])) {
+                /** @var array<string, mixed> $account */
+                $account = $accountItem['account'];
                 [$result[$accountIndex], $error] = $this->loadAccountItem(
-                    $version, $accountItem['account'], $destinationAccountItems[$accountGroupId]['items']
+                    $version, $account, $destinationAccountItems[$accountGroupId]['items']
                 );
                 if (isset($error)) {
                     break;
                 }
-                Log::debug('load: account item     '.sprintf('%2d', $accountItemCount).'/'.sprintf('%2d', $accountItemNumber).' '.$accountId.' '.$result[$accountIndex]['result']);
+                /** @var string $result_for_log */
+                $result_for_log = key_exists('result', $result[$accountIndex])
+                    ? $result[$accountIndex]['result']
+                    : 'null';
+                Log::debug('load: account item     '
+                    .sprintf('%2d', $accountItemCount)
+                    .'/'
+                    .sprintf('%2d', $accountItemNumber)
+                    .' '
+                    .$accountId
+                    .' '
+                    .$result_for_log
+                );
             }
             $accountItemCount++;
         }
@@ -196,25 +211,42 @@ class AccountMigrationLoaderService extends AccountMigrationService
         $accountGroupCount = 0;
         foreach ($accounts as $accountGroupIndex => $accountGroup) {
             if (key_exists('account_group_id', $accountGroup) && is_string($accountGroup['account_group_id'])) {
+                /** @var string $accountGroupId */
                 $accountGroupId = $accountGroup['account_group_id'];
             } else {
                 $error = 'invalid data format: account_group_id';
                 break;
             }
             if (key_exists('account_group', $accountGroup) && is_array($accountGroup['account_group'])) {
+                /** @var array<string, mixed> $accountGroupData */
+                $accountGroupData = $accountGroup['account_group'];
                 [$result[$accountGroupIndex], $error] = $this->loadAccountGroup(
-                    $accountGroup['account_group'], $destinationAccountGroups
+                    $accountGroupData, $destinationAccountGroups
                 );
                 if (isset($error)) {
                     break;
                 }
-                Log::debug('load: account group    '.sprintf('%2d', $accountGroupCount).'/'.sprintf('%2d', $accountGroupNumber).' '.$accountGroupId.' '.$result[$accountGroupIndex]['result']);
+                /** @var string $result_for_log */
+                $result_for_log = key_exists('result', $result[$accountGroupIndex])
+                    ? $result[$accountGroupIndex]['result']
+                    : 'null';
+                Log::debug('load: account group    '
+                    .sprintf('%2d', $accountGroupCount)
+                    .'/'
+                    .sprintf('%2d', $accountGroupNumber)
+                    .' '
+                    .$accountGroupId
+                    .' '
+                    .$result_for_log
+                );
             }
             $accountGroupCount++;
             if (key_exists('items', $accountGroup)) {
                 if (is_array($accountGroup['items'])) {
+                    /** @var array<string, array<string, mixed>> $accountItems */
+                    $accountItems = $accountGroup['items'];
                     [$result[$accountGroupIndex]['items'], $error] = $this->loadAccountItems(
-                        $version, $bookId, $accountGroupId, $accountGroup['items']
+                        $version, $bookId, $accountGroupId, $accountItems
                     );
                     if (isset($error)) {
                         break;

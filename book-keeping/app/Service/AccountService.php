@@ -82,7 +82,7 @@ class AccountService
      * Create a new account group.
      *
      * @param  string  $bookId
-     * @param  string  $accountType
+     * @param  'asset'|'expense'|'liability'|'revenue'  $accountType
      * @param  string  $title
      * @param  bool  $isCurrent
      * @param  int  $bk_uid
@@ -121,6 +121,22 @@ class AccountService
     {
         $accounts = [];
 
+        /** @var array<int, array{
+         *   account_id: string,
+         *   account_group_id: string,
+         *   account_type: 'asset'|'expense'|'liability'|'revenue',
+         *   account_group_title: string,
+         *   is_current: bool,
+         *   account_title: string,
+         *   description: string,
+         *   selectable: bool,
+         *   is_credit_card: bool,
+         *   account_bk_code: int,
+         *   created_at: string,
+         *   account_group_bk_code: int,
+         *   account_group_created_at: string,
+         * }> $accountList
+         */
         $accountList = $this->account->searchBook($bookId);
         foreach ($accountList as $accountItem) {
             if (isset($isCreditCard) && ($isCreditCard != boolval($accountItem['is_credit_card']))) {
@@ -163,6 +179,15 @@ class AccountService
     {
         $accountGroups = [];
 
+        /** @var array<int, array{
+         *   account_group_id: string,
+         *   account_type: 'asset'|'expense'|'liability'|'revenue',
+         *   account_group_title: string,
+         *   is_current: bool,
+         *   account_group_bk_code: int,
+         *   created_at: string,
+         * }> $accountGroupList
+         */
         $accountGroupList = $this->accountGroup->searchBook($bookId);
         foreach ($accountGroupList as $accountGroup) {
             $accountGroups[strval($accountGroup['account_group_id'])] = [

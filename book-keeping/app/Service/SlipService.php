@@ -219,8 +219,37 @@ class SlipService
     public function retrieveSlipEntries($fromDate, $toDate, array $condition, $bookId): array
     {
         $slipEntries = [];
-
-        $list = $this->slipEntry->searchBook($bookId, $fromDate, $toDate, $condition);
+        /**
+         * @var array{
+         *   debit?: string,
+         *   credit?: string,
+         *   and_or?: string,
+         *   keyword?: string,
+         *   credit_card_statement_id? : string,
+         * } $trimmedCondition
+         */
+        $trimmedCondition = [];
+        foreach ($condition as $key => $value) {
+            if (! is_null($value)) {
+                $trimmedCondition[$key] = $value;
+            }
+        }
+        /**
+         * @var array<int, array{
+         *   slip_id: string,
+         *   date: string,
+         *   slip_outline: string,
+         *   slip_memo: string,
+         *   slip_entry_id: string,
+         *   debit: string,
+         *   credit: string,
+         *   amount: int,
+         *   client: string,
+         *   outline: string,
+         *   credit_card_statement_id: string
+         * }> $list
+         */
+        $list = $this->slipEntry->searchBook($bookId, $fromDate, $toDate, $trimmedCondition);
         foreach ($list as $slipEntry) {
             $slipEntries[] = [
                 'slip_id' => strval($slipEntry['slip_id']),
@@ -290,6 +319,21 @@ class SlipService
         $totalAmountOfStatement = 0;
         $totalAmountOfPayment = 0;
 
+        /**
+         * @var array<int, array{
+         *   slip_id: string,
+         *   date: string,
+         *   slip_outline: string,
+         *   slip_memo: string,
+         *   slip_entry_id: string,
+         *   debit: string,
+         *   credit: string,
+         *   amount: int,
+         *   client: string,
+         *   outline: string,
+         *   credit_card_statement_id: string
+         * }> $list
+         */
         $list = $this->slipEntry->searchBook($bookId, $fromDate, $toDate, [
             'credit_card_account_ids' => $creditCardAccountIds,
             'credit_card_statement_id' => $creditCardStatementId,
@@ -351,6 +395,18 @@ class SlipService
     {
         $slipEntries = [];
 
+        /**
+         * @var array<int, array{
+         *   slip_entry_id: string,
+         *   slip_id: string,
+         *   debit: string,
+         *   credit: string,
+         *   amount: int,
+         *   client: string,
+         *   outline: string,
+         *   credit_card_statement_id: string
+         * }> $list
+         */
         $list = $this->slipEntry->searchBookWithCreditCardStatement($bookId, $creditCardStatementId);
         foreach ($list as $slipEntry) {
             $slipEntries[] = [
@@ -387,6 +443,18 @@ class SlipService
     {
         $slipEntries = [];
 
+        /**
+         * @var array<int, array{
+         *   slip_entry_id: string,
+         *   slip_id: string,
+         *   debit: string,
+         *   credit: string,
+         *   amount: int,
+         *   client: string,
+         *   outline: string,
+         *   credit_card_statement_id: string
+         * }> $list
+         */
         $list = $this->slipEntry->searchSlip($slipId);
         foreach ($list as $slipEntry) {
             $slipEntries[] = [
@@ -426,6 +494,21 @@ class SlipService
      */
     public function retrieveSlipEntry($slipEntryId, $bookId, $draftInclude): ?array
     {
+        /**
+         * @var array{
+         *   slip_id: string,
+         *   date: string,
+         *   slip_outline: string,
+         *   slip_memo: string,
+         *   slip_entry_id: string,
+         *   debit: string,
+         *   credit: string,
+         *   amount: int,
+         *   client: string,
+         *   outline: string,
+         *   credit_card_statement_id: string
+         * }|null $slipEntry
+         */
         $slipEntry = $this->slipEntry->findById($slipEntryId, $bookId, $draftInclude);
 
         return is_null($slipEntry) ? null : [
