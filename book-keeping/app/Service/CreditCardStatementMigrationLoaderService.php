@@ -100,21 +100,8 @@ class CreditCardStatementMigrationLoaderService extends CreditCardStatementMigra
             if (isset($error)) {
                 break;
             }
-            /** @var string $creditCardStatementId */
             $creditCardStatementId = $result[$creditCardStatementIndex]['credit_card_statement_id'];
-            /** @var string $result_for_log */
-            $result_for_log = key_exists('result', $result[$creditCardStatementIndex])
-                ? $result[$creditCardStatementIndex]['result']
-                : 'null';
-            Log::debug('load: credit card statement '
-                .sprintf('%2d', $creditCardStatementCount)
-                .'/'
-                .sprintf('%2d', $creditCardStatementNumber)
-                .' '
-                .$creditCardStatementId
-                .' '
-                .$result_for_log
-            );
+            Log::debug('load: credit card statement '.sprintf('%2d', $creditCardStatementCount).'/'.sprintf('%2d', $creditCardStatementNumber).' '.$creditCardStatementId.' '.$result[$creditCardStatementIndex]['result']);
             $creditCardStatementCount++;
         }
 

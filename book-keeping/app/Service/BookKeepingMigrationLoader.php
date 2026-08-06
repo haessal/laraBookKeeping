@@ -74,14 +74,12 @@ class BookKeepingMigrationLoader
         }
         if (key_exists('books', $contents) && is_array($contents['books'])) {
             $importResult['books'] = [];
-            /** @var array<int, array<string, mixed>> $books */
             $books = $contents['books'];
             $booksNumber = count($books);
             $booksCount = 0;
             foreach ($books as $bookIndex => $book) {
                 $importResult['books'][$bookIndex] = [];
                 if (key_exists('book_id', $book)) {
-                    /** @var string $bookId */
                     $bookId = $book['book_id'];
                 } else {
                     $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;
@@ -89,45 +87,23 @@ class BookKeepingMigrationLoader
 
                     return [$status, $importResult, $errorMessage];
                 }
-                Log::debug('load: start book '
-                    .sprintf('%2d', $booksCount)
-                    .'/'
-                    .sprintf('%2d', $booksNumber)
-                    .' '
-                    .$bookId
-                );
+                Log::debug('load: start book '.sprintf('%2d', $booksCount).'/'.sprintf('%2d', $booksNumber).' '.$bookId);
                 [$importable, $reason] = $this->isImportable($bookId);
                 if ($importable) {
                     // book
                     if (key_exists('book', $book)) {
-                        /** @var array<string, mixed> $bookInformation */
-                        $bookInformation = $book['book'];
-                        [$resultOfImportBook, $errorMessage] = $this->book->loadInformation(intval(Auth::id()), $bookInformation);
+                        [$resultOfImportBook, $errorMessage] = $this->book->loadInformation(intval(Auth::id()), $book['book']);
                         $importResult['books'][$bookIndex]['book'] = $resultOfImportBook;
                         if (isset($errorMessage)) {
                             $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;
                             break;
                         }
-                        /** @var string $result_for_log */
-                        $result_for_log = key_exists('result', $resultOfImportBook)
-                            ? $resultOfImportBook['result']
-                            : 'null';
-                        Log::debug('load: book information '
-                            .sprintf('%2d', $booksCount)
-                            .'/'
-                            .sprintf('%2d', $booksNumber)
-                            .' '
-                            .$bookId
-                            .' '
-                            .$result_for_log
-                        );
+                        Log::debug('load: book information '.sprintf('%2d', $booksCount).'/'.sprintf('%2d', $booksNumber).' '.$bookId.' '.$resultOfImportBook['result']);
                     }
                     $booksCount++;
                     // accounts
                     if (key_exists('accounts', $book)) {
-                        /** @var array<string, array<string, mixed>> $accounts */
-                        $accounts = $book['accounts'];
-                        [$resultOfImportAccounts, $errorMessage] = $this->account->loadAccounts($version, $bookId, $accounts);
+                        [$resultOfImportAccounts, $errorMessage] = $this->account->loadAccounts($version, $bookId, $book['accounts']);
                         $importResult['books'][$bookIndex]['accounts'] = $resultOfImportAccounts;
                         if (isset($errorMessage)) {
                             $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;
@@ -136,9 +112,7 @@ class BookKeepingMigrationLoader
                     }
                     // credit card statements
                     if (key_exists('creditCardStatements', $book)) {
-                        /** @var array<string, array<string, mixed>> $creditCardStatements */
-                        $creditCardStatements = $book['creditCardStatements'];
-                        [$resultOfImportCreditCardStatements, $errorMessage] = $this->creditCardStatement->loadCreditCardStatements($bookId, $creditCardStatements);
+                        [$resultOfImportCreditCardStatements, $errorMessage] = $this->creditCardStatement->loadCreditCardStatements($bookId, $book['creditCardStatements']);
                         $importResult['books'][$bookIndex]['creditCardStatements'] = $resultOfImportCreditCardStatements;
                         if (isset($errorMessage)) {
                             $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;
@@ -147,9 +121,7 @@ class BookKeepingMigrationLoader
                     }
                     // slips
                     if (key_exists('slips', $book)) {
-                        /** @var array<string, array<string, mixed>> $slips */
-                        $slips = $book['slips'];
-                        [$resultOfImportSlips, $errorMessage] = $this->slip->loadSlips($version, $bookId, $slips);
+                        [$resultOfImportSlips, $errorMessage] = $this->slip->loadSlips($version, $bookId, $book['slips']);
                         $importResult['books'][$bookIndex]['slips'] = $resultOfImportSlips;
                         if (isset($errorMessage)) {
                             $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;

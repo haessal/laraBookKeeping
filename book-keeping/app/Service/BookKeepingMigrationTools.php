@@ -31,11 +31,7 @@ class BookKeepingMigrationTools
                 case 'created_at':
                     break;
                 case 'updated_at':
-                    if (is_string($value)) {
-                        $converted['updated_at'] = Carbon::parse($value)->timezone('UTC')->toAtomString();
-                    } else {
-                        $converted['updated_at'] = null;
-                    }
+                    $converted['updated_at'] = Carbon::parse(strval($value))->timezone('UTC')->toAtomString();
                     break;
                 case 'deleted_at':
                     $converted['deleted'] = ! is_null($value);
