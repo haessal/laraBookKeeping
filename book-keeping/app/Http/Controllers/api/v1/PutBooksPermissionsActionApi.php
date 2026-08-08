@@ -55,9 +55,13 @@ class PutBooksPermissionsActionApi extends AuthenticatedBookKeepingActionApi
         switch ($status) {
             case BookKeepingService::STATUS_NORMAL:
                 [$retrievalStatus, $permissionList] = $this->BookKeeping->retrievePermittedUsers($bookId);
-                if ($retrievalStatus == BookKeepingService::STATUS_NORMAL) {
-                    $context['permission_list'] = $permissionList;
-                    $response = $this->responder->response($context);
+                switch ($retrievalStatus) {
+                    case BookKeepingService::STATUS_NORMAL:
+                        $context['permission_list'] = $permissionList;
+                        $response = $this->responder->response($context);
+                        break;
+                    default:
+                        break;
                 }
                 break;
             case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:

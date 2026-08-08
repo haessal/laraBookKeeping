@@ -64,11 +64,15 @@ class PostBooksCreditCardStatementsActionApi extends AuthenticatedBookKeepingAct
                         $bookId,
                         $creditCardStatementId,
                     );
-                    if ($retrievalStatus == BookKeepingService::STATUS_NORMAL) {
-                        if (isset($creditCardStatements)) {
-                            $context['creditCardStatements'] = $creditCardStatements;
-                            $response = $this->responder->response($context, JsonResponse::HTTP_CREATED);
-                        }
+                    switch ($retrievalStatus) {
+                        case BookKeepingService::STATUS_NORMAL:
+                            if (isset($creditCardStatements)) {
+                                $context['creditCardStatements'] = $creditCardStatements;
+                                $response = $this->responder->response($context, JsonResponse::HTTP_CREATED);
+                            }
+                            break;
+                        default:
+                            break;
                     }
                 }
                 break;

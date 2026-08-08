@@ -57,12 +57,16 @@ class PostSlipsActionApi extends AuthenticatedBookKeepingActionApi
             case BookKeepingService::STATUS_NORMAL:
                 if (isset($slipId)) {
                     [$retrievalStatus, $slips] = $this->BookKeeping->retrieveSlip($slipId);
-                    if ($retrievalStatus == BookKeepingService::STATUS_NORMAL) {
-                        if (isset($slips)) {
-                            $context['slip_id'] = strval($slipId);
-                            $context['slip'] = $slips[$slipId];
-                            $response = $this->responder->response($context, JsonResponse::HTTP_CREATED);
-                        }
+                    switch ($retrievalStatus) {
+                        case BookKeepingService::STATUS_NORMAL:
+                            if (isset($slips)) {
+                                $context['slip_id'] = strval($slipId);
+                                $context['slip'] = $slips[$slipId];
+                                $response = $this->responder->response($context, JsonResponse::HTTP_CREATED);
+                            }
+                            break;
+                        default:
+                            break;
                     }
                 }
                 break;

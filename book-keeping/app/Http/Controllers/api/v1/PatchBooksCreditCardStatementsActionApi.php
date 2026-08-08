@@ -68,11 +68,15 @@ class PatchBooksCreditCardStatementsActionApi extends AuthenticatedBookKeepingAc
         switch ($status) {
             case BookKeepingService::STATUS_NORMAL:
                 [$retrievalStatus, $updatedCreditCardStatements] = $this->BookKeeping->retrieveCreditCardStatements($bookId, $creditCardStatementId);
-                if ($retrievalStatus == BookKeepingService::STATUS_NORMAL) {
-                    if (isset($updatedCreditCardStatements)) {
-                        $context['creditCardStatements'] = $updatedCreditCardStatements;
-                        $response = $this->responder->response($context);
-                    }
+                switch ($retrievalStatus) {
+                    case BookKeepingService::STATUS_NORMAL:
+                        if (isset($updatedCreditCardStatements)) {
+                            $context['creditCardStatements'] = $updatedCreditCardStatements;
+                            $response = $this->responder->response($context);
+                        }
+                        break;
+                    default:
+                        break;
                 }
                 break;
             case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:

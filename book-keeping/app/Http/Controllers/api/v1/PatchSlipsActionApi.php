@@ -64,12 +64,16 @@ class PatchSlipsActionApi extends AuthenticatedBookKeepingActionApi
         switch ($status) {
             case BookKeepingService::STATUS_NORMAL:
                 [$retrievalStatus, $updatedSlips] = $this->BookKeeping->retrieveSlip($slipId);
-                if ($retrievalStatus == BookKeepingService::STATUS_NORMAL) {
-                    if (isset($updatedSlips)) {
-                        $context['slip_id'] = $slipId;
-                        $context['slip'] = $updatedSlips[$slipId];
-                        $response = $this->responder->response($context);
-                    }
+                switch ($retrievalStatus) {
+                    case BookKeepingService::STATUS_NORMAL:
+                        if (isset($updatedSlips)) {
+                            $context['slip_id'] = $slipId;
+                            $context['slip'] = $updatedSlips[$slipId];
+                            $response = $this->responder->response($context);
+                        }
+                        break;
+                    default:
+                        break;
                 }
                 break;
             case BookKeepingService::STATUS_ERROR_AUTH_NOTAVAILABLE:
