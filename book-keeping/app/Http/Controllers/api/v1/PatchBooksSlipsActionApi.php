@@ -111,15 +111,17 @@ class PatchBooksSlipsActionApi extends AuthenticatedBookKeepingActionApi
         $trimmed = [];
 
         foreach ($slipContents as $contentsKey => $contentsItem) {
+            /** @var string $contentsItemStr */
+            $contentsItemStr = $contentsItem;
             switch ($contentsKey) {
                 case 'date':
-                    $trimmed['date'] = trim(strval($contentsItem));
+                    $trimmed['date'] = trim(strval($contentsItemStr));
                     break;
                 case 'outline':
-                    $trimmed['outline'] = trim(strval($contentsItem));
+                    $trimmed['outline'] = trim(strval($contentsItemStr));
                     break;
                 case 'memo':
-                    $trimmed['memo'] = trim(strval($contentsItem));
+                    $trimmed['memo'] = trim(strval($contentsItemStr));
                     break;
                 default:
                     $success = false;

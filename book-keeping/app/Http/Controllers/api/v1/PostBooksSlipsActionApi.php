@@ -101,7 +101,7 @@ class PostBooksSlipsActionApi extends AuthenticatedBookKeepingActionApi
     /**
      * Validate 'debit' or 'credit' of the slip entry and trim string data.
      *
-     * @param  array<string, mixed>  $slipEntry
+     * @param  array<mixed, mixed>  $slipEntry
      * @param  string  $key
      * @return string|null
      */
@@ -205,7 +205,7 @@ class PostBooksSlipsActionApi extends AuthenticatedBookKeepingActionApi
     /**
      * Validate the slip entry and trim string data.
      *
-     * @param  array<string, mixed>  $slipEntry
+     * @param  array<mixed, mixed>  $slipEntry
      * @return array{success: bool, slipEntry: array{
      *   debit: string,
      *   credit: string,
@@ -267,7 +267,7 @@ class PostBooksSlipsActionApi extends AuthenticatedBookKeepingActionApi
     /**
      * Validate and trim string data.
      *
-     * @param  array<string, mixed>  $array_in
+     * @param  array<mixed, mixed>  $array_in
      * @param  string  $key
      * @return string|null
      */

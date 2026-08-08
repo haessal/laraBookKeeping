@@ -93,24 +93,26 @@ class GetSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
         $keyword = null;
 
         foreach ($query as $queryKey => $queryItem) {
+            /** @var string $queryItemStr */
+            $queryItemStr = $queryItem;
             switch ($queryKey) {
                 case 'from':
-                    $from = trim(strval($queryItem));
+                    $from = trim(strval($queryItemStr));
                     break;
                 case 'to':
-                    $to = trim(strval($queryItem));
+                    $to = trim(strval($queryItemStr));
                     break;
                 case 'debit':
-                    $debit = trim(strval($queryItem));
+                    $debit = trim(strval($queryItemStr));
                     break;
                 case 'credit':
-                    $credit = trim(strval($queryItem));
+                    $credit = trim(strval($queryItemStr));
                     break;
                 case 'operand':
-                    $operand = trim(strval($queryItem));
+                    $operand = trim(strval($queryItemStr));
                     break;
                 case 'keyword':
-                    $keyword = trim(strval($queryItem));
+                    $keyword = trim(strval($queryItemStr));
                     break;
                 default:
                     $success = false;

@@ -125,24 +125,31 @@ class PatchBooksSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
         $trimmed = [];
 
         foreach ($slipEntryContents as $contentsKey => $contentsItem) {
+            /** @var string $contentsItemStr */
+            $contentsItemStr = $contentsItem;
             switch ($contentsKey) {
                 case 'debit':
-                    $trimmed['debit'] = trim(strval($contentsItem));
+                    $trimmed['debit'] = trim(strval($contentsItemStr));
                     break;
                 case 'credit':
-                    $trimmed['credit'] = trim(strval($contentsItem));
+                    $trimmed['credit'] = trim(strval($contentsItemStr));
                     break;
                 case 'amount':
-                    $trimmed['amount'] = intval($contentsItem);
+                    if (is_numeric($contentsItem)) {
+                        $trimmed['amount'] = intval($contentsItem);
+                    } else {
+                        $trimmed['amount'] = 0;
+                        $success = false;
+                    }
                     break;
                 case 'client':
-                    $trimmed['client'] = trim(strval($contentsItem));
+                    $trimmed['client'] = trim(strval($contentsItemStr));
                     break;
                 case 'outline':
-                    $trimmed['outline'] = trim(strval($contentsItem));
+                    $trimmed['outline'] = trim(strval($contentsItemStr));
                     break;
                 case 'credit_card_statement':
-                    $trimmed['credit_card_statement'] = trim(strval($contentsItem));
+                    $trimmed['credit_card_statement'] = trim(strval($contentsItemStr));
                     break;
                 default:
                     $success = false;
@@ -170,11 +177,6 @@ class PatchBooksSlipEntriesActionApi extends AuthenticatedBookKeepingActionApi
         }
         if (array_key_exists('debit', $trimmed) && array_key_exists('credit', $trimmed) && ($trimmed['debit'] == $trimmed['credit'])) {
             $success = false;
-        }
-        if (array_key_exists('amount', $trimmed)) {
-            if (empty($trimmed['amount']) || (! is_int($trimmed['amount']))) {
-                $success = false;
-            }
         }
         if (array_key_exists('client', $trimmed)) {
             if (empty($trimmed['client'])) {
