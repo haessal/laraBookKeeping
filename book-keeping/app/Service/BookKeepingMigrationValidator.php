@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Models\CreditCardStatement;
+use App\Models\DataProvider\Eloquent\CreditCardStatement;
 use Illuminate\Support\Carbon;
 
 class BookKeepingMigrationValidator
