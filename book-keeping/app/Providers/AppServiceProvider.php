@@ -6,10 +6,12 @@ use App\Repositories\AccountGroupRepositoryInterface;
 use App\Repositories\AccountRepositoryInterface;
 use App\Repositories\BookRepositoryInterface;
 use App\Repositories\BudgetRepositoryInterface;
+use App\Repositories\CreditCardStatementRepositoryInterface;
 use App\Repositories\Eloquent\AccountGroupRepository;
 use App\Repositories\Eloquent\AccountRepository;
 use App\Repositories\Eloquent\BookRepository;
 use App\Repositories\Eloquent\BudgetRepository;
+use App\Repositories\Eloquent\CreditCardStatementRepository;
 use App\Repositories\Eloquent\PermissionRepository;
 use App\Repositories\Eloquent\SlipEntryRepository;
 use App\Repositories\Eloquent\SlipRepository;
@@ -41,6 +43,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             BudgetRepositoryInterface::class,
             BudgetRepository::class
+        );
+        $this->app->bind(
+            CreditCardStatementRepositoryInterface::class,
+            CreditCardStatementRepository::class
         );
         $this->app->bind(
             PermissionRepositoryInterface::class,
