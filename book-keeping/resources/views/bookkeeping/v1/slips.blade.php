@@ -1,7 +1,7 @@
 <table>
     <tr>
         @isset($modify)
-        <th></th>
+            <th></th>
         @endisset
         <th class="tx">No.</th>
         <th class="tx">Slip No.</th>
@@ -13,23 +13,25 @@
         <th>{{ __('Outline') }}</th>
     </tr>
     @foreach ($slips as $key => $item)
-    <tr>
-        @isset($modify)
-        <td><input type="checkbox" name="modify_no_list[]" value="{{{ $key }}}" /></td>
-        @endisset
-        <td class="txc">{{{ $item['no'] }}}</td>
-        <td class="txc">{{{ $item['slipNo'] }}}</td>
-        <td class="tx">{{{ $item['date'] }}}</td>
-        <td class="tx">{{{ $item['debit'] }}}</td>
-        <td class="txn">{{{ $item['amount'] }}}</td>
-        <td class="tx">{{{ $item['credit'] }}}</td>
-        <td class="tx">{{{ $item['client'] }}}</td>
-        <td>{{{ $item['outline'] }}}</td>
-    </tr>
+        <tr>
+            @isset($modify)
+                <td><input type="checkbox"
+                           name="modify_no_list[]"
+                           value="{{ $key }}" /></td>
+            @endisset
+            <td class="txc">{{ $item['no'] }}</td>
+            <td class="txc">{{ $item['slipNo'] }}</td>
+            <td class="tx">{{ $item['date'] }}</td>
+            <td class="tx">{{ $item['debit'] }}</td>
+            <td class="txn">{{ $item['amount'] }}</td>
+            <td class="tx">{{ $item['credit'] }}</td>
+            <td class="tx">{{ $item['client'] }}</td>
+            <td>{{ $item['outline'] }}</td>
+        </tr>
     @endforeach
     <tr>
         @isset($modify)
-        <td class="footer"></td>
+            <td class="footer"></td>
         @endisset
         <td class="footer"></td>
         <td class="footer"></td>

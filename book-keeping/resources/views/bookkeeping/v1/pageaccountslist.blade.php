@@ -12,13 +12,13 @@
                         <th class="in-main">{{ __('Description') }}</th>
                     </tr>
                     @foreach ($accounts_list as $accountKey => $account)
-                    <tr class="{{ $account['evenOdd'] }}">
-                        <td class="in-main">{{ $account['code'] }}</td>
-                        <td class="in-main">{{ $account['type'] }}</td>
-                        <td class="in-main">{{ $account['group_title'] }}</td>
-                        <td class="in-main">{{ $account['title'] }}</td>
-                        <td class="in-main">{{ $account['description'] }}</td>
-                    </tr>
+                        <tr class="{{ $account['evenOdd'] }}">
+                            <td class="in-main">{{ $account['code'] }}</td>
+                            <td class="in-main">{{ $account['type'] }}</td>
+                            <td class="in-main">{{ $account['group_title'] }}</td>
+                            <td class="in-main">{{ $account['title'] }}</td>
+                            <td class="in-main">{{ $account['description'] }}</td>
+                        </tr>
                     @endforeach
                 </table>
             </td>
