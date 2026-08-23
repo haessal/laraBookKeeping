@@ -1,0 +1,57 @@
+<?php
+
+namespace Tests\Feature\page\v1\top;
+
+use App\Models\DataProvider\Eloquent\Book;
+use App\Models\DataProvider\Eloquent\Permission;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
+
+class DisplayTopPageTest extends TestCase
+{
+    use RefreshDatabase, WithFaker;
+
+    /** @var \App\Models\User */
+    private $user;
+
+    /** @var \App\Models\User */
+    private $userWhoDoesNotHaveBook;
+
+    /** @var \App\Models\DataProvider\Eloquent\Book */
+    private $book;
+
+    public function setup(): void
+    {
+        parent::setUp();
+        $this->user = User::factory()->create();
+        $this->book = Book::factory()->create([
+            'book_name' => $this->faker->word(),
+        ]);
+        Permission::factory()->create([
+            'permitted_user' => $this->user->id,
+            'readable_book' => $this->book->book_id,
+            'modifiable' => true,
+            'is_owner' => true,
+            'is_default' => true,
+        ]);
+        $this->userWhoDoesNotHaveBook = User::factory()->create();
+    }
+
+    public function test_top_page_can_be_displayed(): void
+    {
+        $response = $this->actingAs($this->user)
+            ->get('/page/v1/top');
+
+        $response->assertOk();
+    }
+
+    public function test_top_page_does_not_display_because_default_book_is_not_found(): void
+    {
+        $response = $this->actingAs($this->userWhoDoesNotHaveBook)
+            ->get('/page/v1/top');
+
+        $response->assertNotFound();
+    }
+}
