@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\page\v1;
 
 use App\Http\Controllers\AuthenticatedBookKeepingAction;
+use App\Http\Requests\page\v1\ShowStatementsRequest;
 use App\Http\Responder\page\v1\ShowStatementsViewResponder;
 use App\Service\BookKeepingService;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class ShowStatementsActionHTML extends AuthenticatedBookKeepingAction
@@ -33,17 +33,17 @@ class ShowStatementsActionHTML extends AuthenticatedBookKeepingAction
     /**
      * Handle the incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\page\v1\ShowStatementsRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(Request $request): Response
+    public function __invoke(ShowStatementsRequest $request): Response
     {
         $context = [];
 
         $today = date('Y-m-d');
         if ($request->isMethod('post')) {
-            $beginningDate = trim(strval($request->input('BEGINNING')));
-            $endDate = trim(strval($request->input('END')));
+            $beginningDate = $request->beginning_date();
+            $endDate = $request->end_date();
         } else {
             $beginningDate = $today;
             $endDate = $today;

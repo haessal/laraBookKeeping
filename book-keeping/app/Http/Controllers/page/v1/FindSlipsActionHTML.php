@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\page\v1;
 
 use App\Http\Controllers\AuthenticatedBookKeepingAction;
+use App\Http\Requests\page\v1\FindSlipsRequest;
 use App\Http\Responder\page\v1\FindSlipsViewResponder;
 use App\Service\BookKeepingService;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class FindSlipsActionHTML extends AuthenticatedBookKeepingAction
@@ -33,10 +33,10 @@ class FindSlipsActionHTML extends AuthenticatedBookKeepingAction
     /**
      * Handle the incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\page\v1\FindSlipsRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(Request $request): Response
+    public function __invoke(FindSlipsRequest $request): Response
     {
         $context = [];
         $beginningDate = null;
@@ -63,36 +63,37 @@ class FindSlipsActionHTML extends AuthenticatedBookKeepingAction
                 abort(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         if ($request->isMethod('post')) {
-            if (is_array($request->input('buttons'))) {
-                $buttonAction = strval(key($request->input('buttons')));
-            } else {
-                $buttonAction = '';
-            }
-            $selectedSlipEntries = $request->input('modify_no_list');
-            if (($buttonAction == 'delete')
-                    && (! empty($selectedSlipEntries)) && is_array($selectedSlipEntries)) {
+            $buttonAction = $request->button_action();
+            if ($buttonAction == 'delete') {
+                $selectedSlipEntries = $request->slip_entry_ids();
                 foreach ($selectedSlipEntries as $slipEntryId) {
                     $this->BookKeeping->deleteSlipEntryAndEmptySlip($slipEntryId);
                 }
             }
-            $beginningDate = trim(strval($request->input('BEGINNING')));
-            $endDate = trim(strval($request->input('END')));
-            $debit = trim(strval($request->input('debit')));
-            $credit = trim(strval($request->input('credit')));
-            $andOr = trim(strval($request->input('and_or')));
-            $keyword = trim(strval($request->input('KEYWORD')));
+            $beginningDate = $request->beginning_date();
+            $endDate = $request->end_date();
+            $debit = $request->debit();
+            $credit = $request->credit();
+            $andOr = $request->and_or();
+            $keyword = $request->keyword();
             if (! empty($beginningDate) || ! empty($endDate) || ! empty($debit) || ! empty($credit) || ! empty($keyword)) {
                 if ($this->BookKeeping->validatePeriod($beginningDate, $endDate)) {
                     [$status, $slips] = $this->BookKeeping->retrieveSlips(
                         $beginningDate, $endDate, $debit, $credit, $andOr, $keyword
                     );
-                    if (($status == BookKeepingService::STATUS_NORMAL) && (isset($slips))) {
-                        $message = null;
-                        if (empty($slips)) {
-                            $message = __('No items that match the condition.');
-                        }
-                    } else {
-                        abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                    switch ($status) {
+                        case BookKeepingService::STATUS_NORMAL:
+                            if (isset($slips)) {
+                                $message = null;
+                                if (empty($slips)) {
+                                    $message = __('No items that match the condition.');
+                                }
+                            } else {
+                                abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                            }
+                            break;
+                        default:
+                            abort(Response::HTTP_INTERNAL_SERVER_ERROR);
                     }
                 } else {
                     $message = __('Invalid date format.');
@@ -106,7 +107,7 @@ class FindSlipsActionHTML extends AuthenticatedBookKeepingAction
         $context['and_or'] = $andOr;
         $context['keyword'] = $keyword;
         $context['slips'] = $slips;
-        $context['message'] = strval($message);
+        $context['message'] = is_string($message) ? $message : '';
 
         return $this->responder->response($context);
     }

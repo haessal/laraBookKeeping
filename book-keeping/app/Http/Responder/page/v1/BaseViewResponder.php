@@ -274,8 +274,11 @@ class BaseViewResponder
      */
     public function translateDraftSlipFormat(array $slip): array
     {
-        $formatted = [];
         $slipId = key($slip);
+        if (! is_string($slipId)) {
+            return [];
+        }
+        $formatted = [];
         $tableRowEvenOrOdd = 'evn';
         foreach ($slip[$slipId]['items'] as $slipEntryId => $slipEntryItem) {
             $formatted[$slipEntryId] = [

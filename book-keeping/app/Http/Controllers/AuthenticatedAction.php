@@ -19,5 +19,4 @@ class AuthenticatedAction extends Controller implements HasMiddleware
             new Middleware('verified'),
         ];
     }
-
 }

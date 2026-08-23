@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\page\v1;
 
 use App\Http\Controllers\AuthenticatedBookKeepingAction;
+use App\Http\Requests\page\v1\CreateSlipRequest;
 use App\Http\Responder\page\v1\CreateSlipViewResponder;
 use App\Service\BookKeepingService;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 
@@ -34,10 +34,10 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
     /**
      * Handle the incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\page\v1\CreateSlipRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(Request $request): Response
+    public function __invoke(CreateSlipRequest $request): Response
     {
         $context = [];
 
@@ -55,21 +55,17 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
             default:
                 abort(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-        $date = trim(strval($request->input('date')));
+        $date = $request->slip_date();
         $context['add'] = null;
         if ($request->isMethod('post')) {
-            if (is_array($request->input('buttons'))) {
-                $buttonAction = strval(key($request->input('buttons')));
-            } else {
-                $buttonAction = '';
-            }
+            $buttonAction = $request->button_action();
             switch ($buttonAction) {
                 case 'add':
-                    $addDebit = trim(strval($request->input('debit')));
-                    $addClient = trim(strval($request->input('client')));
-                    $addOutline = trim(strval($request->input('outline')));
-                    $addCredit = trim(strval($request->input('credit')));
-                    $addAmount = intval($request->input('amount'));
+                    $addDebit = $request->debit();
+                    $addClient = $request->client();
+                    $addOutline = $request->outline();
+                    $addCredit = $request->credit();
+                    $addAmount = $request->amount();
                     if ($this->validateForCreateSlipEntry(
                         $addDebit, $addClient, $addOutline, $addCredit, $addAmount
                     )) {
@@ -86,10 +82,8 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
                     ];
                     break;
                 case 'delete':
-                    $slipEntryId = $request->input('modify_no');
-                    if (isset($slipEntryId)) {
-                        $this->BookKeeping->deleteSlipEntryAndEmptySlip(trim(strval($slipEntryId)));
-                    }
+                    $slipEntryId = $request->slip_entry_id();
+                    $this->BookKeeping->deleteSlipEntryAndEmptySlip($slipEntryId);
                     break;
                 case 'submit':
                     if ($this->BookKeeping->validateDateFormat($date)) {
@@ -106,18 +100,24 @@ class CreateSlipActionHTML extends AuthenticatedBookKeepingAction
         }
         $context['slipdate'] = $date;
         [$status, $draftSlips] = $this->BookKeeping->retrieveDraftSlips();
-        if (($status == BookKeepingService::STATUS_NORMAL) && (isset($draftSlips))) {
-            $totalamount = 0;
-            if (! empty($draftSlips)) {
-                $firstDraftSlip = reset($draftSlips);
-                foreach ($firstDraftSlip['items'] as $draftslipItem) {
-                    $totalamount += intval($draftslipItem['amount']);
+        switch ($status) {
+            case BookKeepingService::STATUS_NORMAL:
+                if (isset($draftSlips)) {
+                    $totalamount = 0;
+                    if (! empty($draftSlips)) {
+                        $firstDraftSlip = reset($draftSlips);
+                        foreach ($firstDraftSlip['items'] as $draftslipItem) {
+                            $totalamount += intval($draftslipItem['amount']);
+                        }
+                    }
+                    $context['totalamount'] = $totalamount;
+                    $context['draftslip'] = $draftSlips;
+                } else {
+                    abort(Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
-            }
-            $context['totalamount'] = $totalamount;
-            $context['draftslip'] = $draftSlips;
-        } else {
-            abort(Response::HTTP_INTERNAL_SERVER_ERROR);
+                break;
+            default:
+                abort(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return $this->responder->response($context);
