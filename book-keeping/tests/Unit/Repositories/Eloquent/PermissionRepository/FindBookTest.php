@@ -13,6 +13,7 @@ class FindBookTest extends TestCase
 {
     use RefreshDatabase;
 
+    /** @var PermissionRepository */
     protected $permission;
 
     public function setUp(): void
