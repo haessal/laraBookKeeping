@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Repositories\AccountRepository;
+namespace Tests\Unit\Repositories\Eloquent\AccountRepository;
 
 use App\Models\DataProvider\Eloquent\Account;
 use App\Repositories\Eloquent\AccountRepository;

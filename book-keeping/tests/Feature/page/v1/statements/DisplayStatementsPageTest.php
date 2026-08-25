@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\page\v1\slip;
+namespace Tests\Feature\page\v1\statements;
 
 use App\Models\DataProvider\Eloquent\Account;
 use App\Models\DataProvider\Eloquent\AccountGroup;

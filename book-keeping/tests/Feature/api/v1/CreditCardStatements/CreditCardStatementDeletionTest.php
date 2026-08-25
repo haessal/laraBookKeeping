@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\api\v1\SlipEntries;
+namespace Tests\Feature\api\v1\CreditCardStatements;
 
 use App\Models\DataProvider\Eloquent\Account;
 use App\Models\DataProvider\Eloquent\AccountGroup;
