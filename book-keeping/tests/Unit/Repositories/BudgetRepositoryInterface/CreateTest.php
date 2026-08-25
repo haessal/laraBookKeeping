@@ -12,6 +12,7 @@ class CreateTest extends TestCase
 {
     use RefreshDatabase;
 
+    /** @var BudgetRepository */
     protected $budget;
 
     public function setUp(): void

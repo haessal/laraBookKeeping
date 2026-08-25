@@ -12,6 +12,7 @@ class UpdateForImportingTest extends TestCase
 {
     use RefreshDatabase;
 
+    /** @var CreditCardStatementRepository */
     protected $creditCardStatement;
 
     public function setUp(): void

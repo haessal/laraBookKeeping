@@ -13,6 +13,7 @@ class UpdateTest extends TestCase
 {
     use RefreshDatabase;
 
+    /** @var AccountGroupRepository */
     protected $accountGroup;
 
     public function setUp(): void

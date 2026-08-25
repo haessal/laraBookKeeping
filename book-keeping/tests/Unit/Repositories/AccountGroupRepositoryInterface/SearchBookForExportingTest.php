@@ -11,6 +11,7 @@ class SearchBookForExportingTest extends TestCase
 {
     use RefreshDatabase;
 
+    /** @var AccountGroupRepository */
     protected $accountGroup;
 
     public function setUp(): void

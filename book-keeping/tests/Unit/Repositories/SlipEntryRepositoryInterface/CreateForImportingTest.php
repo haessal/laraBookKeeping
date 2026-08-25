@@ -12,6 +12,7 @@ class CreateForImportingTest extends TestCase
 {
     use RefreshDatabase;
 
+    /** @var SlipEntryRepository */
     protected $slipEntry;
 
     public function setUp(): void

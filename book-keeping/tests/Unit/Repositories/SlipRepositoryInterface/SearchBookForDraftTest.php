@@ -11,6 +11,7 @@ class SearchBookForDraftTest extends TestCase
 {
     use RefreshDatabase;
 
+    /** @var SlipRepository */
     protected $slip;
 
     public function setUp(): void

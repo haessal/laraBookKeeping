@@ -10,6 +10,7 @@ class CreateTest extends TestCase
 {
     use RefreshDatabase;
 
+    /** @var BookRepository */
     protected $book;
 
     public function setUp(): void
