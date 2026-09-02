@@ -15,7 +15,7 @@ export function NavMenu({ menu }: { menu?: NavMenuItem[] }) {
 
     return (
         <>
-            <nav className="border-b border-gray-700 bg-[#0d1117] px-4 dark:bg-[#0d1117]">
+            <nav className="border-b border-gray-700 bg-[#0d1117] px-4 dark:bg-[#020408]">
                 <ul className="ml-10 flex flex-wrap items-center gap-1 text-sm">
                     {menu.map((item) => {
                         return (
