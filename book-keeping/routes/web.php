@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\PersonalAccessTokenController;
+use App\Http\Controllers\page\ShowDashboardActionHtml;
 use App\Http\Controllers\page\v1\CreateSlipActionHTML;
 use App\Http\Controllers\page\v1\FindSlipsActionHTML;
 use App\Http\Controllers\page\v1\ShowAccountsListActionHTML;
@@ -20,9 +21,7 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', ShowDashboardActionHtml::class)->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
