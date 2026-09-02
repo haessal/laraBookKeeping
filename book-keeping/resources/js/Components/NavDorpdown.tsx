@@ -10,9 +10,9 @@ const customDropdownTheme = createTheme({
             base: 'flex w-full cursor-pointer items-center justify-start px-4 py-1 text-sm hover:rounded-lg text-gray-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:text-gray-200 dark:hover:bg-[#1c2128] dark:hover:text-white dark:focus:bg-[#1c2128] dark:focus:text-white',
         },
         style: {
-            dark: 'border bg-gray-700 text-white dark:bg-[#0d1117]',
+            dark: 'border bg-gray-700 text-white dark:bg-[#020408]',
             light: 'border border-gray-200 bg-white text-gray-900',
-            auto: 'border border-gray-200 bg-white text-gray-900 dark:border-gray-700 dark:bg-[#0d1117] dark:text-white',
+            auto: 'border border-gray-200 bg-white text-gray-900 dark:border-gray-700 dark:bg-[#020408] dark:text-white',
         },
     },
 });

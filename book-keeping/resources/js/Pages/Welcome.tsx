@@ -15,7 +15,7 @@ export default function SandboxW({
             <Navbar
                 fluid
                 rounded={false}
-                className="border-gray-700 bg-[#0d1117] px-4 py-3 font-sans dark:bg-[#0d1117]"
+                className="border-gray-700 bg-[#0d1117] px-4 py-3 font-sans dark:bg-[#020408]"
             >
                 <div className="flex flex-wrap items-center justify-between gap-4 ml-10">
                     <NavbarBrand href="/">
