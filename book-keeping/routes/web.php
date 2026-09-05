@@ -1,12 +1,15 @@
 <?php
 
 use App\Http\Controllers\Auth\PersonalAccessTokenController;
+use App\Http\Controllers\page\CreateBookActionHtml;
 use App\Http\Controllers\page\ShowDashboardActionHtml;
 use App\Http\Controllers\page\v1\CreateSlipActionHTML;
 use App\Http\Controllers\page\v1\FindSlipsActionHTML;
 use App\Http\Controllers\page\v1\ShowAccountsListActionHTML;
 use App\Http\Controllers\page\v1\ShowStatementsActionHTML;
 use App\Http\Controllers\page\v1\ShowTopActionHTML;
+use App\Http\Controllers\page\v2\ShowBookHomeActionHtml;
+use App\Http\Controllers\page\v2\ShowBookSettingsActionHtml;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +25,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', ShowDashboardActionHtml::class)->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/books/new', CreateBookActionHtml::class)->middleware(['auth', 'verified'])->name('books.new');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -38,6 +42,14 @@ Route::prefix('/page/v1')->group(function () {
     Route::match(['get', 'post'], '/slip', CreateSlipActionHTML::class)->name('v1_slip');
     Route::match(['get', 'post'], '/statements', ShowStatementsActionHTML::class)->name('v1_statements');
     Route::get('/accountslist', ShowAccountsListActionHTML::class)->name('v1_accountslist');
+});
+
+Route::prefix('/page/v2/books/{bookId}')->group(function () {
+    Route::get('', function ($bookId) {
+        return redirect()->route('v2_home', ['bookId' => $bookId]);
+    })->name('v2');
+    Route::get('/home', ShowBookHomeActionHtml::class)->name('v2_home');
+    Route::get('/settings', ShowBookSettingsActionHtml::class)->name('v2_settings');
 });
 
 require __DIR__.'/auth.php';

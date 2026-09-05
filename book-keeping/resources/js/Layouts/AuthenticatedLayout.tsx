@@ -19,7 +19,7 @@ export default function Authenticated({
                     'border-gray-700 bg-[#0d1117] px-4 py-3 font-sans dark:bg-[#020408]',
                 ].join(' ')}>
                 <div className="ml-10 flex flex-wrap items-center justify-between gap-4">
-                    <NavbarBrand href="/">
+                    <NavbarBrand href={route('dashboard')}>
                         <ApplicationLogo className="h-9 w-9 fill-current" />
                     </NavbarBrand>
                     {navTitle}

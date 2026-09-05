@@ -1,13 +1,6 @@
+import type { Book } from '@/types/BookKeeping/v2/Book';
+import { Link } from '@inertiajs/react';
 import { HiOutlineBookOpen } from 'react-icons/hi';
-
-export interface Book {
-    id: string;
-    name: string;
-    is_default: boolean;
-    is_owner: boolean;
-    modifiable: boolean;
-    owner: string;
-}
 
 export default function DashBoardBookList({ book_list }: { book_list: Book[] }) {
     return (
@@ -18,7 +11,11 @@ export default function DashBoardBookList({ book_list }: { book_list: Book[] }) 
                     <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
                             <span className="truncate text-sm font-medium text-black dark:text-[#f0f6fc]">
-                                {book.owner} / {book.name}
+                                <Link
+                                    href={route('v2', { bookId: book.id })}
+                                    className="hover:underline dark:hover:decoration-white">
+                                    {book.owner} / {book.name}
+                                </Link>
                             </span>
                             {book.is_default && (
                                 <span className="rounded-full border px-2 py-0.5 text-xs text-gray-400 dark:border-gray-600">
