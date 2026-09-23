@@ -4,7 +4,7 @@ import { Head, Link } from '@inertiajs/react';
 import { Button, Footer, FooterCopyright, Navbar, NavbarBrand } from "flowbite-react";
 
 
-export default function SandboxW({
+export default function Welcome({
     auth,
     canLogin,
     canRegister,
