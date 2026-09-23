@@ -12,7 +12,7 @@ export default function DashBoardBookList({ book_list }: { book_list: Book[] }) 
                         <div className="flex items-center gap-2">
                             <span className="truncate text-sm font-medium text-black dark:text-[#f0f6fc]">
                                 <Link
-                                    href="/"
+                                    href={route('v2', { bookId: book.id })}
                                     className="hover:underline dark:hover:decoration-white">
                                     {book.owner} / {book.name}
                                 </Link>
