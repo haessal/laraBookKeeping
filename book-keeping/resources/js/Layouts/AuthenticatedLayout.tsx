@@ -16,7 +16,7 @@ export default function Authenticated({
                 rounded={false}
                 className={[
                     menu ? '' : 'border-b',
-                    'border-gray-700 bg-[#0d1117] px-4 py-3 font-sans dark:bg-[#020408]',
+                    'relative z-50 border-gray-700 bg-[#0d1117] px-4 py-3 font-sans dark:bg-[#020408]',
                 ].join(' ')}>
                 <div className="ml-10 flex flex-wrap items-center justify-between gap-4">
                     <NavbarBrand href="/">
