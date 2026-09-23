@@ -1,4 +1,5 @@
-import DashBoardBookList, { Book } from '@/Components/Dashboard/DashboardBookList';
+import DashBoardBookList from '@/Components/Dashboard/DashboardBookList';
+import type { Book } from '@/types/BookKeeping/v2/Book';
 import { Link } from '@inertiajs/react';
 import { Button } from 'flowbite-react';
 import { GoRepo } from 'react-icons/go';
@@ -14,8 +15,8 @@ export default function DashBoardSideMenu({ book_list }: { book_list: Book[] | n
                             as={Link}
                             href="/"
                             size="sm"
-                            className="bg-green-700 text-sm font-semibold text-white hover:bg-green-600">
-                            <GoRepo className="mr-2 h-4 w-4" />
+                            className="h-7 bg-[#238638] px-2 text-sm font-semibold text-white hover:bg-[#29903b]">
+                            <GoRepo className="mr-1 h-4 w-4" />
                             New
                         </Button>
                     </div>
@@ -29,7 +30,7 @@ export default function DashBoardSideMenu({ book_list }: { book_list: Book[] | n
                             as={Link}
                             href="/"
                             size="sm"
-                            className="h-8 w-full bg-green-700 text-sm font-semibold text-white hover:bg-green-600">
+                            className="h-8 w-full bg-[#238638] text-sm font-semibold text-white hover:bg-[#29903b]">
                             Create Book
                         </Button>
                     </div>
