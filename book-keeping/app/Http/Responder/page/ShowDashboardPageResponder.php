@@ -28,7 +28,7 @@ class ShowDashboardPageResponder
     {
         $book_list = empty($context['books']) ? null : $context['books'];
 
-        return Inertia::render('Dashboard', [
+        return Inertia::render('Dashboard/Dashboard', [
             'book_list' => $book_list,
         ])->toResponse($request);
     }

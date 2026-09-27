@@ -1,4 +1,4 @@
-import DashBoardBookList from '@/Components/Dashboard/DashboardBookList';
+import DashBoardBookList from '@/Pages/Dashboard/Partials/DashboardBookList';
 import type { Book } from '@/types/BookKeeping/v2/Book';
 import { Link } from '@inertiajs/react';
 import { Button } from 'flowbite-react';
