@@ -6,7 +6,7 @@ import { GoRepo } from 'react-icons/go';
 
 export default function DashBoardSideMenu({ book_list }: { book_list: Book[] | null }) {
     return (
-        <div className="px-5 pt-6">
+        <div className="px-5 py-6">
             {book_list ? (
                 <>
                     <div className="mb-2 flex items-center justify-between">

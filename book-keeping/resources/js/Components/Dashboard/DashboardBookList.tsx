@@ -19,7 +19,7 @@ export default function DashBoardBookList({ book_list }: { book_list: Book[] }) 
                             </span>
                             {book.is_default && (
                                 <span className="rounded-full border px-2 py-0.5 text-xs text-gray-400 dark:border-gray-600">
-                                    Default
+                                    <a href={route('v1_top')}>Default</a>
                                 </span>
                             )}
                         </div>
