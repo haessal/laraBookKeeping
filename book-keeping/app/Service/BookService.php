@@ -295,6 +295,31 @@ class BookService
     }
 
     /**
+     * Update the setting of default book.
+     *
+     * @param  int  $userId
+     * @param  string|null  $bookId
+     * @return array{0:int, 1:string|null}
+     */
+    public function updateDefaultBookSetting($userId, $bookId): array
+    {
+        $this->permission->updateDefaultBook($userId, $bookId);
+        $updated = $this->permission->findDefaultBook($userId);
+        $status = BookKeepingService::STATUS_ERROR_BAD_CONDITION;
+        if (is_null($bookId)) {
+            if (is_null($updated)) {
+                $status = BookKeepingService::STATUS_NORMAL;
+            }
+        } else {
+            if (is_string($updated) && ($bookId == $updated)) {
+                $status = BookKeepingService::STATUS_NORMAL;
+            }
+        }
+
+        return [$status, $updated];
+    }
+
+    /**
      * Update the name of the book.
      *
      * @param  string  $bookId

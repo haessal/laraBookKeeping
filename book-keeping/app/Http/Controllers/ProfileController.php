@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Service\BookKeepingService;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,12 +17,34 @@ class ProfileController extends Controller
     /**
      * Display the user's profile form.
      */
-    public function edit(Request $request): Response
+    public function edit(Request $request, BookKeepingService $BookKeeping): Response
     {
+        [$books, $defaultBookId] = $this->retrieveDefaultBook($BookKeeping);
+
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+            'books' => $books,
+            'defaultBookId' => $defaultBookId,
             'status' => session('status'),
         ]);
+    }
+
+    private function retrieveDefaultBook(BookKeepingService $BookKeeping): array
+    {
+        $ownedBooks = [];
+        $defaultBookId = null;
+
+        $availableBooks = $BookKeeping->retrieveAvailableBooks();
+        foreach ($availableBooks as $book) {
+            if ($book['is_owner']) {
+                $ownedBooks[] = $book;
+                if ($book['is_default']) {
+                    $defaultBookId = $book['id'];
+                }
+            }
+        }
+
+        return [$ownedBooks, $defaultBookId];
     }
 
     /**

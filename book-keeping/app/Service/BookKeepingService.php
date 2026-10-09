@@ -303,6 +303,16 @@ class BookKeepingService
     }
 
     /**
+     * Delete the setting of default book.
+     *
+     * @return array{0:int, 1:string|null}
+     */
+    public function deleteDefaultBook(): array
+    {
+        return  $this->book->updateDefaultBookSetting(intval(Auth::id()), null);
+    }
+
+    /**
      * Delete the slip entry and the slip that no longer have a entry.
      *
      * @param  string  $slipEntryId
@@ -1493,6 +1503,17 @@ class BookKeepingService
         $this->creditCardStatement->updateCreditCardStatement($creditCardStatementId, $newData);
 
         return [self::STATUS_NORMAL, null];
+    }
+
+    /**
+     * Updates the specified book as the new default.
+     *
+     * @param  string  $bookId
+     * @return array{0:int, 1:string|null}
+     */
+    public function updateDefaultBook($bookId): array
+    {
+        return $this->book->updateDefaultBookSetting(intval(Auth::id()), $bookId);
     }
 
     /**

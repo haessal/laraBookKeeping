@@ -6,11 +6,15 @@ import { Head } from '@inertiajs/react';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm';
 import PersonalAccessTokenForm from './Partials/PersonalAccessTokenForm';
+import type { Book } from '@/types/BookKeeping/v2/Book';
+import UpdateDefaultBookForm from './Partials/UpdateDefaultBookForm';
 
 export default function Edit({
     mustVerifyEmail,
     status,
-}: PageProps<{ mustVerifyEmail: boolean; status?: string }>) {
+    books,
+    defaultBookId
+}: PageProps<{ mustVerifyEmail: boolean; status?: string; books: Book[]; defaultBookId?: string }>) {
     return (
         <>
             <Head title="Profile" />
@@ -38,6 +42,14 @@ export default function Edit({
                             <DeleteUserForm className="max-w-xl" />
                         </div>
                         */}
+
+                        <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800">
+                            <UpdateDefaultBookForm
+                                books={books}
+                                defaultBookId={defaultBookId}
+                                className="max-w-xl"
+                            />
+                        </div>
                     </div>
                 </div>
             </AuthenticatedLayout>

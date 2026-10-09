@@ -5,6 +5,7 @@ namespace App\Repositories\Eloquent;
 use App\Models\DataProvider\Eloquent\Permission;
 use App\Models\User;
 use App\Repositories\PermissionRepositoryInterface;
+use Illuminate\Support\Facades\DB;
 
 class PermissionRepository implements PermissionRepositoryInterface
 {
@@ -182,6 +183,40 @@ class PermissionRepository implements PermissionRepositoryInterface
             ->get()->toArray();
 
         return $list;
+    }
+
+    /**
+     * Update the specified owned book as the default book.
+     *
+     * @param  int  $userId
+     * @param  string|null  $bookId
+     * @return void
+     */
+    public function updateDefaultBook($userId, $bookId)
+    {
+        if (is_null($bookId)) {
+            Permission::query()
+                ->where('permitted_user', $userId)
+                ->where('is_owner', true)
+                ->where('is_default', true)
+                ->update(['is_default' => false]);
+        } else {
+            DB::transaction(function () use ($userId, $bookId) {
+                $baseQuery = Permission::query()
+                    ->where('permitted_user', $userId)
+                    ->where('is_owner', true);
+                if ((clone $baseQuery)->where('readable_book', $bookId)->exists()) {
+                    (clone $baseQuery)
+                        ->where('readable_book', '!=', $bookId)
+                        ->where('is_default', true)
+                        ->update(['is_default' => false]);
+                    (clone $baseQuery)
+                        ->where('readable_book', $bookId)
+                        ->where('is_default', false)
+                        ->update(['is_default' => true]);
+                }
+            });
+        }
     }
 
     /**

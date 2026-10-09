@@ -83,6 +83,15 @@ interface PermissionRepositoryInterface
     public function searchForAccessibleBooks($userId): array;
 
     /**
+     * Update the specified owned book as the default book.
+     *
+     * @param  int  $userId
+     * @param  string|null  $bookId
+     * @return void
+     */
+    public function updateDefaultBook($userId, $bookId);
+
+    /**
      * Update the mark for indicating that the book is default one for the user.
      *
      * @param  int  $userId

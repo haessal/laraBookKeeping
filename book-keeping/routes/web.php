@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\PersonalAccessTokenController;
+use App\Http\Controllers\DefaultBookController;
 use App\Http\Controllers\page\CreateBookActionHtml;
 use App\Http\Controllers\page\ShowDashboardActionHtml;
 use App\Http\Controllers\page\v1\CreateSlipActionHTML;
@@ -35,6 +36,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/token', [PersonalAccessTokenController::class, 'get_creation_date']);
     Route::post('/profile/token', [PersonalAccessTokenController::class, 'store']);
     Route::delete('/profile/token', [PersonalAccessTokenController::class, 'destroy']);
+    Route::put('/profile/default-book', [DefaultBookController::class, 'update'])->name('profile.default-book.update');
+    Route::delete('/profile/default-book', [DefaultBookController::class, 'destroy'])->name('profile.default-book.destroy');
 });
 
 Route::prefix('/page/v1')->group(function () {
