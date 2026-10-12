@@ -19,8 +19,8 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
                -o /usr/local/etc/git-completion.bash \
                https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
 
-# Install Node.js 22 (LTS)
-RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+# Install Node.js 24 (LTS)
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
         && apt-get install -y nodejs \
         && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
         && npm install -g npm-check-updates
@@ -42,7 +42,7 @@ RUN pecl install xdebug \
 
 COPY xdebug.ini /usr/local/etc/php/conf.d/
 
-# Install MySQL and related extension
+# Install MySQL client and related extension
 RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
             default-libmysqlclient-dev \
             default-mysql-client \
@@ -58,6 +58,10 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
+
+# Install Laravel installer
+RUN composer global require laravel/installer \
+        && ln -s /root/.composer/vendor/bin/laravel /usr/bin/laravel
 
 # Install phpDocumentor
 RUN curl -sS -L -o /usr/local/bin/phpdoc https://phpdoc.org/phpDocumentor.phar && chmod +x /usr/local/bin/phpdoc
