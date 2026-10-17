@@ -5,34 +5,39 @@ export DOCKER_CLI_HINTS=false
 
 ENV_FILE=.env
 IMAGE=laravelinstaller:devcontainer
+PNPM_VERSION=12.14.0
 
 if [ -f "${ENV_FILE}" ]; then
     echo "Doing nothing because ${ENV_FILE} file already exists."
     exit 0
 fi
+
 if [ ! -f composer.lock ]; then
     echo "Doing nothing because no composer.lock found."
-    exit -1
+    exit 1
 fi
-if [ ! -f package-lock.json ]; then
-    echo "Doing nothing because no package-lock.json found."
-    exit -1
+
+if [ ! -f pnpm-lock.yaml ]; then
+    echo "Doing nothing because no pnpm-lock.yaml found."
+    exit 1
 fi
 
 set -x
-# Build laravel installer container if not exist
-docker build .devcontainer/workspace/ -t ${IMAGE}
 
-# Install composer package include Laravel framework and Sail
-docker run --rm -it -v $(pwd):/workspace -w /workspace ${IMAGE} composer install
+# Build Laravel installer container if it does not exist
+docker build .devcontainer/workspace/ -t "${IMAGE}"
+
+# Install Composer packages
+docker run --rm -it -v "$(pwd):/workspace" -w /workspace "${IMAGE}" composer install
 
 # Create .env to run Sail
-cp .env.example ${ENV_FILE}
+cp .env.example "${ENV_FILE}"
 
-# Run Sail
+# Start Sail
 ./vendor/bin/sail down -v
 ./vendor/bin/sail up -d
 set +x
+
 until ./vendor/bin/sail exec mysql \
     mysqladmin ping \
     -h 127.0.0.1 \
@@ -40,20 +45,30 @@ until ./vendor/bin/sail exec mysql \
     --silent
 do
     sleep 1
+    echo -n "."
 done
+echo ""
+
 set -x
 
-# Install node pacakges
-./vendor/bin/sail npm ci
+# Download and initialize pnpm through Corepack
+./vendor/bin/sail exec laravel.test \
+    corepack "pnpm@${PNPM_VERSION}" --version
+
+# Install Node.js packages using pnpm
+./vendor/bin/sail exec laravel.test \
+    corepack "pnpm@${PNPM_VERSION}" install --frozen-lockfile
 
 # Generate APP_KEY
 ./vendor/bin/sail artisan key:generate
 
-# Migrate datebase
+# Migrate database
 ./vendor/bin/sail artisan migrate:fresh --seed
 
-# Build asset
-./vendor/bin/sail npm run build
+# Build assets
+./vendor/bin/sail exec laravel.test \
+    corepack "pnpm@${PNPM_VERSION}" run build
+
 set +x
 
-echo "Complete succesfuly. Try to access http://localhost"
+echo "Completed successfully. Try to access http://localhost"
