@@ -17,7 +17,8 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
         && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
         && curl --location --fail --connect-timeout 30 --retry 5 \
                -o /usr/local/etc/git-completion.bash \
-               https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
+               https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash \
+        && git config --global --add safe.directory /workspace
 
 # Install Node.js 24 (LTS)
 RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
