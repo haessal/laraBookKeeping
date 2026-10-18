@@ -71,4 +71,4 @@ set -x
 
 set +x
 
-echo "Completed successfully. Try to access http://localhost"
+echo "Completed successfully. Try to access http://localhost:8000"
