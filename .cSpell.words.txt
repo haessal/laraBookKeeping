@@ -1,28 +1,34 @@
 # Common words of Laravel Framework
+uncompromised
 unserialized
 
 # A part of name of developers, company, services, packages and tools
 alpinejs
 arjun
 barryvdh
+bcmath
 beanstalkd
 bmewburn
 bradlc
 cimg
 Curotec
+Documentor
 eamodio
 enmod
 Envoyer
 felixfbecker
 haessal
 humao
+libonig
 inertiajs
 intelephense
 mysqld
 nunomaduro
 Otwell
+phpmyadmin
 ryanluker
 tightenco
+tzdata
 Vehikl
 
 # Misc
