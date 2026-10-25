@@ -24,7 +24,8 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
 RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
         && apt-get install -y nodejs \
         && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-        && npm install -g npm-check-updates
+        && npm install -g npm-check-updates \
+        && corepack enable pnpm
 
 # Install CSpell(command line tool for spell checking code)
 RUN npm install -g cspell
