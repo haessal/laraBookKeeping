@@ -49,6 +49,7 @@
         "@rolldown/plugin-babel": "^0.2.3",
         "@types/node": "^22.13.5",
         "babel-plugin-react-compiler": "^1.0.0",
+        "cspell": "^10.4.0",
         "vite-plus": "catalog:"
     },
     "optionalDependencies": {
