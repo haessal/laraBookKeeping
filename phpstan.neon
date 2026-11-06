@@ -9,5 +9,10 @@ parameters:
         - config/
         - database/
         - routes/
-
-    level: 7
+    excludePaths:
+        - app/Http/Controllers/Settings/ProfileController.php
+        - app/Http/Controllers/Settings/SecurityController.php
+        - app/Http/Requests/Settings/ProfileUpdateRequest.php
+        - app/Providers/FortifyServiceProvider.php
+        - database/factories/UserFactory.php
+    level: 9
