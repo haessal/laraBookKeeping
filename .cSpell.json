@@ -1,9 +1,11 @@
-// cSpell Settings
 {
     "version": "0.2",
     "language": "en",
     "ignorePaths": [
         ".env.*",
+        ".gitignore",
+        ".phpdoc/**",
+        ".prettierrc",
         "bootstrap/cache/**",
         "build/**",
         "compose.yaml",
@@ -32,7 +34,6 @@
     ],
     "allowCompoundWords": true,
     "dictionaries": ["php", "custom-words"],
-    // Tell CSpell about your dictionary
     "dictionaryDefinitions": [
         {
             "name": "custom-words",
