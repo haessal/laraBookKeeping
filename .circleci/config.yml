@@ -7,11 +7,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Set up pnpm
-          command: |
-            corepack enable
-            corepack prepare pnpm@12.14.0 --activate
-      - run:
           name: Install pnpm dependencies
           command: |
             pnpm install
@@ -24,11 +19,6 @@ jobs:
       - image: cimg/node:24
     steps:
       - checkout
-      - run:
-          name: Set up pnpm
-          command: |
-            corepack enable
-            corepack prepare pnpm@12.14.0 --activate
       - run:
           name: Install pnpm dependencies
           command: |
