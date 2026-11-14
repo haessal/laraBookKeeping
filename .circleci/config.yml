@@ -87,6 +87,10 @@ jobs:
           command: |
             composer install -n --prefer-dist
       - run:
+          name: Install php-coveralls
+          command: |
+            composer require -W --prefer-dist --dev php-coveralls/php-coveralls
+      - run:
           name: Set up pnpm
           command: |
             corepack enable
@@ -113,11 +117,7 @@ jobs:
       - run:
           name: Upload coverage to Coveralls
           command: |
-            curl -fL \
-              "https://github.com/php-coveralls/php-coveralls/releases/download/v2.9.1/php-coveralls.phar" \
-              -o php-coveralls.phar
-            chmod +x php-coveralls.phar
-            php php-coveralls.phar -vvv \
+            php ./vendor/bin/php-coveralls -vvv \
               --coverage_clover=./storage/logs/clover.xml \
               --json_path=./storage/logs/coveralls-upload.json
 workflows:
