@@ -73,8 +73,16 @@ jobs:
     docker:
       - image: cimg/php:8.5-node
         environment:
-          DB_CONNECTION: sqlite
-          DB_DATABASE: ":memory:"
+          DB_HOST: 127.0.0.1
+          DB_DATABASE: testing
+          DB_USERNAME: default
+          DB_PASSWORD: secret
+      - image: cimg/mariadb:10.5
+        environment:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: testing
+          MYSQL_USER: default
+          MYSQL_PASSWORD: secret
     steps:
       - checkout
       - run:
@@ -108,6 +116,10 @@ jobs:
           command: |
             cp .env.example .env
             php artisan key:generate
+      - run:
+          name: Wait for MySQL
+          command: |
+            dockerize -wait tcp://127.0.0.1:3306 -timeout 60s
       - run:
           name: Run PHPUnit with coverage
           command: |
