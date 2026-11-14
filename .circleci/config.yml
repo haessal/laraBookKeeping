@@ -113,9 +113,11 @@ jobs:
       - run:
           name: Upload coverage to Coveralls
           command: |
-            curl -L https://github.com -o php-coveralls.phar
+            curl -fL \
+              "https://github.com/php-coveralls/php-coveralls/releases/download/v2.9.1/php-coveralls.phar" \
+              -o php-coveralls.phar
             chmod +x php-coveralls.phar
-            php php-coveralls.phar -v \
+            php php-coveralls.phar -vvv \
               --coverage_clover=./storage/logs/clover.xml \
               --json_path=./storage/logs/coveralls-upload.json
 workflows:
