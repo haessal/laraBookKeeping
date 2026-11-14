@@ -81,7 +81,7 @@ jobs:
 
   phpunit:
     docker:
-      - image: cimg/php:8.3-node
+      - image: cimg/php:8.5-node
         environment:
           DB_CONNECTION: sqlite
           DB_DATABASE: ":memory:"
@@ -123,7 +123,9 @@ jobs:
       - run:
           name: Upload coverage to Coveralls
           command: |
-            php ./vendor/bin/php-coveralls \
+            curl -L https://github.com -o php-coveralls.phar
+            chmod +x php-coveralls.phar
+            php php-coveralls.phar \
               --coverage_clover=./storage/logs/clover.xml \
               --json_path=./storage/logs/coveralls-upload.json
 workflows:
