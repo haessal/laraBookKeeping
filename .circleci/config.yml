@@ -125,7 +125,7 @@ jobs:
           command: |
             curl -L https://github.com -o php-coveralls.phar
             chmod +x php-coveralls.phar
-            php php-coveralls.phar \
+            php php-coveralls.phar -v \
               --coverage_clover=./storage/logs/clover.xml \
               --json_path=./storage/logs/coveralls-upload.json
 workflows:
