@@ -1,0 +1,136 @@
+version: 2.1
+
+jobs:
+  spellcheck:
+    docker:
+      - image: cimg/node:24
+    steps:
+      - checkout
+      - run:
+          name: Set up pnpm
+          command: |
+            corepack enable
+            corepack prepare pnpm@12.14.0 --activate
+      - run:
+          name: Install pnpm dependencies
+          command: |
+            pnpm install
+      - run:
+          name: Run CSpell
+          command: pnpm cspell --config .cSpell.json "**/*.{ts,tsx,php,md,yml,json}"
+
+  formatcheck:
+    docker:
+      - image: cimg/node:24
+    steps:
+      - checkout
+      - run:
+          name: Set up pnpm
+          command: |
+            corepack enable
+            corepack prepare pnpm@12.14.0 --activate
+      - run:
+          name: Install pnpm dependencies
+          command: |
+            pnpm install
+      - run:
+          name: Run prettier
+          command: |
+            pnpm prettier --check "resources/views/**/*.blade.php" "resources/js/**/*.{js,jsx,ts,tsx}"
+      - run:
+          name: Run eslint
+          command: |
+            pnpm eslint "resources/js/**/*.{js,jsx,ts,tsx}"
+
+  build:
+    docker:
+      - image: cimg/php:8.5-node
+    steps:
+      - checkout
+      - run:
+          name: Install Composer dependencies
+          command: |
+            composer install -n --prefer-dist
+      - run:
+          name: Set up pnpm
+          command: |
+            corepack enable
+            corepack prepare pnpm@12.14.0 --activate
+      - run:
+          name: Install pnpm dependencies
+          command: |
+            pnpm install
+      - run:
+          name: Build assets
+          command: |
+            pnpm run build
+
+  static-analysis:
+    docker:
+      - image: cimg/php:8.5
+    steps:
+      - checkout
+      - run:
+          name: Install Composer dependencies
+          command: |
+            composer install -n --prefer-dist
+      - run:
+          name: Run PHPStan with Larastan extension
+          command: |
+            ./vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=512M
+
+  phpunit:
+    docker:
+      - image: cimg/php:8.3-node
+        environment:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ":memory:"
+    steps:
+      - checkout
+      - run:
+          name: Install Xdebug
+          command: |
+            sudo pecl channel-update pecl.php.net
+            sudo pecl install xdebug
+      - run:
+          name: Install Composer dependencies
+          command: |
+            composer install -n --prefer-dist
+      - run:
+          name: Set up pnpm
+          command: |
+            corepack enable
+            corepack prepare pnpm@12.14.0 --activate
+      - run:
+          name: Install pnpm dependencies
+          command: |
+            pnpm install
+      - run:
+          name: Build assets
+          command: |
+            pnpm run build
+      - run:
+          name: Set up .env for testing
+          command: |
+            cp .env.example .env
+            php artisan key:generate
+      - run:
+          name: Run PHPUnit with coverage
+          command: |
+            php artisan config:clear
+            XDEBUG_MODE=coverage ./vendor/bin/phpunit -d memory_limit=512M \
+              --coverage-clover ./storage/logs/clover.xml
+      - run:
+          name: Upload coverage to Coveralls
+          command: |
+            php ./vendor/bin/php-coveralls \
+              --coverage_clover=./storage/logs/clover.xml \
+              --json_path=./storage/logs/coveralls-upload.json
+workflows:
+  ci:
+    jobs:
+      - spellcheck
+      - formatcheck
+      - build
+      - static-analysis
+      - phpunit
