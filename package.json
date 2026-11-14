@@ -51,9 +51,11 @@
         "@types/node": "^22.13.5",
         "babel-plugin-react-compiler": "^1.0.0",
         "cspell": "^10.4.0",
+        "eslint": "^10.14.0",
         "prettier": "^3.9.10",
         "prettier-plugin-organize-imports": "^4.3.0",
         "prettier-plugin-tailwindcss": "^0.8.1",
+        "typescript-eslint": "^8.72.2",
         "vite-plus": "catalog:"
     },
     "optionalDependencies": {
